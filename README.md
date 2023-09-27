@@ -1,4 +1,4 @@
-# core_mana_hotel_be
+# CORE_MANA_HOTEL_BE
 
 
 
