@@ -1,0 +1,22 @@
+package com.manahotel.be.model.dto;
+
+import java.sql.Timestamp;
+
+public class GoodsDTO {
+    private String goodsId;
+    private String goodsName;
+    private String goodsCategoryId;
+    private boolean status;
+    private Float cost;
+    private Float price;
+    private String unit;
+    private Long inventory;
+    private Long minInventory;
+    private Long maxInventory;
+    private String note;
+    private String description;
+    private Long createdById;
+    private Long updatedById;
+    private Timestamp createdDate;
+    private Timestamp updatedDate;
+}
