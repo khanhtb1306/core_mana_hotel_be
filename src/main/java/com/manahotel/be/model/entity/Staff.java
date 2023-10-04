@@ -1,59 +1,59 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+@Table(name = "staff", indexes = {
+        @Index(name = "pk_s_r_idx", columnList = "role_id")
+})
 @Entity
 @Data
-@Table(name = "staff")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Staff {
     @Id
-    @Column(name = "staff_id")
+    @Column(name = "staff_id", nullable = false)
     private Long staffId;
 
-    @Column(name = "staff_name")
+    @Column(name = "staff_name", length = 250)
     private String staffName;
 
-    @Column(name = "username")
+    @Column(name = "username", length = 50)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 150)
     private String password;
 
-    @Column(name = "role_id")
-    private Long roleId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 
     @Column(name = "dob")
     private Timestamp dob;
 
-    @Column(name = "address")
+    @Column(name = "address", length = 350)
     private String address;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 350)
     private String email;
 
     @Column(name = "gender")
-    private boolean gender;
+    private Boolean gender;
 
-    @Column(name = "identity")
+    @Column(name = "identity", length = 350)
     private String identity;
 
-    @Column(name = "tax_code")
+    @Column(name = "tax_code", length = 350)
     private String taxCode;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 
     @Column(name = "created_by_id")

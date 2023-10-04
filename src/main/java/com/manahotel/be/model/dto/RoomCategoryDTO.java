@@ -5,7 +5,8 @@ import java.sql.Timestamp;
 public class RoomCategoryDTO {
     private String roomCategoryId;
     private String roomCategoryName;
-    private Long numOfRooms;
+    private Long roomCapacity;
+    private Float roomArea;
     private boolean status;
     private String description;
     private Long createdById;

@@ -1,36 +1,37 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
+@Table(name = "room", indexes = {
+        @Index(name = "pk_r_rc_idx", columnList = "room_category_id")
+})
 @Entity
 @Data
-@Table(name = "room")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Room {
     @Id
-    @Column(name = "room_id")
+    @Column(name = "room_id", nullable = false, length = 50)
     private String roomId;
 
-    @Column(name = "room_name")
+    @Column(name = "room_name", length = 250)
     private String roomName;
 
-    @Column(name = "roomCategoryId")
-    private String roomCategoryId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "room_category_id", nullable = false)
+    private RoomCategory roomCategory;
 
-    @Column(name = "floor")
+    @Column(name = "floor", length = 250)
     private String floor;
 
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 
     @Column(name = "booking_status")
     private Long bookingStatus;
@@ -38,7 +39,7 @@ public class Room {
     @Column(name = "condition_status")
     private Long conditionStatus;
 
-    @Column(name = "note")
+    @Column(name = "note", length = 250)
     private String note;
 
     @Column(name = "created_by_id")
