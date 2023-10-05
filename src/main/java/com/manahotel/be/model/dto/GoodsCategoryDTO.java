@@ -1,7 +1,10 @@
 package com.manahotel.be.model.dto;
 
+import lombok.Data;
+
 import java.sql.Timestamp;
 
+@Data
 public class GoodsCategoryDTO {
     private String goodsCategoryId;
     private String goodsCategoryName;
