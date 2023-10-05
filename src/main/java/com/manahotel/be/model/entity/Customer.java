@@ -9,44 +9,45 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
+@Table(name = "customer")
 @Entity
 @Data
-@Table(name = "customer")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
     @Id
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", nullable = false, length = 50)
     private String customerId;
 
-    @Column(name = "customer_name")
+    @Column(name = "customer_name", length = 250)
     private String customerName;
 
-    @Column(name = "customer_group")
+    @Column(name = "customer_group", length = 250)
     private String customerGroup;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 
     @Column(name = "dob")
     private Timestamp dob;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 350)
     private String email;
 
-    @Column(name = "address")
+    @Column(name = "address", length = 350)
     private String address;
 
-    @Column(name = "identity")
+    @Column(name = "identity", length = 350)
     private String identity;
 
-    @Column(name = "nationality")
+    @Column(name = "nationality", length = 350)
     private String nationality;
 
-    @Column(name = "tax_code")
+    @Column(name = "tax_code", length = 350)
     private String taxCode;
 
     @Column(name = "gender")
-    private boolean gender;
+    private Boolean gender;
 }

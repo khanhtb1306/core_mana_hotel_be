@@ -1,42 +1,43 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+@Table(name = "price_list", indexes = {
+        @Index(name = "room_category_id_idx", columnList = "room_category_id")
+})
 @Entity
 @Data
-@Table(name = "price_list")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class PriceList {
     @Id
-    @Column(name = "price_list_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "price_list_id", nullable = false)
     private Long priceListId;
 
-    @Column(name = "price_list_name")
-    private Long priceListName;
+    @Column(name = "price_list_name", length = 250)
+    private String priceListName;
 
-    @Column(name = "room_category_id")
-    private String roomCategoryId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "room_category_id", nullable = false)
+    private RoomCategory roomCategory;
 
-    @Column(name = "price_by_day")
+    @Column(name = "price_by_day", nullable = false)
     private Float priceByDay;
 
-    @Column(name = "price_by_night")
+    @Column(name = "price_by_night", nullable = false)
     private Float priceByNight;
 
-    @Column(name = "price_by_hour")
+    @Column(name = "price_by_hour", nullable = false)
     private Float priceByHour;
 
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 
     @Column(name = "start_date")
     private Timestamp startDate;

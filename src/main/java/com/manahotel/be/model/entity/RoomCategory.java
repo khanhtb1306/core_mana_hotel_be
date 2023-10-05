@@ -10,26 +10,29 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+@Table(name = "room_category")
 @Entity
 @Data
-@Table(name = "room_category")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class RoomCategory {
     @Id
-    @Column(name = "room_category_id")
+    @Column(name = "room_category_id", nullable = false, length = 50)
     private String roomCategoryId;
 
-    @Column(name = "room_category_name")
+    @Column(name = "room_category_name", length = 250)
     private String roomCategoryName;
 
-    @Column(name = "num_of_rooms")
-    private Long numOfRooms;
+    @Column(name = "room_capacity")
+    private Long roomCapacity;
+
+    @Column(name = "room_area")
+    private Float roomArea;
 
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 500)
     private String description;
 
     @Column(name = "created_by_id")

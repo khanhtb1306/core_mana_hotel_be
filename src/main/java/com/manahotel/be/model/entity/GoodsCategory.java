@@ -9,22 +9,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
+@Table(name = "goods_category")
 @Entity
 @Data
-@Table(name = "goods_category")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class GoodsCategory {
     @Id
-    @Column(name = "goods_category_id")
+    @Column(name = "goods_category_id", nullable = false, length = 50)
     private String goodsCategoryId;
 
-    @Column(name = "goods_category_name")
+    @Column(name = "goods_category_name", length = 250)
     private String goodsCategoryName;
 
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 
     @Column(name = "created_by_id")
     private Long createdById;
