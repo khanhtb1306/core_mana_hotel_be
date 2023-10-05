@@ -29,6 +29,15 @@ public class RoomCategory {
     @Column(name = "room_area")
     private Float roomArea;
 
+    @Column(name = "price_by_day", nullable = false)
+    private Float priceByDay;
+
+    @Column(name = "price_by_night", nullable = false)
+    private Float priceByNight;
+
+    @Column(name = "price_by_hour", nullable = false)
+    private Float priceByHour;
+
     @Column(name = "status")
     private Boolean status;
 
