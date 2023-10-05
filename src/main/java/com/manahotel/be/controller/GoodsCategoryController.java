@@ -5,9 +5,9 @@ import com.manahotel.be.model.entity.GoodsCategory;
 import com.manahotel.be.service.GoodsCategoryService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/goods-category")
@@ -19,5 +19,25 @@ public class GoodsCategoryController {
     @PostMapping
     public GoodsCategory createGoodsCategory(GoodsCategoryDTO goodsCategoryDTO) {
         return service.createGoodsCategory(goodsCategoryDTO);
+    }
+
+    @PutMapping("/{id}")
+    public GoodsCategory updateGoodsCategory(@PathVariable String id, GoodsCategoryDTO goodsCategoryDTO) {
+        return service.updateGoodsCategory(id, goodsCategoryDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public GoodsCategory deleteGoodsCategory(@PathVariable String id) {
+        return service.deleteGoodsCategory(id);
+    }
+
+    @GetMapping("/{id}")
+    public GoodsCategory getGoodsCategoryById(@PathVariable String id) {
+        return service.getGoodsCategoryById(id);
+    }
+
+    @GetMapping
+    public List<GoodsCategory> getAll() {
+        return service.getAll();
     }
 }
