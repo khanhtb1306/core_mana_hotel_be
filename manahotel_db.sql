@@ -169,6 +169,9 @@ DROP TABLE IF EXISTS `room_category`;
 CREATE TABLE `room_category` (
   `room_category_id` varchar(50) NOT NULL,
   `room_category_name` varchar(250) DEFAULT NULL,
+  `price_by_day` float NOT NULL,
+  `price_by_night` float NOT NULL,
+  `price_by_hour` float NOT NULL,
   `room_capacity` int DEFAULT NULL,
   `room_area` float DEFAULT NULL,
   `status` bit(1) DEFAULT NULL,

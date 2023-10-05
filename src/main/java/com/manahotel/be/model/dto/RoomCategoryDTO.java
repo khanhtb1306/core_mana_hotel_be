@@ -6,6 +6,9 @@ public class RoomCategoryDTO {
     private String roomCategoryId;
     private String roomCategoryName;
     private Long roomCapacity;
+    private Float priceByDay;
+    private Float priceByNight;
+    private Float priceByHour;
     private Float roomArea;
     private boolean status;
     private String description;
