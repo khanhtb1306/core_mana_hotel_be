@@ -9,12 +9,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Table(name = "room_category")
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class RoomCategory {
     @Id
     @Column(name = "room_category_id", nullable = false, length = 50)
@@ -22,6 +23,15 @@ public class RoomCategory {
 
     @Column(name = "room_category_name", length = 250)
     private String roomCategoryName;
+
+    @Column(name = "price_by_day")
+    private Float priceByDay;
+
+    @Column(name = "price_by_night")
+    private Float priceByNight;
+
+    @Column(name = "price_by_hour")
+    private Float priceByHour;
 
     @Column(name = "room_capacity")
     private Long roomCapacity;
