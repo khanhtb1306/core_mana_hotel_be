@@ -27,7 +27,7 @@ public class Goods {
     private GoodsCategory goodsCategory;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "cost")
     private Float cost;

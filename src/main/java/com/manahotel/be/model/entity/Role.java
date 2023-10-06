@@ -23,7 +23,7 @@ public class Role {
     private String roleName;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "created_by_id")
     private Long createdById;

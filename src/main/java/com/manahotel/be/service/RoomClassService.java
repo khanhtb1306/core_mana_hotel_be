@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
@@ -16,14 +17,16 @@ import java.util.List;
 public class RoomClassService {
     @Autowired
     private RoomClassRepository roomClassRepository;
+    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
-        public List<RoomCategory>getAllRoomClass(){
+    public List<RoomCategory>getAllRoomClass(){
         return roomClassRepository.findAll();
     }
 
 
-        public RoomCategory createRoomClass(RoomCategoryDTO dto){
-            try{
+    public RoomCategory createRoomClass(RoomCategoryDTO dto){
+        try{
                 log.info("------- Add Room Class Start -------");
                 RoomCategory latestRoomCategory = roomClassRepository.findTopByOrderByRoomCategoryIdDesc();
                 String latestId = (latestRoomCategory == null) ? null : latestRoomCategory.getRoomCategoryId();
@@ -37,7 +40,7 @@ public class RoomClassService {
                 roomClass.setPriceByHour(dto.getPriceByHour());
                 roomClass.setRoomCapacity(dto.getRoomCapacity());
                 roomClass.setRoomArea(dto.getRoomArea());
-                roomClass.setStatus(true);
+                roomClass.setStatus(ACTIVE);
                 roomClass.setDescription(dto.getDescription());
                 roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
                 roomClass.setCreatedById(dto.getCreatedById());
@@ -50,9 +53,9 @@ public class RoomClassService {
         }
     }
 
-        public RoomCategory updateRoomClass(String id,RoomCategoryDTO dto){
-            log.info("------- Update Room Class Start -------");
-            try{
+    public RoomCategory updateRoomClass(String id,RoomCategoryDTO dto){
+        log.info("------- Update Room Class Start -------");
+        try{
 
                 RoomCategory roomClass = getRoomCategoryById(id);
                 if(roomClass == null){ return null;}
@@ -71,10 +74,10 @@ public class RoomClassService {
 
                 log.info("------- Update Room Class End -------");
                 return roomClass;
-            }catch (Exception e){
-                log.info("Can't Update Room Class", e.getMessage());
-                return null;
-            }
+        }catch (Exception e){
+            log.info("Can't Update Room Class", e.getMessage());
+            return null;
+        }
         }
 
         public void deleteRoomClassById(String id) {
