@@ -86,7 +86,7 @@ CREATE TABLE `goods` (
                          `goods_id` varchar(50) NOT NULL,
                          `goods_name` varchar(250) DEFAULT NULL,
                          `goods_category_id` varchar(50) NOT NULL,
-                         `status` bit(1) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
                          `cost` float DEFAULT NULL,
                          `price` float DEFAULT NULL,
                          `unit` varchar(250) DEFAULT NULL,
