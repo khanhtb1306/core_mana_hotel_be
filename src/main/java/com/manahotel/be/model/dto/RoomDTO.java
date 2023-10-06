@@ -1,7 +1,9 @@
 package com.manahotel.be.model.dto;
 
-import java.sql.Timestamp;
+import lombok.Data;
 
+import java.sql.Timestamp;
+@Data
 public class RoomDTO {
     private String roomId;
     private String roomName;
@@ -13,6 +15,6 @@ public class RoomDTO {
     private String note;
     private Long createdById;
     private Long updatedById;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
+    private String createdDate;
+    private String updatedDate;
 }

@@ -1,13 +1,10 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.entity.Role;
+import com.manahotel.be.model.dto.RoomCategoryDTO;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.service.RoomClassService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,4 +19,25 @@ public class RoomClassController {
     public List<RoomCategory> getAllRoomClass() {
         return roomClassService.getAllRoomClass();
     }
+
+    @PostMapping
+    public RoomCategory createRoomClass(RoomCategoryDTO roomCategoryDTO){
+
+         return roomClassService.createRoomClass(roomCategoryDTO);
+    }
+    @PutMapping("/{id}")
+    public RoomCategory updateRoomClass(@PathVariable String id, RoomCategoryDTO roomCategoryDTO){
+        return roomClassService.updateRoomClass(id, roomCategoryDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteRoomClassById(@PathVariable String id){
+        roomClassService.deleteRoomClassById(id);
+    }
+
+    @GetMapping("/{id}")
+    public RoomCategory getRoomClassById(@PathVariable String id){
+        return roomClassService.getRoomCategoryById(id);
+    }
+
 }

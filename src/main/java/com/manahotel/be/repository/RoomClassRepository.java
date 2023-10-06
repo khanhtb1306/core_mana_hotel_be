@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RoomClassRepository extends JpaRepository<RoomCategory, Long> {
+public interface RoomClassRepository extends JpaRepository<RoomCategory, String> {
+    RoomCategory findTopByOrderByRoomCategoryIdDesc();
 }
