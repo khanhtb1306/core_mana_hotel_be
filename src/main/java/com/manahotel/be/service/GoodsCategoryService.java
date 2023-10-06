@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsCategoryDTO;
@@ -14,6 +15,9 @@ import java.util.List;
 @Service
 public class GoodsCategoryService {
 
+    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
+
     @Autowired
     private GoodsCategoryRepository repository;
 
@@ -26,7 +30,7 @@ public class GoodsCategoryService {
         GoodsCategory goodsCategory = new GoodsCategory();
         goodsCategory.setGoodsCategoryId(nextId);
         goodsCategory.setGoodsCategoryName(dto.getGoodsCategoryName());
-        goodsCategory.setStatus(true);
+        goodsCategory.setStatus(ACTIVE);
         goodsCategory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goodsCategory);
@@ -58,7 +62,7 @@ public class GoodsCategoryService {
             return null;
         }
 
-        goodsCategory.setStatus(false);
+        goodsCategory.setStatus(DEACTIVATE);
 
         repository.save(goodsCategory);
 

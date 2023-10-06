@@ -39,6 +39,43 @@ CREATE TABLE `customer` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `floor`
+--
+
+DROP TABLE IF EXISTS `floor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `floor` (
+                         `floor_id` int NOT NULL AUTO_INCREMENT,
+                         `floor_name` varchar(250) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
+                         `created_by_id` int DEFAULT NULL,
+                         `updated_by_id` int DEFAULT NULL,
+                         `created_date` timestamp NULL DEFAULT NULL,
+                         `updated_date` timestamp NULL DEFAULT NULL,
+                         PRIMARY KEY (`floor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `floor`
+--
+
+LOCK TABLES `floor` WRITE;
+/*!40000 ALTER TABLE `floor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `floor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `goods`
 --
 

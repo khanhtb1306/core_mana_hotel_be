@@ -1,14 +1,18 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.RoomDTO;
+import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
+import com.manahotel.be.repository.FloorRepository;
 import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,7 +22,10 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
-
+    @Autowired
+    private FloorRepository floorRepository;
+    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     @Autowired
     private RoomClassService roomClassService;
@@ -39,8 +46,9 @@ public class RoomService {
             room.setRoomName(dto.getRoomName());
             RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
-            room.setFloor(dto.getFloor());
-            room.setStatus(true);
+            Floor floor = GetFloorById(dto.getFloorId());
+            room.setFloor(floor);
+            room.setStatus(ACTIVE);
             room.setBookingStatus(0L);
             room.setConditionStatus(0L);
             room.setNote(dto.getNote());
@@ -65,7 +73,8 @@ public class RoomService {
             room.setRoomName(dto.getRoomName());
             RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
-            room.setFloor(dto.getFloor());
+            Floor floor = GetFloorById(dto.getFloorId());
+            room.setFloor(floor);
             room.setNote(dto.getNote());
             room.setCreatedById(dto.getCreatedById());
             room.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -98,6 +107,13 @@ public class RoomService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Room not found with id " + id));
+    }
+
+    public Floor GetFloorById(String id){
+        return  floorRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Floor not found with id " + id));
     }
 
 

@@ -25,7 +25,7 @@ public class GoodsCategory {
     private String goodsCategoryName;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "created_by_id")
     private Long createdById;
