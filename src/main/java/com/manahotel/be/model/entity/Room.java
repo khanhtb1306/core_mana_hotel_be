@@ -6,15 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Table(name = "room", indexes = {
-        @Index(name = "pk_r_rc_idx", columnList = "room_category_id")
+        @Index(name = "pk_r_rc_idx", columnList = "room_category_id"),
+        @Index(name = "pk_r_f_idx", columnList = "floor_id")
 })
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Room {
     @Id
     @Column(name = "room_id", nullable = false, length = 50)
@@ -27,11 +27,12 @@ public class Room {
     @JoinColumn(name = "room_category_id", nullable = false)
     private RoomCategory roomCategory;
 
-    @Column(name = "floor", length = 250)
-    private String floor;
+    @ManyToOne
+    @JoinColumn(name = "floor_id")
+    private Floor floor;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "booking_status")
     private Long bookingStatus;

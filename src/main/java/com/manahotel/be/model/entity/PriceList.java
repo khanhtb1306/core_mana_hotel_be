@@ -37,7 +37,7 @@ public class PriceList {
     private Float priceByHour;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "start_date")
     private Timestamp startDate;

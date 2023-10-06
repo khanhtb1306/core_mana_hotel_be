@@ -40,7 +40,7 @@ public class RoomCategory {
     private Float roomArea;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "description", length = 500)
     private String description;

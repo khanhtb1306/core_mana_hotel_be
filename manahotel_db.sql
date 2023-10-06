@@ -39,6 +39,25 @@ CREATE TABLE `customer` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `floor`
+--
+
+DROP TABLE IF EXISTS `floor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `floor` (
+                         `floor_id` int NOT NULL AUTO_INCREMENT,
+                         `floor_name` varchar(45) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
+                         `created_by_id` int DEFAULT NULL,
+                         `updated_by_id` int DEFAULT NULL,
+                         `created_date` timestamp NULL DEFAULT NULL,
+                         `updated_date` timestamp NULL DEFAULT NULL,
+                         PRIMARY KEY (`floor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `goods`
 --
 
@@ -49,7 +68,7 @@ CREATE TABLE `goods` (
                          `goods_id` varchar(50) NOT NULL,
                          `goods_name` varchar(250) DEFAULT NULL,
                          `goods_category_id` varchar(50) NOT NULL,
-                         `status` bit(1) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
                          `cost` float DEFAULT NULL,
                          `price` float DEFAULT NULL,
                          `unit` varchar(250) DEFAULT NULL,
@@ -78,9 +97,9 @@ DROP TABLE IF EXISTS `goods_category`;
 CREATE TABLE `goods_category` (
                                   `goods_category_id` varchar(50) NOT NULL,
                                   `goods_category_name` varchar(250) DEFAULT NULL,
-                                  `status` bit(1) DEFAULT NULL,
-                                  `created_by_id` bigint DEFAULT NULL,
-                                  `updated_by_id` bigint DEFAULT NULL,
+                                  `status` int DEFAULT NULL,
+                                  `created_by_id` int DEFAULT NULL,
+                                  `updated_by_id` int DEFAULT NULL,
                                   `created_date` timestamp NULL DEFAULT NULL,
                                   `updated_date` timestamp NULL DEFAULT NULL,
                                   PRIMARY KEY (`goods_category_id`)
@@ -95,17 +114,17 @@ DROP TABLE IF EXISTS `price_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `price_list` (
-                              `price_list_id` bigint NOT NULL AUTO_INCREMENT,
+                              `price_list_id` int NOT NULL,
                               `price_list_name` varchar(250) DEFAULT NULL,
                               `room_category_id` varchar(50) NOT NULL,
                               `price_by_day` float NOT NULL,
                               `price_by_night` float NOT NULL,
                               `price_by_hour` float NOT NULL,
-                              `status` bit(1) DEFAULT NULL,
+                              `status` int DEFAULT NULL,
                               `start_date` timestamp NULL DEFAULT NULL,
                               `end_date` timestamp NULL DEFAULT NULL,
-                              `created_by_id` bigint DEFAULT NULL,
-                              `updated_by_id` bigint DEFAULT NULL,
+                              `created_by_id` int DEFAULT NULL,
+                              `updated_by_id` int DEFAULT NULL,
                               `created_date` timestamp NULL DEFAULT NULL,
                               `updated_date` timestamp NULL DEFAULT NULL,
                               PRIMARY KEY (`price_list_id`),
@@ -144,17 +163,19 @@ CREATE TABLE `room` (
                         `room_id` varchar(50) NOT NULL,
                         `room_name` varchar(250) DEFAULT NULL,
                         `room_category_id` varchar(50) NOT NULL,
-                        `floor` varchar(250) DEFAULT NULL,
-                        `status` bit(1) DEFAULT NULL,
-                        `booking_status` bigint DEFAULT NULL,
-                        `condition_status` bigint DEFAULT NULL,
+                        `floor_id` int DEFAULT NULL,
+                        `status` int DEFAULT NULL,
+                        `booking_status` int DEFAULT NULL,
+                        `condition_status` int DEFAULT NULL,
                         `note` varchar(250) DEFAULT NULL,
-                        `created_by_id` bigint DEFAULT NULL,
-                        `updated_by_id` bigint DEFAULT NULL,
+                        `created_by_id` int DEFAULT NULL,
+                        `updated_by_id` int DEFAULT NULL,
                         `created_date` timestamp NULL DEFAULT NULL,
                         `updated_date` timestamp NULL DEFAULT NULL,
                         PRIMARY KEY (`room_id`),
                         KEY `pk_r_rc_idx` (`room_category_id`),
+                        KEY `pk_r_f_idx` (`floor_id`),
+                        CONSTRAINT `pk_r_f` FOREIGN KEY (`floor_id`) REFERENCES `floor` (`floor_id`),
                         CONSTRAINT `pk_r_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -174,7 +195,7 @@ CREATE TABLE `room_category` (
                                  `price_by_hour` float DEFAULT NULL,
                                  `room_capacity` bigint DEFAULT NULL,
                                  `room_area` float DEFAULT NULL,
-                                 `status` bit(1) DEFAULT NULL,
+                                 `status` int DEFAULT NULL,
                                  `description` varchar(500) DEFAULT NULL,
                                  `created_by_id` bigint DEFAULT NULL,
                                  `updated_by_id` bigint DEFAULT NULL,
@@ -197,7 +218,7 @@ CREATE TABLE `staff` (
                          `username` varchar(50) DEFAULT NULL,
                          `password` varchar(150) DEFAULT NULL,
                          `role_id` int NOT NULL,
-                         `status` bit(1) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
                          `dob` timestamp NULL DEFAULT NULL,
                          `address` varchar(350) DEFAULT NULL,
                          `email` varchar(350) DEFAULT NULL,
@@ -224,4 +245,4 @@ CREATE TABLE `staff` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-06  1:12:34
+-- Dump completed on 2023-10-06 21:09:58
