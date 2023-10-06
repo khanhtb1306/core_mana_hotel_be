@@ -8,7 +8,7 @@ public class RoomDTO {
     private String roomId;
     private String roomName;
     private String roomCategoryId;
-    private String floorId;
+    private Long floorId;
     private boolean status;
     private Long bookingStatus;
     private Long conditionStatus;
