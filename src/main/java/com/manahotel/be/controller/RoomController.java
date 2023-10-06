@@ -1,7 +1,9 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.FloorDTO;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
 import com.manahotel.be.model.dto.RoomDTO;
+import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.service.RoomClassService;
@@ -41,4 +43,7 @@ public class RoomController {
     public Room getRoomById(@PathVariable String id){
         return roomService.getRoomById(id);
     }
+
+
+
 }

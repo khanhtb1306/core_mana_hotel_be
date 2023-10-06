@@ -3,6 +3,7 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.FloorDTO;
 import com.manahotel.be.model.dto.RoomDTO;
 import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
@@ -24,11 +25,12 @@ public class RoomService {
     private RoomRepository roomRepository;
     @Autowired
     private FloorRepository floorRepository;
+    @Autowired
+    private RoomClassService roomClassService;
+
     private static final Long ACTIVE = Status.ACTIVE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
-    @Autowired
-    private RoomClassService roomClassService;
     //Get All List Room
     public List<Room> getAllRoom(){
         return roomRepository.findAll();
@@ -46,7 +48,7 @@ public class RoomService {
             room.setRoomName(dto.getRoomName());
             RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
-            Floor floor = GetFloorById(dto.getFloorId());
+            Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
             room.setStatus(ACTIVE);
             room.setBookingStatus(0L);
@@ -73,7 +75,7 @@ public class RoomService {
             room.setRoomName(dto.getRoomName());
             RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
-            Floor floor = GetFloorById(dto.getFloorId());
+            Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
             room.setNote(dto.getNote());
             room.setCreatedById(dto.getCreatedById());
@@ -109,12 +111,67 @@ public class RoomService {
                                 "Room not found with id " + id));
     }
 
-    public Floor GetFloorById(String id){
+    public Floor getFloorById(Long id){
         return  floorRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Floor not found with id " + id));
     }
 
+
+    public List<Floor> getAllFloor(){
+        return floorRepository.findAll();
+    }
+
+    public Floor createFloor(FloorDTO dto){
+        try{
+            log.info("------- Add Floor Start -------");
+
+            Floor floor = new Floor();
+            floor.setFloorName(dto.getFloorName());
+            floor.setStatus(dto.getStatus());
+            floor.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            floorRepository.save(floor);
+            log.info("------- Add Floor End -------");
+            return floor;
+        }catch (Exception e){
+            log.info("Can't Add Floor", e.getMessage());
+            return null;
+        }
+    }
+
+    public Floor updateFloor(int id, FloorDTO dto){
+        try{
+            log.info("------- Update Floor Start -------");
+
+            Floor floor = getFloorById((long) id);
+            if(floor == null ){
+                return  null;
+            }
+            floor.setFloorName(dto.getFloorName());
+            floor.setStatus(dto.getStatus());
+            floor.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+            floorRepository.save(floor);
+            log.info("------- Update Floor End -------");
+            return floor;
+        }catch (Exception e){
+            log.info("Can't Update Floor", e.getMessage());
+            return null;
+        }
+    }
+
+    public void deleteFloorById(int id) {
+        try {
+            Floor floor = getFloorById((long)id);
+            if (floor == null) {
+                log.info("Can't find floor id");
+                return;
+            }
+
+            floorRepository.delete(floor);
+        } catch (Exception e){
+            log.info("Can't Delete Floor", e.getMessage());
+        }
+    }
 
 }
