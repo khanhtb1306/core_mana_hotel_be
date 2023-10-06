@@ -35,6 +35,9 @@ public class Goods {
     @Column(name = "price")
     private Float price;
 
+    @Column(name = "unit", length = 250)
+    private String unit;
+
     @Column(name = "inventory")
     private Long inventory;
 
