@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `floor`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `floor` (
                          `floor_id` int NOT NULL AUTO_INCREMENT,
-                         `floor_name` varchar(45) DEFAULT NULL,
+                         `floor_name` varchar(250) DEFAULT NULL,
                          `status` int DEFAULT NULL,
                          `created_by_id` int DEFAULT NULL,
                          `updated_by_id` int DEFAULT NULL,

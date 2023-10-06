@@ -19,7 +19,7 @@ public class Floor {
     @Column(name = "floor_id", nullable = false)
     private Long floorId;
 
-    @Column(name = "floor_name", length = 45)
+    @Column(name = "floor_name", length = 250)
     private String floorName;
 
     @Column(name = "status")
