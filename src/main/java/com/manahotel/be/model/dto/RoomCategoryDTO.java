@@ -1,19 +1,20 @@
 package com.manahotel.be.model.dto;
 
-import java.sql.Timestamp;
+import lombok.Data;
 
+import java.sql.Timestamp;
+@Data
 public class RoomCategoryDTO {
-    private String roomCategoryId;
     private String roomCategoryName;
-    private Long roomCapacity;
     private Float priceByDay;
     private Float priceByNight;
     private Float priceByHour;
+    private Long roomCapacity;
     private Float roomArea;
     private boolean status;
     private String description;
     private Long createdById;
     private Long updatedById;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
+    private String createdDate;
+    private String updatedDate;
 }
