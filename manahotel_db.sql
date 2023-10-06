@@ -106,6 +106,16 @@ CREATE TABLE `goods` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `goods`
+--
+
+LOCK TABLES `goods` WRITE;
+/*!40000 ALTER TABLE `goods` DISABLE KEYS */;
+INSERT INTO `goods` VALUES ('SP000001','Sữa chua','LH000002',1,28000,30000,'Hộp',100,10,1000,'Hàng hiếm','Cực múp',NULL,NULL,'2023-10-05 17:51:06','2023-10-05 18:10:13');
+/*!40000 ALTER TABLE `goods` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `goods_category`
 --
 
@@ -115,9 +125,9 @@ DROP TABLE IF EXISTS `goods_category`;
 CREATE TABLE `goods_category` (
                                   `goods_category_id` varchar(50) NOT NULL,
                                   `goods_category_name` varchar(250) DEFAULT NULL,
-                                  `status` bit(1) DEFAULT NULL,
-                                  `created_by_id` bigint DEFAULT NULL,
-                                  `updated_by_id` bigint DEFAULT NULL,
+                                  `status` int DEFAULT NULL,
+                                  `created_by_id` int DEFAULT NULL,
+                                  `updated_by_id` int DEFAULT NULL,
                                   `created_date` timestamp NULL DEFAULT NULL,
                                   `updated_date` timestamp NULL DEFAULT NULL,
                                   PRIMARY KEY (`goods_category_id`)
@@ -125,31 +135,14 @@ CREATE TABLE `goods_category` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `price_list`
+-- Dumping data for table `goods_category`
 --
 
-DROP TABLE IF EXISTS `price_list`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `price_list` (
-                              `price_list_id` bigint NOT NULL AUTO_INCREMENT,
-                              `price_list_name` varchar(250) DEFAULT NULL,
-                              `room_category_id` varchar(50) NOT NULL,
-                              `price_by_day` float NOT NULL,
-                              `price_by_night` float NOT NULL,
-                              `price_by_hour` float NOT NULL,
-                              `status` bit(1) DEFAULT NULL,
-                              `start_date` timestamp NULL DEFAULT NULL,
-                              `end_date` timestamp NULL DEFAULT NULL,
-                              `created_by_id` bigint DEFAULT NULL,
-                              `updated_by_id` bigint DEFAULT NULL,
-                              `created_date` timestamp NULL DEFAULT NULL,
-                              `updated_date` timestamp NULL DEFAULT NULL,
-                              PRIMARY KEY (`price_list_id`),
-                              KEY `room_category_id_idx` (`room_category_id`),
-                              CONSTRAINT `pk_pl_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `goods_category` WRITE;
+/*!40000 ALTER TABLE `goods_category` DISABLE KEYS */;
+INSERT INTO `goods_category` VALUES ('LH000001','Hàng hóa',1,NULL,NULL,'2023-10-05 16:19:51','2023-10-05 17:08:02'),('LH000002','Dịch vụ',1,NULL,NULL,'2023-10-05 16:31:48',NULL);
+/*!40000 ALTER TABLE `goods_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `role`
@@ -171,6 +164,15 @@ CREATE TABLE `role` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `room`
 --
 
@@ -181,20 +183,31 @@ CREATE TABLE `room` (
                         `room_id` varchar(50) NOT NULL,
                         `room_name` varchar(250) DEFAULT NULL,
                         `room_category_id` varchar(50) NOT NULL,
-                        `floor` varchar(250) DEFAULT NULL,
-                        `status` bit(1) DEFAULT NULL,
-                        `booking_status` bigint DEFAULT NULL,
-                        `condition_status` bigint DEFAULT NULL,
+                        `floor_id` int DEFAULT NULL,
+                        `status` int DEFAULT NULL,
+                        `booking_status` int DEFAULT NULL,
+                        `condition_status` int DEFAULT NULL,
                         `note` varchar(250) DEFAULT NULL,
-                        `created_by_id` bigint DEFAULT NULL,
-                        `updated_by_id` bigint DEFAULT NULL,
+                        `created_by_id` int DEFAULT NULL,
+                        `updated_by_id` int DEFAULT NULL,
                         `created_date` timestamp NULL DEFAULT NULL,
                         `updated_date` timestamp NULL DEFAULT NULL,
                         PRIMARY KEY (`room_id`),
                         KEY `pk_r_rc_idx` (`room_category_id`),
+                        KEY `pk_r_f_idx` (`floor_id`),
+                        CONSTRAINT `pk_r_f` FOREIGN KEY (`floor_id`) REFERENCES `floor` (`floor_id`),
                         CONSTRAINT `pk_r_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room`
+--
+
+LOCK TABLES `room` WRITE;
+/*!40000 ALTER TABLE `room` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `room_category`
@@ -211,7 +224,7 @@ CREATE TABLE `room_category` (
                                  `price_by_hour` float DEFAULT NULL,
                                  `room_capacity` bigint DEFAULT NULL,
                                  `room_area` float DEFAULT NULL,
-                                 `status` bit(1) DEFAULT NULL,
+                                 `status` int DEFAULT NULL,
                                  `description` varchar(500) DEFAULT NULL,
                                  `created_by_id` bigint DEFAULT NULL,
                                  `updated_by_id` bigint DEFAULT NULL,
@@ -220,6 +233,15 @@ CREATE TABLE `room_category` (
                                  PRIMARY KEY (`room_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room_category`
+--
+
+LOCK TABLES `room_category` WRITE;
+/*!40000 ALTER TABLE `room_category` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `staff`
@@ -234,7 +256,7 @@ CREATE TABLE `staff` (
                          `username` varchar(50) DEFAULT NULL,
                          `password` varchar(150) DEFAULT NULL,
                          `role_id` int NOT NULL,
-                         `status` bit(1) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
                          `dob` timestamp NULL DEFAULT NULL,
                          `address` varchar(350) DEFAULT NULL,
                          `email` varchar(350) DEFAULT NULL,
@@ -251,6 +273,15 @@ CREATE TABLE `staff` (
                          CONSTRAINT `pk_s_r` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `staff`
+--
+
+LOCK TABLES `staff` WRITE;
+/*!40000 ALTER TABLE `staff` DISABLE KEYS */;
+/*!40000 ALTER TABLE `staff` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -261,4 +292,4 @@ CREATE TABLE `staff` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-06  1:12:34
+-- Dump completed on 2023-10-06 21:24:20
