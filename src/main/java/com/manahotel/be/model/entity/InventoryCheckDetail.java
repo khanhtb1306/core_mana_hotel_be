@@ -39,6 +39,6 @@ public class InventoryCheckDetail {
     @Column(name = "inventory")
     private Long inventory;
 
-    @Column(name = "price")
-    private Float price;
+    @Column(name = "cost")
+    private Float cost;
 }

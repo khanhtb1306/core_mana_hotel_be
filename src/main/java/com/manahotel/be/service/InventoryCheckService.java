@@ -65,9 +65,9 @@ public class InventoryCheckService {
 
             detail.setActualInventory(detailDTO.getActualInventory());
             detail.setQuantityDiscrepancy(detail.getActualInventory() - goods.getInventory());
-            detail.setValueDiscrepancy(detail.getQuantityDiscrepancy() * goods.getPrice());
+            detail.setValueDiscrepancy(detail.getQuantityDiscrepancy() * goods.getCost());
             detail.setInventory(goods.getInventory());
-            detail.setPrice(goods.getPrice());
+            detail.setCost(goods.getCost());
 
             list.add(detail);
         }
