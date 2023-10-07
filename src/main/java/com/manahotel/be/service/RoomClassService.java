@@ -17,7 +17,7 @@ import java.util.List;
 public class RoomClassService {
     @Autowired
     private RoomClassRepository roomClassRepository;
-    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     public List<RoomCategory>getAllRoomClass(){
@@ -40,7 +40,7 @@ public class RoomClassService {
                 roomClass.setPriceByHour(dto.getPriceByHour());
                 roomClass.setRoomCapacity(dto.getRoomCapacity());
                 roomClass.setRoomArea(dto.getRoomArea());
-                roomClass.setStatus(ACTIVE);
+                roomClass.setStatus(ACTIVATE);
                 roomClass.setDescription(dto.getDescription());
                 roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
                 roomClass.setCreatedById(dto.getCreatedById());

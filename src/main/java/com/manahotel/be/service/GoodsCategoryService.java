@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class GoodsCategoryService {
 
-    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     @Autowired
@@ -30,7 +30,7 @@ public class GoodsCategoryService {
         GoodsCategory goodsCategory = new GoodsCategory();
         goodsCategory.setGoodsCategoryId(nextId);
         goodsCategory.setGoodsCategoryName(dto.getGoodsCategoryName());
-        goodsCategory.setStatus(ACTIVE);
+        goodsCategory.setStatus(ACTIVATE);
         goodsCategory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goodsCategory);

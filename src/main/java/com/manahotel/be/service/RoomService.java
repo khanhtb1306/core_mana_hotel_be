@@ -28,7 +28,7 @@ public class RoomService {
     @Autowired
     private RoomClassService roomClassService;
 
-    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     //Get All List Room
@@ -50,7 +50,7 @@ public class RoomService {
             room.setRoomCategory(roomCategory);
             Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
-            room.setStatus(ACTIVE);
+            room.setStatus(ACTIVATE);
             room.setBookingStatus(0L);
             room.setConditionStatus(0L);
             room.setNote(dto.getNote());

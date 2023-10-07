@@ -9,7 +9,7 @@ public class RoomDTO {
     private String roomName;
     private String roomCategoryId;
     private Long floorId;
-    private boolean status;
+    private Long status;
     private Long bookingStatus;
     private Long conditionStatus;
     private String note;

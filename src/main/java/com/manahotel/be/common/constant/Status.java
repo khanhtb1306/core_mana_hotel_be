@@ -1,8 +1,13 @@
 package com.manahotel.be.common.constant;
 
 public enum Status {
-    ACTIVE(1L),
-    DEACTIVATE(2L);
+    ACTIVATE(1L),
+    DEACTIVATE(2L),
+
+    // Inventory Check
+    CANCEL(3L),
+    TEMPORARY(4L),
+    BALANCE(5L);
 
     private final Long statusId;
 
