@@ -3,8 +3,6 @@ package com.manahotel.be.model.dto;
 import java.sql.Timestamp;
 
 public class StaffDTO {
-    private Long staffId;
-    private String staffName;
     private String username;
     private String password;
     private Long roleId;

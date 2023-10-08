@@ -23,7 +23,7 @@ public class Staff {
     private String staffName;
 
     @Column(name = "username", length = 50)
-    private String username;
+    private String userName;
 
     @Column(name = "password", length = 150)
     private String password;
