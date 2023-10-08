@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.exception.EmptyListException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.InventoryCheckDTO;
 import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
@@ -11,7 +12,7 @@ import com.manahotel.be.model.entity.InventoryCheckDetail;
 import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.InventoryCheckDetailRepository;
 import com.manahotel.be.repository.InventoryCheckRepository;
-import jakarta.persistence.Tuple;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class InventoryCheckService {
 
     private static final Long TEMPORARY = Status.TEMPORARY.getStatusId();
+    private static final Long CANCEL = Status.CANCEL.getStatusId();
 
     @Autowired
     private InventoryCheckRepository repository;
@@ -38,36 +40,30 @@ public class InventoryCheckService {
         return repository.findAll();
     }
 
-    public String createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
-
-        InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
-        String latestId = (latestCheck == null) ? null : latestCheck.getInventoryCheckId();
-        String nextId = IdGenerator.generateId(latestId, "KK");
-
-        InventoryCheck check = new InventoryCheck();
-        check.setInventoryCheckId(nextId);
+    private void commonMapping(InventoryCheck check, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         check.setStatus(dto.getStatus());
-        if(check.getStatus().equals(TEMPORARY)) {
+
+        if (check.getStatus().equals(TEMPORARY)) {
             check.setTimeBalance(null);
-        }
-        else {
+        } else {
             Timestamp timeBalance = Optional.ofNullable(dto.getTimeBalance())
                     .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
             check.setTimeBalance(timeBalance);
         }
 
         check.setNote(dto.getNote());
-        check.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(check);
 
+        repository2.deleteInventoryCheckDetailByInventoryCheckId(check.getInventoryCheckId());
+
         List<InventoryCheckDetail> list = new ArrayList<>();
 
-        for(InventoryCheckDetailDTO detailDTO : listDetailDTO) {
+        for (InventoryCheckDetailDTO detailDTO : listDetailDTO) {
 
             InventoryCheckDetail detail = new InventoryCheckDetail();
 
-            InventoryCheck ic = findInventoryCheckById(nextId);
+            InventoryCheck ic = findInventoryCheckById(check.getInventoryCheckId());
             detail.setInventoryCheck(ic);
 
             Goods goods = findGoods(detailDTO.getGoodsId());
@@ -82,15 +78,55 @@ public class InventoryCheckService {
             list.add(detail);
         }
 
-        repository2.saveAll(list);
+        if(list.isEmpty()) {
+            repository2.saveAll(list);
+        }
+        else{
+            throw new EmptyListException("Chi tiết kiểm kho không được để trống");
+        }
+    }
+
+    public String createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+
+        InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
+        String latestId = (latestCheck == null) ? null : latestCheck.getInventoryCheckId();
+        String nextId = IdGenerator.generateId(latestId, "KK");
+
+        InventoryCheck check = new InventoryCheck();
+        check.setInventoryCheckId(nextId);
+        check.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+
+        commonMapping(check, dto, listDetailDTO);
 
         return "Tạo kiểm kho thành công";
     }
 
     public String updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+        InventoryCheck check = findInventoryCheckById(id);
+
+        if (check == null) {
+            return null;
+        }
+
+        commonMapping(check, dto, listDetailDTO);
+
         return "Cập nhật kiểm kho thành công";
     }
 
+    public List<InventoryCheck> getAllCheck() {
+        return repository.findAll();
+    }
+
+    public String cancelCheck(String id) {
+        InventoryCheck check = findInventoryCheckById(id);
+        check.setStatus(CANCEL);
+        repository.save(check);
+        return "Hủy kiểm kho thành công";
+    }
+
+    public List<InventoryCheckDetail> findListInvetoryCheckDetailByInventoryCheckId(String id) {
+        return repository2.findListInventoryCheckDetailByInventoryCheckId(id);
+    }
 
     public InventoryCheck findInventoryCheckById(String id) {
         return repository.findById(id)
@@ -103,6 +139,6 @@ public class InventoryCheckService {
     }
 
     public InventoryCheckResponse getInventoryCheckSummary(String id) {
-         return repository2.getInventoryCheckSummary(id);
+        return repository2.getInventoryCheckSummary(id);
     }
 }
