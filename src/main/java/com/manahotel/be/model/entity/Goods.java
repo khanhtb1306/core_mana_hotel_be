@@ -27,13 +27,16 @@ public class Goods {
     private GoodsCategory goodsCategory;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "cost")
     private Float cost;
 
     @Column(name = "price")
     private Float price;
+
+    @Column(name = "unit", length = 250)
+    private String unit;
 
     @Column(name = "inventory")
     private Long inventory;

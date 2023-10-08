@@ -33,7 +33,7 @@ public class Staff {
     private Role role;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "dob")
     private Timestamp dob;

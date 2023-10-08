@@ -1,9 +1,6 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,18 +8,19 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@Table(name = "goods_category")
+@Table(name = "floor")
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodsCategory {
+public class Floor {
     @Id
-    @Column(name = "goods_category_id", nullable = false, length = 50)
-    private String goodsCategoryId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "floor_id", nullable = false)
+    private Long floorId;
 
-    @Column(name = "goods_category_name", length = 250)
-    private String goodsCategoryName;
+    @Column(name = "floor_name", length = 250)
+    private String floorName;
 
     @Column(name = "status")
     private Long status;
