@@ -2,9 +2,13 @@ package com.manahotel.be.repository;
 
 import com.manahotel.be.model.entity.InventoryCheckDetail;
 import com.manahotel.be.service.InventoryCheckResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface InventoryCheckDetailRepository extends JpaRepository<InventoryCheckDetail, Long> {
@@ -19,4 +23,12 @@ public interface InventoryCheckDetailRepository extends JpaRepository<InventoryC
             "SUM(icd.quantity_discrepancy * icd.cost) AS totalQuantityDiscrepancyValue " +
             "FROM inventory_check_detail icd WHERE icd.inventory_check_id = :id", nativeQuery = true)
     InventoryCheckResponse getInventoryCheckSummary(String id);
+
+    @Query(value = "DELETE FROM inventory_check_detail icd WHERE icd.inventory_check_id = :id", nativeQuery = true)
+    @Transactional
+    @Modifying
+    void deleteInventoryCheckDetailByInventoryCheckId(String id);
+
+    @Query("SELECT icd FROM InventoryCheckDetail icd WHERE icd.inventoryCheck.inventoryCheckId = :id")
+    List<InventoryCheckDetail> findListInventoryCheckDetailByInventoryCheckId(String id);
 }
