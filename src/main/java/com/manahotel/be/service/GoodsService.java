@@ -30,7 +30,7 @@ public class GoodsService {
         return repository.findAll();
     }
 
-    public Goods createGoods(GoodsDTO dto) {
+    public String createGoods(GoodsDTO dto) {
 
         Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
         String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
@@ -46,14 +46,14 @@ public class GoodsService {
 
         repository.save(goods);
 
-        return goods;
+        return "Tạo hàng hóa thành công";
     }
 
-    public Goods updateGoods(String id, GoodsDTO dto) {
+    public String updateGoods(String id, GoodsDTO dto) {
 
         Goods goods = findGoodsById(id);
 
-        if(goods == null) {
+        if (goods == null) {
             return null;
         }
 
@@ -63,14 +63,14 @@ public class GoodsService {
 
         repository.save(goods);
 
-        return goods;
+        return "Cập nhật hàng hóa thành công";
     }
 
-    public Goods deleteGoods(String id) {
+    public String deleteGoods(String id) {
 
         Goods goods = findGoodsById(id);
 
-        if(goods == null) {
+        if (goods == null) {
             return null;
         }
 
@@ -78,7 +78,7 @@ public class GoodsService {
 
         repository.save(goods);
 
-        return goods;
+        return "Xóa hàng hóa thành công";
     }
 
     public Goods findGoodsById(String id) {

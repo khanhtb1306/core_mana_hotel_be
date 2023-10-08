@@ -21,22 +21,22 @@ public class RoomClassController {
     }
 
     @PostMapping
-    public RoomCategory createRoomClass(RoomCategoryDTO roomCategoryDTO){
-
-         return roomClassService.createRoomClass(roomCategoryDTO);
+    public String createRoomClass(RoomCategoryDTO roomCategoryDTO) {
+        return roomClassService.createRoomClass(roomCategoryDTO);
     }
+
     @PutMapping("/{id}")
-    public RoomCategory updateRoomClass(@PathVariable String id, RoomCategoryDTO roomCategoryDTO){
+    public String updateRoomClass(@PathVariable String id, RoomCategoryDTO roomCategoryDTO) {
         return roomClassService.updateRoomClass(id, roomCategoryDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoomClassById(@PathVariable String id){
-        roomClassService.deleteRoomClassById(id);
+    public String deleteRoomClassById(@PathVariable String id) {
+        return roomClassService.deleteRoomClassById(id);
     }
 
     @GetMapping("/{id}")
-    public RoomCategory getRoomClassById(@PathVariable String id){
+    public RoomCategory getRoomClassById(@PathVariable String id) {
         return roomClassService.getRoomCategoryById(id);
     }
 

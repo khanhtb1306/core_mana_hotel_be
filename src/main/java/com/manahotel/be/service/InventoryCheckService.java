@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.InventoryCheckDTO;
@@ -10,6 +11,7 @@ import com.manahotel.be.model.entity.InventoryCheckDetail;
 import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.InventoryCheckDetailRepository;
 import com.manahotel.be.repository.InventoryCheckRepository;
+import jakarta.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import java.util.Optional;
 
 @Service
 public class InventoryCheckService {
+
+    private static final Long TEMPORARY = Status.TEMPORARY.getStatusId();
 
     @Autowired
     private InventoryCheckRepository repository;
@@ -34,7 +38,7 @@ public class InventoryCheckService {
         return repository.findAll();
     }
 
-    public InventoryCheck createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+    public String createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
 
         InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
         String latestId = (latestCheck == null) ? null : latestCheck.getInventoryCheckId();
@@ -42,12 +46,18 @@ public class InventoryCheckService {
 
         InventoryCheck check = new InventoryCheck();
         check.setInventoryCheckId(nextId);
-        Timestamp timeBalance = Optional.ofNullable(dto.getTimeBalance())
-                .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
-        check.setTimeBalance(timeBalance);
+        check.setStatus(dto.getStatus());
+        if(check.getStatus().equals(TEMPORARY)) {
+            check.setTimeBalance(null);
+        }
+        else {
+            Timestamp timeBalance = Optional.ofNullable(dto.getTimeBalance())
+                    .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
+            check.setTimeBalance(timeBalance);
+        }
+
         check.setNote(dto.getNote());
         check.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        check.setStatus(dto.getStatus());
 
         repository.save(check);
 
@@ -74,8 +84,13 @@ public class InventoryCheckService {
 
         repository2.saveAll(list);
 
-        return check;
+        return "Tạo kiểm kho thành công";
     }
+
+    public String updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+        return "Cập nhật kiểm kho thành công";
+    }
+
 
     public InventoryCheck findInventoryCheckById(String id) {
         return repository.findById(id)
@@ -85,5 +100,9 @@ public class InventoryCheckService {
     private Goods findGoods(String id) {
         return repository3.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
+    }
+
+    public InventoryCheckResponse getInventoryCheckSummary(String id) {
+         return repository2.getInventoryCheckSummary(id);
     }
 }

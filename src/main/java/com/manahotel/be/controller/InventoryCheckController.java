@@ -1,17 +1,10 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.InventoryCheckDTO;
-import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
-import com.manahotel.be.model.entity.InventoryCheck;
 import com.manahotel.be.service.InventoryCheckRequest;
+import com.manahotel.be.service.InventoryCheckResponse;
 import com.manahotel.be.service.InventoryCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/inventory-check")
@@ -21,8 +14,12 @@ public class InventoryCheckController {
     private InventoryCheckService service;
 
     @PostMapping
-    public InventoryCheck createInventoryCheck(@RequestBody InventoryCheckRequest request) {
+    public String createInventoryCheck(@RequestBody InventoryCheckRequest request) {
         return service.createInventoryCheck(request.getInventoryCheckDTO(), request.getListInventoryCheckDetailDTO());
     }
 
+    @GetMapping("/summary/{id}")
+    public InventoryCheckResponse getInventoryCheckSummary(@PathVariable String id) {
+        return service.getInventoryCheckSummary(id);
+    }
 }

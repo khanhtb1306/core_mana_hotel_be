@@ -16,17 +16,17 @@ public class GoodsCategoryController {
     private GoodsCategoryService service;
 
     @PostMapping
-    public GoodsCategory createGoodsCategory(@RequestBody GoodsCategoryDTO goodsCategoryDTO) {
+    public String createGoodsCategory(@RequestBody GoodsCategoryDTO goodsCategoryDTO) {
         return service.createGoodsCategory(goodsCategoryDTO);
     }
 
     @PutMapping("/{id}")
-    public GoodsCategory updateGoodsCategory(@PathVariable String id, @RequestBody GoodsCategoryDTO goodsCategoryDTO) {
+    public String updateGoodsCategory(@PathVariable String id, @RequestBody GoodsCategoryDTO goodsCategoryDTO) {
         return service.updateGoodsCategory(id, goodsCategoryDTO);
     }
 
     @DeleteMapping("/{id}")
-    public GoodsCategory deleteGoodsCategory(@PathVariable String id) {
+    public String deleteGoodsCategory(@PathVariable String id) {
         return service.deleteGoodsCategory(id);
     }
 

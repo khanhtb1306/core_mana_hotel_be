@@ -21,21 +21,22 @@ public class FloorController {
     }
 
     @PostMapping
-    public Floor createFloor(FloorDTO floorDTO){
+    public String createFloor(@RequestBody FloorDTO floorDTO) {
         return roomService.createFloor(floorDTO);
     }
+
     @PutMapping("/{id}")
-    public Floor updateFloor(@PathVariable int id, FloorDTO floorDTO){
+    public String updateFloor(@PathVariable int id, @RequestBody FloorDTO floorDTO) {
         return roomService.updateFloor(id, floorDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFloorById(@PathVariable int id){
-        roomService.deleteFloorById(id);
+    public String deleteFloorById(@PathVariable int id) {
+        return roomService.deleteFloorById(id);
     }
 
     @GetMapping("/{id}")
-    public Floor getFloorById(@PathVariable int id){
+    public Floor getFloorById(@PathVariable int id) {
         return roomService.getFloorById((long) id);
     }
 }
