@@ -3,7 +3,6 @@ package com.manahotel.be.controller;
 import com.manahotel.be.model.dto.GoodsCategoryDTO;
 import com.manahotel.be.model.entity.GoodsCategory;
 import com.manahotel.be.service.GoodsCategoryService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +16,17 @@ public class GoodsCategoryController {
     private GoodsCategoryService service;
 
     @PostMapping
-    public GoodsCategory createGoodsCategory(GoodsCategoryDTO goodsCategoryDTO) {
+    public String createGoodsCategory(@RequestBody GoodsCategoryDTO goodsCategoryDTO) {
         return service.createGoodsCategory(goodsCategoryDTO);
     }
 
     @PutMapping("/{id}")
-    public GoodsCategory updateGoodsCategory(@PathVariable String id, GoodsCategoryDTO goodsCategoryDTO) {
+    public String updateGoodsCategory(@PathVariable String id, @RequestBody GoodsCategoryDTO goodsCategoryDTO) {
         return service.updateGoodsCategory(id, goodsCategoryDTO);
     }
 
     @DeleteMapping("/{id}")
-    public GoodsCategory deleteGoodsCategory(@PathVariable String id) {
+    public String deleteGoodsCategory(@PathVariable String id) {
         return service.deleteGoodsCategory(id);
     }
 

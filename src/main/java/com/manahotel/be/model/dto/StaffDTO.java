@@ -8,7 +8,7 @@ public class StaffDTO {
     private String username;
     private String password;
     private Long roleId;
-    private boolean status;
+    private Long status;
     private Timestamp dob;
     private String address;
     private String email;

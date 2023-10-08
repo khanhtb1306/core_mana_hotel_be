@@ -6,6 +6,7 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsCategory;
+import com.manahotel.be.repository.GoodsCategoryRepository;
 import com.manahotel.be.repository.GoodsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,20 @@ import java.util.List;
 @Service
 public class GoodsService {
 
-    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     @Autowired
     private GoodsRepository repository;
 
     @Autowired
-    private GoodsCategoryService goodsCategoryService;
+    private GoodsCategoryRepository repository2;
 
     public List<Goods> getAll() {
         return repository.findAll();
     }
 
-    public Goods createGoods(GoodsDTO dto) {
+    public String createGoods(GoodsDTO dto) {
 
         Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
         String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
@@ -37,60 +38,39 @@ public class GoodsService {
 
         Goods goods = new Goods();
         goods.setGoodsId(nextId);
-        goods.setGoodsName(dto.getGoodsName());
+        goods.setStatus(ACTIVATE);
 
-        GoodsCategory category = goodsCategoryService.getGoodsCategoryById(dto.getGoodsCategoryId());
-        goods.setGoodsCategory(category);
+        commonMapping(goods, dto);
 
-        goods.setStatus(ACTIVE);
-        goods.setCost(dto.getCost());
-        goods.setPrice(dto.getPrice());
-        goods.setUnit(dto.getUnit());
-        goods.setInventory(dto.getInventory());
-        goods.setMinInventory(dto.getMinInventory());
-        goods.setMaxInventory(dto.getMaxInventory());
-        goods.setNote(dto.getNote());
-        goods.setDescription(dto.getDescription());
         goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goods);
 
-        return goods;
+        return "Tạo hàng hóa thành công";
     }
 
-    public Goods updateGoods(String id, GoodsDTO dto) {
+    public String updateGoods(String id, GoodsDTO dto) {
 
         Goods goods = findGoodsById(id);
 
-        if(goods == null) {
+        if (goods == null) {
             return null;
         }
 
-        goods.setGoodsName(dto.getGoodsName());
+        commonMapping(goods, dto);
 
-        GoodsCategory category = goodsCategoryService.getGoodsCategoryById(dto.getGoodsCategoryId());
-        goods.setGoodsCategory(category);
-
-        goods.setCost(dto.getCost());
-        goods.setPrice(dto.getPrice());
-        goods.setUnit(dto.getUnit());
-        goods.setInventory(dto.getInventory());
-        goods.setMinInventory(dto.getMinInventory());
-        goods.setMaxInventory(dto.getMaxInventory());
-        goods.setNote(dto.getNote());
-        goods.setDescription(dto.getDescription());
         goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goods);
 
-        return goods;
+        return "Cập nhật hàng hóa thành công";
     }
 
-    public Goods deleteGoods(String id) {
+    public String deleteGoods(String id) {
 
         Goods goods = findGoodsById(id);
 
-        if(goods == null) {
+        if (goods == null) {
             return null;
         }
 
@@ -98,11 +78,32 @@ public class GoodsService {
 
         repository.save(goods);
 
-        return goods;
+        return "Xóa hàng hóa thành công";
     }
 
     public Goods findGoodsById(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
+    }
+
+    private void commonMapping(Goods goods, GoodsDTO dto) {
+        goods.setGoodsName(dto.getGoodsName());
+
+        GoodsCategory category = findGoodsCategory(dto.getGoodsCategoryId());
+        goods.setGoodsCategory(category);
+
+        goods.setCost(dto.getCost());
+        goods.setPrice(dto.getPrice());
+        goods.setUnit(dto.getUnit());
+        goods.setInventory(dto.getInventory());
+        goods.setMinInventory(dto.getMinInventory());
+        goods.setMaxInventory(dto.getMaxInventory());
+        goods.setNote(dto.getNote());
+        goods.setDescription(dto.getDescription());
+    }
+
+    private GoodsCategory findGoodsCategory(String id) {
+        return repository2.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Goods Category not found with id " + id));
     }
 }

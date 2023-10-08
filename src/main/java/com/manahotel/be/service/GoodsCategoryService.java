@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class GoodsCategoryService {
 
-    private static final Long ACTIVE = Status.ACTIVE.getStatusId();
+    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     @Autowired
     private GoodsCategoryRepository repository;
 
-    public GoodsCategory createGoodsCategory(GoodsCategoryDTO dto) {
+    public String createGoodsCategory(GoodsCategoryDTO dto) {
 
         GoodsCategory latestGoodsCategory = repository.findTopByOrderByGoodsCategoryIdDesc();
         String latestId = (latestGoodsCategory == null) ? null : latestGoodsCategory.getGoodsCategoryId();
@@ -30,15 +30,15 @@ public class GoodsCategoryService {
         GoodsCategory goodsCategory = new GoodsCategory();
         goodsCategory.setGoodsCategoryId(nextId);
         goodsCategory.setGoodsCategoryName(dto.getGoodsCategoryName());
-        goodsCategory.setStatus(ACTIVE);
+        goodsCategory.setStatus(ACTIVATE);
         goodsCategory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goodsCategory);
 
-        return goodsCategory;
+        return "Tạo loại hàng thành công";
     }
 
-    public GoodsCategory updateGoodsCategory(String id, GoodsCategoryDTO dto) {
+    public String updateGoodsCategory(String id, GoodsCategoryDTO dto) {
 
         GoodsCategory goodsCategory = getGoodsCategoryById(id);
 
@@ -51,10 +51,10 @@ public class GoodsCategoryService {
 
         repository.save(goodsCategory);
 
-        return goodsCategory;
+        return "Cập nhật loại hàng thành công";
     }
 
-    public GoodsCategory deleteGoodsCategory(String id) {
+    public String deleteGoodsCategory(String id) {
 
         GoodsCategory goodsCategory = getGoodsCategoryById(id);
 
@@ -66,7 +66,7 @@ public class GoodsCategoryService {
 
         repository.save(goodsCategory);
 
-        return goodsCategory;
+        return "Xóa loại hàng thành công";
     }
 
     public GoodsCategory getGoodsCategoryById(String id) {

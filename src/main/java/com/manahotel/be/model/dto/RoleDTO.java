@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class RoleDTO {
     private Long roleId;
     private String roleName;
-    private boolean status;
+    private Long status;
     private Long createdById;
     private Long updatedById;
     private Timestamp createdDate;

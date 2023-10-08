@@ -21,17 +21,17 @@ public class GoodsController {
     }
 
     @PostMapping
-    public Goods createGoods(GoodsDTO goodsDTO) {
+    public String createGoods(@RequestBody GoodsDTO goodsDTO) {
         return service.createGoods(goodsDTO);
     }
 
     @PutMapping("/{id}")
-    public Goods updateGoods(@PathVariable String id, GoodsDTO goodsDTO) {
+    public String updateGoods(@PathVariable String id, @RequestBody GoodsDTO goodsDTO) {
         return service.updateGoods(id, goodsDTO);
     }
 
     @DeleteMapping("/{id}")
-    public Goods deleteGoods(@PathVariable String id) {
+    public String deleteGoods(@PathVariable String id) {
         return service.deleteGoods(id);
     }
 

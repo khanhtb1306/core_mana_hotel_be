@@ -11,7 +11,7 @@ public class RoomCategoryDTO {
     private Float priceByHour;
     private Long roomCapacity;
     private Float roomArea;
-    private boolean status;
+    private Long status;
     private String description;
     private Long createdById;
     private Long updatedById;
