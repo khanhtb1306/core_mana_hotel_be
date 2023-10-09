@@ -78,7 +78,7 @@ public class InventoryCheckService {
             list.add(detail);
         }
 
-        if(list.isEmpty()) {
+        if(!list.isEmpty()) {
             repository2.saveAll(list);
         }
         else{
@@ -124,7 +124,7 @@ public class InventoryCheckService {
         return "Hủy kiểm kho thành công";
     }
 
-    public List<InventoryCheckDetail> findListInvetoryCheckDetailByInventoryCheckId(String id) {
+    public List<InventoryCheckDetail> findListInventoryCheckDetailByInventoryCheckId(String id) {
         return repository2.findListInventoryCheckDetailByInventoryCheckId(id);
     }
 
