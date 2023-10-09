@@ -43,7 +43,7 @@ public class InventoryCheckController {
     }
 
     @GetMapping("/details/{id}")
-    public List<InventoryCheckDetail> findListInvetoryCheckDetailByInventoryCheckId(@PathVariable String id) {
-        return service.findListInvetoryCheckDetailByInventoryCheckId(id);
+    public List<InventoryCheckDetail> findListInventoryCheckDetailByInventoryCheckId(@PathVariable String id) {
+        return service.findListInventoryCheckDetailByInventoryCheckId(id);
     }
 }
