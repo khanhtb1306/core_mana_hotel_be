@@ -19,6 +19,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class Staff implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id", nullable = false)
     private Long staffId;
 

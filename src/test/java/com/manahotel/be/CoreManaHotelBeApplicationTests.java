@@ -1,9 +1,6 @@
 package com.manahotel.be;
 
-import com.manahotel.be.model.dto.GoodsCategoryDTO;
-import com.manahotel.be.model.dto.GoodsDTO;
-import com.manahotel.be.model.dto.InventoryCheckDTO;
-import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
+import com.manahotel.be.model.dto.*;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsCategory;
 import com.manahotel.be.model.entity.InventoryCheck;
@@ -91,15 +88,18 @@ class CoreManaHotelBeApplicationTests {
 		GoodsDTO dto = new GoodsDTO();
 		dto.setGoodsName("Thịt trâu khô");
 		dto.setGoodsCategoryId("LH000001");
-		dto.setCost(97000F);
-		dto.setPrice(100000F);
-		dto.setUnit("Gói");
 		dto.setInventory(100000L);
 		dto.setMinInventory(100L);
 		dto.setMaxInventory(100000L);
 		dto.setNote("");
 		dto.setDescription("");
-		String message = goodsService.createGoods(dto);
+
+		GoodsUnitDTO dto2 = new GoodsUnitDTO();
+		dto2.setGoodsUnitName("Gói");
+		dto2.setCost(97000F);
+		dto2.setPrice(100000F);
+
+		String message = goodsService.createGoods(dto, dto2);
 		assertEquals("Tạo hàng hóa thành công", message);
 	}
 
@@ -142,15 +142,18 @@ class CoreManaHotelBeApplicationTests {
 		GoodsDTO dto = new GoodsDTO();
 		dto.setGoodsName("Thịt trâu khô");
 		dto.setGoodsCategoryId("LH000001");
-		dto.setCost(97000F);
-		dto.setPrice(100000F);
-		dto.setUnit("Hộp");
 		dto.setInventory(100000L);
 		dto.setMinInventory(100L);
 		dto.setMaxInventory(100000L);
 		dto.setNote("");
 		dto.setDescription("");
-		String message = goodsService.updateGoods("SP000004", dto);
+
+		GoodsUnitDTO dto2 = new GoodsUnitDTO();
+		dto2.setGoodsUnitName("Gói");
+		dto2.setCost(97000F);
+		dto2.setPrice(100000F);
+
+		String message = goodsService.updateGoods("SP000004", dto, dto2);
 		assertEquals("Cập nhật hàng hóa thành công", message);
 	}
 

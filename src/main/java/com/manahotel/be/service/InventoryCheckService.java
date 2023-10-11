@@ -7,12 +7,13 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.InventoryCheckDTO;
 import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
 import com.manahotel.be.model.entity.Goods;
+import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.model.entity.InventoryCheck;
 import com.manahotel.be.model.entity.InventoryCheckDetail;
 import com.manahotel.be.repository.GoodsRepository;
+import com.manahotel.be.repository.GoodsUnitRepository;
 import com.manahotel.be.repository.InventoryCheckDetailRepository;
 import com.manahotel.be.repository.InventoryCheckRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class InventoryCheckService {
 
     @Autowired
     private GoodsRepository repository3;
+
+    @Autowired
+    private GoodsUnitRepository repository4;
 
     public List<InventoryCheck> getAll() {
         return repository.findAll();
@@ -69,11 +73,13 @@ public class InventoryCheckService {
             Goods goods = findGoods(detailDTO.getGoodsId());
             detail.setGoods(goods);
 
+            GoodsUnit goodsUnit = repository4.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
+
             detail.setActualInventory(detailDTO.getActualInventory());
             detail.setQuantityDiscrepancy(detail.getActualInventory() - goods.getInventory());
-            detail.setValueDiscrepancy(detail.getQuantityDiscrepancy() * goods.getCost());
+            detail.setValueDiscrepancy(detail.getQuantityDiscrepancy() * goodsUnit.getCost());
             detail.setInventory(goods.getInventory());
-            detail.setCost(goods.getCost());
+            detail.setCost(goodsUnit.getCost());
 
             list.add(detail);
         }

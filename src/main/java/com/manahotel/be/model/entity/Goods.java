@@ -1,6 +1,7 @@
 package com.manahotel.be.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,15 +29,6 @@ public class Goods {
 
     @Column(name = "status")
     private Long status;
-
-    @Column(name = "cost")
-    private Float cost;
-
-    @Column(name = "price")
-    private Float price;
-
-    @Column(name = "unit", length = 250)
-    private String unit;
 
     @Column(name = "inventory")
     private Long inventory;

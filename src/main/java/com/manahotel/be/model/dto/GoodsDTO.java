@@ -10,9 +10,6 @@ public class GoodsDTO {
     private String goodsName;
     private String goodsCategoryId;
     private Long status;
-    private Float cost;
-    private Float price;
-    private String unit;
     private Long inventory;
     private Long minInventory;
     private Long maxInventory;
