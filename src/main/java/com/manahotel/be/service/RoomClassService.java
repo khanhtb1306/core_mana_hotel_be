@@ -21,10 +21,9 @@ public class RoomClassService {
     private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
-    public List<RoomCategory> getAllRoomClass() {
-        return roomClassRepository.findAll();
+    public List<Object[]> getAllRoomClassWithRoomCount() {
+        return roomClassRepository.findRoomCategoriesWithRoomCount();
     }
-
     private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) {
         roomClass.setRoomCategoryName(dto.getRoomCategoryName());
         roomClass.setPriceByDay(dto.getPriceByDay());
