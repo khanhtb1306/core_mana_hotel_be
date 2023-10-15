@@ -11,8 +11,8 @@ import java.util.List;
 public interface RoomClassRepository extends JpaRepository<RoomCategory, String> {
     RoomCategory findTopByOrderByRoomCategoryIdDesc();
 
-    @Query("SELECT rc, COUNT(r) FROM RoomCategory rc " +
+    @Query("SELECT rc, r.roomId, r.roomName, r.floor.floorId, r.status, COUNT(r) FROM RoomCategory rc " +
             "LEFT JOIN Room r ON rc.roomCategoryId = r.roomCategory.roomCategoryId " +
-            "GROUP BY rc")
+            "GROUP BY rc, r.roomId, r.roomName, r.floor.floorId, r.status")
     List<Object[]> findRoomCategoriesWithRoomCount();
 }
