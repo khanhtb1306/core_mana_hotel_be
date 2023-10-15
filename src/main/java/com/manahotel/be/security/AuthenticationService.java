@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.logging.Logger;
 
@@ -39,18 +40,23 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(staff);
         return AuthenticationResponse.builder().response(jwtToken).build();
     }
-
+    @CrossOrigin(origins = "http://localhost:8080")
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Staff staff = staffService.findByuserName(request.getUsername());
 
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getPassword(),
-                        request.getPassword()
-                )
-        );
-
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getPassword(),
+                            request.getPassword()
+                    )
+            );
+            var jwtToken = jwtService.generateToken(staff);
+            return AuthenticationResponse.builder().response(jwtToken).build();
+        }
+        catch (Exception e){
+            return AuthenticationResponse.builder().response("Username or password is wrong").build();
+        }
     }
 
     public void ResetPassword(Staff staff, String newPassword) {

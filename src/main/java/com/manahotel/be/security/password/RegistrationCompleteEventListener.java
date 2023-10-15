@@ -30,12 +30,12 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         String url = event.getApplicationUrl()+"/register/verifyEmail?token="+verificationToken;
         try {
             sendVerificationEmail(url);
-        } catch (UnsupportedEncodingException | MessagingException e) {
+        } catch (UnsupportedEncodingException | MessagingException | jakarta.mail.MessagingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void sendVerificationEmail(String url) throws UnsupportedEncodingException, MessagingException {
+    public void sendVerificationEmail(String url) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String subject = "Email Verification";
         String senderName = "User Registration Portal Service";
         String mailContent = "<p> Hi, "+ staff.getStaffName()+ ", </p>"+
@@ -43,7 +43,8 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
                 "Please, follow the link below to complete your registration.</p>"+
                 "<a href=\"" +url+ "\">Verify your email to activate your account</a>"+
                 "<p> Thank you <br> Users Registration Portal Service";
-        MimeMessage message = mailSender.createMimeMessage();
+
+        jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom("dailycodework@gmail.com", senderName);
         messageHelper.setTo(staff.getEmail());
@@ -51,7 +52,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         messageHelper.setText(mailContent, true);
         mailSender.send(message);
     }
-    public void sendPasswordResetVerificationEmail(String url,Staff staff) throws UnsupportedEncodingException, MessagingException {
+    public void sendPasswordResetVerificationEmail(String url,Staff staff) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String subject = "Password Reset Request Verification";
         String senderName = "User Registration Portal Service";
         String mailContent = "<p> Hi, "+ staff.getStaffName()+ ", </p>"+
@@ -59,7 +60,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
                 "Please, follow the link below to complete the action.</p>"+
                 "<a href=\"" +url+ "\">Reset password</a>"+
                 "<p> Users Registration Portal Service";
-        MimeMessage message = mailSender.createMimeMessage();
+        jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
         messageHelper.setFrom("dailycodework@gmail.com", senderName);
         messageHelper.setTo(staff.getEmail());
