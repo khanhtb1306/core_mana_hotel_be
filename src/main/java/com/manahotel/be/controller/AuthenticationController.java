@@ -45,7 +45,7 @@ public class AuthenticationController {
     @PostMapping("/password-reset-request")
     public String resetPasswordRequest(@RequestBody PasswordResetRequest passwordRequestUtil,
                                        final HttpServletRequest servletRequest)
-            throws UnsupportedEncodingException, MessagingException {
+            throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
 
         Optional<Staff> staff = staffService.findByEmail(passwordRequestUtil.getEmail());
         String passwordResetUrl = "";
@@ -62,7 +62,7 @@ public class AuthenticationController {
                 + request.getServerPort() + request.getContextPath();
     }
 
-    private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException {
+    private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String url = applicationUrl + "/reset-password?token" + passwordResetToken;
         eventListener.sendPasswordResetVerificationEmail(url,staff);
 //        log.info("Click the link to reset your password :  {}", url);
