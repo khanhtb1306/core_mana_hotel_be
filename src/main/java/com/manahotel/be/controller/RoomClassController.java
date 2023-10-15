@@ -16,8 +16,8 @@ public class RoomClassController {
     private RoomClassService roomClassService;
 
     @GetMapping
-    public List<RoomCategory> getAllRoomClass() {
-        return roomClassService.getAllRoomClass();
+    public List<Object[]> getAllRoomClass() {
+        return roomClassService.getAllRoomClassWithRoomCount();
     }
 
     @PostMapping
