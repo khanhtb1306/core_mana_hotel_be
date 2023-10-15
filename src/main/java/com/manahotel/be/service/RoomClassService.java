@@ -4,13 +4,17 @@ import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
+import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.RoomClassRepository;
+import com.manahotel.be.repository.RoomRepository;
+import jdk.jfr.Category;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,12 +22,27 @@ import java.util.List;
 public class RoomClassService {
     @Autowired
     private RoomClassRepository roomClassRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
     private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     public List<Object[]> getAllRoomClassWithRoomCount() {
-        return roomClassRepository.findRoomCategoriesWithRoomCount();
+        List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
+        List<Object[]> result = new ArrayList<>();
+        for(Object[] roomCategory: roomCategories){
+            RoomCategory rc = (RoomCategory) roomCategory[0];
+            Long roomCount = (Long) roomCategory[1];
+            List<Room> rooms = roomRepository.findByRoomCategory(rc);
+
+            Object[] roomCategoryWithRooms = {rc, roomCount, rooms.toArray()};
+            result.add(roomCategoryWithRooms);
+        }
+        return result;
     }
+
     private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) {
         roomClass.setRoomCategoryName(dto.getRoomCategoryName());
         roomClass.setPriceByDay(dto.getPriceByDay());
