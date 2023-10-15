@@ -4,12 +4,14 @@ import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.repository.CustomerRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class CustomerService {
     @Autowired
