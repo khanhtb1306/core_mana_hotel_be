@@ -40,11 +40,10 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(staff);
         return AuthenticationResponse.builder().response(jwtToken).build();
     }
-    @CrossOrigin(origins = "http://localhost:8080")
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Staff staff = staffService.findByuserName(request.getUsername());
 
-        try {
+//        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getPassword(),
@@ -53,10 +52,10 @@ public class AuthenticationService {
             );
             var jwtToken = jwtService.generateToken(staff);
             return AuthenticationResponse.builder().response(jwtToken).build();
-        }
-        catch (Exception e){
-            return AuthenticationResponse.builder().response("Username or password is wrong").build();
-        }
+//        }
+//        catch (Exception e){
+//            return AuthenticationResponse.builder().response("Username or password is wrong").build();
+//        }
     }
 
     public void ResetPassword(Staff staff, String newPassword) {
