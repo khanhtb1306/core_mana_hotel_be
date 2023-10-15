@@ -4,10 +4,13 @@ import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsDTO;
+import com.manahotel.be.model.dto.GoodsUnitDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsCategory;
+import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.repository.GoodsCategoryRepository;
 import com.manahotel.be.repository.GoodsRepository;
+import com.manahotel.be.repository.GoodsUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +29,14 @@ public class GoodsService {
     @Autowired
     private GoodsCategoryRepository repository2;
 
+    @Autowired
+    private GoodsUnitRepository repository3;
+
     public List<Goods> getAll() {
         return repository.findAll();
     }
 
-    public String createGoods(GoodsDTO dto) {
+    public String createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
 
         Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
         String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
@@ -46,10 +52,20 @@ public class GoodsService {
 
         repository.save(goods);
 
+        GoodsUnit goodsUnit = new GoodsUnit();
+        goodsUnit.setGoods(goods);
+
+        goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
+        goodsUnit.setCost(dto2.getCost());
+        goodsUnit.setPrice(dto2.getPrice());
+        goodsUnit.setIsDefault(true);
+
+        repository3.save(goodsUnit);
+
         return "Tạo hàng hóa thành công";
     }
 
-    public String updateGoods(String id, GoodsDTO dto) {
+    public String updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
 
         Goods goods = findGoodsById(id);
 
@@ -62,6 +78,13 @@ public class GoodsService {
         goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goods);
+
+        GoodsUnit goodsUnit = repository3.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
+        goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
+        goodsUnit.setCost(dto2.getCost());
+        goodsUnit.setPrice(dto2.getPrice());
+
+        repository3.save(goodsUnit);
 
         return "Cập nhật hàng hóa thành công";
     }
@@ -92,9 +115,6 @@ public class GoodsService {
         GoodsCategory category = findGoodsCategory(dto.getGoodsCategoryId());
         goods.setGoodsCategory(category);
 
-        goods.setCost(dto.getCost());
-        goods.setPrice(dto.getPrice());
-        goods.setUnit(dto.getUnit());
         goods.setInventory(dto.getInventory());
         goods.setMinInventory(dto.getMinInventory());
         goods.setMaxInventory(dto.getMaxInventory());

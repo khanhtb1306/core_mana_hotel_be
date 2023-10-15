@@ -2,6 +2,7 @@ package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.entity.Goods;
+import com.manahotel.be.service.GoodsRequest;
 import com.manahotel.be.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,13 @@ public class GoodsController {
     }
 
     @PostMapping
-    public String createGoods(@RequestBody GoodsDTO goodsDTO) {
-        return service.createGoods(goodsDTO);
+    public String createGoods(@RequestBody GoodsRequest goodsRequest) {
+        return service.createGoods(goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
     @PutMapping("/{id}")
-    public String updateGoods(@PathVariable String id, @RequestBody GoodsDTO goodsDTO) {
-        return service.updateGoods(id, goodsDTO);
+    public String updateGoods(@PathVariable String id, @RequestBody GoodsRequest goodsRequest) {
+        return service.updateGoods(id, goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
     @DeleteMapping("/{id}")
