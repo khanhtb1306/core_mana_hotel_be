@@ -63,6 +63,10 @@ public class Staff implements UserDetails {
     @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     @Column(name = "created_by_id")
     private Long createdById;
 

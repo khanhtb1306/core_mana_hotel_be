@@ -1,15 +1,11 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Table(name = "room_category")
 @Entity
@@ -44,6 +40,10 @@ public class RoomCategory {
 
     @Column(name = "description", length = 500)
     private String description;
+
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
 
     @Column(name = "created_by_id")
     private Long createdById;

@@ -74,6 +74,7 @@ CREATE TABLE `goods` (
                          `max_inventory` bigint DEFAULT NULL,
                          `note` varchar(250) DEFAULT NULL,
                          `description` varchar(500) DEFAULT NULL,
+                         `image` longblob,
                          `created_by_id` bigint DEFAULT NULL,
                          `updated_by_id` bigint DEFAULT NULL,
                          `created_date` timestamp NULL DEFAULT NULL,
@@ -199,6 +200,7 @@ CREATE TABLE `room` (
                         `status` int DEFAULT NULL,
                         `booking_status` int DEFAULT NULL,
                         `condition_status` int DEFAULT NULL,
+                        `image` longblob,
                         `note` varchar(250) DEFAULT NULL,
                         `created_by_id` int DEFAULT NULL,
                         `updated_by_id` int DEFAULT NULL,
@@ -229,6 +231,7 @@ CREATE TABLE `room_category` (
                                  `room_area` float DEFAULT NULL,
                                  `status` int DEFAULT NULL,
                                  `description` varchar(500) DEFAULT NULL,
+                                 `image` longblob,
                                  `created_by_id` bigint DEFAULT NULL,
                                  `updated_by_id` bigint DEFAULT NULL,
                                  `created_date` timestamp NULL DEFAULT NULL,
@@ -258,6 +261,7 @@ CREATE TABLE `staff` (
                          `identity` varchar(350) DEFAULT NULL,
                          `tax_code` varchar(350) DEFAULT NULL,
                          `phone_number` varchar(50) DEFAULT NULL,
+                         `image` longblob,
                          `created_by_id` bigint DEFAULT NULL,
                          `updated_by_id` bigint DEFAULT NULL,
                          `created_date` timestamp NULL DEFAULT NULL,
@@ -277,4 +281,4 @@ CREATE TABLE `staff` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-11 23:56:32
+-- Dump completed on 2023-10-16  0:41:06
