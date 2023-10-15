@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -34,15 +36,8 @@ public class AuthenticationService {
         staff.setRoleId(request.getRoleId());
         staffRepository.save(staff);
 
-//        StaffDTO staffDTO = new StaffDTO();
-//        staffDTO.setId(staff.getStaffId());
-//
-//        staffDTO.setUsername(staff.getUsername());
-//        staffDTO.setPassword(staff.getPassword());
-//        staffDTO.setRoleId(staff.getRoleId());
-
         var jwtToken = jwtService.generateToken(staff);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthenticationResponse.builder().response(jwtToken).build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -56,13 +51,11 @@ public class AuthenticationService {
                 )
         );
 
-//        StaffDTO staffDTO = new StaffDTO();
-//        staffDTO.setId(staff.getStaffId());
-//
-//        staffDTO.setUsername(staff.getUsername());
-//        staffDTO.setPassword(staff.getPassword());
-//        staffDTO.setRoleId(staff.getRoleId());
-        var jwtToken = jwtService.generateToken(staff);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+    public void ResetPassword(Staff staff, String newPassword) {
+        staff.setPassword(bcryptEncoder.encode(newPassword));
+        staffRepository.save(staff);
+
     }
 }
