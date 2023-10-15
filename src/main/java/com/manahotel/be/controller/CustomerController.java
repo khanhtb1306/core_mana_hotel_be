@@ -27,12 +27,12 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public void updateGoods(@PathVariable String id, CustomerDTO customerDTO) {
+    public void updateCutomer(@PathVariable String id, CustomerDTO customerDTO) {
         service.update(id, customerDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGoods(@PathVariable String id) {
+    public void deleteCutomer(@PathVariable String id) {
         service.delete(id);
     }
 

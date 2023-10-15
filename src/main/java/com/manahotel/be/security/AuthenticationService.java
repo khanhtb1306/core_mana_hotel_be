@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -32,35 +34,39 @@ public class AuthenticationService {
         staff.setRoleId(request.getRoleId());
         staffRepository.save(staff);
 
-//        StaffDTO staffDTO = new StaffDTO();
-//        staffDTO.setId(staff.getStaffId());
-//
-//        staffDTO.setUsername(staff.getUsername());
-//        staffDTO.setPassword(staff.getPassword());
-//        staffDTO.setRoleId(staff.getRoleId());
-
         var jwtToken = jwtService.generateToken(staff);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthenticationResponse.builder().response(jwtToken).build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Staff staff = staffService.findByuserName(request.getUserName());
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUserName(),
+                            request.getPassword()
+                    )
+            );
+
+            var jwtToken = jwtService.generateToken(staff);
+            return AuthenticationResponse.builder().response(jwtToken).build();
+        }
+        catch (Exception e){
+            if(staff == null){
+                return AuthenticationResponse.builder().response("Username is wrong").build();
+            }
+            else{
+                return AuthenticationResponse.builder().response("Password is wrong").build();
+            }
+        }
 
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUserName(),
-                        request.getPassword()
-                )
-        );
 
-//        StaffDTO staffDTO = new StaffDTO();
-//        staffDTO.setId(staff.getStaffId());
-//
-//        staffDTO.setUsername(staff.getUsername());
-//        staffDTO.setPassword(staff.getPassword());
-//        staffDTO.setRoleId(staff.getRoleId());
-        var jwtToken = jwtService.generateToken(staff);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+    public void ResetPassword(Staff staff, String newPassword) {
+        staff.setPassword(bcryptEncoder.encode(newPassword));
+        staffRepository.save(staff);
+
     }
 }

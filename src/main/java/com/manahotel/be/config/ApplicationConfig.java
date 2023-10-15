@@ -27,14 +27,7 @@ public class ApplicationConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//                StaffDTO staffDTO = new StaffDTO();
                 Staff staff = staffService.findByuserName(username);
-//                staffDTO.setId(staff.getStaffId());
-//                staffDTO.setUsername(staff.getUsername());
-//                staffDTO.setPassword(staff.getPassword());
-//                staffDTO.setRoleId(staff.getRoleId());
-
-//                return staffDTO;
                 return staff;
             }
         };
