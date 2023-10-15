@@ -17,59 +17,63 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<Customer> getAll(){
+    public List<Customer> getAll() {
         return customerRepository.findAll();
     }
 
-    public void create(CustomerDTO customerDTO){
-        Customer latestCutomer= customerRepository.findTopByOrderByCustomerIdDesc();
-        String latestId = (latestCutomer == null) ? null : latestCutomer.getCustomerId();
+    private void commonMapping(Customer c, CustomerDTO customerDTO) {
+        c.setCustomerName(customerDTO.getCustomerName());
+        c.setCustomerGroup(customerDTO.getCustomerGroup());
+        c.setPhoneNumber(customerDTO.getPhoneNumber());
+        c.setDob(customerDTO.getDob());
+        c.setEmail(customerDTO.getEmail());
+        c.setAddress(customerDTO.getAddress());
+        c.setIdentity(customerDTO.getIdentity());
+        c.setNationality(customerDTO.getNationality());
+        c.setTaxCode(customerDTO.getTaxCode());
+        c.setGender(customerDTO.isGender());
+    }
+
+    public String create(CustomerDTO customerDTO) {
+        Customer latestCustomer = customerRepository.findTopByOrderByCustomerIdDesc();
+        String latestId = (latestCustomer == null) ? null : latestCustomer.getCustomerId();
         String nextId = IdGenerator.generateId(latestId, "C");
 
         Customer c = new Customer();
         c.setCustomerId(nextId);
-        c.setCustomerName(customerDTO.getCustomerName());
-        c.setCustomerGroup(customerDTO.getCustomerGroup());
-        c.setPhoneNumber(customerDTO.getPhoneNumber());
-        c.setDob(customerDTO.getDob());
-        c.setEmail(customerDTO.getEmail());
-        c.setAddress(customerDTO.getAddress());
-        c.setIdentity(customerDTO.getIdentity());
-        c.setNationality(customerDTO.getNationality());
-        c.setTaxCode(customerDTO.getTaxCode());
-        c.setGender(customerDTO.isGender());
+
+        commonMapping(c, customerDTO);
+
         customerRepository.save(c);
 
+        return "Tạo thông tin khách hàng thành công";
     }
-    public void update(String customerId,CustomerDTO customerDTO){
 
-        Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists" ));
-        c.setCustomerName(customerDTO.getCustomerName());
-        c.setCustomerGroup(customerDTO.getCustomerGroup());
-        c.setPhoneNumber(customerDTO.getPhoneNumber());
-        c.setDob(customerDTO.getDob());
-        c.setEmail(customerDTO.getEmail());
-        c.setAddress(customerDTO.getAddress());
-        c.setIdentity(customerDTO.getIdentity());
-        c.setNationality(customerDTO.getNationality());
-        c.setTaxCode(customerDTO.getTaxCode());
-        c.setGender(customerDTO.isGender());
+    public String update(String customerId, CustomerDTO customerDTO) {
+
+        Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists"));
+
+        commonMapping(c, customerDTO);
+
         customerRepository.save(c);
+
+        return "Cập nhật thông tin khách hàng thành công";
     }
 
-    public void delete(String customerId){
+    public String delete(String customerId) {
         boolean exists = customerRepository.existsById(customerId);
-        if(!exists){
-            throw new IllegalStateException("customer with id " + customerId + " not exists" );
+        if (!exists) {
+            throw new IllegalStateException("customer with id " + customerId + " not exists");
         }
         customerRepository.deleteById(customerId);
 
+        return "Xóa thông tin khách hàng thành công";
     }
 
-    public Optional<Customer> getById(String customerId){
+    public Optional<Customer> getById(String customerId) {
         boolean exists = customerRepository.existsById(customerId);
-        if(!exists){
-            throw new IllegalStateException("customer with id " + customerId + " not exists" );
+        if (!exists) {
+            throw new IllegalStateException("customer with id " + customerId + " not exists");
         }
         return customerRepository.findById(customerId);
     }

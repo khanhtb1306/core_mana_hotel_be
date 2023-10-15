@@ -22,18 +22,18 @@ public class CustomerController {
     }
 
     @PostMapping
-    public void createCutomer(CustomerDTO customerDTO) {
-         service.create(customerDTO);
+    public String createCustomer(@RequestBody CustomerDTO customerDTO) {
+         return service.create(customerDTO);
     }
 
     @PutMapping("/{id}")
-    public void updateCutomer(@PathVariable String id, CustomerDTO customerDTO) {
-        service.update(id, customerDTO);
+    public String updateGoods(@PathVariable String id, @RequestBody CustomerDTO customerDTO) {
+        return service.update(id, customerDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCutomer(@PathVariable String id) {
-        service.delete(id);
+    public String deleteGoods(@PathVariable String id) {
+        return service.delete(id);
     }
 
     @GetMapping("/{id}")

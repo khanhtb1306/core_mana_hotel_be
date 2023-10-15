@@ -15,21 +15,23 @@ import java.util.logging.Logger;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+
     @Autowired
     private final StaffRepository staffRepository;
+
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
     @Autowired
     private StaffService staffService;
+
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
         Staff staff = new Staff();
-        staff.setStaffId(request.getStaffId());
-        staff.setUsername(request.getUserName());
+        staff.setUsername(request.getUsername());
         staff.setPassword(bcryptEncoder.encode(request.getPassword()));
         staff.setRoleId(request.getRoleId());
         staffRepository.save(staff);
@@ -39,28 +41,15 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        Staff staff = staffService.findByuserName(request.getUserName());
-        try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUserName(),
-                            request.getPassword()
-                    )
-            );
-
-            var jwtToken = jwtService.generateToken(staff);
-            return AuthenticationResponse.builder().response(jwtToken).build();
-        }
-        catch (Exception e){
-            if(staff == null){
-                return AuthenticationResponse.builder().response("Username is wrong").build();
-            }
-            else{
-                return AuthenticationResponse.builder().response("Password is wrong").build();
-            }
-        }
+        Staff staff = staffService.findByuserName(request.getUsername());
 
 
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getPassword(),
+                        request.getPassword()
+                )
+        );
 
     }
 
