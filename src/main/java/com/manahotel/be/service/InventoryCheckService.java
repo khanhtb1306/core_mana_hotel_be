@@ -14,6 +14,7 @@ import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.GoodsUnitRepository;
 import com.manahotel.be.repository.InventoryCheckDetailRepository;
 import com.manahotel.be.repository.InventoryCheckRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class InventoryCheckService {
 
@@ -90,30 +92,45 @@ public class InventoryCheckService {
     }
 
     public String createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+        try {
+            log.info("----- Add Check Start -----");
+            InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
+            String latestId = (latestCheck == null) ? null : latestCheck.getInventoryCheckId();
+            String nextId = IdGenerator.generateId(latestId, "KK");
 
-        InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
-        String latestId = (latestCheck == null) ? null : latestCheck.getInventoryCheckId();
-        String nextId = IdGenerator.generateId(latestId, "KK");
+            InventoryCheck check = new InventoryCheck();
+            check.setInventoryCheckId(nextId);
+            check.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
-        InventoryCheck check = new InventoryCheck();
-        check.setInventoryCheckId(nextId);
-        check.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            commonMapping(check, dto, listDetailDTO);
+            log.info("----- Add Check End -----");
 
-        commonMapping(check, dto, listDetailDTO);
-
-        return "Tạo kiểm kho thành công";
+            return "Tạo kiểm kho thành công";
+        }
+        catch (Exception e) {
+            log.info("Can't add inventory check", e.getMessage());
+            return "Tạo kiểm kho thất bại";
+        }
     }
 
     public String updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
-        InventoryCheck check = findInventoryCheckById(id);
+        try {
+            log.info("----- Update Check Start -----");
+            InventoryCheck check = findInventoryCheckById(id);
 
-        if (check == null) {
-            return null;
+            if (check == null) {
+                return null;
+            }
+
+            commonMapping(check, dto, listDetailDTO);
+            log.info("----- Update Check End -----");
+
+            return "Cập nhật kiểm kho thành công";
         }
-
-        commonMapping(check, dto, listDetailDTO);
-
-        return "Cập nhật kiểm kho thành công";
+        catch (Exception e) {
+            log.info("Can't update inventory check", e.getMessage());
+            return "Cập nhật kiểm kho thất bại";
+        }
     }
 
     public List<InventoryCheck> getAllCheck() {
@@ -121,10 +138,16 @@ public class InventoryCheckService {
     }
 
     public String cancelCheck(String id) {
-        InventoryCheck check = findInventoryCheckById(id);
-        check.setStatus(Status.CANCEL);
-        repository.save(check);
-        return "Hủy kiểm kho thành công";
+        try {
+            InventoryCheck check = findInventoryCheckById(id);
+            check.setStatus(Status.CANCEL);
+            repository.save(check);
+            return "Hủy kiểm kho thành công";
+        }
+        catch (Exception e) {
+            log.info("Can't update inventory check", e.getMessage());
+            return "Hủy kiểm kho thất bại";
+        }
     }
 
     public List<InventoryCheckDetail> findListInventoryCheckDetailByInventoryCheckId(String id) {

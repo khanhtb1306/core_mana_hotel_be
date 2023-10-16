@@ -20,6 +20,7 @@ import java.util.*;
 @Slf4j
 @Service
 public class RoomClassService {
+
     @Autowired
     private RoomClassRepository roomClassRepository;
 
