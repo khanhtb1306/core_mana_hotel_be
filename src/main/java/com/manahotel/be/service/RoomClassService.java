@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -29,16 +31,21 @@ public class RoomClassService {
     private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
-    public List<Object[]> getAllRoomClassWithRoomCount() {
+    public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
         List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
-        List<Object[]> result = new ArrayList<>();
-        for(Object[] roomCategory: roomCategories){
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Object[] roomCategory : roomCategories) {
             RoomCategory rc = (RoomCategory) roomCategory[0];
             Long roomCount = (Long) roomCategory[1];
             List<Room> rooms = roomRepository.findByRoomCategory(rc);
 
-            Object[] roomCategoryWithRooms = {rc, roomCount, rooms.toArray()};
-            result.add(roomCategoryWithRooms);
+            Map<String, Object> roomInfo = new HashMap<>();
+            roomInfo.put("roomCategory", rc);
+            roomInfo.put("roomTotal", roomCount);
+            roomInfo.put("listRoom", rooms.toArray());
+
+            result.add(roomInfo);
         }
         return result;
     }
