@@ -1,6 +1,7 @@
 package com.manahotel.be.model.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 @Data
@@ -12,9 +13,10 @@ public class RoomDTO {
     private Long status;
     private Long bookingStatus;
     private Long conditionStatus;
+    private MultipartFile image;
     private String note;
     private Long createdById;
     private Long updatedById;
-    private String createdDate;
-    private String updatedDate;
+    private Timestamp createdDate;
+    private Timestamp updatedDate;
 }

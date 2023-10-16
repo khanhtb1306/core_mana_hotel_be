@@ -15,9 +15,6 @@ import java.util.List;
 @Service
 public class GoodsCategoryService {
 
-    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
-    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
-
     @Autowired
     private GoodsCategoryRepository repository;
 
@@ -30,7 +27,7 @@ public class GoodsCategoryService {
         GoodsCategory goodsCategory = new GoodsCategory();
         goodsCategory.setGoodsCategoryId(nextId);
         goodsCategory.setGoodsCategoryName(dto.getGoodsCategoryName());
-        goodsCategory.setStatus(ACTIVATE);
+        goodsCategory.setStatus(Status.ACTIVATE);
         goodsCategory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         repository.save(goodsCategory);
@@ -62,7 +59,7 @@ public class GoodsCategoryService {
             return null;
         }
 
-        goodsCategory.setStatus(DEACTIVATE);
+        goodsCategory.setStatus(Status.DEACTIVATE);
 
         repository.save(goodsCategory);
 

@@ -13,7 +13,6 @@ import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -24,13 +23,12 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+
     @Autowired
     private FloorRepository floorRepository;
+
     @Autowired
     private RoomClassService roomClassService;
-
-    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
-    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     //Get All List Room
     public List<Room> getAllRoom() {
@@ -51,9 +49,10 @@ public class RoomService {
             room.setRoomCategory(roomCategory);
             Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
-            room.setStatus(ACTIVATE);
+            room.setStatus(Status.ACTIVATE);
             room.setBookingStatus(0L);
             room.setConditionStatus(0L);
+            room.setImage(dto.getImage().getBytes());
             room.setNote(dto.getNote());
             room.setCreatedById(dto.getCreatedById());
             room.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -81,6 +80,7 @@ public class RoomService {
             Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
             room.setNote(dto.getNote());
+            room.setImage(dto.getImage().getBytes());
             room.setUpdatedById(dto.getCreatedById());
             room.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
@@ -100,7 +100,7 @@ public class RoomService {
                 log.info("Can't find room id");
                 return null;
             }
-            room.setStatus(DEACTIVATE);
+            room.setStatus(Status.DEACTIVATE);
             roomRepository.save(room);
 
             return "Xóa phòng thành công";
@@ -175,7 +175,7 @@ public class RoomService {
                 return null;
             }
 
-            floor.setStatus(DEACTIVATE);
+            floor.setStatus(Status.DEACTIVATE);
             floorRepository.save(floor);
 
             return "Xóa tầng thành công";

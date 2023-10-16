@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -24,9 +25,6 @@ public class RoomClassService {
 
     @Autowired
     private  RoomRepository roomRepository;
-
-    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
-    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
         List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
@@ -44,7 +42,7 @@ public class RoomClassService {
         return result;
     }
 
-    private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) {
+    private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) throws IOException {
         roomClass.setRoomCategoryName(dto.getRoomCategoryName());
         roomClass.setPriceByDay(dto.getPriceByDay());
         roomClass.setPriceByNight(dto.getPriceByNight());
@@ -52,6 +50,7 @@ public class RoomClassService {
         roomClass.setRoomCapacity(dto.getRoomCapacity());
         roomClass.setRoomArea(dto.getRoomArea());
         roomClass.setDescription(dto.getDescription());
+        roomClass.setImage(dto.getImage().getBytes());
     }
 
     public String createRoomClass(RoomCategoryDTO dto) {
@@ -63,7 +62,7 @@ public class RoomClassService {
 
             RoomCategory roomClass = new RoomCategory();
             roomClass.setRoomCategoryId(nextId);
-            roomClass.setStatus(ACTIVATE);
+            roomClass.setStatus(Status.ACTIVATE);
 
             commonMapping(roomClass, dto);
 
@@ -110,7 +109,7 @@ public class RoomClassService {
                 return null;
             }
 
-            roomClass.setStatus(DEACTIVATE);
+            roomClass.setStatus(Status.DEACTIVATE);
             roomClassRepository.save(roomClass);
 
             return "Xóa hạng phòng thành công";

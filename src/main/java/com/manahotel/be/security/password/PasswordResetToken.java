@@ -1,6 +1,5 @@
 package com.manahotel.be.security.password;
 
-import com.manahotel.be.model.dto.StaffDTO;
 import com.manahotel.be.model.entity.Staff;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

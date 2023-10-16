@@ -1,6 +1,7 @@
 package com.manahotel.be.model.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
@@ -15,6 +16,7 @@ public class GoodsDTO {
     private Long maxInventory;
     private String note;
     private String description;
+    private MultipartFile image;
     private Long createdById;
     private Long updatedById;
     private Timestamp createdDate;

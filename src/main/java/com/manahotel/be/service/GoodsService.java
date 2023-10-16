@@ -14,14 +14,12 @@ import com.manahotel.be.repository.GoodsUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 public class GoodsService {
-
-    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
-    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
 
     @Autowired
     private GoodsRepository repository;
@@ -37,56 +35,64 @@ public class GoodsService {
     }
 
     public String createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
+        try {
+            Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
+            String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
+            String nextId = IdGenerator.generateId(latestId, "SP");
 
-        Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
-        String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
-        String nextId = IdGenerator.generateId(latestId, "SP");
+            Goods goods = new Goods();
+            goods.setGoodsId(nextId);
+            goods.setStatus(Status.ACTIVATE);
 
-        Goods goods = new Goods();
-        goods.setGoodsId(nextId);
-        goods.setStatus(ACTIVATE);
+            commonMapping(goods, dto);
 
-        commonMapping(goods, dto);
+            goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
-        goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            repository.save(goods);
 
-        repository.save(goods);
+            GoodsUnit goodsUnit = new GoodsUnit();
+            goodsUnit.setGoods(goods);
 
-        GoodsUnit goodsUnit = new GoodsUnit();
-        goodsUnit.setGoods(goods);
+            goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
+            goodsUnit.setCost(dto2.getCost());
+            goodsUnit.setPrice(dto2.getPrice());
+            goodsUnit.setIsDefault(true);
 
-        goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
-        goodsUnit.setCost(dto2.getCost());
-        goodsUnit.setPrice(dto2.getPrice());
-        goodsUnit.setIsDefault(true);
+            repository3.save(goodsUnit);
 
-        repository3.save(goodsUnit);
-
-        return "Tạo hàng hóa thành công";
+            return "Tạo hàng hóa thành công";
+        }
+        catch (Exception e) {
+            return "Tạo hàng hóa thất bại";
+        }
     }
 
     public String updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
+        try{
+            Goods goods = findGoodsById(id);
 
-        Goods goods = findGoodsById(id);
+            if (goods == null) {
+                return null;
+            }
 
-        if (goods == null) {
-            return null;
+            commonMapping(goods, dto);
+
+            goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+
+            repository.save(goods);
+
+            GoodsUnit goodsUnit = repository3.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
+            goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
+            goodsUnit.setCost(dto2.getCost());
+            goodsUnit.setPrice(dto2.getPrice());
+
+            repository3.save(goodsUnit);
+
+            return "Cập nhật hàng hóa thành công";
         }
-
-        commonMapping(goods, dto);
-
-        goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-
-        repository.save(goods);
-
-        GoodsUnit goodsUnit = repository3.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
-        goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
-        goodsUnit.setCost(dto2.getCost());
-        goodsUnit.setPrice(dto2.getPrice());
-
-        repository3.save(goodsUnit);
-
-        return "Cập nhật hàng hóa thành công";
+        catch (Exception e) {
+            return "Cập nhật hàng hóa thất bại";
+        }
     }
 
     public String deleteGoods(String id) {
@@ -97,7 +103,7 @@ public class GoodsService {
             return null;
         }
 
-        goods.setStatus(DEACTIVATE);
+        goods.setStatus(Status.DEACTIVATE);
 
         repository.save(goods);
 
@@ -109,7 +115,7 @@ public class GoodsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
     }
 
-    private void commonMapping(Goods goods, GoodsDTO dto) {
+    private void commonMapping(Goods goods, GoodsDTO dto) throws IOException {
         goods.setGoodsName(dto.getGoodsName());
 
         GoodsCategory category = findGoodsCategory(dto.getGoodsCategoryId());
@@ -120,6 +126,7 @@ public class GoodsService {
         goods.setMaxInventory(dto.getMaxInventory());
         goods.setNote(dto.getNote());
         goods.setDescription(dto.getDescription());
+        goods.setImage(dto.getImage().getBytes());
     }
 
     private GoodsCategory findGoodsCategory(String id) {

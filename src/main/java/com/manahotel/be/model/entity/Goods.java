@@ -45,6 +45,10 @@ public class Goods {
     @Column(name = "description", length = 500)
     private String description;
 
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     @Column(name = "created_by_id")
     private Long createdById;
 

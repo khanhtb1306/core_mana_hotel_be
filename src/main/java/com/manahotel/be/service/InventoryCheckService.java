@@ -25,9 +25,6 @@ import java.util.Optional;
 @Service
 public class InventoryCheckService {
 
-    private static final Long TEMPORARY = Status.TEMPORARY.getStatusId();
-    private static final Long CANCEL = Status.CANCEL.getStatusId();
-
     @Autowired
     private InventoryCheckRepository repository;
 
@@ -47,7 +44,7 @@ public class InventoryCheckService {
     private void commonMapping(InventoryCheck check, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         check.setStatus(dto.getStatus());
 
-        if (check.getStatus().equals(TEMPORARY)) {
+        if (check.getStatus().equals(Status.TEMPORARY)) {
             check.setTimeBalance(null);
         } else {
             Timestamp timeBalance = Optional.ofNullable(dto.getTimeBalance())
@@ -125,7 +122,7 @@ public class InventoryCheckService {
 
     public String cancelCheck(String id) {
         InventoryCheck check = findInventoryCheckById(id);
-        check.setStatus(CANCEL);
+        check.setStatus(Status.CANCEL);
         repository.save(check);
         return "Hủy kiểm kho thành công";
     }

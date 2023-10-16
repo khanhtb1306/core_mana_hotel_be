@@ -40,6 +40,10 @@ public class Room {
     @Column(name = "condition_status")
     private Long conditionStatus;
 
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     @Column(name = "note", length = 250)
     private String note;
 
