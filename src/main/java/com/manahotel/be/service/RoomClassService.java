@@ -4,27 +4,47 @@ import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
+import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.RoomClassRepository;
+import com.manahotel.be.repository.RoomRepository;
+import jdk.jfr.Category;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
 public class RoomClassService {
-
     @Autowired
     private RoomClassRepository roomClassRepository;
 
-    public List<Object[]> getAllRoomClassWithRoomCount() {
-        return roomClassRepository.findRoomCategoriesWithRoomCount();
+    @Autowired
+    private  RoomRepository roomRepository;
+
+    private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
+    private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
+
+    public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
+        List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Object[] roomCategory : roomCategories) {
+            RoomCategory rc = (RoomCategory) roomCategory[0];
+            Long roomCount = (Long) roomCategory[1];
+            Map<String, Object> roomInfo = new HashMap<>();
+            roomInfo.put("roomCategory", rc);
+            roomInfo.put("roomTotal", roomCount);
+
+            result.add(roomInfo);
+        }
+        return result;
     }
-    private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) throws IOException {
+
+    private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) {
         roomClass.setRoomCategoryName(dto.getRoomCategoryName());
         roomClass.setPriceByDay(dto.getPriceByDay());
         roomClass.setPriceByNight(dto.getPriceByNight());
@@ -32,7 +52,6 @@ public class RoomClassService {
         roomClass.setRoomCapacity(dto.getRoomCapacity());
         roomClass.setRoomArea(dto.getRoomArea());
         roomClass.setDescription(dto.getDescription());
-        roomClass.setImage(dto.getImage().getBytes());
     }
 
     public String createRoomClass(RoomCategoryDTO dto) {
@@ -44,7 +63,7 @@ public class RoomClassService {
 
             RoomCategory roomClass = new RoomCategory();
             roomClass.setRoomCategoryId(nextId);
-            roomClass.setStatus(Status.ACTIVATE);
+            roomClass.setStatus(ACTIVATE);
 
             commonMapping(roomClass, dto);
 
@@ -91,7 +110,7 @@ public class RoomClassService {
                 return null;
             }
 
-            roomClass.setStatus(Status.DEACTIVATE);
+            roomClass.setStatus(DEACTIVATE);
             roomClassRepository.save(roomClass);
 
             return "Xóa hạng phòng thành công";
@@ -106,5 +125,18 @@ public class RoomClassService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Room Class not found with id " + id));
+    }
+
+    public Map<String, Object> getAllRoomClassWithListRoom(String id) {
+        RoomCategory roomCategory = getRoomCategoryById(id);
+        Map<String, Object> roomInfo = new HashMap<>();
+
+        if (roomCategory != null) {
+            List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
+            roomInfo.put("roomCategory", roomCategory);
+            roomInfo.put("listRoom", rooms);
+        }
+
+        return roomInfo;
     }
 }

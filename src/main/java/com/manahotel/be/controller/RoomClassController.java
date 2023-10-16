@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/room-class")
@@ -16,7 +17,7 @@ public class RoomClassController {
     private RoomClassService roomClassService;
 
     @GetMapping
-    public List<Object[]> getAllRoomClass() {
+    public List<Map<String, Object>> getAllRoomClass() {
         return roomClassService.getAllRoomClassWithRoomCount();
     }
 
@@ -36,8 +37,8 @@ public class RoomClassController {
     }
 
     @GetMapping("/{id}")
-    public RoomCategory getRoomClassById(@PathVariable String id) {
-        return roomClassService.getRoomCategoryById(id);
+    public Map<String, Object> getRoomClassById(@PathVariable String id) {
+        return roomClassService.getAllRoomClassWithListRoom(id);
     }
 
 }
