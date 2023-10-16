@@ -1,0 +1,32 @@
+spring:
+  main:
+    banner-mode: off
+  security:
+    user:
+      name: admin
+      password: admin
+  datasource:
+    ## MySQL config test
+    url: jdbc:mysql://localhost:3306/MANAHOTEL_DB
+    username: root
+    password: 123456
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nguyenhuync2937@gmail.com
+    password: huyhuy2937
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
+
+
