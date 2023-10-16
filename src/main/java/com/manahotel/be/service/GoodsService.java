@@ -11,6 +11,7 @@ import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.repository.GoodsCategoryRepository;
 import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.GoodsUnitRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Slf4j
 @Service
 public class GoodsService {
 
@@ -36,6 +38,7 @@ public class GoodsService {
 
     public String createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
+            log.info("----- Add Goods Start -----");
             Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
             String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
             String nextId = IdGenerator.generateId(latestId, "SP");
@@ -49,7 +52,9 @@ public class GoodsService {
             goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
             repository.save(goods);
+            log.info("----- Add Goods End -----");
 
+            log.info("----- Add Unit Start -----");
             GoodsUnit goodsUnit = new GoodsUnit();
             goodsUnit.setGoods(goods);
 
@@ -59,19 +64,22 @@ public class GoodsService {
             goodsUnit.setIsDefault(true);
 
             repository3.save(goodsUnit);
-
+            log.info("----- Add Unit End -----");
             return "Tạo hàng hóa thành công";
         }
         catch (Exception e) {
+            log.info("Can't add goods", e.getMessage());
             return "Tạo hàng hóa thất bại";
         }
     }
 
     public String updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
         try{
+            log.info("----- Update Goods Start -----");
             Goods goods = findGoodsById(id);
 
             if (goods == null) {
+                log.info("Can't find the goods");
                 return null;
             }
 
@@ -80,34 +88,47 @@ public class GoodsService {
             goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             repository.save(goods);
+            log.info("----- Update Goods End -----");
 
+            log.info("----- Update Unit Start -----");
             GoodsUnit goodsUnit = repository3.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
             goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
             goodsUnit.setCost(dto2.getCost());
             goodsUnit.setPrice(dto2.getPrice());
 
             repository3.save(goodsUnit);
+            log.info("----- Update Unit Done -----");
 
             return "Cập nhật hàng hóa thành công";
         }
         catch (Exception e) {
+            log.info("Can't update goods", e.getMessage());
             return "Cập nhật hàng hóa thất bại";
         }
     }
 
     public String deleteGoods(String id) {
 
-        Goods goods = findGoodsById(id);
+        try {
+            log.info("----- Delete Goods Start -----");
+            Goods goods = findGoodsById(id);
 
-        if (goods == null) {
-            return null;
+            if (goods == null) {
+                log.info("Can't find the goods");
+                return null;
+            }
+
+            goods.setStatus(Status.DEACTIVATE);
+
+            repository.save(goods);
+            log.info("----- Delete Goods End -----");
+
+            return "Xóa hàng hóa thành công";
         }
-
-        goods.setStatus(Status.DEACTIVATE);
-
-        repository.save(goods);
-
-        return "Xóa hàng hóa thành công";
+        catch (Exception e) {
+            log.info("Can't delete goods", e.getMessage());
+            return "Xóa hàng hóa thất bại";
+        }
     }
 
     public Goods findGoodsById(String id) {
