@@ -6,14 +6,20 @@ spring:
       name: admin
       password: admin
   datasource:
-    ## MySQL config test
+    # MySQL config test
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/MANAHOTEL_DB
     username: root
     password: 123456
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
   mail:
     host: smtp.gmail.com
     port: 587
