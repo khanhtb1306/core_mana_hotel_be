@@ -37,8 +37,8 @@ public class RoomClassController {
     }
 
     @GetMapping("/{id}")
-    public RoomCategory getRoomClassById(@PathVariable String id) {
-        return roomClassService.getRoomCategoryById(id);
+    public Map<String, Object> getRoomClassById(@PathVariable String id) {
+        return roomClassService.getAllRoomClassWithListRoom(id);
     }
 
 }

@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -26,7 +23,7 @@ public class RoomClassService {
     private RoomClassRepository roomClassRepository;
 
     @Autowired
-    private RoomRepository roomRepository;
+    private  RoomRepository roomRepository;
 
     private static final Long ACTIVATE = Status.ACTIVATE.getStatusId();
     private static final Long DEACTIVATE = Status.DEACTIVATE.getStatusId();
@@ -38,12 +35,9 @@ public class RoomClassService {
         for (Object[] roomCategory : roomCategories) {
             RoomCategory rc = (RoomCategory) roomCategory[0];
             Long roomCount = (Long) roomCategory[1];
-            List<Room> rooms = roomRepository.findByRoomCategory(rc);
-
             Map<String, Object> roomInfo = new HashMap<>();
             roomInfo.put("roomCategory", rc);
             roomInfo.put("roomTotal", roomCount);
-            roomInfo.put("listRoom", rooms.toArray());
 
             result.add(roomInfo);
         }
@@ -131,5 +125,18 @@ public class RoomClassService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Room Class not found with id " + id));
+    }
+
+    public Map<String, Object> getAllRoomClassWithListRoom(String id) {
+        RoomCategory roomCategory = getRoomCategoryById(id);
+        Map<String, Object> roomInfo = new HashMap<>();
+
+        if (roomCategory != null) {
+            List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
+            roomInfo.put("roomCategory", roomCategory);
+            roomInfo.put("listRoom", rooms);
+        }
+
+        return roomInfo;
     }
 }
