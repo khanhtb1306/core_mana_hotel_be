@@ -1,7 +1,6 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.RoomCategoryDTO;
-import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.service.RoomClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

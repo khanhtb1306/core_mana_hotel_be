@@ -22,12 +22,12 @@ public class GoodsController {
     }
 
     @PostMapping
-    public String createGoods(@RequestBody GoodsRequest goodsRequest) {
+    public String createGoods(GoodsRequest goodsRequest) {
         return service.createGoods(goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
     @PutMapping("/{id}")
-    public String updateGoods(@PathVariable String id, @RequestBody GoodsRequest goodsRequest) {
+    public String updateGoods(@PathVariable String id, GoodsRequest goodsRequest) {
         return service.updateGoods(id, goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
