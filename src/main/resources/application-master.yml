@@ -1,0 +1,28 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://manahoteldb.chcfkjpxl2uk.ap-southeast-1.rds.amazonaws.com:3306/MANAHOTEL_DB
+    username: manahoteldb
+    password: manahoteldb_123
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nguyenhuync2937@gmail.com
+    password: huyhuy2937
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
