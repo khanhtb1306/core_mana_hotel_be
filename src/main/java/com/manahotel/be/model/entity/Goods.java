@@ -1,16 +1,13 @@
 package com.manahotel.be.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
-@Table(name = "goods", indexes = {
-        @Index(name = "pk_g_gc_idx", columnList = "goods_category_id")
-})
+@Table(name = "goods")
 @Entity
 @Data
 @AllArgsConstructor
@@ -23,9 +20,8 @@ public class Goods {
     @Column(name = "goods_name", length = 250)
     private String goodsName;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "goods_category_id", nullable = false)
-    private GoodsCategory goodsCategory;
+    @Column(name = "goods_category")
+    private boolean goodsCategory;
 
     @Column(name = "status")
     private Long status;

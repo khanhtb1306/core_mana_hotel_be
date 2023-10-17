@@ -6,9 +6,7 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.dto.GoodsUnitDTO;
 import com.manahotel.be.model.entity.Goods;
-import com.manahotel.be.model.entity.GoodsCategory;
 import com.manahotel.be.model.entity.GoodsUnit;
-import com.manahotel.be.repository.GoodsCategoryRepository;
 import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.GoodsUnitRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -27,13 +28,36 @@ public class GoodsService {
     private GoodsRepository repository;
 
     @Autowired
-    private GoodsCategoryRepository repository2;
-
-    @Autowired
-    private GoodsUnitRepository repository3;
+    private GoodsUnitRepository repository2;
 
     public List<Goods> getAll() {
         return repository.findAll();
+    }
+
+    public List<Map<String, Object>> getAllGoodsWithGoodsUnit() {
+        List<Object[]> listGoods = repository.findGoodWithGoodUnits();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Object[] goods : listGoods) {
+            Goods g = (Goods) goods[0];
+            List<GoodsUnit> listGoodsUnit = repository2.findGoodsUnitByGoods(g);
+            Map<String, Object> goodsInfo = new HashMap<>();
+            goodsInfo.put("goods", g);
+            goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
+
+            result.add(goodsInfo);
+        }
+        return result;
+    }
+
+    public Map<String, Object> getGoodsWithGoodsUnitById(String id) {
+        Goods goods = findGoodsById(id);
+        Map<String, Object> goodsInfo = new HashMap<>();
+        List<GoodsUnit> listGoodsUnit = repository2.findGoodsUnitByGoods(goods);
+        goodsInfo.put("goods", goods);
+        goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
+        return goodsInfo;
     }
 
     public String createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
@@ -63,7 +87,7 @@ public class GoodsService {
             goodsUnit.setPrice(dto2.getPrice());
             goodsUnit.setIsDefault(true);
 
-            repository3.save(goodsUnit);
+            repository2.save(goodsUnit);
             log.info("----- Add Unit End -----");
             return "Tạo hàng hóa thành công";
         }
@@ -91,12 +115,12 @@ public class GoodsService {
             log.info("----- Update Goods End -----");
 
             log.info("----- Update Unit Start -----");
-            GoodsUnit goodsUnit = repository3.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
+            GoodsUnit goodsUnit = repository2.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
             goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
             goodsUnit.setCost(dto2.getCost());
             goodsUnit.setPrice(dto2.getPrice());
 
-            repository3.save(goodsUnit);
+            repository2.save(goodsUnit);
             log.info("----- Update Unit Done -----");
 
             return "Cập nhật hàng hóa thành công";
@@ -138,20 +162,12 @@ public class GoodsService {
 
     private void commonMapping(Goods goods, GoodsDTO dto) throws IOException {
         goods.setGoodsName(dto.getGoodsName());
-
-        GoodsCategory category = findGoodsCategory(dto.getGoodsCategoryId());
-        goods.setGoodsCategory(category);
-
+        goods.setGoodsCategory(dto.isGoodsCategory());
         goods.setInventory(dto.getInventory());
         goods.setMinInventory(dto.getMinInventory());
         goods.setMaxInventory(dto.getMaxInventory());
         goods.setNote(dto.getNote());
         goods.setDescription(dto.getDescription());
         goods.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
-    }
-
-    private GoodsCategory findGoodsCategory(String id) {
-        return repository2.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Goods Category not found with id " + id));
     }
 }

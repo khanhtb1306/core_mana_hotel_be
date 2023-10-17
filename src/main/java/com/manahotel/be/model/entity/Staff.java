@@ -10,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Timestamp;
 import java.util.Collection;
 
-@Table(name = "staff", indexes = {
-        @Index(name = "pk_s_r_idx", columnList = "role_id")
-})
+@Table(name = "staff")
 @Entity
 @Data
 @NoArgsConstructor
@@ -31,13 +29,6 @@ public class Staff implements UserDetails {
 
     @Column(name = "password", length = 150)
     private String password;
-//
-//    @ManyToOne(optional = false)
-//    @JoinColumn(name = "role_id", nullable = false)
-//    private Role role;
-
-    @Column(name = "role_id")
-    private int roleId;
 
     @Column(name = "status")
     private Long status;

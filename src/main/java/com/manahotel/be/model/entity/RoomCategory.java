@@ -29,8 +29,11 @@ public class RoomCategory {
     @Column(name = "price_by_hour")
     private Float priceByHour;
 
-    @Column(name = "room_capacity")
-    private Long roomCapacity;
+    @Column(name = "num_of_adults")
+    private Long numOfAdults;
+
+    @Column(name = "num_of_children")
+    private Long numOfChildren;
 
     @Column(name = "room_area")
     private Float roomArea;

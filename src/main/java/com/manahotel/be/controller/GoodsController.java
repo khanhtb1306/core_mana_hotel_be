@@ -1,6 +1,5 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.service.GoodsRequest;
 import com.manahotel.be.service.GoodsService;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/goods")
@@ -17,8 +17,8 @@ public class GoodsController {
     private GoodsService service;
 
     @GetMapping
-    public List<Goods> getAll() {
-        return service.getAll();
+    public List<Map<String, Object>> getAll() {
+        return service.getAllGoodsWithGoodsUnit();
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class GoodsController {
     }
 
     @GetMapping("/{id}")
-    public Goods getGoodsById(@PathVariable String id) {
-        return service.findGoodsById(id);
+    public Map<String, Object> getGoodsById(@PathVariable String id) {
+        return service.getGoodsWithGoodsUnitById(id);
     }
 }
