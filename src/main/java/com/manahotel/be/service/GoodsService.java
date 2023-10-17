@@ -147,7 +147,7 @@ public class GoodsService {
         goods.setMaxInventory(dto.getMaxInventory());
         goods.setNote(dto.getNote());
         goods.setDescription(dto.getDescription());
-        goods.setImage(dto.getImage().getBytes());
+        goods.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
     }
 
     private GoodsCategory findGoodsCategory(String id) {

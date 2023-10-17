@@ -51,7 +51,7 @@ public class RoomClassService {
         roomClass.setRoomCapacity(dto.getRoomCapacity());
         roomClass.setRoomArea(dto.getRoomArea());
         roomClass.setDescription(dto.getDescription());
-        roomClass.setImage(dto.getImage().getBytes());
+        roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
     }
 
     public String createRoomClass(RoomCategoryDTO dto) {
