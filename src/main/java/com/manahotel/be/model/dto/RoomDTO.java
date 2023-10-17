@@ -17,6 +17,4 @@ public class RoomDTO {
     private String note;
     private Long createdById;
     private Long updatedById;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
 }

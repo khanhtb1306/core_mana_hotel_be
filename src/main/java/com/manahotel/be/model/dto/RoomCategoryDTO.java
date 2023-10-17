@@ -17,6 +17,4 @@ public class RoomCategoryDTO {
     private MultipartFile image;
     private Long createdById;
     private Long updatedById;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
 }
