@@ -15,8 +15,4 @@ public class RoomDTO {
     private Long conditionStatus;
     private MultipartFile image;
     private String note;
-    private Long createdById;
-    private Long updatedById;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
 }
