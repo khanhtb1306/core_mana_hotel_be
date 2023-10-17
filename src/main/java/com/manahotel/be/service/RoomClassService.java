@@ -51,7 +51,8 @@ public class RoomClassService {
         roomClass.setRoomCapacity(dto.getRoomCapacity());
         roomClass.setRoomArea(dto.getRoomArea());
         roomClass.setDescription(dto.getDescription());
-        roomClass.setImage(dto.getImage().getBytes());
+        roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+
     }
 
     public String createRoomClass(RoomCategoryDTO dto) {
@@ -68,7 +69,7 @@ public class RoomClassService {
             commonMapping(roomClass, dto);
 
             roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            roomClass.setCreatedById(dto.getCreatedById());
+//            roomClass.setCreatedById(dto.getCreatedById());
             roomClassRepository.save(roomClass);
             log.info("------- Add Room Class End -------");
             return "Tạo hạng phòng thành công";
@@ -90,7 +91,7 @@ public class RoomClassService {
             commonMapping(roomClass, dto);
 
             roomClass.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-            roomClass.setUpdatedById(dto.getCreatedById());
+//            roomClass.setUpdatedById(dto.getCreatedById());
 
             roomClassRepository.save(roomClass);
 
