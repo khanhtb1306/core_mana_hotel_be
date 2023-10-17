@@ -9,7 +9,7 @@ spring:
     password: manahoteldb_123
     hikari:
       poolName: Hikari
-      auto-commit: false
+      auto-commit: true
       data-source-properties:
         cachePrepStmts: true
         prepStmtCacheSize: 250
