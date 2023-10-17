@@ -4,7 +4,6 @@ import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.FloorDTO;
-import com.manahotel.be.model.dto.RoomCategoryDTO;
 import com.manahotel.be.model.dto.RoomDTO;
 import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
