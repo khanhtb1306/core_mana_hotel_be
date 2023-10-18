@@ -19,8 +19,4 @@ public class StaffDTO {
     private String taxCode;
     private String phoneNumber;
     private MultipartFile image;
-    private Long createdById;
-    private Long updatedById;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
 }
