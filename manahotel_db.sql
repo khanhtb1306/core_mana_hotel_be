@@ -67,7 +67,7 @@ DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods` (
                          `goods_id` varchar(50) NOT NULL,
                          `goods_name` varchar(250) DEFAULT NULL,
-                         `goods_category_id` varchar(50) NOT NULL,
+                         `goods_category` bit(1) DEFAULT NULL,
                          `status` int DEFAULT NULL,
                          `inventory` bigint DEFAULT NULL,
                          `min_inventory` bigint DEFAULT NULL,
@@ -79,28 +79,7 @@ CREATE TABLE `goods` (
                          `updated_by_id` bigint DEFAULT NULL,
                          `created_date` timestamp NULL DEFAULT NULL,
                          `updated_date` timestamp NULL DEFAULT NULL,
-                         PRIMARY KEY (`goods_id`),
-                         KEY `pk_g_gc_idx` (`goods_category_id`),
-                         CONSTRAINT `pk_g_gc` FOREIGN KEY (`goods_category_id`) REFERENCES `goods_category` (`goods_category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `goods_category`
---
-
-DROP TABLE IF EXISTS `goods_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `goods_category` (
-                                  `goods_category_id` varchar(50) NOT NULL,
-                                  `goods_category_name` varchar(250) DEFAULT NULL,
-                                  `status` int DEFAULT NULL,
-                                  `created_by_id` int DEFAULT NULL,
-                                  `updated_by_id` int DEFAULT NULL,
-                                  `created_date` timestamp NULL DEFAULT NULL,
-                                  `updated_date` timestamp NULL DEFAULT NULL,
-                                  PRIMARY KEY (`goods_category_id`)
+                         PRIMARY KEY (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -121,7 +100,7 @@ CREATE TABLE `goods_unit` (
                               PRIMARY KEY (`goods_unit_id`),
                               KEY `pk_gu_g_idx` (`goods_id`),
                               CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,22 +146,19 @@ CREATE TABLE `inventory_check_detail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `role`
+-- Table structure for table `password_reset_token`
 --
 
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `password_reset_token`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-                        `role_id` int NOT NULL AUTO_INCREMENT,
-                        `role_name` varchar(250) DEFAULT NULL,
-                        `status` bit(1) DEFAULT NULL,
-                        `created_by_id` bigint DEFAULT NULL,
-                        `updated_by_id` bigint DEFAULT NULL,
-                        `created_date` timestamp NULL DEFAULT NULL,
-                        `updated_date` timestamp NULL DEFAULT NULL,
-                        PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `password_reset_token` (
+                                        `token_id` bigint NOT NULL,
+                                        `token` varchar(200) DEFAULT NULL,
+                                        `staff_id` bigint DEFAULT NULL,
+                                        `expiration_time` timestamp NULL DEFAULT NULL,
+                                        PRIMARY KEY (`token_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +203,8 @@ CREATE TABLE `room_category` (
                                  `price_by_day` float DEFAULT NULL,
                                  `price_by_night` float DEFAULT NULL,
                                  `price_by_hour` float DEFAULT NULL,
-                                 `room_capacity` bigint DEFAULT NULL,
+                                 `num_of_adults` bigint DEFAULT NULL,
+                                 `num_of_children` bigint DEFAULT NULL,
                                  `room_area` float DEFAULT NULL,
                                  `status` int DEFAULT NULL,
                                  `description` varchar(500) DEFAULT NULL,
@@ -252,7 +229,7 @@ CREATE TABLE `staff` (
                          `staff_name` varchar(250) DEFAULT NULL,
                          `username` varchar(50) DEFAULT NULL,
                          `password` varchar(150) DEFAULT NULL,
-                         `role_id` int NOT NULL,
+                         `role` varchar(250) DEFAULT NULL,
                          `status` int DEFAULT NULL,
                          `dob` timestamp NULL DEFAULT NULL,
                          `address` varchar(350) DEFAULT NULL,
@@ -266,9 +243,7 @@ CREATE TABLE `staff` (
                          `updated_by_id` bigint DEFAULT NULL,
                          `created_date` timestamp NULL DEFAULT NULL,
                          `updated_date` timestamp NULL DEFAULT NULL,
-                         PRIMARY KEY (`staff_id`),
-                         KEY `pk_s_r_idx` (`role_id`),
-                         CONSTRAINT `pk_s_r` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+                         PRIMARY KEY (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -281,4 +256,4 @@ CREATE TABLE `staff` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-16  0:41:06
+-- Dump completed on 2023-10-18 15:28:12

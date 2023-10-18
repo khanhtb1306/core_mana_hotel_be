@@ -8,7 +8,6 @@ import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
-import jdk.jfr.Category;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,8 @@ public class RoomClassService {
         roomClass.setPriceByDay(dto.getPriceByDay());
         roomClass.setPriceByNight(dto.getPriceByNight());
         roomClass.setPriceByHour(dto.getPriceByHour());
-        roomClass.setRoomCapacity(dto.getRoomCapacity());
+        roomClass.setNumOfAdults(dto.getNumOfAdults());
+        roomClass.setNumOfChildren(dto.getNumOfChildren());
         roomClass.setRoomArea(dto.getRoomArea());
         roomClass.setDescription(dto.getDescription());
         roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
@@ -110,7 +110,7 @@ public class RoomClassService {
                 return null;
             }
 
-            roomClass.setStatus(Status.DEACTIVATE);
+            roomClass.setStatus(Status.DELETE);
             roomClassRepository.save(roomClass);
 
             return "Xóa hạng phòng thành công";

@@ -10,7 +10,8 @@ public class RoomCategoryDTO {
     private Float priceByDay;
     private Float priceByNight;
     private Float priceByHour;
-    private Long roomCapacity;
+    private Long numOfAdults;
+    private Long numOfChildren;
     private Float roomArea;
     private Long status;
     private String description;

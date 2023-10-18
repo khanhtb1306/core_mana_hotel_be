@@ -2,13 +2,13 @@
 <configuration>
     <property name="LOGS" value="./logs" />
     <appender name = "FILE" class = "ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/u01/manahotel/data_manahotel/data_manahotel_log/manahotel.log</file>
+        <file>/home/ec2-user/u01/manahotel/data_manahotel/data_manahotel_log/manahotel.log</file>
         <encoder>
             <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [${appName}] %-5level [%thread] %logger{50}.%M - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                /u01/manahotel/data_manahotel/data_manahotel_log/manahotel_%d{yyyy-MM-dd}.%i.log.zip
+                /home/ec2-user/u01/manahotel/data_manahotel/data_manahotel_log/manahotel_%d{yyyy-MM-dd}.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>

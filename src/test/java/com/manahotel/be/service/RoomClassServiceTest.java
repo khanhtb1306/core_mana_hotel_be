@@ -40,7 +40,8 @@ class RoomClassServiceTest {
         dto.setPriceByDay(100.0F);
         dto.setPriceByNight(80.0F);
         dto.setPriceByHour(20.0F);
-        dto.setRoomCapacity(2L);
+        dto.setNumOfAdults(2L);
+        dto.setNumOfChildren(2L);
         dto.setRoomArea(30.0F);
         dto.setDescription("Test Description");
 //        dto.setCreatedById(1L);
@@ -51,7 +52,8 @@ class RoomClassServiceTest {
         roomCategory.setPriceByDay(dto.getPriceByDay());
         roomCategory.setPriceByNight(dto.getPriceByNight());
         roomCategory.setPriceByHour(dto.getPriceByHour());
-        roomCategory.setRoomCapacity(dto.getRoomCapacity());
+        roomCategory.setNumOfAdults(dto.getNumOfAdults());
+        roomCategory.setNumOfChildren(dto.getNumOfChildren());
         roomCategory.setRoomArea(dto.getRoomArea());
         roomCategory.setDescription(dto.getDescription());
         roomCategory.setStatus(Status.ACTIVATE);
@@ -73,7 +75,8 @@ class RoomClassServiceTest {
         dto.setPriceByDay(120.0F);
         dto.setPriceByNight(100.0F);
         dto.setPriceByHour(25.0F);
-        dto.setRoomCapacity(3L);
+        dto.setNumOfAdults(3L);
+        dto.setNumOfChildren(3L);
         dto.setRoomArea(35F);
         dto.setDescription("Updated Description");
 //        dto.setCreatedById(2L);
@@ -84,7 +87,8 @@ class RoomClassServiceTest {
         roomCategory.setPriceByDay(dto.getPriceByDay());
         roomCategory.setPriceByNight(dto.getPriceByNight());
         roomCategory.setPriceByHour(dto.getPriceByHour());
-        roomCategory.setRoomCapacity(dto.getRoomCapacity());
+        roomCategory.setNumOfAdults(dto.getNumOfAdults());
+        roomCategory.setNumOfChildren(dto.getNumOfChildren());
         roomCategory.setRoomArea(dto.getRoomArea());
         roomCategory.setDescription(dto.getDescription());
         roomCategory.setUpdatedDate(Mockito.any(Timestamp.class));

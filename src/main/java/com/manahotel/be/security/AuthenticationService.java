@@ -9,9 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
-import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +31,6 @@ public class AuthenticationService {
         Staff staff = new Staff();
         staff.setUsername(request.getUsername());
         staff.setPassword(bcryptEncoder.encode(request.getPassword()));
-        staff.setRoleId(request.getRoleId());
         staffRepository.save(staff);
 
         var jwtToken = jwtService.generateToken(staff);

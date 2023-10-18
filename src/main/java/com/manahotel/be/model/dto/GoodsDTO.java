@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class GoodsDTO {
     private String goodsId;
     private String goodsName;
-    private String goodsCategoryId;
+    private boolean goodsCategory;
     private Long status;
     private Long inventory;
     private Long minInventory;
