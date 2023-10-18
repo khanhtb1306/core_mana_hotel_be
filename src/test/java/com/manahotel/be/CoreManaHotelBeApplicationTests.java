@@ -2,10 +2,8 @@ package com.manahotel.be;
 
 import com.manahotel.be.model.dto.*;
 import com.manahotel.be.model.entity.Goods;
-import com.manahotel.be.model.entity.GoodsCategory;
 import com.manahotel.be.model.entity.InventoryCheck;
 import com.manahotel.be.model.entity.InventoryCheckDetail;
-import com.manahotel.be.service.GoodsCategoryService;
 import com.manahotel.be.service.GoodsService;
 import com.manahotel.be.service.InventoryCheckResponse;
 import com.manahotel.be.service.InventoryCheckService;
@@ -22,21 +20,10 @@ import static org.junit.Assert.*;
 class CoreManaHotelBeApplicationTests {
 
 	@Autowired
-	private GoodsCategoryService goodsCategoryService;
-
-	@Autowired
 	private GoodsService goodsService;
 
 	@Autowired
 	private InventoryCheckService inventoryCheckService;
-
-	@Test
-	void loadGoodsCategory() {
-		List<GoodsCategory> goodsCategories = goodsCategoryService.getAll();
-		assertTrue(goodsCategories.size() >= 0);
-		assertNotNull(goodsCategories);
-		assertFalse(goodsCategories.isEmpty());
-	}
 
 	@Test
 	void loadGoods() {
@@ -55,13 +42,6 @@ class CoreManaHotelBeApplicationTests {
 	}
 
 	@Test
-	void getGoodsCategoryById() {
-		GoodsCategory good = goodsCategoryService.getGoodsCategoryById("LH000001");
-		assertNotNull(good);
-		assertEquals("LH000001", good.getGoodsCategoryId());
-	}
-
-	@Test
 	void getGoodsById() {
 		Goods good = goodsService.findGoodsById("SP000001");
 		assertNotNull(good);
@@ -76,18 +56,10 @@ class CoreManaHotelBeApplicationTests {
 	}
 
 	@Test
-	void addGoodsCategory() {
-		GoodsCategoryDTO dto = new GoodsCategoryDTO();
-		dto.setGoodsCategoryName("Đồ ăn");
-		String message = goodsCategoryService.createGoodsCategory(dto);
-		assertEquals("Tạo loại hàng thành công", message);
-	}
-
-	@Test
 	void addGoods() {
 		GoodsDTO dto = new GoodsDTO();
 		dto.setGoodsName("Thịt trâu khô");
-		dto.setGoodsCategoryId("LH000001");
+		dto.setGoodsCategory(true);
 		dto.setInventory(100000L);
 		dto.setMinInventory(100L);
 		dto.setMaxInventory(100000L);
@@ -130,18 +102,10 @@ class CoreManaHotelBeApplicationTests {
 	}
 
 	@Test
-	void updateGoodsCategory() {
-		GoodsCategoryDTO dto = new GoodsCategoryDTO();
-		dto.setGoodsCategoryName("Đồ uống");
-		String message = goodsCategoryService.updateGoodsCategory("LH000003", dto);
-		assertEquals("Cập nhật loại hàng thành công", message);
-	}
-
-	@Test
 	void updateGoods() {
 		GoodsDTO dto = new GoodsDTO();
 		dto.setGoodsName("Thịt trâu khô");
-		dto.setGoodsCategoryId("LH000001");
+		dto.setGoodsCategory(true);
 		dto.setInventory(100000L);
 		dto.setMinInventory(100L);
 		dto.setMaxInventory(100000L);
@@ -181,12 +145,6 @@ class CoreManaHotelBeApplicationTests {
 
 		String message = inventoryCheckService.updateInventoryCheck("KK000003", ic, listIcd);
 		assertEquals("Cập nhật kiểm kho thành công", message);
-	}
-
-	@Test
-	void deleteGoodsCategory() {
-		String message = goodsCategoryService.deleteGoodsCategory("LH000003");
-		assertEquals("Xóa loại hàng thành công", message);
 	}
 
 	@Test

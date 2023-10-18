@@ -9,8 +9,8 @@ import java.sql.Timestamp;
 public class StaffDTO {
     private String username;
     private String password;
-    private Long roleId;
     private Long status;
+    private String role;
     private Timestamp dob;
     private String address;
     private String email;
