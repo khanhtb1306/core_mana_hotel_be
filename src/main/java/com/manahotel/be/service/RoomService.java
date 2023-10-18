@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -35,20 +36,29 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
+    private void commonMapping(Room room, RoomDTO dto) throws IOException {
+        room.setRoomName(dto.getRoomName());
+        room.setNote(dto.getNote());
+        room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+    }
+
     public String createRoom(RoomDTO dto) {
         try {
             log.info("------- Add Room Start -------");
             Room latestRoom = roomRepository.findTopByOrderByRoomIdDesc();
             String latestId = (latestRoom == null) ? null : latestRoom.getRoomId();
             String nextId = IdGenerator.generateId(latestId, "P");
-
             Room room = new Room();
             room.setRoomId(nextId);
-            room.setRoomName(dto.getRoomName());
+
+            commonMapping(room, dto);
+
             RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
+
             Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
+
             room.setStatus(Status.ACTIVATE);
             room.setBookingStatus(0L);
             room.setConditionStatus(0L);
@@ -74,9 +84,11 @@ public class RoomService {
                 return null;
             }
 
-            room.setRoomName(dto.getRoomName());
+            commonMapping(room, dto);
+
             RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
+
             Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
             room.setNote(dto.getNote());
@@ -178,10 +190,10 @@ public class RoomService {
             floor.setStatus(Status.DEACTIVATE);
             floorRepository.save(floor);
 
-            return "Xóa tầng thành công";
+            return "Xóa khu vực thành công";
         } catch (Exception e) {
             log.info("Can't Delete Floor", e.getMessage());
-            return "Xóa tầng thất bại";
+            return "Xóa Khu vực thất bại";
         }
     }
 

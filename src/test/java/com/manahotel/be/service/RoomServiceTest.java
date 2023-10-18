@@ -49,7 +49,7 @@ class RoomServiceTest {
         roomDTO.setRoomCategoryId("HP000001");
         roomDTO.setFloorId(1L);
         roomDTO.setNote("Test Room Note");
-        roomDTO.setCreatedById(1L);
+//        roomDTO.setCreatedById(1L);
 
         RoomCategory existingRoomCategory = new RoomCategory();
         existingRoomCategory.setRoomCategoryId("HP000001");
@@ -73,7 +73,7 @@ class RoomServiceTest {
         roomDTO.setRoomCategoryId("HP000002");
         roomDTO.setFloorId(2L);
         roomDTO.setNote("Updated Room Note");
-        roomDTO.setCreatedById(2L);
+//        roomDTO.setCreatedById(2L);
 
         Room existingRoom = new Room();
         existingRoom.setRoomId("P000001");
