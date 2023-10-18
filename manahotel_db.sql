@@ -100,7 +100,7 @@ CREATE TABLE `goods_unit` (
                               PRIMARY KEY (`goods_unit_id`),
                               KEY `pk_gu_g_idx` (`goods_id`),
                               CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,9 +155,11 @@ DROP TABLE IF EXISTS `password_reset_token`;
 CREATE TABLE `password_reset_token` (
                                         `token_id` bigint NOT NULL,
                                         `token` varchar(200) DEFAULT NULL,
-                                        `staff_id` bigint DEFAULT NULL,
+                                        `staff_id` bigint NOT NULL,
                                         `expiration_time` timestamp NULL DEFAULT NULL,
-                                        PRIMARY KEY (`token_id`)
+                                        PRIMARY KEY (`token_id`),
+                                        KEY `fk_prt_s_idx` (`staff_id`),
+                                        CONSTRAINT `fk_prt_s` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -256,4 +258,4 @@ CREATE TABLE `staff` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-18 15:28:12
+-- Dump completed on 2023-10-18 22:03:33
