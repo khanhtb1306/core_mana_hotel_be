@@ -44,7 +44,7 @@ class RoomClassServiceTest {
         dto.setNumOfChildren(2L);
         dto.setRoomArea(30.0F);
         dto.setDescription("Test Description");
-        dto.setCreatedById(1L);
+//        dto.setCreatedById(1L);
 
         RoomCategory roomCategory = new RoomCategory();
         roomCategory.setRoomCategoryId("HP000001");
@@ -58,7 +58,7 @@ class RoomClassServiceTest {
         roomCategory.setDescription(dto.getDescription());
         roomCategory.setStatus(Status.ACTIVATE);
         roomCategory.setCreatedDate(Mockito.any(Timestamp.class));
-        roomCategory.setCreatedById(dto.getCreatedById());
+//        roomCategory.setCreatedById(dto.getCreatedById());
 
         Mockito.when(roomClassRepository.findTopByOrderByRoomCategoryIdDesc()).thenReturn(null);
         Mockito.when(roomClassRepository.save(Mockito.any(RoomCategory.class))).thenReturn(roomCategory);
@@ -79,7 +79,7 @@ class RoomClassServiceTest {
         dto.setNumOfChildren(3L);
         dto.setRoomArea(35F);
         dto.setDescription("Updated Description");
-        dto.setCreatedById(2L);
+//        dto.setCreatedById(2L);
 
         RoomCategory roomCategory = new RoomCategory();
         roomCategory.setRoomCategoryId(id);
@@ -92,7 +92,7 @@ class RoomClassServiceTest {
         roomCategory.setRoomArea(dto.getRoomArea());
         roomCategory.setDescription(dto.getDescription());
         roomCategory.setUpdatedDate(Mockito.any(Timestamp.class));
-        roomCategory.setUpdatedById(dto.getCreatedById());
+//        roomCategory.setUpdatedById(dto.getCreatedById());
 
         Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.of(roomCategory));
         Mockito.when(roomClassRepository.save(Mockito.any(RoomCategory.class))).thenReturn(roomCategory);
