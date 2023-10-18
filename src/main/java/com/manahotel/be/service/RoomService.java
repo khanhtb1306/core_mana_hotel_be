@@ -64,7 +64,6 @@ public class RoomService {
             room.setConditionStatus(0L);
             room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
             room.setNote(dto.getNote());
-            room.setCreatedById(dto.getCreatedById());
             room.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Add Room End -------");
@@ -93,7 +92,6 @@ public class RoomService {
             room.setFloor(floor);
             room.setNote(dto.getNote());
             room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
-            room.setUpdatedById(dto.getCreatedById());
             room.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Update Room End -------");

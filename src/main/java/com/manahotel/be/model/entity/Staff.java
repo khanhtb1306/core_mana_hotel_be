@@ -30,7 +30,6 @@ public class Staff implements UserDetails {
     @Column(name = "password", length = 150)
     private String password;
 
-
     @Column(name = "role", length = 250)
     private String role;
 
