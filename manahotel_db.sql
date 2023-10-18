@@ -100,7 +100,7 @@ CREATE TABLE `goods_unit` (
                               PRIMARY KEY (`goods_unit_id`),
                               KEY `pk_gu_g_idx` (`goods_id`),
                               CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,22 +146,19 @@ CREATE TABLE `inventory_check_detail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `role`
+-- Table structure for table `password_reset_token`
 --
 
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `password_reset_token`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-                        `role_id` int NOT NULL AUTO_INCREMENT,
-                        `role_name` varchar(250) DEFAULT NULL,
-                        `status` int DEFAULT NULL,
-                        `created_by_id` bigint DEFAULT NULL,
-                        `updated_by_id` bigint DEFAULT NULL,
-                        `created_date` timestamp NULL DEFAULT NULL,
-                        `updated_date` timestamp NULL DEFAULT NULL,
-                        PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `password_reset_token` (
+                                        `token_id` bigint NOT NULL,
+                                        `token` varchar(200) DEFAULT NULL,
+                                        `staff_id` bigint DEFAULT NULL,
+                                        `expiration_time` timestamp NULL DEFAULT NULL,
+                                        PRIMARY KEY (`token_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,6 +229,7 @@ CREATE TABLE `staff` (
                          `staff_name` varchar(250) DEFAULT NULL,
                          `username` varchar(50) DEFAULT NULL,
                          `password` varchar(150) DEFAULT NULL,
+                         `role` varchar(250) DEFAULT NULL,
                          `status` int DEFAULT NULL,
                          `dob` timestamp NULL DEFAULT NULL,
                          `address` varchar(350) DEFAULT NULL,
@@ -258,4 +256,4 @@ CREATE TABLE `staff` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-18  2:31:05
+-- Dump completed on 2023-10-18 15:28:12
