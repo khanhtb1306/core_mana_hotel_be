@@ -111,14 +111,16 @@ public class RoomClassService {
                 return "NOT_FOUND";
             }
             if (roomClassHasRooms(roomClass)) {
+                log.info("Room class has associated rooms");
                 return "BAD_REQUEST";
             }
             roomClass.setStatus(Status.DELETE);
             roomClassRepository.save(roomClass);
 
+            log.info("Room class deleted successfully");
             return "success";
         } catch (Exception e) {
-            log.info("Can't Delete Room Class", e.getMessage());
+            log.error("Failed to delete Room Class", e);
             return "DeleteFail";
         }
     }

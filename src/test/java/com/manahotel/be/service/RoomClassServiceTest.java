@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
+import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
@@ -13,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -100,19 +103,24 @@ class RoomClassServiceTest {
 //        String result2 = roomClassService.deleteRoomClassById(id);
 //
 //        assertEquals("NOT_FOUND", result2); // Now the test should pass
-//
-//        // Scenario 3: Room class has rooms associated with it
+
+        // Scenario 3: Room class has rooms associated with it
 //        RoomCategory roomCategory3 = new RoomCategory();
 //        roomCategory3.setRoomCategoryId(id);
 //        roomCategory3.setStatus(Status.ACTIVATE);
 //
+//        // Mock the behavior of repository
 //        Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.of(roomCategory3));
+//        // Mock the method roomClassHasRooms to return true
 //        Mockito.when(roomClassService.roomClassHasRooms(roomCategory3)).thenReturn(true);
 //
 //        String result3 = roomClassService.deleteRoomClassById(id);
 //
 //        assertEquals("BAD_REQUEST", result3);
+//
+//        // Verify that the room class status and repository were not modified or called
 //        assertEquals(Status.ACTIVATE, roomCategory3.getStatus());
 //        Mockito.verifyNoMoreInteractions(roomClassRepository);
+
     }
 }
