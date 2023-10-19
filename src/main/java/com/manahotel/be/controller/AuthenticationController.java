@@ -1,7 +1,10 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.security.*;
+import com.manahotel.be.security.AuthenticationRequest;
+import com.manahotel.be.security.AuthenticationResponse;
+import com.manahotel.be.security.AuthenticationService;
+import com.manahotel.be.security.RegisterRequest;
 import com.manahotel.be.security.password.PasswordResetRequest;
 import com.manahotel.be.security.password.RegistrationCompleteEventListener;
 import com.manahotel.be.service.StaffService;
@@ -17,6 +20,7 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -34,6 +38,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
@@ -63,7 +68,7 @@ public class AuthenticationController {
 
     private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
-        eventListener.sendPasswordResetVerificationEmail(url,staff);
+        eventListener.sendPasswordResetVerificationEmail(url, staff);
         log.info("Click the link to reset your password :  {}", url);
         return url;
     }

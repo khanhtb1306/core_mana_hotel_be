@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CoreManaHotelBeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CoreManaHotelBeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CoreManaHotelBeApplication.class, args);
+    }
 
 }
