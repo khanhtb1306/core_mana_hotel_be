@@ -8,6 +8,8 @@ import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.GoodsUnitRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +24,11 @@ public class GoodsUnitService {
     @Autowired
     private GoodsRepository repository2;
 
-    public List<GoodsUnit> getAll() {
-        return repository.findAll();
+    public ResponseEntity<List<GoodsUnit>> getAll() {
+        return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
 
-    public String createGoodsUnit(GoodsUnitDTO dto) {
+    public ResponseEntity<String> createGoodsUnit(GoodsUnitDTO dto) {
         try {
             log.info("----- Add Unit Start -----");
             GoodsUnit goodsUnit = new GoodsUnit();
@@ -42,15 +44,15 @@ public class GoodsUnitService {
             repository.save(goodsUnit);
             log.info("----- Add Unit End -----");
 
-            return "Tạo đơn vị thành công";
+            return new ResponseEntity<>("Tạo đơn vị thành công", HttpStatus.OK);
         }
         catch(Exception e) {
             log.info("Can't add unit", e.getMessage());
-            return "Tạo đơn vị thất bại";
+            return new ResponseEntity<>("Tạo đơn vị thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String updateGoodsUnit(Long id, GoodsUnitDTO dto) {
+    public ResponseEntity<String> updateGoodsUnit(Long id, GoodsUnitDTO dto) {
         try {
             log.info("----- Update Unit Start -----");
             GoodsUnit goodsUnit = findGoodsUnitById(id);
@@ -61,26 +63,26 @@ public class GoodsUnitService {
             repository.save(goodsUnit);
             log.info("----- Update Unit End -----");
 
-            return "Cập nhật đơn vị thành công";
+            return new ResponseEntity<>("Cập nhật đơn vị thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't update unit", e.getMessage());
-            return "Cập nhật đơn vị thất bại";
+            return new ResponseEntity<>("Cập nhật đơn vị thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String deleteGoodsUnit(Long id) {
+    public ResponseEntity<String> deleteGoodsUnit(Long id) {
         try {
             log.info("----- Delete Unit Start -----");
             GoodsUnit goodsUnit = findGoodsUnitById(id);
             repository.delete(goodsUnit);
             log.info("----- Delete Unit End -----");
 
-            return "Xóa đơn vị thành công";
+            return new ResponseEntity<>("Xóa đơn vị thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't delete unit", e.getMessage());
-            return  "Xóa đơn vị thất bại";
+            return new ResponseEntity<>("Xóa đơn vị thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

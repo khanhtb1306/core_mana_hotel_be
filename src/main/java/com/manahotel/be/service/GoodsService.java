@@ -45,6 +45,7 @@ public class GoodsService {
             goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
             result.add(goodsInfo);
         }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

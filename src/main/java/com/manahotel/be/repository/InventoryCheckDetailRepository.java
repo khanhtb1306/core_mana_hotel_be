@@ -1,5 +1,6 @@
 package com.manahotel.be.repository;
 
+import com.manahotel.be.model.entity.InventoryCheck;
 import com.manahotel.be.model.entity.InventoryCheckDetail;
 import com.manahotel.be.service.InventoryCheckResponse;
 import jakarta.transaction.Transactional;
@@ -31,4 +32,6 @@ public interface InventoryCheckDetailRepository extends JpaRepository<InventoryC
 
     @Query("SELECT icd FROM InventoryCheckDetail icd WHERE icd.inventoryCheck.inventoryCheckId = :id")
     List<InventoryCheckDetail> findListInventoryCheckDetailByInventoryCheckId(String id);
+
+    List<InventoryCheckDetail> findInventoryCheckDetailByInventoryCheck(InventoryCheck inventoryCheck);
 }
