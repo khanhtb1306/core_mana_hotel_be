@@ -25,8 +25,12 @@ public class TokenService {
         var validUserTokens = tokenRepository.findByStaff(staff);
         if (validUserTokens.isEmpty())
             return;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(0));
+        calendar.add(Calendar.YEAR, 1);
+        Date newDate = calendar.getTime();
         validUserTokens.forEach(token -> {
-           token.setExpirationTime(new Date(0));
+           token.setExpirationTime(newDate);
         });
         tokenRepository.saveAll(validUserTokens);
     }
