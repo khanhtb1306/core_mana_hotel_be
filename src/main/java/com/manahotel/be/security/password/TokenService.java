@@ -1,28 +1,37 @@
 package com.manahotel.be.security.password;
 
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.repository.PasswordResetTokenRepository;
+import com.manahotel.be.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PasswordResetTokenService {
+public class TokenService {
     @Autowired
-    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final TokenRepository tokenRepository;
 
 
-    public void createPasswordResetTokenForUser(Staff staff, String passwordToken) {
-        PasswordResetToken passwordRestToken = new PasswordResetToken(passwordToken, staff);
-        passwordResetTokenRepository.save(passwordRestToken);
+    public void createTokenForUser(Staff staff, String passwordToken) {
+        Token passwordRestToken = new Token(passwordToken, staff);
+        tokenRepository.save(passwordRestToken);
     }
-
+    public void revokeAllUserTokens(Staff staff) {
+        var validUserTokens = tokenRepository.findByStaff(staff);
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+           token.setExpirationTime(new Date(0));
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
     public String validatePasswordResetToken(String theToken){
-        PasswordResetToken passwordToken = passwordResetTokenRepository.findByToken(theToken);
+        Token passwordToken = tokenRepository.findByToken(theToken);
         if(passwordToken == null){
             return "Invalid password reset token";
         }
@@ -35,10 +44,10 @@ public class PasswordResetTokenService {
 
     }
     public Optional<Staff> findStaffByPasswordToken(String passwordResetToken) {
-        return Optional.ofNullable(passwordResetTokenRepository.findByToken(passwordResetToken).getStaff());
+        return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
     }
 
     public Optional<Staff> findUserByPasswordToken(String passwordResetToken) {
-        return Optional.ofNullable(passwordResetTokenRepository.findByToken(passwordResetToken).getStaff());
+        return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
     }
 }

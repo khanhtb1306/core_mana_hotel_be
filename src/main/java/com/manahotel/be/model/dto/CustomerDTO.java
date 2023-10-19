@@ -1,6 +1,7 @@
 package com.manahotel.be.model.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
@@ -17,4 +18,5 @@ public class CustomerDTO {
     private String nationality;
     private String taxCode;
     private boolean gender;
+    private MultipartFile image;
 }

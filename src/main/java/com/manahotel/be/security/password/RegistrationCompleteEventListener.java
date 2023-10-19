@@ -24,15 +24,15 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     private Staff staff;
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
-        staff = event.getStaff();
-        String verificationToken = UUID.randomUUID().toString();
-        staffService.saveUserVerificationToken(staff, verificationToken);
-        String url = event.getApplicationUrl()+"/register/verifyEmail?token="+verificationToken;
-        try {
-            sendVerificationEmail(url);
-        } catch (UnsupportedEncodingException | MessagingException | jakarta.mail.MessagingException e) {
-            throw new RuntimeException(e);
-        }
+//        staff = event.getStaff();
+//        String verificationToken = UUID.randomUUID().toString();
+//        staffService.saveUserVerificationToken(staff, verificationToken);
+//        String url = event.getApplicationUrl()+"/register/verifyEmail?token="+verificationToken;
+//        try {
+//            sendVerificationEmail(url);
+//        } catch (UnsupportedEncodingException | MessagingException | jakarta.mail.MessagingException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public void sendVerificationEmail(String url) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {

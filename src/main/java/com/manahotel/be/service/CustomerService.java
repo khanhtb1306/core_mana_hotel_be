@@ -5,12 +5,17 @@ import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class CustomerService {
@@ -21,7 +26,7 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    private void commonMapping(Customer c, CustomerDTO customerDTO) {
+    private void commonMapping(Customer c, CustomerDTO customerDTO) throws IOException {
         c.setCustomerName(customerDTO.getCustomerName());
         c.setCustomerGroup(customerDTO.getCustomerGroup());
         c.setPhoneNumber(customerDTO.getPhoneNumber());
@@ -32,42 +37,71 @@ public class CustomerService {
         c.setNationality(customerDTO.getNationality());
         c.setTaxCode(customerDTO.getTaxCode());
         c.setGender(customerDTO.isGender());
+        c.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : null);
+
     }
 
-    public String create(CustomerDTO customerDTO) {
-        Customer latestCustomer = customerRepository.findTopByOrderByCustomerIdDesc();
-        String latestId = (latestCustomer == null) ? null : latestCustomer.getCustomerId();
-        String nextId = IdGenerator.generateId(latestId, "C");
+    public ResponseEntity<String> create(CustomerDTO customerDTO) throws IOException {
+        log.info("----- Add Customer Start -----");
+        try {
+            Customer latestCustomer = customerRepository.findTopByOrderByCustomerIdDesc();
+            String latestId = (latestCustomer == null) ? null : latestCustomer.getCustomerId();
+            String nextId = IdGenerator.generateId(latestId, "C");
+            if (customerDTO.getCustomerName() == null) {
+                log.info("Name customer is null");
+                return new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            Customer c = new Customer();
+            c.setCustomerId(nextId);
 
-        Customer c = new Customer();
-        c.setCustomerId(nextId);
+            commonMapping(c, customerDTO);
 
-        commonMapping(c, customerDTO);
+            customerRepository.save(c);
+            log.info("----- Add Customer End -----");
+            return new ResponseEntity<>("Tạo thông tin khách hàng thành công ", HttpStatus.OK);
 
-        customerRepository.save(c);
+        } catch (Exception e) {
+            log.info("Can't add customer", e.getMessage());
+            return new ResponseEntity<>("Tạo thông tin khách hàng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return "Tạo thông tin khách hàng thành công";
+
     }
 
-    public String update(String customerId, CustomerDTO customerDTO) {
+    public ResponseEntity<String> update(String customerId, CustomerDTO customerDTO) throws IOException {
+        log.info("----- Update Customer Start -----");
 
-        Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists"));
+        try {
+            if (customerDTO.getCustomerName() == null) {
+                log.info("Name customer is null");
+                return new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists"));
 
-        commonMapping(c, customerDTO);
+            commonMapping(c, customerDTO);
 
-        customerRepository.save(c);
+            customerRepository.save(c);
 
-        return "Cập nhật thông tin khách hàng thành công";
+            log.info("----- Update Customer End -----");
+            return new ResponseEntity<>("Cập nhật thông tin khách hàng thành công ", HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Can't update customer", e.getMessage());
+            return new ResponseEntity<>("Cập nhật thông tin khách hàng  thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    public String delete(String customerId) {
+    public ResponseEntity<String> delete(String customerId) {
+        log.info("----- Delete Customer Start -----");
+
         boolean exists = customerRepository.existsById(customerId);
         if (!exists) {
-            throw new IllegalStateException("customer with id " + customerId + " not exists");
+            log.info("Can't delete customer");
+            return new ResponseEntity<>("customer with id " + customerId + " not exists", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         customerRepository.deleteById(customerId);
 
-        return "Xóa thông tin khách hàng thành công";
+        log.info("----- Delete Customer End -----");
+        return new ResponseEntity<>("Xóa thông tin khách hàng thành công ", HttpStatus.OK);
     }
 
     public Optional<Customer> getById(String customerId) {
