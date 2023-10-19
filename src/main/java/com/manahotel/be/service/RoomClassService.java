@@ -27,7 +27,7 @@ public class RoomClassService {
     private RoomClassRepository roomClassRepository;
 
     @Autowired
-    private  RoomRepository roomRepository;
+    private RoomRepository roomRepository;
 
     public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
         List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
@@ -147,7 +147,7 @@ public class RoomClassService {
 
     boolean roomClassHasRooms(RoomCategory roomClass) {
         List<Room> rooms = roomRepository.findByRoomCategory(roomClass);
-        if(!rooms.isEmpty()){
+        if (!rooms.isEmpty()) {
             return true;
         }
         return false;

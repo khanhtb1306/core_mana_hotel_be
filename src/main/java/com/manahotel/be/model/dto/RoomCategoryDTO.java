@@ -2,6 +2,7 @@ package com.manahotel.be.model.dto;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+
 @Data
 public class RoomCategoryDTO {
     private String roomCategoryName;

@@ -1,11 +1,9 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.repository.TokenRepository;
 import com.manahotel.be.repository.StaffRepository;
+import com.manahotel.be.repository.TokenRepository;
 import com.manahotel.be.security.password.TokenService;
-//import com.manahotel.be.security.token.VerificationToken;
-//import com.manahotel.be.security.token.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +53,6 @@ public class StaffService {
 //        var verificationToken = new VerificationToken(token, staff);
 //        verificationTokenRepository.save(verificationToken);
 //    }
-
 
 
 }

@@ -16,20 +16,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
-import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
-    private final LogoutHandler logoutHandler;
-    @Autowired
-    private final LogoutService logoutService;
-
     private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
@@ -42,6 +33,11 @@ public class SecurityConfig {
             "/webjars/**",
             "/swagger-ui.html",
             "/swagger-ui/index.html"};
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final LogoutHandler logoutHandler;
+    @Autowired
+    private final LogoutService logoutService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -67,8 +63,8 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout().logoutUrl("/api/v1/auth/logout")
-                                .addLogoutHandler(logoutService)
-                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()
+                .addLogoutHandler(logoutService)
+                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()
                 );
         return http.build();
     }

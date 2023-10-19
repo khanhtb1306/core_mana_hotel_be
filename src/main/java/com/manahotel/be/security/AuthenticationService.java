@@ -21,19 +21,14 @@ public class AuthenticationService {
 
     @Autowired
     private final StaffRepository staffRepository;
-
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     @Autowired
     private PasswordEncoder bcryptEncoder;
-
     @Autowired
     private TokenService tokenService;
-
     @Autowired
     private StaffService staffService;
-
-    private final JwtService jwtService;
-
-    private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
         Staff staff = new Staff();

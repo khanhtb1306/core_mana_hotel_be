@@ -2,7 +2,6 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
-import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
@@ -13,9 +12,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -79,6 +75,7 @@ class RoomClassServiceTest {
         // Verify that save() method was called on the repository
         Mockito.verify(roomClassRepository).save(roomCategory);
     }
+
     @Test
     public void testDeleteRoomClassById() {
         String id = "HP000001";
