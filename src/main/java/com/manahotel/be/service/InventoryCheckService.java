@@ -16,12 +16,12 @@ import com.manahotel.be.repository.InventoryCheckDetailRepository;
 import com.manahotel.be.repository.InventoryCheckRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -41,6 +41,23 @@ public class InventoryCheckService {
 
     public List<InventoryCheck> getAll() {
         return repository.findAll();
+    }
+
+    public ResponseEntity<List<Map<String, Object>>> getAllInventoryCheckWithDetails() {
+        List<Object[]> listInventoryChecks = repository.findAllInventoryChecksWithDetails();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Object[] inventoryCheck : listInventoryChecks) {
+            InventoryCheck ic = (InventoryCheck) inventoryCheck[0];
+            List<InventoryCheckDetail> listInventoryCheckDetails = repository2.findInventoryCheckDetailByInventoryCheck(ic);
+            Map<String, Object> checkInfo = new HashMap<>();
+            checkInfo.put("inventoryCheck", ic);
+            checkInfo.put("listInventoryCheckDetails", listInventoryCheckDetails.toArray());
+            result.add(checkInfo);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     private void commonMapping(InventoryCheck check, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
@@ -91,7 +108,7 @@ public class InventoryCheckService {
         }
     }
 
-    public String createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+    public ResponseEntity<String> createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         try {
             log.info("----- Add Check Start -----");
             InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
@@ -105,53 +122,58 @@ public class InventoryCheckService {
             commonMapping(check, dto, listDetailDTO);
             log.info("----- Add Check End -----");
 
-            return "Tạo kiểm kho thành công";
+            if(check.getStatus().equals(Status.TEMPORARY)) {
+                return new ResponseEntity<>("Tạo phiếu tạm kiểm kho thành công", HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>("Tạo cân bằng kiểm kho thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't add inventory check", e.getMessage());
-            return "Tạo kiểm kho thất bại";
+            return new ResponseEntity<>("Tạo kiểm kho thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
+    public ResponseEntity<String> updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         try {
             log.info("----- Update Check Start -----");
             InventoryCheck check = findInventoryCheckById(id);
 
             if (check == null) {
-                return null;
+                log.info("Can't find the inventory check");
+                return new ResponseEntity<>("Không tìm thấy mã kiểm kho", HttpStatus.NOT_FOUND);
             }
 
             commonMapping(check, dto, listDetailDTO);
             log.info("----- Update Check End -----");
 
-            return "Cập nhật kiểm kho thành công";
+            if(check.getStatus().equals(Status.TEMPORARY)) {
+                return new ResponseEntity<>("Cập nhật phiếu tạm kiểm kho thành công", HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>("Cập nhật cân bằng kiểm kho thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't update inventory check", e.getMessage());
-            return "Cập nhật kiểm kho thất bại";
+            return new ResponseEntity<>("Cập nhật kiểm kho thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public List<InventoryCheck> getAllCheck() {
-        return repository.findAll();
-    }
-
-    public String cancelCheck(String id) {
+    public ResponseEntity<String> cancelCheck(String id) {
         try {
             InventoryCheck check = findInventoryCheckById(id);
             check.setStatus(Status.CANCEL);
             repository.save(check);
-            return "Hủy kiểm kho thành công";
+            return new ResponseEntity<>("Hủy kiểm kho thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't update inventory check", e.getMessage());
-            return "Hủy kiểm kho thất bại";
+            return new ResponseEntity<>("Hủy kiểm kho thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public List<InventoryCheckDetail> findListInventoryCheckDetailByInventoryCheckId(String id) {
-        return repository2.findListInventoryCheckDetailByInventoryCheckId(id);
+    public ResponseEntity<List<InventoryCheckDetail>> findListInventoryCheckDetailByInventoryCheckId(String id) {
+        return new ResponseEntity<>(repository2.findListInventoryCheckDetailByInventoryCheckId(id), HttpStatus.OK);
     }
 
     public InventoryCheck findInventoryCheckById(String id) {
@@ -164,7 +186,7 @@ public class InventoryCheckService {
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
     }
 
-    public InventoryCheckResponse getInventoryCheckSummary(String id) {
-        return repository2.getInventoryCheckSummary(id);
+    public ResponseEntity<InventoryCheckResponse> getInventoryCheckSummary(String id) {
+        return new ResponseEntity<>(repository2.getInventoryCheckSummary(id), HttpStatus.OK);
     }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -43,7 +44,7 @@ class GoodsServiceTest {
         goodsUnitDTO.setPrice(30000F);
 
         // Act
-        String result = goodsService.createGoods(goodsDTO, goodsUnitDTO);
+        ResponseEntity<String> result = goodsService.createGoods(goodsDTO, goodsUnitDTO);
 
         // Assert
         assertEquals("Tạo hàng hóa thành công", result);
@@ -70,7 +71,7 @@ class GoodsServiceTest {
         goodsUnitDTO.setPrice(30000F);
 
         // Act
-        String result = goodsService.updateGoods(id, goodsDTO, goodsUnitDTO);
+        ResponseEntity<String> result = goodsService.updateGoods(id, goodsDTO, goodsUnitDTO);
 
         // Assert
         assertEquals("Cập nhật hàng hóa thành công", result);

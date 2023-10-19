@@ -4,6 +4,7 @@ import com.manahotel.be.model.dto.GoodsUnitDTO;
 import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.service.GoodsUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,22 +17,22 @@ public class GoodsUnitController {
     private GoodsUnitService service;
 
     @GetMapping
-    public List<GoodsUnit> getAll() {
+    public ResponseEntity<List<GoodsUnit>> getAll() {
         return service.getAll();
     }
 
     @PostMapping
-    public String createGoodsUnit(@RequestBody GoodsUnitDTO goodsUnitDTO) {
+    public ResponseEntity<String> createGoodsUnit(@RequestBody GoodsUnitDTO goodsUnitDTO) {
         return service.createGoodsUnit(goodsUnitDTO);
     }
 
     @PutMapping("/{id}")
-    public String updateGoodsUnit(@PathVariable Long id, @RequestBody GoodsUnitDTO goodsUnitDTO) {
+    public ResponseEntity<String> updateGoodsUnit(@PathVariable Long id, @RequestBody GoodsUnitDTO goodsUnitDTO) {
         return service.updateGoodsUnit(id, goodsUnitDTO);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteGoodsUnit(@PathVariable Long id) {
+    public ResponseEntity<String> deleteGoodsUnit(@PathVariable Long id) {
         return service.deleteGoodsUnit(id);
     }
 }

@@ -1,9 +1,6 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -50,4 +47,8 @@ public class Customer {
 
     @Column(name = "gender")
     private Boolean gender;
+
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
 }
