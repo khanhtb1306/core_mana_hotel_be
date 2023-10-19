@@ -8,5 +8,4 @@ public class GoodsUnitDTO {
     private String goodsId;
     private Float cost;
     private Float price;
-    private boolean isDefault;
 }

@@ -22,12 +22,12 @@ public class CustomerController {
     }
 
     @PostMapping
-    public String createCustomer(@RequestBody CustomerDTO customerDTO) {
+    public String createCustomer(CustomerDTO customerDTO) {
          return service.create(customerDTO);
     }
 
     @PutMapping("/{id}")
-    public String updateGoods(@PathVariable String id, @RequestBody CustomerDTO customerDTO) {
+    public String updateGoods(@PathVariable String id, CustomerDTO customerDTO) {
         return service.update(id, customerDTO);
     }
 
