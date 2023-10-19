@@ -110,7 +110,7 @@ public class RoomClassService {
                 log.info("Can't find room class id");
                 return "NOT_FOUND";
             }
-            if(roomClassHasRooms(roomClass)){
+            if (roomClassHasRooms(roomClass)) {
                 return "BAD_REQUEST";
             }
             roomClass.setStatus(Status.DELETE);
@@ -143,7 +143,7 @@ public class RoomClassService {
         return roomInfo;
     }
 
-    private boolean roomClassHasRooms(RoomCategory roomClass) {
+    boolean roomClassHasRooms(RoomCategory roomClass) {
         List<Room> rooms = roomRepository.findByRoomCategory(roomClass);
         if(!rooms.isEmpty()){
             return true;
