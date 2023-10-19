@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 
 @Data
 public class CustomerDTO {
-    private String customerId;
     private String customerName;
     private String customerGroup;
     private String phoneNumber;

@@ -4,6 +4,7 @@ import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.service.GoodsRequest;
 import com.manahotel.be.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,27 +18,27 @@ public class GoodsController {
     private GoodsService service;
 
     @GetMapping
-    public List<Map<String, Object>> getAll() {
+    public ResponseEntity<List<Map<String, Object>>> getAll() {
         return service.getAllGoodsWithGoodsUnit();
     }
 
     @PostMapping
-    public String createGoods(GoodsRequest goodsRequest) {
+    public ResponseEntity<String> createGoods(GoodsRequest goodsRequest) {
         return service.createGoods(goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
     @PutMapping("/{id}")
-    public String updateGoods(@PathVariable String id, GoodsRequest goodsRequest) {
+    public ResponseEntity<String> updateGoods(@PathVariable String id, GoodsRequest goodsRequest) {
         return service.updateGoods(id, goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
     @DeleteMapping("/{id}")
-    public String deleteGoods(@PathVariable String id) {
+    public ResponseEntity<String> deleteGoods(@PathVariable String id) {
         return service.deleteGoods(id);
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getGoodsById(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> getGoodsById(@PathVariable String id) {
         return service.getGoodsWithGoodsUnitById(id);
     }
 }

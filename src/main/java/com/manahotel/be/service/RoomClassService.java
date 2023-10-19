@@ -71,13 +71,12 @@ public class RoomClassService {
             commonMapping(roomClass, dto);
 
             roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//            roomClass.setCreatedById(dto.getCreatedById());
             roomClassRepository.save(roomClass);
             log.info("------- Add Room Class End -------");
-            return "Tạo hạng phòng thành công";
+            return "CreateRoomClassSuccess";
         } catch (Exception e) {
             log.info("Can't Add Room Class", e.getMessage());
-            return "Tạo hạng phòng thất bại";
+            return "CreateRoomClassFail";
         }
     }
 
@@ -93,15 +92,14 @@ public class RoomClassService {
             commonMapping(roomClass, dto);
 
             roomClass.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-//            roomClass.setUpdatedById(dto.getCreatedById());
 
             roomClassRepository.save(roomClass);
 
             log.info("------- Update Room Class End -------");
-            return "Cập nhật hạng phòng thành công";
+            return "UpdateRoomClassSuccess";
         } catch (Exception e) {
             log.info("Can't Update Room Class", e.getMessage());
-            return "Cập nhật hạng phòng thất bại";
+            return "UpdateRoomClassFail";
         }
     }
 
@@ -110,16 +108,18 @@ public class RoomClassService {
             RoomCategory roomClass = getRoomCategoryById(id);
             if (roomClass == null) {
                 log.info("Can't find room class id");
-                return null;
+                return "NOT_FOUND";
             }
-
+            if(roomClassHasRooms(roomClass)){
+                return "BAD_REQUEST";
+            }
             roomClass.setStatus(Status.DELETE);
             roomClassRepository.save(roomClass);
 
-            return "Xóa hạng phòng thành công";
+            return "success";
         } catch (Exception e) {
             log.info("Can't Delete Room Class", e.getMessage());
-            return "Xóa hạng phòng thất bại";
+            return "DeleteFail";
         }
     }
 
@@ -141,5 +141,13 @@ public class RoomClassService {
         }
 
         return roomInfo;
+    }
+
+    private boolean roomClassHasRooms(RoomCategory roomClass) {
+        List<Room> rooms = roomRepository.findByRoomCategory(roomClass);
+        if(!rooms.isEmpty()){
+            return true;
+        }
+        return false;
     }
 }
