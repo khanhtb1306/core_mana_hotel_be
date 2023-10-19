@@ -12,6 +12,6 @@ public interface GoodsRepository extends JpaRepository<Goods, String> {
     Goods findTopByOrderByGoodsIdDesc();
 
     @Query("SELECT g FROM Goods g " +
-            "LEFT JOIN GoodsUnit gu ON g.goodsId = gu.goods.goodsId ")
+            "LEFT JOIN GoodsUnit gu ON g.goodsId = gu.goods.goodsId where g.status <> 6")
     List<Object[]> findGoodWithGoodUnits();
 }

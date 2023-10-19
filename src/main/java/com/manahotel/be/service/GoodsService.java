@@ -11,6 +11,8 @@ import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.GoodsUnitRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -30,11 +32,7 @@ public class GoodsService {
     @Autowired
     private GoodsUnitRepository repository2;
 
-    public List<Goods> getAll() {
-        return repository.findAll();
-    }
-
-    public List<Map<String, Object>> getAllGoodsWithGoodsUnit() {
+    public ResponseEntity<List<Map<String, Object>>> getAllGoodsWithGoodsUnit() {
         List<Object[]> listGoods = repository.findGoodWithGoodUnits();
 
         List<Map<String, Object>> result = new ArrayList<>();
@@ -45,22 +43,21 @@ public class GoodsService {
             Map<String, Object> goodsInfo = new HashMap<>();
             goodsInfo.put("goods", g);
             goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
-
             result.add(goodsInfo);
         }
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    public Map<String, Object> getGoodsWithGoodsUnitById(String id) {
+    public ResponseEntity<Map<String, Object>> getGoodsWithGoodsUnitById(String id) {
         Goods goods = findGoodsById(id);
         Map<String, Object> goodsInfo = new HashMap<>();
         List<GoodsUnit> listGoodsUnit = repository2.findGoodsUnitByGoods(goods);
         goodsInfo.put("goods", goods);
         goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
-        return goodsInfo;
+        return new ResponseEntity<>(goodsInfo, HttpStatus.OK);
     }
 
-    public String createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
+    public ResponseEntity<String> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Add Goods Start -----");
             Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
@@ -89,26 +86,27 @@ public class GoodsService {
 
             repository2.save(goodsUnit);
             log.info("----- Add Unit End -----");
-            return "Tạo hàng hóa thành công";
+            return new ResponseEntity<>("Tạo hàng hóa thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't add goods", e.getMessage());
-            return "Tạo hàng hóa thất bại";
+            return new ResponseEntity<>("Tạo hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
+    public ResponseEntity<String> updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
         try{
             log.info("----- Update Goods Start -----");
             Goods goods = findGoodsById(id);
 
             if (goods == null) {
                 log.info("Can't find the goods");
-                return null;
+                return new ResponseEntity<>("Không tìm thấy hàng hóa", HttpStatus.NOT_FOUND);
             }
 
             commonMapping(goods, dto);
 
+            goods.setStatus(dto.getStatus());
             goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             repository.save(goods);
@@ -123,15 +121,15 @@ public class GoodsService {
             repository2.save(goodsUnit);
             log.info("----- Update Unit Done -----");
 
-            return "Cập nhật hàng hóa thành công";
+            return new  ResponseEntity<>("Cập nhật hàng hóa thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't update goods", e.getMessage());
-            return "Cập nhật hàng hóa thất bại";
+            return new  ResponseEntity<>("Cập nhật hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String deleteGoods(String id) {
+    public ResponseEntity<String> deleteGoods(String id) {
 
         try {
             log.info("----- Delete Goods Start -----");
@@ -139,19 +137,19 @@ public class GoodsService {
 
             if (goods == null) {
                 log.info("Can't find the goods");
-                return null;
+                return new ResponseEntity<>("Không tìm thấy hàng hóa", HttpStatus.NOT_FOUND);
             }
 
-            goods.setStatus(Status.DEACTIVATE);
+            goods.setStatus(Status.DELETE);
 
             repository.save(goods);
             log.info("----- Delete Goods End -----");
 
-            return "Xóa hàng hóa thành công";
+            return new ResponseEntity<>("Xóa hàng hóa thành công", HttpStatus.OK);
         }
         catch (Exception e) {
             log.info("Can't delete goods", e.getMessage());
-            return "Xóa hàng hóa thất bại";
+            return new ResponseEntity<>("Xóa hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
