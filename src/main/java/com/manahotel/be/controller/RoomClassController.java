@@ -24,22 +24,22 @@ public class RoomClassController {
 
     @PostMapping
     public ResponseEntity<String> createRoomClass(RoomCategoryDTO roomCategoryDTO) {
-        String createResult =  roomClassService.createRoomClass(roomCategoryDTO);
+        String createResult = roomClassService.createRoomClass(roomCategoryDTO);
 
-        if(createResult.equals("CreateRoomClassSuccess")){
+        if (createResult.equals("CreateRoomClassSuccess")) {
             return new ResponseEntity<>("Thêm hạng phòng thành công", HttpStatus.OK);
-        }else {
-            return  new ResponseEntity<>("Thêm hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity<>("Thêm hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateRoomClass(@PathVariable String id, RoomCategoryDTO roomCategoryDTO) {
         String updateResult = roomClassService.updateRoomClass(id, roomCategoryDTO);
-        if(updateResult.equals("UpdateRoomClassSuccess")){
+        if (updateResult.equals("UpdateRoomClassSuccess")) {
             return new ResponseEntity<>("Cập nhật hạng phòng thành công", HttpStatus.OK);
-        }else {
-            return  new ResponseEntity<>("Cập nhật hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity<>("Cập nhật hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -52,7 +52,7 @@ public class RoomClassController {
             return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
         } else if (deletionResult.equals("BAD_REQUEST")) {
             return new ResponseEntity<>("Không thể xóa hạng phòng vì có phòng thuộc hạng phòng này", HttpStatus.BAD_REQUEST);
-        } else  {
+        } else {
             return new ResponseEntity<>("Xóa hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

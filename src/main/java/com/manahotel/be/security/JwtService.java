@@ -51,15 +51,15 @@ public class JwtService {
             Staff userDetails
 
     ) {
-        extraClaims.put("staff_id",userDetails.getStaffId());
-        extraClaims.put("role",userDetails.getRole());
+        extraClaims.put("staff_id", userDetails.getStaffId());
+        extraClaims.put("role", userDetails.getRole());
 
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+JWT_EXPIRATION ))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

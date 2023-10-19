@@ -1,14 +1,5 @@
 package com.manahotel.be.security.token;
 
-import com.manahotel.be.model.entity.Staff;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.Calendar;
-import java.util.Date;
-
 //@Getter
 //@Setter
 //@Entity
