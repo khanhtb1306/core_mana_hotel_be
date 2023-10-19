@@ -1,5 +1,6 @@
 package com.manahotel.be.security;
 
+import com.manahotel.be.model.entity.Staff;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,28 +29,31 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(Staff userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            Staff userDetails
     ) {
         return buildToken(extraClaims, userDetails);
     }
 
     public String generateRefreshToken(
-            UserDetails userDetails
+            Staff userDetails
     ) {
         return buildToken(new HashMap<>(), userDetails);
     }
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            Staff userDetails
 
     ) {
+        extraClaims.put("staff_id",userDetails.getStaffId());
+        extraClaims.put("role",userDetails.getRole());
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

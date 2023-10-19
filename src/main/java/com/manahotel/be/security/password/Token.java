@@ -13,7 +13,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordResetToken {
+@Table(name = "password_reset_token")
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long token_id;
@@ -25,14 +26,14 @@ public class PasswordResetToken {
     @JoinColumn(name = "staff_id")
     private Staff staff;
 
-    public PasswordResetToken(String token, Staff staff) {
+    public Token(String token, Staff staff) {
         super();
         this.token = token;
         this.staff = staff;
         this.expirationTime = this.getTokenExpirationTime();
     }
 
-    public PasswordResetToken(String token) {
+    public Token(String token) {
         super();
         this.token = token;
         this.expirationTime = this.getTokenExpirationTime();

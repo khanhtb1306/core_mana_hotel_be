@@ -3,11 +3,11 @@ package com.manahotel.be.controller;
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.security.*;
 import com.manahotel.be.security.password.PasswordResetRequest;
-import com.manahotel.be.security.password.PasswordResetToken;
 import com.manahotel.be.security.password.RegistrationCompleteEventListener;
 import com.manahotel.be.service.StaffService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +17,7 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.UUID;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -52,6 +52,7 @@ public class AuthenticationController {
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
             passwordResetUrl = passwordResetEmailLink(staff.get(), applicationUrl(servletRequest), passwordResetToken);
         }
+        log.info(passwordResetUrl);
         return passwordResetUrl;
     }
 
@@ -61,9 +62,9 @@ public class AuthenticationController {
     }
 
     private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/reset-password?token" + passwordResetToken;
+        String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
         eventListener.sendPasswordResetVerificationEmail(url,staff);
-//        log.info("Click the link to reset your password :  {}", url);
+        log.info("Click the link to reset your password :  {}", url);
         return url;
     }
 
@@ -77,7 +78,6 @@ public class AuthenticationController {
 
         Staff staff = staffService.findUserByPasswordToken(passwordResetToken);
         if (staff != null) {
-//            staffService.resetStaffPassword(staff,passwordResetRequest.getNewPassword());
             service.ResetPassword(staff, passwordResetRequest.getNewPassword());
             return "Password has been reset successful";
         }

@@ -1,14 +1,19 @@
 package com.manahotel.be.model.entity;
 
+import com.manahotel.be.common.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "staff")
 @Entity
@@ -31,7 +36,8 @@ public class Staff implements UserDetails {
     private String password;
 
     @Column(name = "role", length = 250)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "status")
     private Long status;
@@ -73,10 +79,13 @@ public class Staff implements UserDetails {
     @Column(name = "updated_date")
     private Timestamp updatedDate;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return List.of(new SimpleGrantedAuthority(role.name()));
-        return null;
+        List<GrantedAuthority> authorities = Arrays.stream(role.name().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return authorities;
     }
 
     @Override

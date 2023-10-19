@@ -1,24 +1,47 @@
 package com.manahotel.be.config;
 
 import com.manahotel.be.security.JwtAuthenticationFilter;
+import com.manahotel.be.security.LogoutService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
+import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final LogoutHandler logoutHandler;
+    @Autowired
+    private final LogoutService logoutService;
 
+    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/swagger-ui/index.html"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,8 +49,15 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .requestMatchers("/**")
+                .requestMatchers(WHITE_LIST_URL)
                 .permitAll()
+                .requestMatchers("/customer").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/Floor").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/goods").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/goods-unit").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/inventory-check").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/room-class").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/room").hasAnyAuthority("ROLE_MANAGER")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -35,8 +65,11 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout().logoutUrl("/api/v1/auth/logout")
+                                .addLogoutHandler(logoutService)
+                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()
+                );
         return http.build();
     }
 

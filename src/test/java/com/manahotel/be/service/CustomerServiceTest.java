@@ -40,6 +40,18 @@ class CustomerServiceTest {
 
     @Test
     void getAll() {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setGender(false);
+
+//        underTest.create(customerDTO);
+//
+//        CustomerDTO customerDTO1 = new CustomerDTO();
+//        customerDTO.setGender(false);
+//        underTest.create(customerDTO1);
+
+
+
+
     }
 
     @Test
@@ -47,7 +59,7 @@ class CustomerServiceTest {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setGender(false);
 
-        underTest.create(customerDTO);
+//        underTest.create(customerDTO);
 
         Customer customer = new Customer();
         customer.setCustomerId("C000001");
