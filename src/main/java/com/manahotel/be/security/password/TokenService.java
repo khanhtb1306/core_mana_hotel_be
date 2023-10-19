@@ -21,31 +21,32 @@ public class TokenService {
         Token passwordRestToken = new Token(passwordToken, staff);
         tokenRepository.save(passwordRestToken);
     }
-
     public void revokeAllUserTokens(Staff staff) {
         var validUserTokens = tokenRepository.findByStaff(staff);
         if (validUserTokens.isEmpty())
             return;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(0));
+        calendar.add(Calendar.YEAR, 1);
+        Date newDate = calendar.getTime();
         validUserTokens.forEach(token -> {
-            token.setExpirationTime(new Date(0));
+           token.setExpirationTime(newDate);
         });
         tokenRepository.saveAll(validUserTokens);
     }
-
-    public String validatePasswordResetToken(String theToken) {
+    public String validatePasswordResetToken(String theToken){
         Token passwordToken = tokenRepository.findByToken(theToken);
-        if (passwordToken == null) {
+        if(passwordToken == null){
             return "Invalid password reset token";
         }
         Staff staff = passwordToken.getStaff();
         Calendar calendar = Calendar.getInstance();
-        if ((passwordToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
+        if ((passwordToken.getExpirationTime().getTime()-calendar.getTime().getTime())<= 0){
             return "Link already expired, resend link";
         }
         return "valid";
 
     }
-
     public Optional<Staff> findStaffByPasswordToken(String passwordResetToken) {
         return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
     }
