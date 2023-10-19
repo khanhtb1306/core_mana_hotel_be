@@ -13,4 +13,7 @@ public interface RoomRepository extends JpaRepository<Room, String> {
     Room findTopByOrderByRoomIdDesc();
 
     List<Room> findByRoomCategory(RoomCategory roomCategory);
+
+    List<Room> findByStatusNot(Long status);
+
 }

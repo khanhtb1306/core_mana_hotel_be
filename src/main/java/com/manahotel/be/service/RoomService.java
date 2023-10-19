@@ -33,7 +33,7 @@ public class RoomService {
 
     //Get All List Room
     public List<Room> getAllRoom() {
-        return roomRepository.findAll();
+        return roomRepository.findByStatusNot(Status.DELETE);
     }
 
     private void commonMapping(Room room, RoomDTO dto) throws IOException {
@@ -67,10 +67,10 @@ public class RoomService {
             room.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Add Room End -------");
-            return "Tạo phòng thành công";
+            return "CreateRoomSuccess";
         } catch (Exception e) {
             log.info("Can't Add Room", e.getMessage());
-            return "Tạo phòng thất bại";
+            return "CreateRoomFail";
         }
     }
 
@@ -95,10 +95,10 @@ public class RoomService {
             room.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Update Room End -------");
-            return "Cập nhật phòng thành công";
+            return "UpdateRoomSuccess";
         } catch (Exception e) {
             log.info("Can't Update Room", e.getMessage());
-            return "Cập nhật phòng thất bại";
+            return "UpdateRoomFail";
         }
     }
 
@@ -108,16 +108,16 @@ public class RoomService {
             Room room = getRoomById(id);
             if (room == null) {
                 log.info("Can't find room id");
-                return null;
+                return "NOT_FOUND";
             }
-            room.setStatus(Status.DEACTIVATE);
+            room.setStatus(Status.DELETE);
             roomRepository.save(room);
 
-            return "Xóa phòng thành công";
+            return "DeleteRoomSuccess";
 
         } catch (Exception e) {
             log.info("Can't Delete Room", e.getMessage());
-            return "Xóa phòng thất bại";
+            return "DeleteRoomFail";
         }
     }
 
@@ -137,7 +137,7 @@ public class RoomService {
 
 
     public List<Floor> getAllFloor() {
-        return floorRepository.findAll();
+        return floorRepository.findByStatusNot(Status.DELETE);
     }
 
     public String createFloor(FloorDTO dto) {
@@ -150,10 +150,10 @@ public class RoomService {
             floor.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             floorRepository.save(floor);
             log.info("------- Add Floor End -------");
-            return "Tạo tầng thành công";
+            return "CreateFloorSuccess";
         } catch (Exception e) {
             log.info("Can't Add Floor", e.getMessage());
-            return "Tạo tầng thất bại";
+            return "CreateFloorFail";
         }
     }
 
@@ -170,10 +170,10 @@ public class RoomService {
             floor.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             floorRepository.save(floor);
             log.info("------- Update Floor End -------");
-            return "Cập nhật tầng thành công";
+            return "UpdateFloorSuccess";
         } catch (Exception e) {
             log.info("Can't Update Floor", e.getMessage());
-            return "Cập nhật tầng thất bại";
+            return "UpdateFloorFail";
         }
     }
 
@@ -182,16 +182,16 @@ public class RoomService {
             Floor floor = getFloorById((long) id);
             if (floor == null) {
                 log.info("Can't find floor id");
-                return null;
+                return "NOT_FOUND";
             }
 
             floor.setStatus(Status.DEACTIVATE);
             floorRepository.save(floor);
 
-            return "Xóa khu vực thành công";
+            return "DeleteFloorSuccess";
         } catch (Exception e) {
             log.info("Can't Delete Floor", e.getMessage());
-            return "Xóa Khu vực thất bại";
+            return "DeleteFloorFail";
         }
     }
 
