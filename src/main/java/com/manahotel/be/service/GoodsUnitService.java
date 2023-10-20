@@ -69,11 +69,11 @@ public class GoodsUnitService {
         }
     }
 
-    public ResponseEntity<String> deleteGoodsUnit(Long id) {
+    public ResponseEntity<String> deleteGoodsUnit(String id) {
         try {
             log.info("----- Delete Unit Start -----");
-            GoodsUnit goodsUnit = findGoodsUnitById(id);
-            repository.delete(goodsUnit);
+            List<GoodsUnit> listGoodsUnit = repository.findGoodsUnitByGoodsIdAndAndIsDefault(id, false);
+            repository.deleteAll(listGoodsUnit);
             log.info("----- Delete Unit End -----");
 
             return new ResponseEntity<>("Xóa đơn vị thành công", HttpStatus.OK);

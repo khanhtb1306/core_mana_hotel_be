@@ -14,4 +14,7 @@ public interface GoodsUnitRepository extends JpaRepository<GoodsUnit, Long> {
     GoodsUnit findGoodsUnitByGoodsIdAndIsDefault(String goodsId, Boolean isDefault);
 
     List<GoodsUnit> findGoodsUnitByGoods(Goods goods);
+
+    @Query("SELECT gu FROM GoodsUnit gu WHERE gu.goods.goodsId = :goodsId AND gu.isDefault = :isDefault")
+    List<GoodsUnit> findGoodsUnitByGoodsIdAndAndIsDefault(String goodsId, Boolean isDefault);
 }
