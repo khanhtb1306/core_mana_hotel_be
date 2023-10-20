@@ -21,6 +21,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     @Autowired
     private final JavaMailSender mailSender;
     private Staff staff;
+
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
 //        staff = event.getStaff();
@@ -37,10 +38,10 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     public void sendVerificationEmail(String url) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String subject = "Email Verification";
         String senderName = "User Registration Portal Service";
-        String mailContent = "<p> Hi, "+ staff.getStaffName()+ ", </p>"+
-                "<p>Thank you for registering with us,"+"" +
-                "Please, follow the link below to complete your registration.</p>"+
-                "<a href=\"" +url+ "\">Verify your email to activate your account</a>"+
+        String mailContent = "<p> Hi, " + staff.getStaffName() + ", </p>" +
+                "<p>Thank you for registering with us," + "" +
+                "Please, follow the link below to complete your registration.</p>" +
+                "<a href=\"" + url + "\">Verify your email to activate your account</a>" +
                 "<p> Thank you <br> Users Registration Portal Service";
 
         jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
@@ -51,13 +52,14 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         messageHelper.setText(mailContent, true);
         mailSender.send(message);
     }
-    public void sendPasswordResetVerificationEmail(String url,Staff staff) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
+
+    public void sendPasswordResetVerificationEmail(String url, Staff staff) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String subject = "Password Reset Request Verification";
         String senderName = "User Registration Portal Service";
-        String mailContent = "<p> Hi, "+ staff.getStaffName()+ ", </p>"+
-                "<p><b>You recently requested to reset your password,</b>"+"" +
-                "Please, follow the link below to complete the action.</p>"+
-                "<a href=\"" +url+ "\">Reset password</a>"+
+        String mailContent = "<p> Hi, " + staff.getStaffName() + ", </p>" +
+                "<p><b>You recently requested to reset your password,</b>" + "" +
+                "Please, follow the link below to complete the action.</p>" +
+                "<a href=\"" + url + "\">Reset password</a>" +
                 "<p> Users Registration Portal Service";
         jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);

@@ -15,13 +15,12 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "token")
 public class Token {
+    private static final int EXPIRATION_TIME = 5;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long token_id;
     private String token;
     private Date expirationTime;
-    private static final int EXPIRATION_TIME = 5;
-
     @OneToOne
     @JoinColumn(name = "staff_id")
     private Staff staff;
