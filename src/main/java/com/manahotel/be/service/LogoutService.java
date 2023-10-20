@@ -1,4 +1,4 @@
-package com.manahotel.be.security;
+package com.manahotel.be.service;
 
 import com.manahotel.be.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;

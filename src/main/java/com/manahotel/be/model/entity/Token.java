@@ -1,4 +1,4 @@
-package com.manahotel.be.security.password;
+package com.manahotel.be.model.entity;
 
 import com.manahotel.be.model.entity.Staff;
 import jakarta.persistence.*;

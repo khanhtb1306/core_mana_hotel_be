@@ -1,7 +1,8 @@
-package com.manahotel.be.security.password;
+package com.manahotel.be.service;
 
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.TokenRepository;
+import com.manahotel.be.model.entity.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class TokenService {
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {
-           token.setExpirationTime(new Date(0));
+           token.setExpirationTime(new Date(80,1,1));
         });
         tokenRepository.saveAll(validUserTokens);
     }

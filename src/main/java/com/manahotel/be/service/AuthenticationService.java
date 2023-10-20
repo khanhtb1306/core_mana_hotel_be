@@ -1,9 +1,10 @@
-package com.manahotel.be.security;
+package com.manahotel.be.service;
 
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.StaffRepository;
-import com.manahotel.be.security.password.TokenService;
-import com.manahotel.be.service.StaffService;
+import com.manahotel.be.security.*;
+import com.manahotel.be.security.request.AuthenticationRequest;
+import com.manahotel.be.security.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

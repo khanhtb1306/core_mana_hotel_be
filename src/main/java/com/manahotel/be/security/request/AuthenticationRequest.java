@@ -1,4 +1,4 @@
-package com.manahotel.be.security;
+package com.manahotel.be.security.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class RegisterRequest {
+public class AuthenticationRequest {
     private String username;
     private String password;
 }

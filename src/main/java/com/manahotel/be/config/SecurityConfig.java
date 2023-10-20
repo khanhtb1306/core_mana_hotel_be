@@ -1,7 +1,7 @@
 package com.manahotel.be.config;
 
 import com.manahotel.be.security.JwtAuthenticationFilter;
-import com.manahotel.be.security.LogoutService;
+import com.manahotel.be.service.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
-import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
@@ -30,7 +27,7 @@ public class SecurityConfig {
     @Autowired
     private final LogoutService logoutService;
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+    private static final String[] WHITE_LIST_URL = {"/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
