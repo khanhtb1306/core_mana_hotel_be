@@ -10,7 +10,7 @@ public class CustomerDTO {
     private String customerName;
     private String customerGroup;
     private String phoneNumber;
-    private Timestamp dob;
+    private String dob;
     private String email;
     private String address;
     private String identity;

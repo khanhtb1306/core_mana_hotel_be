@@ -24,12 +24,12 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCustomer(@RequestBody CustomerDTO customerDTO) throws IOException {
-        return service.create(customerDTO);
+    public ResponseEntity<String> createCustomer( CustomerDTO customerDTO) throws IOException {
+         return service.create(customerDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateGoods(@PathVariable String id, @RequestBody CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<String> updateGoods(@PathVariable String id,  CustomerDTO customerDTO) throws IOException {
         return service.update(id, customerDTO);
     }
 

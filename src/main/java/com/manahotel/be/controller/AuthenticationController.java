@@ -1,10 +1,7 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.security.AuthenticationRequest;
-import com.manahotel.be.security.AuthenticationResponse;
-import com.manahotel.be.security.AuthenticationService;
-import com.manahotel.be.security.RegisterRequest;
+import com.manahotel.be.security.*;
 import com.manahotel.be.security.password.PasswordResetRequest;
 import com.manahotel.be.security.password.RegistrationCompleteEventListener;
 import com.manahotel.be.service.StaffService;
@@ -12,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +21,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
@@ -38,15 +36,14 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
-
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
 
     }
 
     @PostMapping("/password-reset-request")
-    public String resetPasswordRequest(@RequestBody PasswordResetRequest passwordRequestUtil,
+    public ResponseEntity<String> resetPasswordRequest(@RequestBody PasswordResetRequest passwordRequestUtil,
                                        final HttpServletRequest servletRequest)
             throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
 
@@ -57,8 +54,11 @@ public class AuthenticationController {
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
             passwordResetUrl = passwordResetEmailLink(staff.get(), applicationUrl(servletRequest), passwordResetToken);
         }
+        else{
+            return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         log.info(passwordResetUrl);
-        return passwordResetUrl;
+        return new ResponseEntity<>(passwordResetUrl, HttpStatus.OK);
     }
 
     public String applicationUrl(HttpServletRequest request) {
@@ -68,8 +68,8 @@ public class AuthenticationController {
 
     private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
-        eventListener.sendPasswordResetVerificationEmail(url, staff);
-        log.info("Click the link to reset your password :  {}", url);
+        eventListener.sendPasswordResetVerificationEmail(url,staff);
+        log.info("Click the link to reset your password : ", url);
         return url;
     }
 
