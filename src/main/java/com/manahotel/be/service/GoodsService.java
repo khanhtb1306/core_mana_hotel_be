@@ -87,16 +87,23 @@ public class GoodsService {
 
             repository2.save(goodsUnit);
             log.info("----- Add Unit End -----");
-            return new ResponseEntity<>("Tạo hàng hóa thành công", HttpStatus.OK);
-        }
-        catch (Exception e) {
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo hàng hóa thành công");
+            response.put("goodsId", goods.getGoodsId());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
             log.info("Can't add goods", e.getMessage());
-            return new ResponseEntity<>("Tạo hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo hàng hóa thành công");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public ResponseEntity<String> updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
-        try{
+        try {
             log.info("----- Update Goods Start -----");
             Goods goods = findGoodsById(id);
 
@@ -122,11 +129,10 @@ public class GoodsService {
             repository2.save(goodsUnit);
             log.info("----- Update Unit Done -----");
 
-            return new  ResponseEntity<>("Cập nhật hàng hóa thành công", HttpStatus.OK);
-        }
-        catch (Exception e) {
+            return new ResponseEntity<>("Cập nhật hàng hóa thành công", HttpStatus.OK);
+        } catch (Exception e) {
             log.info("Can't update goods", e.getMessage());
-            return new  ResponseEntity<>("Cập nhật hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Cập nhật hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -147,14 +153,13 @@ public class GoodsService {
             log.info("----- Delete Goods End -----");
 
             return new ResponseEntity<>("Xóa hàng hóa thành công", HttpStatus.OK);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Can't delete goods", e.getMessage());
             return new ResponseEntity<>("Xóa hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public Goods findGoodsById(String id) {
+    private Goods findGoodsById(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
     }

@@ -96,10 +96,9 @@ public class InventoryCheckService {
             list.add(detail);
         }
 
-        if(!list.isEmpty()) {
+        if (!list.isEmpty()) {
             repository2.saveAll(list);
-        }
-        else{
+        } else {
             throw new EmptyListException("Chi tiết kiểm kho không được để trống");
         }
     }
@@ -118,13 +117,12 @@ public class InventoryCheckService {
             commonMapping(check, dto, listDetailDTO);
             log.info("----- Add Check End -----");
 
-            if(check.getStatus().equals(Status.TEMPORARY)) {
+            if (check.getStatus().equals(Status.TEMPORARY)) {
                 return new ResponseEntity<>("Tạo phiếu tạm kiểm kho thành công", HttpStatus.OK);
             }
 
             return new ResponseEntity<>("Tạo cân bằng kiểm kho thành công", HttpStatus.OK);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Can't add inventory check", e.getMessage());
             return new ResponseEntity<>("Tạo kiểm kho thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -143,13 +141,12 @@ public class InventoryCheckService {
             commonMapping(check, dto, listDetailDTO);
             log.info("----- Update Check End -----");
 
-            if(check.getStatus().equals(Status.TEMPORARY)) {
+            if (check.getStatus().equals(Status.TEMPORARY)) {
                 return new ResponseEntity<>("Cập nhật phiếu tạm kiểm kho thành công", HttpStatus.OK);
             }
 
             return new ResponseEntity<>("Cập nhật cân bằng kiểm kho thành công", HttpStatus.OK);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Can't update inventory check", e.getMessage());
             return new ResponseEntity<>("Cập nhật kiểm kho thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -161,8 +158,7 @@ public class InventoryCheckService {
             check.setStatus(Status.CANCEL);
             repository.save(check);
             return new ResponseEntity<>("Hủy kiểm kho thành công", HttpStatus.OK);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Can't update inventory check", e.getMessage());
             return new ResponseEntity<>("Hủy kiểm kho thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
