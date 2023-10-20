@@ -88,7 +88,7 @@ class RoomClassServiceTest {
         Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.of(roomCategory1));
         Mockito.when(roomClassRepository.save(roomCategory1)).thenReturn(roomCategory1);
 
-        String result1 = roomClassService.deleteRoomClassById(id);
+        String result1 = String.valueOf(roomClassService.deleteRoomClassById(id));
 
         assertEquals("success", result1);
         assertEquals(Status.DELETE, roomCategory1.getStatus());

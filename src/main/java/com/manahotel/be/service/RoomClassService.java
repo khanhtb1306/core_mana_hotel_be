@@ -10,6 +10,8 @@ import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -103,26 +105,40 @@ public class RoomClassService {
         }
     }
 
-    public String deleteRoomClassById(String id) {
+    public ResponseEntity<String> deleteRoomClassById(String id) {
         try {
             RoomCategory roomClass = getRoomCategoryById(id);
             if (roomClass == null) {
                 log.info("Can't find room class id");
-                return "NOT_FOUND";
+                return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
             }
             if (roomClassHasRooms(roomClass)) {
                 log.info("Room class has associated rooms");
-                return "BAD_REQUEST";
+                return new ResponseEntity<>("Không thể xóa hạng phòng vì có phòng thuộc hạng phòng này", HttpStatus.BAD_REQUEST);
             }
             roomClass.setStatus(Status.DELETE);
             roomClassRepository.save(roomClass);
 
             log.info("Room class deleted successfully");
-            return "success";
+            return new ResponseEntity<>("Xóa hạng phòng thành công", HttpStatus.OK);
         } catch (Exception e) {
             log.error("Failed to delete Room Class", e);
-            return "DeleteFail";
+            return new ResponseEntity<>("Xóa hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    public ResponseEntity<Map<String, String>> deleteRoomClassesByList(List<String> idList) {
+        Map<String, String> result = new HashMap<>();
+
+        if (idList == null || idList.isEmpty()) {
+            result.put("error", "Danh sách ID không hợp lệ.");
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        for (String id : idList) {
+            ResponseEntity<String> deletionResult = deleteRoomClassById(id);
+            result.put(id, deletionResult.getBody());
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     public RoomCategory getRoomCategoryById(String id) {

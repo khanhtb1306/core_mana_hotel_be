@@ -44,17 +44,8 @@ public class RoomClassController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRoomClassById(@PathVariable String id) {
-        String deletionResult = roomClassService.deleteRoomClassById(id);
-        if (deletionResult.equals("success")) {
-            return new ResponseEntity<>("Xóa hạng phòng thành công", HttpStatus.OK);
-        } else if (deletionResult.equals("NOT_FOUND")) {
-            return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
-        } else if (deletionResult.equals("BAD_REQUEST")) {
-            return new ResponseEntity<>("Không thể xóa hạng phòng vì có phòng thuộc hạng phòng này", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>("Xóa hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Map<String, String>> deleteRoomClassById(@PathVariable List<String> id) {
+        return roomClassService.deleteRoomClassesByList(id);
     }
 
     @GetMapping("/{id}")
