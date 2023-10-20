@@ -12,8 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.SimpleFormatter;
 
 @Slf4j
 @AllArgsConstructor
@@ -30,7 +35,14 @@ public class CustomerService {
         c.setCustomerName(customerDTO.getCustomerName());
         c.setCustomerGroup(customerDTO.getCustomerGroup());
         c.setPhoneNumber(customerDTO.getPhoneNumber());
-        c.setDob(customerDTO.getDob());
+        try{
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = dateFormat.parse(customerDTO.getDob());
+            Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
+            c.setDob(dobTimestamp);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         c.setEmail(customerDTO.getEmail());
         c.setAddress(customerDTO.getAddress());
         c.setIdentity(customerDTO.getIdentity());

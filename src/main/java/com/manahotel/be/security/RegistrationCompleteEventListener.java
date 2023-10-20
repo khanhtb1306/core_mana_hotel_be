@@ -1,6 +1,7 @@
-package com.manahotel.be.security.password;
+package com.manahotel.be.security;
 
 import com.manahotel.be.model.entity.Staff;
+import com.manahotel.be.security.RegistrationCompleteEvent;
 import com.manahotel.be.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
