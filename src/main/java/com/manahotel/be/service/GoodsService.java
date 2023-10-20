@@ -58,7 +58,7 @@ public class GoodsService {
         return new ResponseEntity<>(goodsInfo, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
+    public ResponseEntity<Map<String, String>> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Add Goods Start -----");
             Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();

@@ -39,10 +39,6 @@ public class InventoryCheckService {
     @Autowired
     private GoodsUnitRepository repository4;
 
-    public List<InventoryCheck> getAll() {
-        return repository.findAll();
-    }
-
     public ResponseEntity<List<Map<String, Object>>> getAllInventoryCheckWithDetails() {
         List<Object[]> listInventoryChecks = repository.findAllInventoryChecksWithDetails();
 

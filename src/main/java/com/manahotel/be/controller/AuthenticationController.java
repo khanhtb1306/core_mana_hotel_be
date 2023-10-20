@@ -21,6 +21,7 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/auth")

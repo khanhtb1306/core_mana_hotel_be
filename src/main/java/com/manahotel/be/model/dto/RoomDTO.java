@@ -3,7 +3,6 @@ package com.manahotel.be.model.dto;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Timestamp;
 @Data
 public class RoomDTO {
     private String roomName;

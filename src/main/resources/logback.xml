@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOGS" value="./logs" />
-    <appender name = "FILE" class = "ch.qos.logback.core.rolling.RollingFileAppender">
+    <property name="LOGS" value="./logs"/>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/u01/manahotel/data_manahotel/data_manahotel_log/manahotel.log</file>
         <encoder>
             <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [${appName}] %-5level [%thread] %logger{50}.%M - %msg%n</pattern>

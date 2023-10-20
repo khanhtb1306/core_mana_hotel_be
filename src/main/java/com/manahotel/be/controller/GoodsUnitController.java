@@ -22,12 +22,12 @@ public class GoodsUnitController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createGoodsUnit(@RequestBody GoodsUnitDTO goodsUnitDTO) {
+    public ResponseEntity<String> createGoodsUnit(GoodsUnitDTO goodsUnitDTO) {
         return service.createGoodsUnit(goodsUnitDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateGoodsUnit(@PathVariable Long id, @RequestBody GoodsUnitDTO goodsUnitDTO) {
+    public ResponseEntity<String> updateGoodsUnit(@PathVariable Long id, GoodsUnitDTO goodsUnitDTO) {
         return service.updateGoodsUnit(id, goodsUnitDTO);
     }
 

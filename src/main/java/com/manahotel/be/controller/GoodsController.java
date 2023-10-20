@@ -1,6 +1,5 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.service.GoodsRequest;
 import com.manahotel.be.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class GoodsController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createGoods(GoodsRequest goodsRequest) {
+    public ResponseEntity<Map<String, String>> createGoods(GoodsRequest goodsRequest) {
         return service.createGoods(goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
