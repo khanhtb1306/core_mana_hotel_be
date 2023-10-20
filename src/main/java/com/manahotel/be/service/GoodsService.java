@@ -58,7 +58,7 @@ public class GoodsService {
         return new ResponseEntity<>(goodsInfo, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
+    public ResponseEntity<Map<String, String>> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Add Goods Start -----");
             Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
@@ -87,10 +87,18 @@ public class GoodsService {
 
             repository2.save(goodsUnit);
             log.info("----- Add Unit End -----");
-            return new ResponseEntity<>("Tạo hàng hóa thành công", HttpStatus.OK);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo hàng hóa thành công");
+            response.put("goodsId", goods.getGoodsId());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't add goods", e.getMessage());
-            return new ResponseEntity<>("Tạo hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo hàng hóa thành công");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -151,7 +159,7 @@ public class GoodsService {
         }
     }
 
-    public Goods findGoodsById(String id) {
+    private Goods findGoodsById(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
     }

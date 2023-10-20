@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,7 +57,7 @@ class GoodsServiceTest {
         goodsUnitDTO.setPrice(30000F);
 
         // Act
-        ResponseEntity<String> result = goodsService.createGoods(goodsDTO, goodsUnitDTO);
+        ResponseEntity<Map<String, String>> result = goodsService.createGoods(goodsDTO, goodsUnitDTO);
 
         // Assert
         assertEquals("Tạo hàng hóa thành công", result.getBody());

@@ -22,7 +22,7 @@ public class GoodsController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createGoods(GoodsRequest goodsRequest) {
+    public ResponseEntity<Map<String, String>> createGoods(GoodsRequest goodsRequest) {
         return service.createGoods(goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
