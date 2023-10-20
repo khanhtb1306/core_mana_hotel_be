@@ -32,7 +32,7 @@ public class GoodsUnitController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGoodsUnit(@PathVariable Long id) {
+    public ResponseEntity<String> deleteGoodsUnit(@PathVariable String id) {
         return service.deleteGoodsUnit(id);
     }
 }
