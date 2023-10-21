@@ -140,16 +140,18 @@ public class GoodsService {
 
         try {
             log.info("----- Delete Goods Start -----");
-            Goods goods = findGoodsById(id);
+            List<Goods> listGoods = repository.findGoodsByGoodsId(id);
 
-            if (goods == null) {
+            if (listGoods == null) {
                 log.info("Can't find the goods");
                 return new ResponseEntity<>("Không tìm thấy hàng hóa", HttpStatus.NOT_FOUND);
             }
 
-            goods.setStatus(Status.DELETE);
+            for(Goods goods : listGoods) {
+                goods.setStatus(Status.DELETE);
+            }
 
-            repository.save(goods);
+            repository.saveAll(listGoods);
             log.info("----- Delete Goods End -----");
 
             return new ResponseEntity<>("Xóa hàng hóa thành công", HttpStatus.OK);
