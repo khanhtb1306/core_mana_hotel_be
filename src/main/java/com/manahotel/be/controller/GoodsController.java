@@ -31,9 +31,9 @@ public class GoodsController {
         return service.updateGoods(id, goodsRequest.getGoodsDTO(), goodsRequest.getGoodsUnitDTO());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGoods(@PathVariable String id) {
-        return service.deleteGoods(id);
+    @DeleteMapping
+    public ResponseEntity<String> deleteGoods(@RequestParam List<String> listGoodsId) {
+        return service.deleteGoods(listGoodsId);
     }
 
     @GetMapping("/{id}")
