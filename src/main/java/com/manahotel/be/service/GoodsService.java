@@ -80,9 +80,7 @@ public class GoodsService {
             GoodsUnit goodsUnit = new GoodsUnit();
             goodsUnit.setGoods(goods);
 
-            goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
-            goodsUnit.setCost(dto2.getCost());
-            goodsUnit.setPrice(dto2.getPrice());
+            commonMapping2(goodsUnit, dto2);
             goodsUnit.setIsDefault(true);
 
             repository2.save(goodsUnit);
@@ -114,7 +112,7 @@ public class GoodsService {
 
             commonMapping(goods, dto);
 
-            goods.setStatus(dto.getStatus());
+            goods.setStatus(dto.getStatus() != null ? dto.getStatus() : goods.getStatus());
             goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             repository.save(goods);
@@ -122,9 +120,7 @@ public class GoodsService {
 
             log.info("----- Update Unit Start -----");
             GoodsUnit goodsUnit = repository2.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
-            goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName());
-            goodsUnit.setCost(dto2.getCost());
-            goodsUnit.setPrice(dto2.getPrice());
+            commonMapping2(goodsUnit, dto2);
 
             repository2.save(goodsUnit);
             log.info("----- Update Unit Done -----");
@@ -168,13 +164,19 @@ public class GoodsService {
     }
 
     private void commonMapping(Goods goods, GoodsDTO dto) throws IOException {
-        goods.setGoodsName(dto.getGoodsName());
-        goods.setGoodsCategory(dto.isGoodsCategory());
-        goods.setInventory(dto.getInventory());
-        goods.setMinInventory(dto.getMinInventory());
-        goods.setMaxInventory(dto.getMaxInventory());
-        goods.setNote(dto.getNote());
-        goods.setDescription(dto.getDescription());
-        goods.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+        goods.setGoodsName((dto.getGoodsName() != null && !dto.getGoodsName().isEmpty()) ? dto.getGoodsName() : goods.getGoodsName());
+        goods.setGoodsCategory(dto.isGoodsCategory() ? dto.isGoodsCategory() : goods.isGoodsCategory());
+        goods.setInventory(dto.getInventory() != null ? dto.getInventory() : goods.getInventory());
+        goods.setMinInventory(dto.getMinInventory() != null ? dto.getMinInventory() : goods.getMinInventory());
+        goods.setMaxInventory(dto.getMaxInventory() != null ? dto.getMaxInventory() : goods.getMaxInventory());
+        goods.setNote((dto.getNote() != null && !dto.getNote().isEmpty()) ? dto.getNote() : goods.getNote());
+        goods.setDescription((dto.getDescription() != null && !dto.getDescription().isEmpty()) ? dto.getDescription() : goods.getDescription());
+        goods.setImage(dto.getImage() != null ? dto.getImage().getBytes() : goods.getImage());
+    }
+
+    private void commonMapping2(GoodsUnit goodsUnit, GoodsUnitDTO dto2) {
+        goodsUnit.setGoodsUnitName(dto2.getGoodsUnitName() != null ? dto2.getGoodsUnitName() : goodsUnit.getGoodsUnitName());
+        goodsUnit.setCost(dto2.getCost() != null ? dto2.getCost() : goodsUnit.getCost());
+        goodsUnit.setPrice(dto2.getPrice() != null ? dto2.getPrice() : goodsUnit.getPrice());
     }
 }
