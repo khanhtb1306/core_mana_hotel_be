@@ -32,7 +32,7 @@ public class GoodsController {
     }
 
     @DeleteMapping("/{listGoodsId}")
-    public ResponseEntity<Map<String, String>> deleteGoods(@PathVariable List<String> listGoodsId) {
+    public ResponseEntity<Map<String, String>> deleteListGoods(@PathVariable List<String> listGoodsId) {
         return service.deleteListGoods(listGoodsId);
     }
 
