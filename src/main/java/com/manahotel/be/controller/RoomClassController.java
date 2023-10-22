@@ -39,7 +39,7 @@ public class RoomClassController {
 
     @GetMapping("/{id}")
     public Map<String, Object> getRoomClassById(@PathVariable String id) {
-        return roomClassService.getAllRoomClassWithListRoom(id);
+        return roomClassService.getRoomClassWithListRoom(id);
     }
 
 }

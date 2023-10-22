@@ -151,7 +151,7 @@ public class RoomClassService {
                                 "Room Class not found with id " + id));
     }
 
-    public Map<String, Object> getAllRoomClassWithListRoom(String id) {
+    public Map<String, Object> getRoomClassWithListRoom(String id) {
         RoomCategory roomCategory = getRoomCategoryById(id);
         Map<String, Object> roomInfo = new HashMap<>();
 

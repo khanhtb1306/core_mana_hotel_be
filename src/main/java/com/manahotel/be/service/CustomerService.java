@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.SimpleFormatter;
 
 @Slf4j
@@ -31,25 +29,25 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    private void commonMapping(Customer c, CustomerDTO customerDTO) throws IOException {
-        c.setCustomerName(customerDTO.getCustomerName());
-        c.setCustomerGroup(customerDTO.getCustomerGroup());
-        c.setPhoneNumber(customerDTO.getPhoneNumber());
-        try{
+    private void commonMapping(Customer customer, CustomerDTO customerDTO) throws IOException {
+        customer.setCustomerName((customerDTO.getCustomerName() != null && !customerDTO.getCustomerName().isEmpty()) ? customerDTO.getCustomerName() : customer.getCustomerName());
+        customer.setCustomerGroup(customerDTO.getCustomerGroup() != null ? customerDTO.getCustomerGroup() : customer.getCustomerGroup());
+        customer.setPhoneNumber(customerDTO.getPhoneNumber() != null ? customerDTO.getPhoneNumber() : customer.getPhoneNumber());
+        try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date parsedDate = dateFormat.parse(customerDTO.getDob());
             Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
-            c.setDob(dobTimestamp);
+            customer.setDob(dobTimestamp);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        c.setEmail(customerDTO.getEmail());
-        c.setAddress(customerDTO.getAddress());
-        c.setIdentity(customerDTO.getIdentity());
-        c.setNationality(customerDTO.getNationality());
-        c.setTaxCode(customerDTO.getTaxCode());
-        c.setGender(customerDTO.isGender());
-        c.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : null);
+        customer.setEmail(customerDTO.getEmail() != null ? customerDTO.getEmail() : customer.getEmail());
+        customer.setAddress(customerDTO.getAddress() != null ? customerDTO.getAddress() : customer.getAddress());
+        customer.setIdentity(customerDTO.getIdentity() != null ? customerDTO.getIdentity() : customer.getIdentity());
+        customer.setNationality(customerDTO.getNationality() != null ? customerDTO.getNationality() : customer.getNationality());
+        customer.setTaxCode(customerDTO.getTaxCode() != null ? customerDTO.getTaxCode() : customer.getTaxCode());
+        customer.setGender(customerDTO.isGender());
+        customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : null);
 
     }
 
@@ -122,6 +120,21 @@ public class CustomerService {
             throw new IllegalStateException("customer with id " + customerId + " not exists");
         }
         return customerRepository.findById(customerId);
+    }
+
+    public ResponseEntity<Map<String, String>> deleteCustomerByList(List<String> idList) {
+        Map<String, String> result = new HashMap<>();
+
+        if (idList == null || idList.isEmpty()) {
+            result.put("error", "Danh sách ID không hợp lệ.");
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        for (String id : idList) {
+            ResponseEntity<String> deletionResult = delete(id);
+            result.put(id, deletionResult.getBody());
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }
