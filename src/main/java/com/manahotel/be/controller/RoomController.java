@@ -25,22 +25,12 @@ public class RoomController {
 
     @PostMapping
     public ResponseEntity<String> createRoom(RoomDTO roomDTO) {
-        String response = roomService.createRoom(roomDTO);
-        if (response.equals("CreateRoomSuccess")) {
-            return new ResponseEntity<>("Thêm phòng thành công", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Thêm phòng Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return roomService.createRoom(roomDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateRoom(@PathVariable String id, RoomDTO roomDTO) {
-        String response = roomService.updateRoom(id, roomDTO);
-        if (response.equals("UpdateRoomSuccess")) {
-            return new ResponseEntity<>("Cập nhật phòng thành công", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Cập nhật phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return roomService.updateRoom(id, roomDTO);
     }
 
     @DeleteMapping("/{id}")

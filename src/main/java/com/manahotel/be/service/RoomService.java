@@ -41,12 +41,12 @@ public class RoomService {
     }
 
     private void commonMapping(Room room, RoomDTO dto) throws IOException {
-        room.setRoomName(dto.getRoomName());
-        room.setNote(dto.getNote());
+        room.setRoomName(dto.getRoomName() != null ? dto.getRoomName() : room.getRoomName());
+        room.setNote(dto.getNote() != null ? dto.getNote() : room.getNote());
         room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
     }
 
-    public String createRoom(RoomDTO dto) {
+    public ResponseEntity<String> createRoom(RoomDTO dto) {
         try {
             log.info("------- Add Room Start -------");
             Room latestRoom = roomRepository.findTopByOrderByRoomIdDesc();
@@ -64,22 +64,20 @@ public class RoomService {
             room.setFloor(floor);
 
             room.setStatus(Status.ACTIVATE);
-            room.setBookingStatus(0L);
-            room.setConditionStatus(0L);
-            room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
-            room.setNote(dto.getNote());
+            room.setBookingStatus(Status.EMPTY);
+            room.setConditionStatus(Status.CLEAN);
             room.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Add Room End -------");
-            return "CreateRoomSuccess";
+            return new ResponseEntity<>("Thêm phòng thành công", HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't Add Room", e.getMessage());
-            return "CreateRoomFail";
+            return new ResponseEntity<>("Thêm phòng Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
-    public String updateRoom(String id, RoomDTO dto) {
+    public ResponseEntity<String> updateRoom(String id, RoomDTO dto) {
         try {
             log.info("------- Update Room Start -------");
             Room room = getRoomById(id);
@@ -94,15 +92,17 @@ public class RoomService {
 
             Floor floor = getFloorById(dto.getFloorId());
             room.setFloor(floor);
-            room.setNote(dto.getNote());
-            room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+
             room.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Update Room End -------");
-            return "UpdateRoomSuccess";
+            return new ResponseEntity<>("Cập nhật phòng thành công", HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            log.info("Can't find room class");
+            return new ResponseEntity<>("Không tìm thấy phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("Can't Update Room", e.getMessage());
-            return "UpdateRoomFail";
+            return new ResponseEntity<>("Cập phòng Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

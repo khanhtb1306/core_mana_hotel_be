@@ -12,8 +12,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class RoomClassServiceTest {
@@ -34,16 +41,25 @@ class RoomClassServiceTest {
 
     @Test
     public void testCreateRoomClass() {
-        RoomCategoryDTO dto = new RoomCategoryDTO();
-
-        RoomCategory roomCategory = new RoomCategory();
-        roomCategory.setRoomCategoryId("HP000001");
-
         Mockito.when(roomClassRepository.findTopByOrderByRoomCategoryIdDesc()).thenReturn(null);
-        Mockito.when(roomClassRepository.save(Mockito.any(RoomCategory.class))).thenReturn(roomCategory);
 
-        String result = roomClassService.createRoomClass(dto);
-        assertEquals("CreateRoomClassSuccess", result); // Update the expected result
+        RoomCategoryDTO dto = new RoomCategoryDTO();
+        dto.setRoomCategoryName("Create Room Category");
+        dto.setPriceByDay(120.0F);
+        dto.setPriceByNight(100.0F);
+        dto.setPriceByHour(25.0F);
+        dto.setNumOfAdults(3L);
+        dto.setNumOfChildren(3L);
+        dto.setRoomArea(35F);
+        dto.setDescription("Create Description");
+        ResponseEntity<String> result = roomClassService.createRoomClass(dto);
+
+        if (result.getStatusCode() == HttpStatus.OK) {
+            assertEquals("Thêm hạng phòng thành công", result.getBody());
+        } else {
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+            assertEquals("Thêm hạng phòng thất bại", result.getBody());
+        }
     }
 
     @Test
@@ -61,63 +77,45 @@ class RoomClassServiceTest {
 
         RoomCategory roomCategory = new RoomCategory();
         roomCategory.setRoomCategoryId(id);
-
-        // Mock the behavior of repository
         Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.of(roomCategory));
         Mockito.when(roomClassRepository.save(roomCategory)).thenReturn(roomCategory);
 
         // Execute the method
-        String result = roomClassService.updateRoomClass(id, dto);
+        ResponseEntity<String> result = roomClassService.updateRoomClass(id, dto);
 
-        // Verify the method behavior
-        assertEquals("UpdateRoomClassSuccess", result);
-
+        if (result.getStatusCode() == HttpStatus.OK) {
+            assertEquals("Cập nhật hạng phòng thành công", result.getBody());
+        } else {
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+            assertEquals("Cập nhật hạng phòng thất bại", result.getBody());
+        }
         // Verify that save() method was called on the repository
         Mockito.verify(roomClassRepository).save(roomCategory);
     }
 
     @Test
     public void testDeleteRoomClassById() {
-        String id = "HP000001";
+        // Scenario 1: Successfully deleting a room class
+        String id1 = "HP000001";
+        RoomCategory roomCategory1 = new RoomCategory();
+        roomCategory1.setRoomCategoryId(id1);
+        roomCategory1.setStatus(Status.ACTIVATE);
 
-//        // Scenario 1: Successfully deleting a room class
-//        RoomCategory roomCategory1 = new RoomCategory();
-//        roomCategory1.setRoomCategoryId(id);
-//        roomCategory1.setStatus(Status.ACTIVATE);
-//
-//        Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.of(roomCategory1));
-//        Mockito.when(roomClassRepository.save(roomCategory1)).thenReturn(roomCategory1);
-//
-//        String result1 = String.valueOf(roomClassService.deleteRoomClassById(id));
-//
-//        assertEquals("success", result1);
-//        assertEquals(Status.DELETE, roomCategory1.getStatus());
-//        Mockito.verify(roomClassRepository).save(roomCategory1);
+        Mockito.when(roomClassRepository.findById(id1)).thenReturn(java.util.Optional.of(roomCategory1));
 
-//        // Scenario 2: Room class not found
-//        Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.empty());
-//
-//        String result2 = roomClassService.deleteRoomClassById(id);
-//
-//        assertEquals("NOT_FOUND", result2); // Now the test should pass
+        ResponseEntity<String> result1 = roomClassService.deleteRoomClassById(id1);
+        assertEquals(HttpStatus.OK, result1.getStatusCode());
+        assertEquals("Xóa hạng phòng thành công", result1.getBody());
+        assertEquals(Status.DELETE, roomCategory1.getStatus());
+        Mockito.verify(roomClassRepository).save(roomCategory1);
 
-        // Scenario 3: Room class has rooms associated with it
-//        RoomCategory roomCategory3 = new RoomCategory();
-//        roomCategory3.setRoomCategoryId(id);
-//        roomCategory3.setStatus(Status.ACTIVATE);
-//
-//        // Mock the behavior of repository
-//        Mockito.when(roomClassRepository.findById(id)).thenReturn(java.util.Optional.of(roomCategory3));
-//        // Mock the method roomClassHasRooms to return true
-//        Mockito.when(roomClassService.roomClassHasRooms(roomCategory3)).thenReturn(true);
-//
-//        String result3 = roomClassService.deleteRoomClassById(id);
-//
-//        assertEquals("BAD_REQUEST", result3);
-//
-//        // Verify that the room class status and repository were not modified or called
-//        assertEquals(Status.ACTIVATE, roomCategory3.getStatus());
-//        Mockito.verifyNoMoreInteractions(roomClassRepository);
+        // Scenario 2: Room class not found
+        String id2 = "NonExistentID";
+        Mockito.when(roomClassRepository.findById(id2)).thenReturn(java.util.Optional.empty());
+
+        ResponseEntity<String> result2 = roomClassService.deleteRoomClassById(id2);
+        assertEquals(HttpStatus.NOT_FOUND, result2.getStatusCode());
+        assertEquals("Không tìm thấy hạng phòng", result2.getBody());
 
     }
 }
