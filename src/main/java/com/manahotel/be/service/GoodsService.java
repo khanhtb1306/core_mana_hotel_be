@@ -105,11 +105,6 @@ public class GoodsService {
             log.info("----- Update Goods Start -----");
             Goods goods = findGoodsById(id);
 
-            if (goods == null) {
-                log.info("Can't find the goods");
-                return new ResponseEntity<>("Không tìm thấy hàng hóa", HttpStatus.NOT_FOUND);
-            }
-
             commonMapping(goods, dto);
 
             goods.setStatus(dto.getStatus() != null ? dto.getStatus() : goods.getStatus());
@@ -139,11 +134,6 @@ public class GoodsService {
 
             for (String id : listGoodsId) {
                 Goods goods = findGoodsById(id);
-
-                if (goods == null) {
-                    log.info("Can't find the goods");
-                    return new ResponseEntity<>("Không tìm thấy hàng hóa", HttpStatus.NOT_FOUND);
-                }
 
                 goods.setStatus(Status.DELETE);
 

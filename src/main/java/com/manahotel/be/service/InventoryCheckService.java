@@ -57,17 +57,17 @@ public class InventoryCheckService {
     }
 
     private void commonMapping(InventoryCheck check, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
-        check.setStatus(dto.getStatus());
+        check.setStatus(dto.getStatus() != null ? dto.getStatus() : check.getStatus());
 
         if (check.getStatus().equals(Status.TEMPORARY)) {
             check.setTimeBalance(null);
         } else {
-            Timestamp timeBalance = Optional.ofNullable(dto.getTimeBalance())
+            Timestamp timeBalance = Optional.ofNullable(dto.getTimeBalance() != null ? dto.getTimeBalance() : check.getTimeBalance())
                     .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
             check.setTimeBalance(timeBalance);
         }
 
-        check.setNote(dto.getNote());
+        check.setNote(dto.getNote() != null ? dto.getNote() : check.getNote());
 
         repository.save(check);
 
@@ -132,11 +132,6 @@ public class InventoryCheckService {
         try {
             log.info("----- Update Check Start -----");
             InventoryCheck check = findInventoryCheckById(id);
-
-            if (check == null) {
-                log.info("Can't find the inventory check");
-                return new ResponseEntity<>("Không tìm thấy mã kiểm kho", HttpStatus.NOT_FOUND);
-            }
 
             commonMapping(check, dto, listDetailDTO);
             log.info("----- Update Check End -----");
