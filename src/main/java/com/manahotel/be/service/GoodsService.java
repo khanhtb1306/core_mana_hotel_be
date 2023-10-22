@@ -165,7 +165,7 @@ public class GoodsService {
 
     private void commonMapping(Goods goods, GoodsDTO dto) throws IOException {
         goods.setGoodsName((dto.getGoodsName() != null && !dto.getGoodsName().isEmpty()) ? dto.getGoodsName() : goods.getGoodsName());
-        goods.setGoodsCategory(dto.isGoodsCategory() ? dto.isGoodsCategory() : goods.isGoodsCategory());
+        goods.setGoodsCategory(dto.isGoodsCategory());
         goods.setInventory(dto.getInventory() != null ? dto.getInventory() : goods.getInventory());
         goods.setMinInventory(dto.getMinInventory() != null ? dto.getMinInventory() : goods.getMinInventory());
         goods.setMaxInventory(dto.getMaxInventory() != null ? dto.getMaxInventory() : goods.getMaxInventory());
