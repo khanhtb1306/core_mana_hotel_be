@@ -127,18 +127,15 @@ public class GoodsService {
         }
     }
 
-    public ResponseEntity<String> deleteGoods(List<String> listGoodsId) {
+    private ResponseEntity<String> deleteGoods(String id) {
 
         try {
             log.info("----- Delete Goods Start -----");
+            Goods goods = findGoodsById(id);
 
-            for (String id : listGoodsId) {
-                Goods goods = findGoodsById(id);
+            goods.setStatus(Status.DELETE);
 
-                goods.setStatus(Status.DELETE);
-
-                repository.save(goods);
-            }
+            repository.save(goods);
             log.info("----- Delete Goods End -----");
 
             return new ResponseEntity<>("Xóa hàng hóa thành công", HttpStatus.OK);
@@ -147,6 +144,23 @@ public class GoodsService {
             return new ResponseEntity<>("Xóa hàng hóa thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ResponseEntity<Map<String, String>> deleteListGoods(List<String> listGoodsId) {
+        Map<String, String> result = new HashMap<>();
+
+        if(listGoodsId == null || listGoodsId.isEmpty()) {
+            result.put("error", "Danh sách Id không hợp lệ");
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        for (String id : listGoodsId) {
+            ResponseEntity<String> deleteResult = deleteGoods(id);
+            result.put(id, deleteResult.getBody());
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     private Goods findGoodsById(String id) {
         return repository.findById(id)
