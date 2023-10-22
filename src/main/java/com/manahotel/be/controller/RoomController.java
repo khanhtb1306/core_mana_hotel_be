@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/room")
@@ -43,17 +44,9 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRoomById(@PathVariable String id) {
-        String response = roomService.deleteRoomById(id);
-        if (response.equals("DeleteRoomSuccess")) {
-            return new ResponseEntity<>("Xóa phòng thành công", HttpStatus.OK);
-        } else if (response.equals("NOT_FOUND")) {
-            return new ResponseEntity<>("Không tìm thấy phòng", HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>("Xóa phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Map<String, String>> deleteRoomById(@PathVariable List<String> id) {
+        return roomService.deleteRoomByList(id);
     }
-
     @GetMapping("/{id}")
     public Room getRoomById(@PathVariable String id) {
         return roomService.getRoomById(id);

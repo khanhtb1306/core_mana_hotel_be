@@ -108,9 +108,9 @@ public class RoomClassService {
     public ResponseEntity<String> deleteRoomClassById(String id) {
         try {
             RoomCategory roomClass = getRoomCategoryById(id);
-            if (roomClass == null) {
-                log.info("Can't find room class id");
-                return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
+            if (roomClass.getStatus() == Status.DELETE) {
+                log.info("Room Class Can't delete");
+                return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
             }
             if (roomClassHasRooms(roomClass)) {
                 log.info("Room class has associated rooms");
@@ -121,6 +121,9 @@ public class RoomClassService {
 
             log.info("Room class deleted successfully");
             return new ResponseEntity<>("Xóa hạng phòng thành công", HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            log.info("Can't find room class");
+            return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error("Failed to delete Room Class", e);
             return new ResponseEntity<>("Xóa hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);

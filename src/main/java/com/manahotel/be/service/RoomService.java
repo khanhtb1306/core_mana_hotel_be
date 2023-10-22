@@ -12,11 +12,15 @@ import com.manahotel.be.repository.FloorRepository;
 import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -103,29 +107,48 @@ public class RoomService {
     }
 
 
-    public String deleteRoomById(String id) {
+    public ResponseEntity<String> deleteRoomById(String id) {
         try {
             Room room = getRoomById(id);
-            if (room == null) {
-                log.info("Can't find room id");
-                return "NOT_FOUND";
+            if (room.getStatus() == Status.DELETE) {
+                log.info("Phòng đã bị xóa");
+                return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
             }
             room.setStatus(Status.DELETE);
             roomRepository.save(room);
+            log.info("Room deleted successfully");
+            return new ResponseEntity<>("Xóa phòng thành công", HttpStatus.OK);
 
-            return "DeleteRoomSuccess";
-
+        } catch (ResourceNotFoundException e) {
+            log.info("Can't find room class");
+            return new ResponseEntity<>("Không tìm thấy phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.info("Can't Delete Room", e.getMessage());
-            return "DeleteRoomFail";
+            log.error("Failed to delete Room", e);
+            return new ResponseEntity<>("Xóa phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    public ResponseEntity<Map<String, String>> deleteRoomByList(List<String> idList) {
+        Map<String, String> result = new HashMap<>();
+
+        if (idList == null || idList.isEmpty()) {
+            result.put("error", "Danh sách ID không hợp lệ.");
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        for (String id : idList) {
+            ResponseEntity<String> deletionResult = deleteRoomById(id);
+            result.put(id, deletionResult.getBody());
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     public Room getRoomById(String id) {
         return roomRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Room not found with id " + id));
+                                "Room not found with id" + id));
     }
 
     public Floor getFloorById(Long id) {
