@@ -10,10 +10,13 @@ import com.manahotel.be.repository.FloorRepository;
 import com.manahotel.be.repository.RoomRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -58,9 +61,10 @@ public class RoomServiceTest {
         Mockito.when(roomClassService.getRoomCategoryById("HP000001")).thenReturn(existingRoomCategory);
         Mockito.when(roomService.getFloorById(1L)).thenReturn(existingFloor);
 
-        String result = roomService.createRoom(roomDTO);
+        ResponseEntity<String> result = roomService.createRoom(roomDTO);
         assertNotNull(result);
-        assertEquals("CreateRoomSuccess", result);
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+        Assertions.assertEquals("Thêm phòng thành công", result.getBody());
     }
 
     @Test
@@ -86,9 +90,10 @@ public class RoomServiceTest {
         Mockito.when(roomClassService.getRoomCategoryById("HP000002")).thenReturn(updatedRoomCategory);
         Mockito.when(roomService.getFloorById(2L)).thenReturn(updatedFloor);
 
-        String result = roomService.updateRoom(roomId, roomDTO);
+        ResponseEntity<String> result = roomService.updateRoom(roomId, roomDTO);
         assertNotNull(result);
-        assertEquals("UpdateRoomSuccess", result);
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+        Assertions.assertEquals("Cập nhật phòng thành công", result.getBody());
     }
 
 
@@ -117,10 +122,10 @@ public class RoomServiceTest {
         existingFloor.setFloorId((long) floorId);
 
         Mockito.when(floorRepository.findById((long) floorId)).thenReturn(Optional.of(existingFloor));
-        Mockito.when(floorRepository.save(Mockito.any(Floor.class))).thenReturn(existingFloor); // Assuming the floor is updated successfully
+        Mockito.when(floorRepository.save(Mockito.any(Floor.class))).thenReturn(existingFloor);
 
         String result = roomService.updateFloor(floorId, floorDTO);
         assertNotNull(result);
-        assertEquals("UpdateFloorSuccess", result); // Assuming the method returns "UpdateFloorSuccess" upon successful update
+        assertEquals("UpdateFloorSuccess", result);
     }
 }

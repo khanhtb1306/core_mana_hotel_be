@@ -59,7 +59,7 @@ public class RoomClassService {
         roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
     }
 
-    public String createRoomClass(RoomCategoryDTO dto) {
+    public ResponseEntity<String> createRoomClass(RoomCategoryDTO dto) {
         try {
             log.info("------- Add Room Class Start -------");
             RoomCategory latestRoomCategory = roomClassRepository.findTopByOrderByRoomCategoryIdDesc();
@@ -75,14 +75,14 @@ public class RoomClassService {
             roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             roomClassRepository.save(roomClass);
             log.info("------- Add Room Class End -------");
-            return "CreateRoomClassSuccess";
+            return new ResponseEntity<>("Thêm hạng phòng thành công", HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't Add Room Class", e.getMessage());
-            return "CreateRoomClassFail";
+            return new ResponseEntity<>("Thêm hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String updateRoomClass(String id, RoomCategoryDTO dto) {
+    public ResponseEntity<String> updateRoomClass(String id, RoomCategoryDTO dto) {
         log.info("------- Update Room Class Start -------");
         try {
 
@@ -98,19 +98,19 @@ public class RoomClassService {
             roomClassRepository.save(roomClass);
 
             log.info("------- Update Room Class End -------");
-            return "UpdateRoomClassSuccess";
+            return new ResponseEntity<>("Cập nhật hạng phòng thành công", HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't Update Room Class", e.getMessage());
-            return "UpdateRoomClassFail";
+            return new ResponseEntity<>("Cập nhật hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public ResponseEntity<String> deleteRoomClassById(String id) {
         try {
             RoomCategory roomClass = getRoomCategoryById(id);
-            if (roomClass == null) {
-                log.info("Can't find room class id");
-                return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
+            if (roomClass.getStatus() == Status.DELETE) {
+                log.info("Room Class Can't delete");
+                return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
             }
             if (roomClassHasRooms(roomClass)) {
                 log.info("Room class has associated rooms");
@@ -121,6 +121,9 @@ public class RoomClassService {
 
             log.info("Room class deleted successfully");
             return new ResponseEntity<>("Xóa hạng phòng thành công", HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            log.info("Can't find room class");
+            return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error("Failed to delete Room Class", e);
             return new ResponseEntity<>("Xóa hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
