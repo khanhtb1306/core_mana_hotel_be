@@ -54,6 +54,8 @@ public class RoomClassService {
         roomClass.setPriceByHour(dto.getPriceByHour());
         roomClass.setNumOfAdults(dto.getNumOfAdults());
         roomClass.setNumOfChildren(dto.getNumOfChildren());
+        roomClass.setNumMaxOfAdults(dto.getNumMaxOfAdults());
+        roomClass.setNumMaxOfChildren(dto.getNumMaxOfChildren());
         roomClass.setRoomArea(dto.getRoomArea());
         roomClass.setDescription(dto.getDescription());
         roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
