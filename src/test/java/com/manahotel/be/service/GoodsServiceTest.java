@@ -120,8 +120,8 @@ class GoodsServiceTest {
 
         Mockito.when(goodsRepository.findById(id)).thenReturn(java.util.Optional.of(goods));
 
-        ResponseEntity<String> result = goodsService.deleteGoods(listGoodsId);
+        ResponseEntity<Map<String, String>> result = goodsService.deleteListGoods(listGoodsId);
 
-        assertEquals("Xóa hàng hóa thành công", result.getBody());
+        assertEquals("Xóa hàng hóa thành công", result.getBody().get("SP000001"));
     }
 }
