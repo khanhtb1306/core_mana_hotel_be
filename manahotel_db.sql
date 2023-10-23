@@ -452,6 +452,8 @@ CREATE TABLE `room_category` (
                                  `price_by_hour` float DEFAULT NULL,
                                  `num_of_adults` bigint DEFAULT NULL,
                                  `num_of_children` bigint DEFAULT NULL,
+                                 `num_max_of_adults` bigint DEFAULT NULL,
+                                 `num_max_of_children` bigint DEFAULT NULL,
                                  `room_area` float DEFAULT NULL,
                                  `status` int DEFAULT NULL,
                                  `description` varchar(500) DEFAULT NULL,
@@ -522,18 +524,18 @@ CREATE TABLE `token` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-10-19 12:55:28
-INSERT INTO `room_category` (`room_category_id`, `room_category_name`, `price_by_day`, `price_by_night`, `price_by_hour`, `num_of_adults`, `num_of_children`, `room_area`, `status`, `description`, `image`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
+INSERT INTO `room_category` (`room_category_id`, `room_category_name`, `price_by_day`, `price_by_night`, `price_by_hour`, `num_of_adults`, `num_of_children`,`num_max_of_adults`,`num_max_of_children`, `room_area`, `status`, `description`, `image`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
 VALUES
-    ('HP000001', 'Phòng cơ bản', 300000, 300000.0, 200000, 2,1, 20.0, 1, 'Phòng cơ bản', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000002', 'Phòng hạng trung', 700000, 300000.0, 200000, 3,1, 30.0, 1, 'Phòng hạng trung', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000003', 'Phòng đơn', 400000, 400000.0, 250000, 1,1, 18.0, 1, 'Phòng đơn', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000004', 'Phòng gia đình', 900000, 500000.0, 300000, 4,1, 40.0, 1, 'Phòng gia đình', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000005', 'Phòng VIP', 1200000, 800000.0, 500000, 2,1, 25.0, 1, 'Phòng VIP', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000006', 'Phòng Suite', 1500000, 1000000.0, 600000, 2,1, 30.0, 1, 'Phòng Suite', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000007', 'Phòng VIP2', 2000000, 1500000.0, 800000, 6,1, 70.0, 1, 'Phòng VIP2', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000008', 'Phòng Ocean View', 800000, 500000.0, 350000, 3,1, 35.0, 1, 'Phòng với view biển', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000009', 'Phòng Deluxe Suite', 1800000, 1200000.0, 700000, 2,1, 35.0, 1, 'Phòng Deluxe Suite', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000010', 'Phòng Tổng Thống', 3000000, 2000000.0, 1000000, 2,1, 40.0, 1, 'Phòng Phủng', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
+    ('HP000001', 'Phòng cơ bản', 300000, 300000.0, 200000, 2,1,3,2, 20.0, 1, 'Phòng cơ bản', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000002', 'Phòng hạng trung', 700000, 300000.0, 200000, 3,1,4,2, 30.0, 1, 'Phòng hạng trung', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000003', 'Phòng đơn', 400000, 400000.0, 250000, 1,1,2,2, 18.0, 1, 'Phòng đơn', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000004', 'Phòng gia đình', 900000, 500000.0, 300000, 4,1,5,2, 40.0, 1, 'Phòng gia đình', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000005', 'Phòng VIP', 1200000, 800000.0, 500000, 2,1,3,2, 25.0, 1, 'Phòng VIP', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000006', 'Phòng Suite', 1500000, 1000000.0, 600000, 2,1,3,2, 30.0, 1, 'Phòng Suite', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000007', 'Phòng VIP2', 2000000, 1500000.0, 800000, 6,1,7,2 70.0, 1, 'Phòng VIP2', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000008', 'Phòng Ocean View', 800000, 500000.0, 350000, 3,1,4,1, 35.0, 1, 'Phòng với view biển', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000009', 'Phòng Deluxe Suite', 1800000, 1200000.0, 700000, 2,1,3,2, 35.0, 1, 'Phòng Deluxe Suite', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000010', 'Phòng Tổng Thống', 3000000, 2000000.0, 1000000, 2,1,3,2, 40.0, 1, 'Phòng Phủng', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
 
 INSERT INTO `floor` (`floor_name`, `status`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
 VALUES
