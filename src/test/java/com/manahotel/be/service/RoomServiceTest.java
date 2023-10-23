@@ -105,9 +105,10 @@ public class RoomServiceTest {
 
         Mockito.when(floorRepository.save(Mockito.any(Floor.class))).thenReturn(new Floor()); // Assuming the floor is saved successfully
 
-        String result = roomService.createFloor(floorDTO);
+        ResponseEntity<String> result = roomService.createFloor(floorDTO);
         assertNotNull(result);
-        assertEquals("CreateFloorSuccess", result); // Assuming the method returns "CreateFloorSuccess" upon successful creation
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+        Assertions.assertEquals("Thêm Khu vực thành công", result.getBody());
     }
 
     @Test
@@ -124,8 +125,8 @@ public class RoomServiceTest {
         Mockito.when(floorRepository.findById((long) floorId)).thenReturn(Optional.of(existingFloor));
         Mockito.when(floorRepository.save(Mockito.any(Floor.class))).thenReturn(existingFloor);
 
-        String result = roomService.updateFloor(floorId, floorDTO);
+        ResponseEntity<String> result = roomService.updateFloor(floorId, floorDTO);
         assertNotNull(result);
-        assertEquals("UpdateFloorSuccess", result);
-    }
+        Assertions.assertEquals(HttpStatus.OK, result.getStatusCode());
+        Assertions.assertEquals("Cập nhật Khu vực thành công", result.getBody());      }
 }

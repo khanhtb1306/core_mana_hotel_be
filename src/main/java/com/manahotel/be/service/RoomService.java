@@ -163,7 +163,7 @@ public class RoomService {
         return floorRepository.findByStatusNot(Status.DELETE);
     }
 
-    public String createFloor(FloorDTO dto) {
+    public ResponseEntity<String> createFloor(FloorDTO dto) {
         try {
             log.info("------- Add Floor Start -------");
 
@@ -173,14 +173,14 @@ public class RoomService {
             floor.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             floorRepository.save(floor);
             log.info("------- Add Floor End -------");
-            return "CreateFloorSuccess";
+            return new ResponseEntity<>("Thêm Khu vực thành công", HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't Add Floor", e.getMessage());
-            return "CreateFloorFail";
+            return new ResponseEntity<>("Thêm Khu vực Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String updateFloor(int id, FloorDTO dto) {
+    public ResponseEntity<String> updateFloor(int id, FloorDTO dto) {
         try {
             log.info("------- Update Floor Start -------");
 
@@ -193,28 +193,26 @@ public class RoomService {
             floor.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             floorRepository.save(floor);
             log.info("------- Update Floor End -------");
-            return "UpdateFloorSuccess";
+            return new ResponseEntity<>("Cập nhật Khu vực thành công", HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't Update Floor", e.getMessage());
-            return "UpdateFloorFail";
+            return new ResponseEntity<>("Cập nhật Khu vực Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public String deleteFloorById(int id) {
+    public ResponseEntity<String> deleteFloorById(int id) {
         try {
             Floor floor = getFloorById((long) id);
-            if (floor == null) {
-                log.info("Can't find floor id");
-                return "NOT_FOUND";
-            }
 
             floor.setStatus(Status.DEACTIVATE);
             floorRepository.save(floor);
-
-            return "DeleteFloorSuccess";
+            return new ResponseEntity<>("Xóa khu vực thành công", HttpStatus.OK);
+        }catch (ResourceNotFoundException e){
+            log.info("Can't find floor id", e.getMessage());
+            return new ResponseEntity<>("không tìm thấy khu vực thành công", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("Can't Delete Floor", e.getMessage());
-            return "DeleteFloorFail";
+            return new ResponseEntity<>("Xóa khu vực thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
