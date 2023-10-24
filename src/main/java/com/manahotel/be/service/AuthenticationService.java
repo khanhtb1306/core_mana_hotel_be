@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,7 +71,7 @@ public class AuthenticationService {
             } else {
                 log.error("Password is wrong");
             }
-            return AuthenticationResponse.builder().response("Username or password is wrong").build();
+            return AuthenticationResponse.builder().response("Tên đăng nhập hoặc mật khẩu sai").build();
         }
     }
 
@@ -85,7 +86,7 @@ public class AuthenticationService {
     }
 
     public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
+        String url = applicationUrl + "/auth/reset-password?token=" + passwordResetToken;
         eventListener.sendPasswordResetVerificationEmail(url,staff);
         log.info("Click the link to reset your password : ", url);
         return url;
