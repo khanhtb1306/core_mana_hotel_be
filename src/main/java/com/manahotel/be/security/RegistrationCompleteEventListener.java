@@ -16,12 +16,8 @@ import java.io.UnsupportedEncodingException;
 @Component
 @RequiredArgsConstructor
 public class RegistrationCompleteEventListener implements ApplicationListener<RegistrationCompleteEvent> {
-    private final StaffService staffService;
-
     @Autowired
     private final JavaMailSender mailSender;
-    private Staff staff;
-
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
 //        staff = event.getStaff();
@@ -36,21 +32,21 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     }
 
     public void sendVerificationEmail(String url) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String subject = "Email Verification";
-        String senderName = "User Registration Portal Service";
-        String mailContent = "<p> Hi, " + staff.getStaffName() + ", </p>" +
-                "<p>Thank you for registering with us," + "" +
-                "Please, follow the link below to complete your registration.</p>" +
-                "<a href=\"" + url + "\">Verify your email to activate your account</a>" +
-                "<p> Thank you <br> Users Registration Portal Service";
-
-        jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
-        var messageHelper = new MimeMessageHelper(message);
-        messageHelper.setFrom("nguyenhuync2937@gmail.com", senderName);
-        messageHelper.setTo(staff.getEmail());
-        messageHelper.setSubject(subject);
-        messageHelper.setText(mailContent, true);
-        mailSender.send(message);
+//        String subject = "Email Verification";
+//        String senderName = "User Registration Portal Service";
+//        String mailContent = "<p> Hi, " + staff.getStaffName() + ", </p>" +
+//                "<p>Thank you for registering with us," + "" +
+//                "Please, follow the link below to complete your registration.</p>" +
+//                "<a href=\"" + url + "\">Verify your email to activate your account</a>" +
+//                "<p> Thank you <br> Users Registration Portal Service";
+//
+//        jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
+//        var messageHelper = new MimeMessageHelper(message);
+//        messageHelper.setFrom("nguyenhuync2937@gmail.com", senderName);
+//        messageHelper.setTo(staff.getEmail());
+//        messageHelper.setSubject(subject);
+//        messageHelper.setText(mailContent, true);
+//        mailSender.send(message);
     }
 
     public void sendPasswordResetVerificationEmail(String url, Staff staff) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {

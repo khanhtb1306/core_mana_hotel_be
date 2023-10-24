@@ -51,8 +51,9 @@ public class AuthenticationController {
 
         Optional<Staff> staff = staffService.findByEmail(passwordRequestUtil.getEmail());
         String passwordResetUrl = "";
+        String passwordResetToken="";
         if (staff.isPresent()) {
-            String passwordResetToken = UUID.randomUUID().toString();
+            passwordResetToken = UUID.randomUUID().toString();
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
             passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken);
         }
@@ -60,7 +61,7 @@ public class AuthenticationController {
             return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.OK);
         }
         log.info(passwordResetUrl);
-        return new ResponseEntity<>(passwordResetUrl, HttpStatus.OK);
+        return new ResponseEntity<String>(passwordResetToken, HttpStatus.OK);
     }
 
 
@@ -69,7 +70,7 @@ public class AuthenticationController {
                                 @RequestParam("token") String passwordResetToken) {
         String tokenValidationResult = staffService.validatePasswordResetToken(passwordResetToken);
         if (!tokenValidationResult.equalsIgnoreCase("valid")) {
-            return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.OK);
         }
 
         Staff staff = staffService.findUserByPasswordToken(passwordResetToken);
@@ -77,7 +78,7 @@ public class AuthenticationController {
             service.ResetPassword(staff, passwordResetRequest.getNewPassword());
             return new ResponseEntity<>("Đổi mật khẩu thành công", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.OK);
 
     }
 
