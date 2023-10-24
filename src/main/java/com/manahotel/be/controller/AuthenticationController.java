@@ -56,7 +56,8 @@ public class AuthenticationController {
             passwordResetToken = UUID.randomUUID().toString();
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
             passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken);
-        } else {
+        }
+        else{
             return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.OK);
         }
         log.info(passwordResetUrl);
