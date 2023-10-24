@@ -71,21 +71,20 @@ class CustomerServiceTest {
     @Test
     void updateHaveNotNullCustomerNameIsSucessfull() throws IOException {
 
-        String id = "000001"; // Assuming an existing floor with this ID
+        String customerId = "123";
 
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCustomerName("huy");
+        Customer existingCustomer = new Customer();
+        existingCustomer.setCustomerName("Old Name");
+        existingCustomer.setGender(true);
 
-        Customer exists = new Customer();
-        exists.setCustomerId((String) id);
+        CustomerDTO updatedCustomer = new CustomerDTO();
+        updatedCustomer.setCustomerName("New Name");
+        existingCustomer.setGender(false);
 
-        Mockito.when(customerRepository.findById((String) id)).thenReturn(Optional.of(exists));
-        underTest.update(id, customerDTO);
+        Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.of(existingCustomer));
 
-//        verify(customerRepository).save(customerArgumentCaptor.capture());
-//        Customer c = customerArgumentCaptor.getValue();
-//        exists.setCustomerName("huy");
-//        assertThat(c).isEqualTo(exists);
+        underTest.update(customerId, updatedCustomer);
+        assertEquals(updatedCustomer.isGender(), existingCustomer.getGender());
 
     }
 
