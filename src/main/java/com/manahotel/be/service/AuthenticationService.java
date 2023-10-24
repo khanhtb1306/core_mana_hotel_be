@@ -85,7 +85,7 @@ public class AuthenticationService {
     }
 
     public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/reset-password?token=" + passwordResetToken;
+        String url = applicationUrl + "/reset-password?" + passwordResetToken;
         eventListener.sendPasswordResetVerificationEmail(url,staff);
         log.info("Click the link to reset your password : ", url);
         return url;
