@@ -17,7 +17,6 @@ public class TokenService {
     @Autowired
     private final TokenRepository tokenRepository;
 
-
     public void createTokenForUser(Staff staff, String passwordToken) {
         Token passwordRestToken = new Token(passwordToken, staff);
         tokenRepository.save(passwordRestToken);
@@ -48,7 +47,5 @@ public class TokenService {
         return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
     }
 
-    public Optional<Staff> findUserByPasswordToken(String passwordResetToken) {
-        return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
-    }
+
 }
