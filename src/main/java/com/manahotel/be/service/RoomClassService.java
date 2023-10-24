@@ -38,9 +38,11 @@ public class RoomClassService {
         for (Object[] roomCategory : roomCategories) {
             RoomCategory rc = (RoomCategory) roomCategory[0];
             Long roomCount = (Long) roomCategory[1];
+            List<Room> rooms = roomRepository.findByRoomCategory(rc);
             Map<String, Object> roomInfo = new HashMap<>();
             roomInfo.put("roomCategory", rc);
             roomInfo.put("roomTotal", roomCount);
+            roomInfo.put("ListRoom", rooms.toArray());
 
             result.add(roomInfo);
         }

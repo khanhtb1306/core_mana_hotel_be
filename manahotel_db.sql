@@ -532,7 +532,7 @@ VALUES
     ('HP000004', 'Phòng gia đình', 900000, 500000.0, 300000, 4,1,5,2, 40.0, 1, 'Phòng gia đình', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('HP000005', 'Phòng VIP', 1200000, 800000.0, 500000, 2,1,3,2, 25.0, 1, 'Phòng VIP', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('HP000006', 'Phòng Suite', 1500000, 1000000.0, 600000, 2,1,3,2, 30.0, 1, 'Phòng Suite', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-    ('HP000007', 'Phòng VIP2', 2000000, 1500000.0, 800000, 6,1,7,2 70.0, 1, 'Phòng VIP2', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+    ('HP000007', 'Phòng VIP2', 2000000, 1500000.0, 800000, 6,1,7,2, 70.0, 1, 'Phòng VIP2', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('HP000008', 'Phòng Ocean View', 800000, 500000.0, 350000, 3,1,4,1, 35.0, 1, 'Phòng với view biển', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('HP000009', 'Phòng Deluxe Suite', 1800000, 1200000.0, 700000, 2,1,3,2, 35.0, 1, 'Phòng Deluxe Suite', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('HP000010', 'Phòng Tổng Thống', 3000000, 2000000.0, 1000000, 2,1,3,2, 40.0, 1, 'Phòng Phủng', NULL, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
@@ -551,7 +551,6 @@ VALUES
     ('Tầng 10', 1, NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
 
 
-
 INSERT INTO `room` (`room_id`, `room_name`, `room_category_id`, `floor_id`, `status`, `booking_status`, `condition_status`, `image`, `note`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
 VALUES
     ('P000001', 'P.101', 'HP000001', 1, 1, 0, 1, NULL, 'Phòng cơ bản', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
@@ -564,3 +563,47 @@ VALUES
     ('P000008', 'P.402', 'HP000004', 4, 1, 0, 1, NULL, 'Phòng gia đình', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('P000009', 'P.501', 'HP000005', 5, 1, 0, 1, NULL, 'Phòng VIP', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
     ('P000010', 'P.502', 'HP000005', 5, 1, 0, 1, NULL, 'Phòng VIP', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
+
+
+INSERT INTO `goods`
+(`goods_id`, `goods_name`, `goods_category`, `status`, `inventory`, `min_inventory`, `max_inventory`, `note`, `description`, `image`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
+VALUES
+    ('SP000001', 'Sprite', true, 1, 100000, 100, 100000, 'Non nước ngọt Sprite', 'Non Sprite thể tích 150ml', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000002', 'Coca Cola', true, 1, 100000, 100, 100000, 'Non nước ngọt Coca Cola', 'Non Coca Cola thể tích 150ml', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000003', 'Thịt bò khô', true, 1, 100000, 100, 100000, 'Thịt bò khô', 'Thịt bò khô 10 miếng', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000004', 'Thuê xe máy', false, 1, NULL, NULL, NULL, 'Xe máy', 'Xe máy đầy xăng', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000005', 'Thuê ô tô', false, 1, NULL, NULL, NULL, 'Ô tô', 'Ô tô điện', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000006', 'Massage', false, 1, NULL, NULL, NULL, 'Mát xa', 'Mát xa cực phê', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000007', 'Mỳ tôm', true, 1, 100000, 100, 100000, 'Mỳ tôm', 'Mỳ hảo hán', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000008', 'Bia Huda', true, 1, 100000, 100, 100000, 'Bia', 'Đậm tình miền Trung', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000009', 'Bim bim Lays', true, 1, 100000, 100, 100000, 'Bim bim', 'Anh muốn Lays em', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00'),
+    ('SP000010', 'Cắt tóc', false, 1, NULL, NULL, NULL, 'Cắt tóc', 'Tommy Xiaomi', NULL, NULL, NULL, '2023-10-17 12:00:00', '2023-10-17 12:00:00');
+
+INSERT INTO `goods_unit`
+(`goods_unit_name`, `goods_id`, `cost`, `price`, `is_default`)
+VALUES
+    ('Lon', 'SP000001', 500, 1000, 1),
+    ('Lon', 'SP000002', 300, 700, 1),
+    ('Gói', 'SP000003', 50, 100, 1),
+    ('Lần', 'SP000004', 0, 900, 1),
+    ('Lần', 'SP000005', 0, 1100, 1),
+    ('Lần', 'SP000006', 0, 750, 1),
+    ('Gói', 'SP000007', 60, 120, 1),
+    ('Lon', 'SP000008', 450, 950, 1),
+    ('Gói', 'SP000009', 600, 1300, 1),
+    ('Lần', 'SP000010', 0, 1200, 1);
+
+INSERT INTO `inventory_check`
+(`inventory_check_id`, `time_balance`, `note`, `status`, `created_date`, `created_by_id`)
+VALUES
+    ('KK000001', '2023-10-17 12:00:00', 'Kiểm kê lần 1', 5, '2023-10-17 12:00:00', NULL);
+
+INSERT INTO `inventory_check_detail`
+(`inventory_check_id`, `goods_id`, `actual_inventory`, `quantity_discrepancy`, `value_discrepancy`, `inventory`, `cost`)
+VALUES
+    ('KK000001', 'SP000001', 100000, 0, 0, 100000, 500),
+    ('KK000001', 'SP000002', 100000, 0, 0, 100000, 300),
+    ('KK000001', 'SP000003', 100000, 0, 0, 100000, 50),
+    ('KK000001', 'SP000007', 100000, 0, 0, 100000, 60),
+    ('KK000001', 'SP000008', 100000, 0, 0, 100000, 450),
+    ('KK000001', 'SP000009', 100000, 0, 0, 100000, 600);
