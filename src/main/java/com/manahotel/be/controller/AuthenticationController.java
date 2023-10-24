@@ -27,8 +27,6 @@ import java.util.UUID;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final AuthenticationManager authenticationManager;
-    private final RegistrationCompleteEventListener eventListener;
     @Autowired
     private AuthenticationService service;
 
@@ -55,7 +53,7 @@ public class AuthenticationController {
         if (staff.isPresent()) {
             String passwordResetToken = UUID.randomUUID().toString();
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
-            passwordResetUrl = passwordResetEmailLink(staff.get(), applicationUrl(servletRequest), passwordResetToken);
+            passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken);
         }
         else{
             return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,32 +62,21 @@ public class AuthenticationController {
         return new ResponseEntity<>(passwordResetUrl, HttpStatus.OK);
     }
 
-    public String applicationUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":"
-                + request.getServerPort() + request.getContextPath();
-    }
-
-    private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
-        eventListener.sendPasswordResetVerificationEmail(url,staff);
-        log.info("Click the link to reset your password : ", url);
-        return url;
-    }
 
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestBody PasswordResetRequest passwordResetRequest,
+    public  ResponseEntity<String>  resetPassword(@RequestBody PasswordResetRequest passwordResetRequest,
                                 @RequestParam("token") String passwordResetToken) {
         String tokenValidationResult = staffService.validatePasswordResetToken(passwordResetToken);
         if (!tokenValidationResult.equalsIgnoreCase("valid")) {
-            return "invalid reset token";
+            return new ResponseEntity<>("invalid reset token", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         Staff staff = staffService.findUserByPasswordToken(passwordResetToken);
         if (staff != null) {
             service.ResetPassword(staff, passwordResetRequest.getNewPassword());
-            return "Password has been reset successful";
+            return new ResponseEntity<>("Password has been reset successful", HttpStatus.OK);
         }
-        return "invalid password reset token";
+        return new ResponseEntity<>("invalid password reset token", HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 

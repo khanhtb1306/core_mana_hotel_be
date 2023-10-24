@@ -5,6 +5,7 @@ import com.manahotel.be.repository.StaffRepository;
 import com.manahotel.be.security.*;
 import com.manahotel.be.security.request.AuthenticationRequest;
 import com.manahotel.be.security.request.RegisterRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+
+import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
 import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+    private final RegistrationCompleteEventListener eventListener;
 
     @Autowired
     private final StaffRepository staffRepository;
@@ -35,7 +41,7 @@ public class AuthenticationService {
         Staff staff = new Staff();
         staff.setUsername(request.getUsername());
         staff.setPassword(bcryptEncoder.encode(request.getPassword()));
-        staff.setRole(ROLE_RECEPTIONIST);
+        staff.setRole(ROLE_MANAGER);
         staffRepository.save(staff);
 
         var jwtToken = jwtService.generateToken(staff);
@@ -73,4 +79,16 @@ public class AuthenticationService {
         staffRepository.save(staff);
 
     }
+    public String applicationUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":"
+                + request.getServerPort() + request.getContextPath();
+    }
+
+    public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
+        String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
+        eventListener.sendPasswordResetVerificationEmail(url,staff);
+        log.info("Click the link to reset your password : ", url);
+        return url;
+    }
+
 }
