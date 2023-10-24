@@ -81,12 +81,11 @@ public class AuthenticationService {
 
     }
     public String applicationUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":"
-                + request.getServerPort() + request.getContextPath();
+        return "http://localhost:3000";
     }
 
     public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/auth/reset-password?token=" + passwordResetToken;
+        String url = applicationUrl + "/reset-password?token=" + passwordResetToken;
         eventListener.sendPasswordResetVerificationEmail(url,staff);
         log.info("Click the link to reset your password : ", url);
         return url;
