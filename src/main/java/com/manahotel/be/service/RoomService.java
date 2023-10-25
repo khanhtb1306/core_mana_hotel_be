@@ -44,7 +44,7 @@ public class RoomService {
         room.setRoomName(dto.getRoomName() != null ? dto.getRoomName() : room.getRoomName());
         room.setNote(dto.getNote() != null ? dto.getNote() : room.getNote());
         room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
-        room.setStatus(dto.getStatus());
+        room.setStatus(dto.getStatus() != null ? dto.getStatus(): room.getStatus());
     }
 
     public ResponseEntity<String> createRoom(RoomDTO dto) {
