@@ -57,10 +57,6 @@ public class CustomerService {
             Customer latestCustomer = customerRepository.findTopByOrderByCustomerIdDesc();
             String latestId = (latestCustomer == null) ? null : latestCustomer.getCustomerId();
             String nextId = IdGenerator.generateId(latestId, "C");
-            if (customerDTO.getCustomerName() == null) {
-                log.info("Name customer is null");
-                return new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
             Customer c = new Customer();
             c.setCustomerId(nextId);
 
@@ -82,10 +78,6 @@ public class CustomerService {
         log.info("----- Update Customer Start -----");
 
         try {
-            if (customerDTO.getCustomerName() == null) {
-                log.info("Name customer is null");
-                return new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
             Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists"));
 
             commonMapping(c, customerDTO);
