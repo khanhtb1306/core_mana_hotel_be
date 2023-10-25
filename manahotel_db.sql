@@ -522,7 +522,33 @@ CREATE TABLE `token` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
+DROP TABLE IF EXISTS `Price_List`;
+-- Create Price_List table
+CREATE TABLE Price_List (
+                            price_list_id VARCHAR(50) PRIMARY KEY NOT NULL,
+                            price_list_name VARCHAR(255) NULL,
+                            effective_time_start TIMESTAMP NULL,
+                            effective_time_end TIMESTAMP NULL,
+                            status BIGINT NULL,
+                            note VARCHAR(350) NULL
+);
+DROP TABLE IF EXISTS `Price_List_Detail`;
+-- Create Price_List_Detail table
+CREATE TABLE Price_List_Detail (
+                                   price_list_detail_id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                                   price_list_id VARCHAR(50) NOT NULL,
+                                   room_category_id VARCHAR(50) NOT NULL,
+                                   price_by_day FLOAT NULL,
+                                   price_by_night FLOAT NULL,
+                                   price_by_hour FLOAT NULL,
+                                   time_apply timestamp NULL,
+                                   day_of_week VARCHAR(255) NULL,
+                                   status BIGINT NULL,
+                                   KEY pk_pld_pl_idx (price_list_id),
+                                   KEY pk_pld_rc_idx (room_category_id),
+                                   CONSTRAINT pk_pld_pl FOREIGN KEY (price_list_id) REFERENCES price_list (price_list_id),
+                                   CONSTRAINT pk_pld_rc FOREIGN KEY (room_category_id) REFERENCES room_category (room_category_id)
+);
 -- Dump completed on 2023-10-19 12:55:28
 INSERT INTO `room_category` (`room_category_id`, `room_category_name`, `price_by_day`, `price_by_night`, `price_by_hour`, `num_of_adults`, `num_of_children`,`num_max_of_adults`,`num_max_of_children`, `room_area`, `status`, `description`, `image`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
 VALUES

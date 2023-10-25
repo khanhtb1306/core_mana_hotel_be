@@ -157,15 +157,16 @@ public class RoomClassService {
     }
 
     public Map<String, Object> getRoomClassWithListRoom(String id) {
-        RoomCategory roomCategory = getRoomCategoryById(id);
         Map<String, Object> roomInfo = new HashMap<>();
+        try {
+            RoomCategory roomCategory = getRoomCategoryById(id);
 
-        if (roomCategory != null) {
             List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
             roomInfo.put("roomCategory", roomCategory);
-            roomInfo.put("listRoom", rooms);
+            roomInfo.put("listRoom", rooms.toArray());
+        }catch (ResourceNotFoundException e) {
+            log.info(e.getMessage());
         }
-
         return roomInfo;
     }
 
