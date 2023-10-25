@@ -1,9 +1,8 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.repository.StaffRepository;
 import com.manahotel.be.repository.TokenRepository;
-import com.manahotel.be.security.password.TokenService;
+import com.manahotel.be.repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +16,7 @@ public class StaffService {
     private StaffRepository repository;
 
     @Autowired
-    private TokenRepository tokenRepository;
-
-    @Autowired
     private TokenService tokenService;
-
-
-//    @Autowired
-//    private final VerificationTokenRepository verificationTokenRepository;
 
     public Staff findByuserName(String username) {
         Staff staff = repository.findByUsername(username);
@@ -46,13 +38,10 @@ public class StaffService {
     }
 
     public Staff findUserByPasswordToken(String passwordResetToken) {
-        return tokenService.findUserByPasswordToken(passwordResetToken).get();
+        return tokenService.findStaffByPasswordToken(passwordResetToken).get();
     }
 
-//    public void saveUserVerificationToken(Staff staff, String token) {
-//        var verificationToken = new VerificationToken(token, staff);
-//        verificationTokenRepository.save(verificationToken);
-//    }
+
 
 
 }

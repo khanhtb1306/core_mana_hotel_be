@@ -1,4 +1,4 @@
-package com.manahotel.be.security.password;
+package com.manahotel.be.security;
 
 import com.manahotel.be.model.entity.Staff;
 import lombok.Getter;

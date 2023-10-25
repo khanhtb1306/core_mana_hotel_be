@@ -35,6 +35,12 @@ public class RoomCategory {
     @Column(name = "num_of_children")
     private Long numOfChildren;
 
+    @Column(name = "num_max_of_adults")
+    private Long numMaxOfAdults;
+
+    @Column(name = "num_max_of_children")
+    private Long numMaxOfChildren;
+
     @Column(name = "room_area")
     private Float roomArea;
 

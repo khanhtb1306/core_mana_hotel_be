@@ -1,7 +1,8 @@
-package com.manahotel.be.security.password;
+package com.manahotel.be.service;
 
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.TokenRepository;
+import com.manahotel.be.model.entity.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ public class TokenService {
     @Autowired
     private final TokenRepository tokenRepository;
 
-
     public void createTokenForUser(Staff staff, String passwordToken) {
         Token passwordRestToken = new Token(passwordToken, staff);
         tokenRepository.save(passwordRestToken);
@@ -25,12 +25,8 @@ public class TokenService {
         var validUserTokens = tokenRepository.findByStaff(staff);
         if (validUserTokens.isEmpty())
             return;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(0));
-        calendar.add(Calendar.YEAR, 1);
-        Date newDate = calendar.getTime();
         validUserTokens.forEach(token -> {
-           token.setExpirationTime(newDate);
+           token.setExpirationTime(new Date(80,1,1));
         });
         tokenRepository.saveAll(validUserTokens);
     }
@@ -51,7 +47,5 @@ public class TokenService {
         return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
     }
 
-    public Optional<Staff> findUserByPasswordToken(String passwordResetToken) {
-        return Optional.ofNullable(tokenRepository.findByToken(passwordResetToken).getStaff());
-    }
+
 }

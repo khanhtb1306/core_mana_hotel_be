@@ -55,9 +55,9 @@ public class GoodsUnitService {
         try {
             log.info("----- Update Unit Start -----");
             GoodsUnit goodsUnit = findGoodsUnitById(id);
-            goodsUnit.setGoodsUnitName(dto.getGoodsUnitName());
-            goodsUnit.setPrice(dto.getPrice());
-            goodsUnit.setCost(dto.getCost());
+            goodsUnit.setGoodsUnitName(dto.getGoodsUnitName() != null ? dto.getGoodsUnitName() : goodsUnit.getGoodsUnitName());
+            goodsUnit.setPrice(dto.getPrice() != null ? dto.getPrice() : goodsUnit.getPrice());
+            goodsUnit.setCost(dto.getCost() != null ? dto.getCost() : goodsUnit.getCost());
 
             repository.save(goodsUnit);
             log.info("----- Update Unit End -----");
@@ -69,11 +69,11 @@ public class GoodsUnitService {
         }
     }
 
-    public ResponseEntity<String> deleteGoodsUnit(Long id) {
+    public ResponseEntity<String> deleteGoodsUnit(String id) {
         try {
             log.info("----- Delete Unit Start -----");
-            GoodsUnit goodsUnit = findGoodsUnitById(id);
-            repository.delete(goodsUnit);
+            List<GoodsUnit> listGoodsUnit = repository.findGoodsUnitByGoodsIdAndAndIsDefault(id, false);
+            repository.deleteAll(listGoodsUnit);
             log.info("----- Delete Unit End -----");
 
             return new ResponseEntity<>("Xóa đơn vị thành công", HttpStatus.OK);

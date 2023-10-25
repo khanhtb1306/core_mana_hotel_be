@@ -2,8 +2,12 @@ package com.manahotel.be.controller;
 
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.security.*;
-import com.manahotel.be.security.password.PasswordResetRequest;
-import com.manahotel.be.security.password.RegistrationCompleteEventListener;
+import com.manahotel.be.security.request.PasswordReset;
+import com.manahotel.be.security.request.PasswordResetRequest;
+import com.manahotel.be.security.RegistrationCompleteEventListener;
+import com.manahotel.be.security.request.AuthenticationRequest;
+import com.manahotel.be.security.request.RegisterRequest;
+import com.manahotel.be.service.AuthenticationService;
 import com.manahotel.be.service.StaffService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +28,6 @@ import java.util.UUID;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final AuthenticationManager authenticationManager;
-    private final RegistrationCompleteEventListener eventListener;
     @Autowired
     private AuthenticationService service;
 
@@ -49,44 +51,34 @@ public class AuthenticationController {
 
         Optional<Staff> staff = staffService.findByEmail(passwordRequestUtil.getEmail());
         String passwordResetUrl = "";
+        String passwordResetToken="";
         if (staff.isPresent()) {
-            String passwordResetToken = UUID.randomUUID().toString();
+            passwordResetToken = UUID.randomUUID().toString();
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
-            passwordResetUrl = passwordResetEmailLink(staff.get(), applicationUrl(servletRequest), passwordResetToken);
+            passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken);
         }
         else{
-            return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.OK);
         }
         log.info(passwordResetUrl);
-        return new ResponseEntity<>(passwordResetUrl, HttpStatus.OK);
+        return new ResponseEntity<String>(passwordResetToken, HttpStatus.OK);
     }
 
-    public String applicationUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":"
-                + request.getServerPort() + request.getContextPath();
-    }
-
-    private String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/api/v1/auth/reset-password?token=" + passwordResetToken;
-        eventListener.sendPasswordResetVerificationEmail(url,staff);
-        log.info("Click the link to reset your password : ", url);
-        return url;
-    }
 
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestBody PasswordResetRequest passwordResetRequest,
+    public  ResponseEntity<String>  resetPassword(@RequestBody PasswordReset passwordResetRequest,
                                 @RequestParam("token") String passwordResetToken) {
         String tokenValidationResult = staffService.validatePasswordResetToken(passwordResetToken);
         if (!tokenValidationResult.equalsIgnoreCase("valid")) {
-            return "invalid reset token";
+            return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.OK);
         }
 
         Staff staff = staffService.findUserByPasswordToken(passwordResetToken);
         if (staff != null) {
             service.ResetPassword(staff, passwordResetRequest.getNewPassword());
-            return "Password has been reset successful";
+            return new ResponseEntity<>("Đổi mật khẩu thành công", HttpStatus.OK);
         }
-        return "invalid password reset token";
+        return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.OK);
 
     }
 

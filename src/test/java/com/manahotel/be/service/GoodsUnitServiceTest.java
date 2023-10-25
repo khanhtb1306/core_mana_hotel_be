@@ -74,9 +74,12 @@ class GoodsUnitServiceTest {
         GoodsUnit goodsUnit = new GoodsUnit();
         goodsUnit.setGoodsUnitId(1L);
 
+        Goods goods = new Goods();
+        goods.setGoodsId("SP000001");
+
         Mockito.when(goodsUnitRepository.findById(goodsUnit.getGoodsUnitId())).thenReturn(java.util.Optional.of(goodsUnit));
 
-        ResponseEntity<String> result = goodsUnitService.deleteGoodsUnit(goodsUnit.getGoodsUnitId());
+        ResponseEntity<String> result = goodsUnitService.deleteGoodsUnit(goods.getGoodsId());
 
         assertEquals("Xóa đơn vị thành công", result.getBody());
     }

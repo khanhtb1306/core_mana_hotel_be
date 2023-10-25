@@ -1,7 +1,7 @@
 package com.manahotel.be.config;
 
 import com.manahotel.be.security.JwtAuthenticationFilter;
-import com.manahotel.be.security.LogoutService;
+import com.manahotel.be.service.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +43,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .authorizeRequests()

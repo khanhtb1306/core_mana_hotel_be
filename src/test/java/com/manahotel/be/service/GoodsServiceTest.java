@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -101,8 +103,13 @@ class GoodsServiceTest {
 
     @Test
     void deleteGoods() {
+
+        List<String> listGoodsId = new ArrayList<>();
+
         // Arrange
         String id = "SP000001";
+
+        listGoodsId.add(id);
 
         Goods goods = new Goods();
         goods.setGoodsId(id);
@@ -113,8 +120,8 @@ class GoodsServiceTest {
 
         Mockito.when(goodsRepository.findById(id)).thenReturn(java.util.Optional.of(goods));
 
-        ResponseEntity<String> result = goodsService.deleteGoods(id);
+        ResponseEntity<Map<String, String>> result = goodsService.deleteListGoods(listGoodsId);
 
-        assertEquals("Xóa hàng hóa thành công", result.getBody());
+        assertEquals("Xóa hàng hóa thành công", result.getBody().get("SP000001"));
     }
 }

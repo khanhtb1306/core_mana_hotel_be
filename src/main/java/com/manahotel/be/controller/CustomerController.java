@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,13 +30,13 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateGoods(@PathVariable String id,  CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<String> updateCustomer(@PathVariable String id,  CustomerDTO customerDTO) throws IOException {
         return service.update(id, customerDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGoods(@PathVariable String id) {
-        return service.delete(id);
+    public ResponseEntity<Map<String, String>> deleteCustomer(@PathVariable List<String> id) {
+        return service.deleteCustomerByList(id);
     }
 
     @GetMapping("/{id}")
