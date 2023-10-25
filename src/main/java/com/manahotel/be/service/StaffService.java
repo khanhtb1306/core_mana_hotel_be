@@ -15,8 +15,11 @@ public class StaffService {
     @Autowired
     private StaffRepository repository;
 
+//    @Autowired
+//    private TokenService tokenService;
+
     @Autowired
-    private TokenService tokenService;
+    private JwtService jwtService;
 
     public Staff findByuserName(String username) {
         Staff staff = repository.findByUsername(username);
@@ -30,18 +33,16 @@ public class StaffService {
 
     public void createPasswordResetTokenForUser(Staff staff, String token) {
 
-        tokenService.createTokenForUser(staff, token);
+        jwtService.createTokenForUser(staff, token);
     }
 
     public String validatePasswordResetToken(String token) {
-        return tokenService.validatePasswordResetToken(token);
+        return jwtService.validatePasswordResetToken(token);
     }
 
     public Staff findUserByPasswordToken(String passwordResetToken) {
-        return tokenService.findStaffByPasswordToken(passwordResetToken).get();
+        return jwtService.findStaffByPasswordToken(passwordResetToken).get();
     }
-
-
 
 
 }
