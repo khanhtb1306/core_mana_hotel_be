@@ -83,13 +83,14 @@ public class RoomService {
             log.info("------- Update Room Start -------");
             Room room = getRoomById(id);
             commonMapping(room, dto);
-
-            RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
-            room.setRoomCategory(roomCategory);
-
-            Floor floor = getFloorById(dto.getFloorId());
-            room.setFloor(floor);
-
+            if (dto.getRoomCategoryId() != null) {
+                RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
+                room.setRoomCategory(roomCategory);
+            }
+            if (dto.getFloorId() != null){
+                Floor floor = getFloorById(dto.getFloorId());
+                room.setFloor(floor);
+            }
             room.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Update Room End -------");
