@@ -203,7 +203,7 @@ public class RoomService {
         try {
             Floor floor = getFloorById((long) id);
 
-            floor.setStatus(Status.DEACTIVATE);
+            floor.setStatus(Status.DELETE);
             floorRepository.save(floor);
             return new ResponseEntity<>("Xóa khu vực thành công", HttpStatus.OK);
         }catch (ResourceNotFoundException e){
