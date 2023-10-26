@@ -33,8 +33,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     @Autowired
     private PasswordEncoder bcryptEncoder;
-    @Autowired
-    private TokenService tokenService;
+
     @Autowired
     private StaffService staffService;
 
@@ -60,8 +59,8 @@ public class AuthenticationService {
                     )
             );
             var jwtToken = jwtService.generateToken(staff);
-            tokenService.revokeAllUserTokens(staff);
-            tokenService.createTokenForUser(staff, jwtToken);
+            jwtService.revokeAllUserTokens(staff);
+            jwtService.createTokenForUser(staff, jwtToken);
 
             log.info("Login successful");
             return AuthenticationResponse.builder().response(jwtToken).build();
