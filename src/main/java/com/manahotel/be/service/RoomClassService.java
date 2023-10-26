@@ -50,16 +50,17 @@ public class RoomClassService {
     }
 
     private void commonMapping(RoomCategory roomClass, RoomCategoryDTO dto) throws IOException {
-        roomClass.setRoomCategoryName(dto.getRoomCategoryName());
-        roomClass.setPriceByDay(dto.getPriceByDay());
-        roomClass.setPriceByNight(dto.getPriceByNight());
-        roomClass.setPriceByHour(dto.getPriceByHour());
-        roomClass.setNumOfAdults(dto.getNumOfAdults());
-        roomClass.setNumOfChildren(dto.getNumOfChildren());
-        roomClass.setNumMaxOfAdults(dto.getNumMaxOfAdults());
-        roomClass.setNumMaxOfChildren(dto.getNumMaxOfChildren());
-        roomClass.setRoomArea(dto.getRoomArea());
-        roomClass.setDescription(dto.getDescription());
+        roomClass.setRoomCategoryName(dto.getRoomCategoryName() != null ? dto.getRoomCategoryName() : roomClass.getRoomCategoryName());
+        roomClass.setPriceByDay(dto.getPriceByDay() != null ? dto.getPriceByDay() : roomClass.getPriceByDay());
+        roomClass.setPriceByNight(dto.getPriceByNight() != null ? dto.getPriceByNight() : roomClass.getPriceByNight());
+        roomClass.setPriceByHour(dto.getPriceByHour() != null ? dto.getPriceByHour() : roomClass.getPriceByHour());
+        roomClass.setNumOfAdults(dto.getNumOfAdults() != null ? dto.getNumOfAdults() : roomClass.getNumOfAdults());
+        roomClass.setNumOfChildren(dto.getNumOfChildren() != null ? dto.getNumOfChildren() : roomClass.getNumOfChildren());
+        roomClass.setNumMaxOfAdults(dto.getNumMaxOfAdults() != null ? dto.getNumMaxOfAdults() : roomClass.getNumMaxOfAdults());
+        roomClass.setNumMaxOfChildren(dto.getNumMaxOfChildren() != null ? dto.getNumMaxOfChildren() : roomClass.getNumMaxOfChildren());
+        roomClass.setRoomArea(dto.getRoomArea() != null ? dto.getRoomArea() : roomClass.getRoomArea());
+        roomClass.setStatus(dto.getStatus() != null ? dto.getStatus() : roomClass.getStatus());
+        roomClass.setDescription(dto.getDescription() != null ? dto.getDescription() : roomClass.getDescription());
         roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
     }
 
@@ -91,9 +92,6 @@ public class RoomClassService {
         try {
 
             RoomCategory roomClass = getRoomCategoryById(id);
-            if (roomClass == null) {
-                return null;
-            }
 
             commonMapping(roomClass, dto);
 
@@ -103,6 +101,9 @@ public class RoomClassService {
 
             log.info("------- Update Room Class End -------");
             return new ResponseEntity<>("Cập nhật hạng phòng thành công", HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            log.info("Can't find room class");
+            return new ResponseEntity<>("Không tìm thấy hạng phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("Can't Update Room Class", e.getMessage());
             return new ResponseEntity<>("Cập nhật hạng phòng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -114,7 +115,7 @@ public class RoomClassService {
             RoomCategory roomClass = getRoomCategoryById(id);
             if (roomClass.getStatus() == Status.DELETE) {
                 log.info("Room Class Can't delete");
-                return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Hạng phòng đã bị xóa", HttpStatus.NOT_FOUND);
             }
             if (roomClassHasRooms(roomClass)) {
                 log.info("Room class has associated rooms");
