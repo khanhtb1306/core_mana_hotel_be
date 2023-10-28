@@ -16,12 +16,12 @@ public class Status {
 
 
     //Booking
-    public static final long EMPTY = 1;
-    public static final long BOOKING = 2;
-    public static final long USING = 3;
+    public static final String EMPTY = "ROOM_EMPTY";
+    public static final String BOOKING = "ROOM_BOOKING";
+    public static final String USING = "ROOM_USING";
     //Clean room
-    public static final long CLEAN = 1;
-    public static final long UNCLEAN = 2;
+    public static final String CLEAN = "ROOM_CLEAN";
+    public static final String UNCLEAN = "ROOM_UNCLEAN";
 
 
 }
