@@ -14,11 +14,11 @@ public class Status {
     // Delete
     public static final long DELETE = 6;
 
+
     //Booking
     public static final String EMPTY = "ROOM_EMPTY";
     public static final String BOOKING = "ROOM_BOOKING";
     public static final String USING = "ROOM_USING";
-
     //Clean room
     public static final String CLEAN = "ROOM_CLEAN";
     public static final String UNCLEAN = "ROOM_UNCLEAN";
