@@ -119,7 +119,7 @@ public class PriceListService {
             log.info("Cập nhật danh sách giá thành công");
 
 //            // Xóa tất cả các mục chi tiết danh sách giá cũ
-//            priceListDetailRepository.deleteByPriceList(priceList);
+            priceListDetailRepository.deleteByPriceList(priceList);
 
             // Thêm các mục chi tiết danh sách giá mới
             for (PriceListDetailDTO updatedPldDTO : updatedPriceListDetailDTO) {
@@ -146,14 +146,8 @@ public class PriceListService {
             log.error(e.getMessage());
             return new ResponseEntity<>("Lỗi khi cập nhật danh sách giá", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("Cập nhật thành công", HttpStatus.OK);
+        return new ResponseEntity<>("Cập nhật Bảng giá thành công", HttpStatus.OK);
     }
-
-
-
-
-
-
 
     private void commonMapping(PriceList priceList, PriceListDTO dto) throws IOException {
         priceList.setPriceListId(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());

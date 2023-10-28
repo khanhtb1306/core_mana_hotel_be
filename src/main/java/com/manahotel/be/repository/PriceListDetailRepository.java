@@ -19,4 +19,6 @@ public interface PriceListDetailRepository extends JpaRepository<PriceListDetail
             "where pld.roomCategory.roomCategoryId = ?1")
     List<PriceListDetail> getAllPriceListDetailByRoomCategoryId(String roomCategoryId);
 
+    Void deleteByPriceList(PriceList priceList);
+
 }
