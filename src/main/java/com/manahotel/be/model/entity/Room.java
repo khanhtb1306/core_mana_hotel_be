@@ -35,10 +35,10 @@ public class Room {
     private Long status;
 
     @Column(name = "booking_status")
-    private Long bookingStatus;
+    private String bookingStatus;
 
     @Column(name = "condition_status")
-    private Long conditionStatus;
+    private String conditionStatus;
 
     @Lob
     @Column(name = "image")
