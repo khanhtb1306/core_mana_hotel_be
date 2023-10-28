@@ -154,7 +154,7 @@ DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order` (
-                         `order_id` bigint NOT NULL AUTO_INCREMENT,
+                         `order_id` varchar(50) NOT NULL AUTO_INCREMENT,
                          `reservation_detail_id` bigint NOT NULL,
                          `total_pay` float DEFAULT NULL,
                          `status` bigint DEFAULT NULL,
@@ -175,7 +175,7 @@ DROP TABLE IF EXISTS `order_detail`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_detail` (
                                 `order_detail_id` bigint NOT NULL AUTO_INCREMENT,
-                                `order_id` bigint NOT NULL,
+                                `order_id` varchar(50) NOT NULL,
                                 `goods_id` varchar(50) NOT NULL,
                                 `quantity` bigint DEFAULT NULL,
                                 `price` float DEFAULT NULL,
@@ -313,8 +313,8 @@ CREATE TABLE `room` (
                         `room_category_id` varchar(50) NOT NULL,
                         `floor_id` int NOT NULL,
                         `status` int DEFAULT NULL,
-                        `booking_status` int DEFAULT NULL,
-                        `condition_status` int DEFAULT NULL,
+                        `booking_status` varchar(100) DEFAULT NULL,
+                        `condition_status` varchar(100) DEFAULT NULL,
                         `image` longblob,
                         `note` varchar(250) DEFAULT NULL,
                         `created_by_id` int DEFAULT NULL,
