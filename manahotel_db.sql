@@ -445,16 +445,16 @@ VALUES
 
 INSERT INTO `room` (`room_id`, `room_name`, `room_category_id`, `floor_id`, `status`, `booking_status`, `condition_status`, `image`, `note`, `created_by_id`, `updated_by_id`, `created_date`, `updated_date`)
 VALUES
-('P000001', 'P.101', 'HP000001', 1, 1, 0, 1, NULL, 'Phòng cơ bản', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000002', 'P.102', 'HP000001', 1, 1, 0, 1, NULL, 'Phòng cơ bản', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000003', 'P.201', 'HP000002', 2, 1, 0, 1, NULL, 'Phòng hạng trung', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000004', 'P.202', 'HP000002', 2, 1, 0, 1, NULL, 'Phòng hạng trung', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000005', 'P.301', 'HP000003', 3, 1, 0, 1, NULL, 'Phòng đơn', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000006', 'P.302', 'HP000003', 3, 1, 0, 1, NULL, 'Phòng đơn', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000007', 'P.401', 'HP000004', 4, 1, 0, 1, NULL, 'Phòng gia đình', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000008', 'P.402', 'HP000004', 4, 1, 0, 1, NULL, 'Phòng gia đình', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000009', 'P.501', 'HP000005', 5, 1, 0, 1, NULL, 'Phòng VIP', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
-('P000010', 'P.502', 'HP000005', 5, 1, 0, 1, NULL, 'Phòng VIP', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
+('P000001', 'P.101', 'HP000001', 1, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng cơ bản', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000002', 'P.102', 'HP000001', 1, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng cơ bản', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000003', 'P.201', 'HP000002', 2, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng hạng trung', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000004', 'P.202', 'HP000002', 2, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng hạng trung', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000005', 'P.301', 'HP000003', 3, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng đơn', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000006', 'P.302', 'HP000003', 3, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng đơn', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000007', 'P.401', 'HP000004', 4, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng gia đình', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000008', 'P.402', 'HP000004', 4, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng gia đình', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000009', 'P.501', 'HP000005', 5, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng VIP', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00'),
+('P000010', 'P.502', 'HP000005', 5, 1, 'ROOM_EMPTY', 'ROOM_CLEAN', NULL, 'Phòng VIP', NULL, NULL, '2023-10-16 00:00:00', '2023-10-16 00:00:00');
 
 
 INSERT INTO `goods`
