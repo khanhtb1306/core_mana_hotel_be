@@ -12,7 +12,6 @@ public class PriceListDetailDTO {
     private Float priceByDay;
     private Float priceByNight;
     private Float priceByHour;
-    private Timestamp timeApply;
+    private String timeApply;
     private List<String> dayOfWeek;
-
 }

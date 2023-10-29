@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.PriceListDTO;
@@ -17,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -149,19 +153,56 @@ public class PriceListService {
         return new ResponseEntity<>("Cập nhật Bảng giá thành công", HttpStatus.OK);
     }
 
+    public ResponseEntity<String> deletePriceListById(String id) {
+        try{
+            PriceList priceList = getPriceListById(id);
+            priceList.setStatus(Status.DELETE);
+            priceListRepository.save(priceList);
+        }catch (ResourceNotFoundException rnf){
+            log.error(rnf.getMessage());
+        }
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
     private void commonMapping(PriceList priceList, PriceListDTO dto) throws IOException {
         priceList.setPriceListId(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
-        priceList.setEffectiveTimeStart(dto.getEffectiveTimeStart() != null ? dto.getEffectiveTimeStart() : priceList.getEffectiveTimeStart());
-        priceList.setEffectiveTimeEnd(dto.getEffectiveTimeEnd() != null ? dto.getEffectiveTimeEnd() : priceList.getEffectiveTimeEnd());
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            if (dto.getEffectiveTimeStart() != null) {
+                Date timesStart = dateFormat.parse(dto.getEffectiveTimeStart());
+                Timestamp timesStartTimestamp = new Timestamp(timesStart.getTime());
+                priceList.setEffectiveTimeStart(timesStartTimestamp);
+            } else if (dto.getEffectiveTimeEnd() != null) {
+                Date timesEnd = dateFormat.parse((dto.getEffectiveTimeEnd()));
+                Timestamp timesEndTimestamp = new Timestamp(timesEnd.getTime());
+                priceList.setEffectiveTimeEnd(timesEndTimestamp);
+            } else {
+                priceList.setEffectiveTimeStart(priceList.getEffectiveTimeStart());
+                priceList.setEffectiveTimeEnd(priceList.getEffectiveTimeEnd());
+            }
+        }catch (ParseException e){
+            throw new RuntimeException(e);
+        }
         priceList.setStatus(dto.getStatus() != null ? dto.getStatus() : priceList.getStatus());
         priceList.setNote(dto.getNote() != null ? dto.getNote() : priceList.getNote());
     }
 
-    private void commonMapping(PriceListDetail priceListDetail, PriceListDetailDTO dto) throws IOException {
+    private void commonMapping( PriceListDetail priceListDetail, PriceListDetailDTO dto) throws IOException {
         priceListDetail.setPriceByDay(dto.getPriceByDay() != null ? dto.getPriceByDay() : priceListDetail.getPriceByDay());
         priceListDetail.setPriceByNight(dto.getPriceByNight() != null ? dto.getPriceByNight() : priceListDetail.getPriceByNight());
         priceListDetail.setPriceByHour(dto.getPriceByHour() != null ? dto.getPriceByHour() : priceListDetail.getPriceByHour());
-        priceListDetail.setTimeApply(dto.getTimeApply() != null ? dto.getTimeApply() : priceListDetail.getTimeApply());
+        try {
+            if(dto.getTimeApply() !=null){
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date timesApply = dateFormat.parse(dto.getTimeApply());
+                Timestamp timesApplyTimestamp = new Timestamp(timesApply.getTime());
+                priceListDetail.setTimeApply(timesApplyTimestamp);
+            }else {
+                priceListDetail.setTimeApply(priceListDetail.getTimeApply());
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public RoomCategory getRoomCategoryById(String id) {
