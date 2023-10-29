@@ -219,7 +219,7 @@ CREATE TABLE `price_list_detail` (
                                      `price_by_day` float DEFAULT NULL,
                                      `price_by_night` float DEFAULT NULL,
                                      `price_by_hour` float DEFAULT NULL,
-                                     `time_apply` float DEFAULT NULL,
+                                     `time_apply` timestamp DEFAULT NULL,
                                      `day_of_week` varchar(255) DEFAULT NULL,
                                      PRIMARY KEY (`price_list_detail_id`),
                                      KEY `pk_pld_pl_idx` (`price_list_id`),

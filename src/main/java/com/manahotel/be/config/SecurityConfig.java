@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/inventory-check/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/room-class/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/room/**").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/price-list/**").hasAnyAuthority("ROLE_MANAGER")
                 .anyRequest()
                 .authenticated()
                 .and()
