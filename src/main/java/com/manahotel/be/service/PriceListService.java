@@ -65,8 +65,8 @@ public class PriceListService {
                 }
                 priceListInfo.put("PriceList", priceList);
                 priceListInfo.put("ListPriceListDetail", allRoomClasses.toArray());
+                AllPriceList.add(priceListInfo);
             }
-            AllPriceList.add(priceListInfo);
         } catch (ResourceNotFoundException ef) {
             log.error(ef.getMessage());
         } catch (Exception e) {
