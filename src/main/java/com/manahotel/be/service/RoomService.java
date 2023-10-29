@@ -44,6 +44,7 @@ public class RoomService {
         room.setRoomName(dto.getRoomName() != null ? dto.getRoomName() : room.getRoomName());
         room.setNote(dto.getNote() != null ? dto.getNote() : room.getNote());
         room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+        room.setStatus(dto.getStatus() != null ? dto.getStatus(): room.getStatus());
     }
 
     public ResponseEntity<String> createRoom(RoomDTO dto) {
@@ -81,24 +82,21 @@ public class RoomService {
         try {
             log.info("------- Update Room Start -------");
             Room room = getRoomById(id);
-            if (room == null) {
-                return null;
-            }
-
             commonMapping(room, dto);
-
-            RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
-            room.setRoomCategory(roomCategory);
-
-            Floor floor = getFloorById(dto.getFloorId());
-            room.setFloor(floor);
-
+            if (dto.getRoomCategoryId() != null) {
+                RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
+                room.setRoomCategory(roomCategory);
+            }
+            if (dto.getFloorId() != null){
+                Floor floor = getFloorById(dto.getFloorId());
+                room.setFloor(floor);
+            }
             room.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
             log.info("------- Update Room End -------");
             return new ResponseEntity<>("Cập nhật phòng thành công", HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
-            log.info("Can't find room class");
+            log.info("Can't find room");
             return new ResponseEntity<>("Không tìm thấy phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("Can't Update Room", e.getMessage());
@@ -185,15 +183,16 @@ public class RoomService {
             log.info("------- Update Floor Start -------");
 
             Floor floor = getFloorById((long) id);
-            if (floor == null) {
-                return null;
-            }
+
             floor.setFloorName(dto.getFloorName());
             floor.setStatus(dto.getStatus());
             floor.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             floorRepository.save(floor);
             log.info("------- Update Floor End -------");
             return new ResponseEntity<>("Cập nhật Khu vực thành công", HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            log.info("Can't find room class");
+            return new ResponseEntity<>("Không tìm thấy Khu vực", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("Can't Update Floor", e.getMessage());
             return new ResponseEntity<>("Cập nhật Khu vực Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -204,7 +203,7 @@ public class RoomService {
         try {
             Floor floor = getFloorById((long) id);
 
-            floor.setStatus(Status.DEACTIVATE);
+            floor.setStatus(Status.DELETE);
             floorRepository.save(floor);
             return new ResponseEntity<>("Xóa khu vực thành công", HttpStatus.OK);
         }catch (ResourceNotFoundException e){
