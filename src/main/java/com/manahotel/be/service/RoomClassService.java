@@ -160,7 +160,6 @@ public class RoomClassService {
         Map<String, Object> roomInfo = new HashMap<>();
         try {
             RoomCategory roomCategory = getRoomCategoryById(id);
-
             List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
             roomInfo.put("roomCategory", roomCategory);
             roomInfo.put("listRoom", rooms);
