@@ -95,7 +95,7 @@ public class GoodsService {
             log.info("Can't add goods", e.getMessage());
 
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Tạo hàng hóa thành công");
+            response.put("message", "Tạo hàng hóa thất bại");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

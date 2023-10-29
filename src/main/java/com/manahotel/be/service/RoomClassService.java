@@ -163,7 +163,7 @@ public class RoomClassService {
 
             List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
             roomInfo.put("roomCategory", roomCategory);
-            roomInfo.put("listRoom", rooms.toArray());
+            roomInfo.put("listRoom", rooms);
         }catch (ResourceNotFoundException e) {
             log.info(e.getMessage());
         }

@@ -58,11 +58,11 @@ class GoodsServiceTest {
         goodsUnitDTO.setCost(27000F);
         goodsUnitDTO.setPrice(30000F);
 
-//        // Act
-//        ResponseEntity<Map<String, String>> result = goodsService.createGoods(goodsDTO, goodsUnitDTO);
-//
-//        // Assert
-//        assertEquals("Tạo hàng hóa thành công", result.getBody());
+        // Act
+        ResponseEntity<Map<String, String>> result = goodsService.createGoods(goodsDTO, goodsUnitDTO);
+
+        // Assert
+        assertEquals("Tạo hàng hóa thành công", result.getBody().get("message"));
     }
 
     @Test
