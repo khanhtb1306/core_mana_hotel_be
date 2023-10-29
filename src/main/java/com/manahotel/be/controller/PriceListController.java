@@ -19,7 +19,7 @@ public class PriceListController {
     private PriceListService priceListService;
 
     @GetMapping
-    public List<PriceList> getAllPriceList() {
+    public List<Object> getAllPriceList() {
         return priceListService.getAllPriceList();
     }
 

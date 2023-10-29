@@ -36,8 +36,45 @@ public class PriceListService {
     
     @Autowired
     private RoomClassRepository roomClassRepository;
-    public List<PriceList> getAllPriceList(){
-        return priceListRepository.findAll();
+    public List<Object> getAllPriceList(){
+        List<Object> AllPriceList = new ArrayList<>();
+        Map<String, Object> priceListInfo = new HashMap<>();
+        List<Map<String, Object>> allRoomClasses = new ArrayList<>();
+        List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
+        Map<String, Object> withRoomClass = new HashMap<>();
+
+        try {
+            List<PriceList> listPriceList =  priceListRepository.findAll();
+            for(PriceList list : listPriceList) {
+                PriceList priceList = getPriceListById(list.getPriceListId());
+                List<String> listRoomCategoryId = priceListDetailRepository.getDistinctRoomClassByPriceList(priceList);
+                for (String roomCategoryId : listRoomCategoryId) {
+                    RoomCategory roomClass = getRoomCategoryById(roomCategoryId);
+                    for (PriceListDetail priceListDetail : priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId)) {
+                        List<String> dayOfWeekList = Arrays.stream(priceListDetail.getDayOfWeek().split("\\|")).collect(Collectors.toList());
+                        priceListDetail.setRoomCategory(null);
+                        priceListDetail.setPriceList(null);
+                        Map<String, Object> priceListDetailWithDayOfWeek = new HashMap<>();
+                        priceListDetailWithDayOfWeek.put("PriceListDetail", priceListDetail);
+                        priceListDetailWithDayOfWeek.put("DayOfWeekList", dayOfWeekList);
+                        roomClassPriceListDetailList.add(priceListDetailWithDayOfWeek);
+                    }
+                    withRoomClass.put("RoomClass", roomClass);
+                    withRoomClass.put("PriceListDetail", roomClassPriceListDetailList.toArray());
+                    allRoomClasses.add(withRoomClass);
+                }
+                priceListInfo.put("PriceList", priceList);
+                priceListInfo.put("ListPriceListDetail", allRoomClasses.toArray());
+            }
+            AllPriceList.add(priceListInfo);
+        } catch (ResourceNotFoundException ef) {
+            log.error(ef.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return AllPriceList;
+
     }
 
     public Map<String, Object> getPriceListByIdWithPriceListDetailList(String id) {
