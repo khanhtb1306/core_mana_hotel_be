@@ -47,20 +47,9 @@ public class InventoryCheckService {
         for (Object[] inventoryCheck : listInventoryChecks) {
             InventoryCheck ic = (InventoryCheck) inventoryCheck[0];
             List<InventoryCheckDetail> listInventoryCheckDetails = repository2.findInventoryCheckDetailByInventoryCheck(ic);
-            List<Map<String, Object>> detailList = new ArrayList<>();
-
-            for (InventoryCheckDetail detail : listInventoryCheckDetails) {
-                List<GoodsUnit> goodsUnits = repository4.findGoodsUnitByGoods(detail.getGoods());
-
-                Map<String, Object> detailInfo = new HashMap<>();
-                detailInfo.put("inventoryCheckDetail", detail);
-                detailInfo.put("listGoodsUnits", goodsUnits.toArray());
-                detailList.add(detailInfo);
-            }
-
             Map<String, Object> checkInfo = new HashMap<>();
             checkInfo.put("inventoryCheck", ic);
-            checkInfo.put("listInventoryCheckDetails", detailList.toArray());
+            checkInfo.put("listInventoryCheckDetails", listInventoryCheckDetails.toArray());
             result.add(checkInfo);
         }
 
