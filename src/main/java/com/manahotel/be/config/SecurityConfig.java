@@ -58,6 +58,8 @@ public class SecurityConfig {
                 .requestMatchers("/room-class/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/room/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
+                .requestMatchers("/reservation-detail/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
+                .requestMatchers("/reservation-detail-room/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
                 .anyRequest()
                 .authenticated()
                 .and()
