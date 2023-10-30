@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class PriceListDetail {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "price_list_detail_id")
     private Long priceListDetailId;
 

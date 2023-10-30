@@ -40,6 +40,8 @@ public class InventoryCheckService {
     @Autowired
     private GoodsUnitRepository repository4;
 
+    private static final Long userId = UserUtils.getUser().getStaffId();
+
     public ResponseEntity<List<Map<String, Object>>> getAllInventoryCheckWithDetails() {
         List<Object[]> listInventoryChecks = repository.findAllInventoryChecksWithDetails();
 
