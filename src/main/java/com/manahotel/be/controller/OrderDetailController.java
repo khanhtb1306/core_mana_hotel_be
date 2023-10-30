@@ -2,6 +2,7 @@ package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.OrderDTO;
 import com.manahotel.be.model.dto.OrderDetailDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.service.OrderDetailService;
 import com.manahotel.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class OrderDetailController {
     private OrderDetailService orderDetailService;
 
     @PostMapping
-    public ResponseEntity<String> createOrderDetail(OrderDetailDTO orderDetailDTO) throws IOException {
+    public ResponseDTO createOrderDetail(OrderDetailDTO orderDetailDTO) throws IOException {
         return orderDetailService.createOrderDetail(orderDetailDTO);
     }
 }

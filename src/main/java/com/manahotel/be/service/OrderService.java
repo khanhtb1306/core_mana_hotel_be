@@ -2,7 +2,9 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.OrderDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.RoomDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.OrderDetailRepository;
@@ -41,7 +43,7 @@ public class OrderService {
         order.setStatus(orderDTO.getStatus() != null ? orderDTO.getStatus() : order.getStatus());
     }
 
-    public ResponseEntity<String> createOrder(OrderDTO orderDTO){
+    public ResponseDTO createOrder(OrderDTO orderDTO){
         try {
             log.info("------- Add Order Start -------");
             Order latestOrder = orderRepository.findTopByOrderByOrderIdDesc();
@@ -57,11 +59,12 @@ public class OrderService {
             orderRepository.save(order);
 
             log.info("------- Add Order End -------");
-            return new ResponseEntity<>("Thêm hóa đơn thành công", HttpStatus.OK);
+            return ResponseUtils.success("Thêm hóa đơn thành công");
 
         }catch (Exception e){
             log.info("Can't Add Order", e.getMessage());
-            return new ResponseEntity<>("Thêm hóa đơn thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtils.error("Thêm hóa đơn thất bại");
+
         }
     }
     public Staff findStaff(){
@@ -73,7 +76,7 @@ public class OrderService {
         return reservationDetailRepository.findById(reservationDetailId).orElseThrow(() -> new IllegalStateException("customer with id "  + " not exists"));
     }
 
-    public ResponseEntity<String> updateTotalPayOrder(Long reservationDetailId){
+    public ResponseDTO updateTotalPayOrder(Long reservationDetailId){
         try{
             log.info("------- Update Order Start -------");
 
@@ -89,10 +92,11 @@ public class OrderService {
             orderRepository.save(latestOrder);
 
             log.info("------- Update Order End -------");
-            return new ResponseEntity<>("Cập nhật hóa đơn thành công", HttpStatus.OK);
+            return ResponseUtils.success("Cập nhật hóa đơn thành công");
+
         }catch (Exception e){
             log.info("Can't Update Order", e.getMessage());
-            return new ResponseEntity<>("Cập nhật hóa đơn thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtils.error("Cập nhật hóa đơn thất bại");
         }
     }
 }

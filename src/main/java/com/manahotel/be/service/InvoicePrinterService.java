@@ -1,7 +1,9 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.model.entity.Order;
 import com.manahotel.be.model.entity.OrderDetail;
 import com.manahotel.be.repository.OrderDetailRepository;
+import com.manahotel.be.repository.OrderRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -21,15 +23,16 @@ import java.util.List;
 @Service
 public class InvoicePrinterService implements Printable {
 
+
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private OrderRepository orderRepository;
     PDDocument invc;
     int n;
     Integer total = 0;
     Integer price;
-    String CustName;
-    String CustPh;
+
     List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
+    Order order = new Order();
     String InvoiceTitle = new String("Hóa đơn đặt hàng");
     String SubTitle = new String("Invoice");
 
@@ -44,8 +47,8 @@ public class InvoicePrinterService implements Printable {
 
     public void WriteInvoice(String orderId) {
 
-        orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
-
+        order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("Order not found"));
+        n = orderDetailList.size();
         PDPage mypage = invc.getPage(0);
         try {
             PDPageContentStream cs = new PDPageContentStream(invc, mypage);
@@ -68,10 +71,10 @@ public class InvoicePrinterService implements Printable {
             cs.newLineAtOffset(60, 610);
             cs.showText("Ngày xuất hóa đơn: ");
             cs.newLine();
-            cs.showText("Tên khách hàng: ");
-            cs.newLine();
-            cs.showText("Số điện thoại: ");
-            cs.newLine();
+//            cs.showText("Tên khách hàng: ");
+//            cs.newLine();
+//            cs.showText("Số điện thoại: ");
+//            cs.newLine();
             cs.showText("Mã đặt phòng: ");
             cs.newLine();
             cs.showText("----------------------------------------------------------------");
@@ -81,9 +84,9 @@ public class InvoicePrinterService implements Printable {
             cs.setFont(PDType1Font.TIMES_ROMAN, 14);
             cs.setLeading(20f);
             cs.newLineAtOffset(170, 610);
-//            cs.showText(CustName);
+            cs.showText(order.getCreatedDate().toString());
             cs.newLine();
-//            cs.showText(CustPh);
+            cs.showText(order.getReservationDetail().toString());
             cs.endText();
 
             cs.beginText();
@@ -114,8 +117,9 @@ public class InvoicePrinterService implements Printable {
             cs.setFont(PDType1Font.TIMES_ROMAN, 12);
             cs.setLeading(20f);
             cs.newLineAtOffset(80, 520);
-            for (int i = 0; i < n; i++) {
-//                cs.showText(ProductName.get(i));
+
+            for (OrderDetail orderDetail : orderDetailList){
+//                cs.showText(orderDetail.get);
                 cs.newLine();
             }
             cs.endText();

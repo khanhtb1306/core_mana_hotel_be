@@ -1,8 +1,10 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.OrderDTO;
 import com.manahotel.be.model.dto.OrderDetailDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.Order;
 import com.manahotel.be.model.entity.OrderDetail;
@@ -37,7 +39,7 @@ public class OrderDetailService {
         orderDetail.setPrice(orderDetailDTO.getPrice() != null ? orderDetailDTO.getPrice() : orderDetail.getPrice());
     }
 
-    public ResponseEntity<String> createOrderDetail(OrderDetailDTO orderDetailDTO) {
+    public ResponseDTO createOrderDetail(OrderDetailDTO orderDetailDTO) {
         try {
             log.info("------- Add OrderDetail Start -------");
 
@@ -53,11 +55,12 @@ public class OrderDetailService {
 
             orderDetailRepository.save(orderDetail);
             log.info("------- Add OrderDetail End -------");
-            return new ResponseEntity<>("Thêm chi tiết hóa đơn thành công", HttpStatus.OK);
+            return ResponseUtils.error("Thêm chi tiết hóa đơn thành công");
 
         } catch (Exception e) {
             log.info("Can't Add OrderDetail", e.getMessage());
-            return new ResponseEntity<>("Thêm chi tiết hóa đơn Thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtils.error("Thêm chi tiết hóa đơn Thất bại");
+
         }
     }
 
