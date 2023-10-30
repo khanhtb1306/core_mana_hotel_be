@@ -4,7 +4,7 @@ import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.PriceListDTO;
 import com.manahotel.be.model.dto.PriceListDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.PriceList;
+import com.manahotel.be.model.dto.request.PriceListRequest;
 import com.manahotel.be.service.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +26,12 @@ public class PriceListController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createPriceList(PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTOList) {
-        return priceListService.createPriceList(priceListDTO, priceListDetailDTOList);
+    public ResponseDTO createPriceList(PriceListRequest request) {
+        return priceListService.createPriceList(request.getPriceListDTO(), request.getPriceListDetailDTO());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePriceList( @PathVariable String id, PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTOList) {
+    public ResponseEntity<String> updatePriceList(@PathVariable String id, PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTOList) {
         return priceListService.updatePriceList(id, priceListDTO, priceListDetailDTOList);
     }
 

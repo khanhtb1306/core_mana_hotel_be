@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class PriceListDetailDTO {
-    private String priceListId;
     private String roomCategoryId;
     private Float priceByDay;
     private Float priceByNight;
