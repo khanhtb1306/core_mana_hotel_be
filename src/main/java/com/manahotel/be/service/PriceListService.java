@@ -40,32 +40,10 @@ public class PriceListService {
     private RoomClassRepository roomClassRepository;
     public ResponseDTO getAllPriceList(){
         List<Object> AllPriceList = new ArrayList<>();
-        List<Map<String, Object>> allRoomClasses = new ArrayList<>();
-        List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
         try {
             List<PriceList> listPriceList =  priceListRepository.findAll();
             for(PriceList list : listPriceList) {
-                PriceList priceList = getPriceListById(list.getPriceListId());
-                List<String> listRoomCategoryId = priceListDetailRepository.getDistinctRoomClassByPriceList(priceList);
-                for (String roomCategoryId : listRoomCategoryId) {
-                    RoomCategory roomClass = getRoomCategoryById(roomCategoryId);
-                    for (PriceListDetail priceListDetail : priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId)) {
-                        List<String> dayOfWeekList = Arrays.stream(priceListDetail.getDayOfWeek().split("\\|")).collect(Collectors.toList());
-                        priceListDetail.setRoomCategory(null);
-                        priceListDetail.setPriceList(null);
-                        Map<String, Object> priceListDetailWithDayOfWeek = new HashMap<>();
-                        priceListDetailWithDayOfWeek.put("PriceListDetail", priceListDetail);
-                        priceListDetailWithDayOfWeek.put("DayOfWeekList", dayOfWeekList);
-                        roomClassPriceListDetailList.add(priceListDetailWithDayOfWeek);
-                    }
-                    Map<String, Object> withRoomClass = new HashMap<>();
-                    withRoomClass.put("RoomClass", roomClass);
-                    withRoomClass.put("PriceListDetail", roomClassPriceListDetailList.toArray());
-                    allRoomClasses.add(withRoomClass);
-                }
-                Map<String, Object> priceListInfo = new HashMap<>();
-                priceListInfo.put("PriceList", priceList);
-                priceListInfo.put("ListPriceListDetail", allRoomClasses.toArray());
+                Map<String, Object>  priceListInfo = getPriceListByIdWithPriceListDetailList(list.getPriceListId());
                 AllPriceList.add(priceListInfo);
             }
         } catch (ResourceNotFoundException ef) {
@@ -73,23 +51,25 @@ public class PriceListService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        ResponseDTO responseDTO = ResponseUtils.success(AllPriceList, "GetPriceListSuccessfully");
+        ResponseDTO responseDTO = ResponseUtils.success(AllPriceList, "GetAllPriceListSuccessfully");
         return responseDTO;
 
     }
 
-    public ResponseDTO getPriceListByIdWithPriceListDetailList(String id) {
-
+    public Map<String, Object> getPriceListByIdWithPriceListDetailList(String id) {
         Map<String, Object> priceListInfo = new HashMap<>();
-        List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
         List<Map<String, Object>> allRoomClasses = new ArrayList<>();
 
         try {
             PriceList priceList = getPriceListById(id);
             List<String> listRoomCategoryId = priceListDetailRepository.getDistinctRoomClassByPriceList(priceList);
+
             for (String roomCategoryId : listRoomCategoryId) {
                 RoomCategory roomClass = getRoomCategoryById(roomCategoryId);
-                for (PriceListDetail priceListDetail : priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId)) {
+                List<PriceListDetail> listPriceListDetailByRoomClass = priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId);
+                List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
+
+                for (PriceListDetail priceListDetail : listPriceListDetailByRoomClass) {
                     List<String> dayOfWeekList = Arrays.stream(priceListDetail.getDayOfWeek().split("\\|")).collect(Collectors.toList());
                     priceListDetail.setRoomCategory(null);
                     priceListDetail.setPriceList(null);
@@ -100,19 +80,19 @@ public class PriceListService {
                 }
                 Map<String, Object> withRoomClass = new HashMap<>();
                 withRoomClass.put("RoomClass", roomClass);
-                withRoomClass.put("PriceListDetail", roomClassPriceListDetailList.toArray());
+                withRoomClass.put("PriceListDetailWithDayOfWeek", roomClassPriceListDetailList);
                 allRoomClasses.add(withRoomClass);
             }
 
+            priceListInfo.put("ListPriceListDetail", allRoomClasses);
             priceListInfo.put("PriceList", priceList);
-            priceListInfo.put("ListPriceListDetail", allRoomClasses.toArray());
         } catch (ResourceNotFoundException ef) {
             log.error(ef.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        ResponseDTO responseDTO = ResponseUtils.success(priceListInfo,"GetPriceListByIdSuccessfully");
-        return responseDTO;
+
+        return priceListInfo;
     }
 
     public ResponseEntity<String> createPriceList(PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTO){

@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.PriceListDTO;
 import com.manahotel.be.model.dto.PriceListDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
@@ -36,6 +37,9 @@ public class PriceListController {
 
     @GetMapping("/{id}")
     public ResponseDTO getPriceListById(@PathVariable String id) {
-        return priceListService.getPriceListByIdWithPriceListDetailList(id);
+        Map<String, Object> priceListInfo = priceListService.getPriceListByIdWithPriceListDetailList(id);
+        ResponseDTO responseDTO = ResponseUtils.success(priceListInfo,"GetPriceListByIdSuccessfully");
+        return responseDTO;
+
     }
 }
