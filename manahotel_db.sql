@@ -154,7 +154,7 @@ DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order` (
-                         `order_id` varchar(50) NOT NULL AUTO_INCREMENT,
+                         `order_id` varchar(50) NOT NULL,
                          `reservation_detail_id` bigint NOT NULL,
                          `total_pay` float DEFAULT NULL,
                          `status` bigint DEFAULT NULL,

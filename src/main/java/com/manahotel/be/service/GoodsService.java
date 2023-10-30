@@ -32,6 +32,8 @@ public class GoodsService {
     @Autowired
     private GoodsUnitRepository repository2;
 
+    private static final Long userId = UserUtils.getUser().getStaffId();
+
     public ResponseEntity<List<Map<String, Object>>> getAllGoodsWithGoodsUnit() {
         List<Object[]> listGoods = repository.findGoodWithGoodUnits();
 
@@ -72,6 +74,7 @@ public class GoodsService {
             commonMapping(goods, dto);
 
             goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            goods.setCreatedById(userId);
 
             repository.save(goods);
             log.info("----- Add Goods End -----");
@@ -109,6 +112,7 @@ public class GoodsService {
 
             goods.setStatus(dto.getStatus() != null ? dto.getStatus() : goods.getStatus());
             goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+            goods.setUpdatedById(userId);
 
             repository.save(goods);
             log.info("----- Update Goods End -----");
