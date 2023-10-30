@@ -219,7 +219,7 @@ CREATE TABLE `price_list_detail` (
                                      `price_by_day` float DEFAULT NULL,
                                      `price_by_night` float DEFAULT NULL,
                                      `price_by_hour` float DEFAULT NULL,
-                                     `time_apply` float DEFAULT NULL,
+                                     `time_apply` timestamp DEFAULT NULL,
                                      `day_of_week` varchar(255) DEFAULT NULL,
                                      PRIMARY KEY (`price_list_detail_id`),
                                      KEY `pk_pld_pl_idx` (`price_list_id`),
@@ -285,14 +285,14 @@ CREATE TABLE `reservation_detail` (
 -- Table structure for table `reservation_detail_room`
 --
 
-DROP TABLE IF EXISTS `reservation_detail_room`;
+DROP TABLE IF EXISTS `reservation_detail_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservation_detail_room` (
-                                           `reservation_detail_room_id` bigint NOT NULL,
+CREATE TABLE `reservation_detail_customer` (
+                                           `reservation_detail_customer_id` bigint NOT NULL AUTO_INCREMENT,
                                            `reservation_detail_id` bigint NOT NULL,
                                            `customer_id` varchar(50) NOT NULL,
-                                           PRIMARY KEY (`reservation_detail_room_id`),
+                                           PRIMARY KEY (`reservation_detail_customer_id`),
                                            KEY `pk_rdr_rd_idx` (`reservation_detail_id`),
                                            KEY `pk_rdr_c_idx` (`customer_id`),
                                            CONSTRAINT `pk_rdr_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
