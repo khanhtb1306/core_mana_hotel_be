@@ -27,19 +27,19 @@ import java.util.Map;
 public class GoodsService {
 
     @Autowired
-    private GoodsRepository repository;
+    private GoodsRepository goodsRepository;
 
     @Autowired
-    private GoodsUnitRepository repository2;
+    private GoodsUnitRepository goodsUnitRepository;
 
     public ResponseEntity<List<Map<String, Object>>> getAllGoodsWithGoodsUnit() {
-        List<Object[]> listGoods = repository.findGoodWithGoodUnits();
+        List<Object[]> listGoods = goodsRepository.findGoodWithGoodUnits();
 
         List<Map<String, Object>> result = new ArrayList<>();
 
         for (Object[] goods : listGoods) {
             Goods g = (Goods) goods[0];
-            List<GoodsUnit> listGoodsUnit = repository2.findGoodsUnitByGoods(g);
+            List<GoodsUnit> listGoodsUnit = goodsUnitRepository.findGoodsUnitByGoods(g);
             Map<String, Object> goodsInfo = new HashMap<>();
             goodsInfo.put("goods", g);
             goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
@@ -48,11 +48,31 @@ public class GoodsService {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    public ResponseEntity<List<Map<String, Object>>> findGoodsByCategory(boolean category) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        List<Goods> goodsList = goodsRepository.findGoodsByGoodsCategory(category);
+
+        for (Goods good : goodsList) {
+            List<GoodsUnit> listGoodsUnit = goodsUnitRepository.findGoodsUnitByGoods(good);
+            Map<String, Object> goodsInfo = new HashMap<>();
+
+            for (GoodsUnit goodUnit : listGoodsUnit){
+                goodsInfo.put("goods", good);
+                goodsInfo.put("goodsUnit", goodUnit);
+                result.add(goodsInfo);
+            }
+
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
 
     public ResponseEntity<Map<String, Object>> getGoodsWithGoodsUnitById(String id) {
         Goods goods = findGoodsById(id);
         Map<String, Object> goodsInfo = new HashMap<>();
-        List<GoodsUnit> listGoodsUnit = repository2.findGoodsUnitByGoods(goods);
+        List<GoodsUnit> listGoodsUnit = goodsUnitRepository.findGoodsUnitByGoods(goods);
         goodsInfo.put("goods", goods);
         goodsInfo.put("listGoodsUnit", listGoodsUnit.toArray());
         return new ResponseEntity<>(goodsInfo, HttpStatus.OK);
@@ -61,7 +81,7 @@ public class GoodsService {
     public ResponseEntity<Map<String, String>> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Add Goods Start -----");
-            Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
+            Goods latestGoods = goodsRepository.findTopByOrderByGoodsIdDesc();
             String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
             String nextId = IdGenerator.generateId(latestId, "SP");
 
@@ -73,7 +93,7 @@ public class GoodsService {
 
             goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
-            repository.save(goods);
+            goodsRepository.save(goods);
             log.info("----- Add Goods End -----");
 
             log.info("----- Add Unit Start -----");
@@ -83,7 +103,7 @@ public class GoodsService {
             commonMapping2(goodsUnit, dto2);
             goodsUnit.setIsDefault(true);
 
-            repository2.save(goodsUnit);
+            goodsUnitRepository.save(goodsUnit);
             log.info("----- Add Unit End -----");
 
             Map<String, String> response = new HashMap<>();
@@ -110,14 +130,14 @@ public class GoodsService {
             goods.setStatus(dto.getStatus() != null ? dto.getStatus() : goods.getStatus());
             goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
-            repository.save(goods);
+            goodsRepository.save(goods);
             log.info("----- Update Goods End -----");
 
             log.info("----- Update Unit Start -----");
-            GoodsUnit goodsUnit = repository2.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
+            GoodsUnit goodsUnit = goodsUnitRepository.findGoodsUnitByGoodsIdAndIsDefault(goods.getGoodsId(), true);
             commonMapping2(goodsUnit, dto2);
 
-            repository2.save(goodsUnit);
+            goodsUnitRepository.save(goodsUnit);
             log.info("----- Update Unit Done -----");
 
             return new ResponseEntity<>("Cập nhật hàng hóa thành công", HttpStatus.OK);
@@ -135,7 +155,7 @@ public class GoodsService {
 
             goods.setStatus(Status.DELETE);
 
-            repository.save(goods);
+            goodsRepository.save(goods);
             log.info("----- Delete Goods End -----");
 
             return new ResponseEntity<>("Xóa hàng hóa thành công", HttpStatus.OK);
@@ -161,9 +181,9 @@ public class GoodsService {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
+  
     private Goods findGoodsById(String id) {
-        return repository.findById(id)
+        return goodsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
     }
 

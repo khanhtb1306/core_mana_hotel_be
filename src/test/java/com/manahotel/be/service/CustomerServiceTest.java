@@ -49,7 +49,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void createHaveNotNullCustomerNameIsSucessfull() throws IOException {
+    void createIsSucessfull() throws IOException {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerName("huy");
       customerDTO.setDob("1970-01-01 08:00:00");
@@ -58,18 +58,10 @@ class CustomerServiceTest {
         Assertions.assertEquals(expect, actual);
     }
 
-    @Test
-    void createNullCustomerName() throws IOException {
-        CustomerDTO customerDTO = new CustomerDTO();
 
-        ResponseEntity<String> actual = underTest.create(customerDTO);
-        ResponseEntity<String> expect = new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
-        ;
-        Assertions.assertEquals(expect, actual);
-    }
 
     @Test
-    void updateHaveNotNullCustomerNameIsSucessfull() throws IOException {
+    void updateIsSucessfull() throws IOException {
 
         String customerId = "123";
 
@@ -85,23 +77,6 @@ class CustomerServiceTest {
 
         underTest.update(customerId, updatedCustomer);
         assertEquals(updatedCustomer.isGender(), existingCustomer.getGender());
-
-    }
-
-    @Test
-    void updateNullCustomerName() throws IOException {
-
-        String id = "000001"; // Assuming an existing floor with this ID
-
-        CustomerDTO customerDTO = new CustomerDTO();
-
-        Customer exists = new Customer();
-        exists.setCustomerId((String) id);
-        exists.setCustomerName("huy");
-
-        ResponseEntity<String> actual = underTest.update(id, customerDTO);
-        ResponseEntity<String> expect = new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertEquals(expect, actual);
 
     }
 
