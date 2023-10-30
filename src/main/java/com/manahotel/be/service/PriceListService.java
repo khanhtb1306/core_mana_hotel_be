@@ -91,11 +91,10 @@ public class PriceListService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
         return priceListInfo;
     }
 
-    public ResponseEntity<String> createPriceList(PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTO){
+    public ResponseDTO createPriceList(PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTO){
         try{
             PriceList lastestPriceList = priceListRepository.findTopByOrderByPriceListIdDesc();
             String latestId = (lastestPriceList == null) ? null : lastestPriceList.getPriceListId();
@@ -128,7 +127,7 @@ public class PriceListService {
         }catch (Exception e){
             log.info(e.getMessage());
         }
-        return new ResponseEntity<>("Ok", HttpStatus.OK);
+        return ResponseUtils.success("Cập nhật bảng giá thành công");
     }
 
     public ResponseEntity<String> updatePriceList(String priceListId, PriceListDTO updatedPriceListDTO, List<PriceListDetailDTO> updatedPriceListDetailDTO) {
@@ -184,7 +183,7 @@ public class PriceListService {
     }
 
     private void commonMapping(PriceList priceList, PriceListDTO dto) throws IOException {
-        priceList.setPriceListId(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
+        priceList.setPriceListName(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             if (dto.getEffectiveTimeStart() != null) {
