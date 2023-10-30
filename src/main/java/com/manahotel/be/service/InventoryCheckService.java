@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.EmptyListException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.InventoryCheckDTO;
@@ -38,6 +39,8 @@ public class InventoryCheckService {
 
     @Autowired
     private GoodsUnitRepository repository4;
+
+    private static final Long userId = UserUtils.getUser().getStaffId();
 
     public ResponseEntity<List<Map<String, Object>>> getAllInventoryCheckWithDetails() {
         List<Object[]> listInventoryChecks = repository.findAllInventoryChecksWithDetails();
@@ -113,6 +116,7 @@ public class InventoryCheckService {
             InventoryCheck check = new InventoryCheck();
             check.setInventoryCheckId(nextId);
             check.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            check.setCreatedById(userId);
 
             commonMapping(check, dto, listDetailDTO);
             log.info("----- Add Check End -----");

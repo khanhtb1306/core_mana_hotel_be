@@ -1,15 +1,10 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.entity.Reservation;
+import com.manahotel.be.model.dto.ReservationDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reservation")
@@ -19,7 +14,22 @@ public class ReservationController {
     private ReservationService service;
 
     @GetMapping
-    public ResponseEntity<List<Map<String, Object>>> getAllReservations() {
+    public ResponseDTO getAllReservations() {
         return service.getAllReservationWithRooms();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseDTO getReservationById(String id) {
+        return service.getAllReservationWithRoomsById(id);
+    }
+
+    @PostMapping
+    public ResponseDTO createReservation(ReservationDTO reservationDTO) {
+        return service.createReservation(reservationDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseDTO updateReservation(@PathVariable String id, ReservationDTO reservationDTO) {
+        return service.updateReservation(id, reservationDTO);
     }
 }

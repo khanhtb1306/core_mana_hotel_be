@@ -36,7 +36,7 @@ public class ReservationDetail {
     private Timestamp endDate;
 
     @Column(name = "price")
-    private Double price;
+    private Float price;
 
     @Column(name = "reservation_type", length = 50)
     private String reservationType;
