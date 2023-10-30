@@ -1,24 +1,27 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
-@Getter
-@Setter
+@Table(name = "reservation", indexes = {
+        @Index(name = "pk_r_c_idx", columnList = "customer_id")
+})
 @Entity
-@Table(name = "reservation")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reservation {
     @Id
-    @Size(max = 50)
     @Column(name = "reservation_id", nullable = false, length = 50)
     private String reservationId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @Column(name = "total_adults")
     private Long totalAdults;
@@ -27,16 +30,16 @@ public class Reservation {
     private Long totalChildren;
 
     @Column(name = "check_in_estimate")
-    private Instant checkInEstimate;
+    private Timestamp checkInEstimate;
 
     @Column(name = "check_out_estimate")
-    private Instant checkOutEstimate;
+    private Timestamp checkOutEstimate;
 
     @Column(name = "check_in_actual")
-    private Instant checkInActual;
+    private Timestamp checkInActual;
 
     @Column(name = "check_out_actual")
-    private Instant checkOutActual;
+    private Timestamp checkOutActual;
 
     @Column(name = "status")
     private Long status;
@@ -45,10 +48,10 @@ public class Reservation {
     private Float totalDeposit;
 
     @Column(name = "total_price")
-    private Float totalPrice;
+    private Double totalPrice;
 
     @Column(name = "created_date")
-    private Instant createdDate;
+    private Timestamp createdDate;
 
     @Column(name = "created_by_id")
     private Long createdById;
@@ -58,5 +61,4 @@ public class Reservation {
 
     @Column(name = "staff_check_out")
     private Long staffCheckOut;
-
 }

@@ -1,47 +1,43 @@
 package com.manahotel.be.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
+@Table(name = "reservation_detail", indexes = {
+        @Index(name = "pk__idx", columnList = "reservation_id"),
+        @Index(name = "pk_rd_r_idx", columnList = "room_id")
+})
+@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@Entity
-@Table(name = "reservation_detail")
 public class ReservationDetail {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_detail_id", nullable = false)
-    private Long id;
+    private Long reservationDetailId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "reservation_id", nullable = false)
+    private Reservation reservation;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     @Column(name = "start_date")
-    private Instant startDate;
+    private Timestamp startDate;
 
     @Column(name = "end_date")
-    private Instant endDate;
+    private Timestamp endDate;
 
     @Column(name = "price")
     private Float price;
 
-    @Size(max = 50)
     @Column(name = "reservation_type", length = 50)
     private String reservationType;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "reservation_id", nullable = false)
-    private Reservation reservation;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
-
 }
