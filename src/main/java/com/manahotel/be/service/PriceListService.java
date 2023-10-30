@@ -38,11 +38,8 @@ public class PriceListService {
     private RoomClassRepository roomClassRepository;
     public List<Object> getAllPriceList(){
         List<Object> AllPriceList = new ArrayList<>();
-        Map<String, Object> priceListInfo = new HashMap<>();
         List<Map<String, Object>> allRoomClasses = new ArrayList<>();
         List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
-        Map<String, Object> withRoomClass = new HashMap<>();
-
         try {
             List<PriceList> listPriceList =  priceListRepository.findAll();
             for(PriceList list : listPriceList) {
@@ -59,10 +56,12 @@ public class PriceListService {
                         priceListDetailWithDayOfWeek.put("DayOfWeekList", dayOfWeekList);
                         roomClassPriceListDetailList.add(priceListDetailWithDayOfWeek);
                     }
+                    Map<String, Object> withRoomClass = new HashMap<>();
                     withRoomClass.put("RoomClass", roomClass);
                     withRoomClass.put("PriceListDetail", roomClassPriceListDetailList.toArray());
                     allRoomClasses.add(withRoomClass);
                 }
+                Map<String, Object> priceListInfo = new HashMap<>();
                 priceListInfo.put("PriceList", priceList);
                 priceListInfo.put("ListPriceListDetail", allRoomClasses.toArray());
                 AllPriceList.add(priceListInfo);
@@ -80,9 +79,8 @@ public class PriceListService {
     public Map<String, Object> getPriceListByIdWithPriceListDetailList(String id) {
 
         Map<String, Object> priceListInfo = new HashMap<>();
-        List<Map<String, Object>> allRoomClasses = new ArrayList<>();
         List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
-        Map<String, Object> withRoomClass = new HashMap<>();
+        List<Map<String, Object>> allRoomClasses = new ArrayList<>();
 
         try {
             PriceList priceList = getPriceListById(id);
@@ -98,6 +96,7 @@ public class PriceListService {
                     priceListDetailWithDayOfWeek.put("DayOfWeekList", dayOfWeekList);
                     roomClassPriceListDetailList.add(priceListDetailWithDayOfWeek);
                 }
+                Map<String, Object> withRoomClass = new HashMap<>();
                 withRoomClass.put("RoomClass", roomClass);
                 withRoomClass.put("PriceListDetail", roomClassPriceListDetailList.toArray());
                 allRoomClasses.add(withRoomClass);
