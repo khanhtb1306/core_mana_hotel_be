@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.dto.GoodsUnitDTO;
