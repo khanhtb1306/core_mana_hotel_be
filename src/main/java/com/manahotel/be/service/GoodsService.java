@@ -33,8 +33,6 @@ public class GoodsService {
     @Autowired
     private GoodsUnitRepository repository2;
 
-    private static final Long userId = UserUtils.getUser().getStaffId();
-
     public ResponseEntity<List<Map<String, Object>>> getAllGoodsWithGoodsUnit() {
         List<Object[]> listGoods = repository.findGoodWithGoodUnits();
 
@@ -64,6 +62,8 @@ public class GoodsService {
     public ResponseEntity<Map<String, String>> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Add Goods Start -----");
+            Long userId = UserUtils.getUser().getStaffId();
+
             Goods latestGoods = repository.findTopByOrderByGoodsIdDesc();
             String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
             String nextId = IdGenerator.generateId(latestId, "SP");
@@ -107,6 +107,8 @@ public class GoodsService {
     public ResponseEntity<String> updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Update Goods Start -----");
+            Long userId = UserUtils.getUser().getStaffId();
+
             Goods goods = findGoodsById(id);
 
             commonMapping(goods, dto);

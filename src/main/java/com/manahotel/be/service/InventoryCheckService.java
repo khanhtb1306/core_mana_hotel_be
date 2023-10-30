@@ -40,8 +40,6 @@ public class InventoryCheckService {
     @Autowired
     private GoodsUnitRepository repository4;
 
-    private static final Long userId = UserUtils.getUser().getStaffId();
-
     public ResponseEntity<List<Map<String, Object>>> getAllInventoryCheckWithDetails() {
         List<Object[]> listInventoryChecks = repository.findAllInventoryChecksWithDetails();
 
@@ -109,6 +107,8 @@ public class InventoryCheckService {
     public ResponseEntity<String> createInventoryCheck(InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         try {
             log.info("----- Add Check Start -----");
+            Long userId = UserUtils.getUser().getStaffId();
+
             InventoryCheck latestCheck = repository.findTopByOrderByInventoryCheckIdDesc();
             String latestId = (latestCheck == null) ? null : latestCheck.getInventoryCheckId();
             String nextId = IdGenerator.generateId(latestId, "KK");
@@ -135,6 +135,8 @@ public class InventoryCheckService {
     public ResponseEntity<String> updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         try {
             log.info("----- Update Check Start -----");
+            Long userId = UserUtils.getUser().getStaffId();
+
             InventoryCheck check = findInventoryCheckById(id);
 
             commonMapping(check, dto, listDetailDTO);
