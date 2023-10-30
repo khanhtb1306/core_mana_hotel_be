@@ -2,9 +2,11 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.PriceListDTO;
 import com.manahotel.be.model.dto.PriceListDetailDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.PriceList;
 import com.manahotel.be.model.entity.PriceListDetail;
 import com.manahotel.be.model.entity.RoomCategory;
@@ -36,7 +38,7 @@ public class PriceListService {
     
     @Autowired
     private RoomClassRepository roomClassRepository;
-    public List<Object> getAllPriceList(){
+    public ResponseDTO getAllPriceList(){
         List<Object> AllPriceList = new ArrayList<>();
         List<Map<String, Object>> allRoomClasses = new ArrayList<>();
         List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
@@ -71,12 +73,12 @@ public class PriceListService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
-        return AllPriceList;
+        ResponseDTO responseDTO = ResponseUtils.success(AllPriceList, "GetPriceListSuccessfully");
+        return responseDTO;
 
     }
 
-    public Map<String, Object> getPriceListByIdWithPriceListDetailList(String id) {
+    public ResponseDTO getPriceListByIdWithPriceListDetailList(String id) {
 
         Map<String, Object> priceListInfo = new HashMap<>();
         List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
@@ -109,7 +111,8 @@ public class PriceListService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return priceListInfo;
+        ResponseDTO responseDTO = ResponseUtils.success(priceListInfo,"GetPriceListByIdSuccessfully");
+        return responseDTO;
     }
 
     public ResponseEntity<String> createPriceList(PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTO){

@@ -2,6 +2,7 @@ package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.PriceListDTO;
 import com.manahotel.be.model.dto.PriceListDetailDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.PriceList;
 import com.manahotel.be.service.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class PriceListController {
     private PriceListService priceListService;
 
     @GetMapping
-    public List<Object> getAllPriceList() {
+    public ResponseDTO getAllPriceList() {
         return priceListService.getAllPriceList();
     }
 
@@ -34,7 +35,7 @@ public class PriceListController {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getPriceListById(@PathVariable String id) {
+    public ResponseDTO getPriceListById(@PathVariable String id) {
         return priceListService.getPriceListByIdWithPriceListDetailList(id);
     }
 }
