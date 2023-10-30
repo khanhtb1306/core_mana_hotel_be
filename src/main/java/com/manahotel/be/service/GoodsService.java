@@ -33,8 +33,6 @@ public class GoodsService {
     @Autowired
     private GoodsUnitRepository repository2;
 
-    private static final Long userId = UserUtils.getUser().getStaffId();
-
     public ResponseEntity<List<Map<String, Object>>> getAllGoodsWithGoodsUnit() {
         List<Object[]> listGoods = repository.findGoodWithGoodUnits();
 
