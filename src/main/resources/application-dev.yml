@@ -25,6 +25,9 @@ spring:
     port: 587
     username: hotelsystem00@gmail.com
     password: vsjpxutvricoknsg
+    # đổi sang email dưới này nhé
+#    username: manahotelsystem@gmail.com
+#    password: Manahotelsystem123
 
     properties:
       mail:

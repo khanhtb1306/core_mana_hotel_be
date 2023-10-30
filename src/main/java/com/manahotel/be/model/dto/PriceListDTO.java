@@ -6,8 +6,8 @@ import java.sql.Timestamp;
 @Data
 public class PriceListDTO {
     private String priceListName;
-    private Timestamp effectiveTimeStart;
-    private Timestamp effectiveTimeEnd;
+    private String effectiveTimeStart;
+    private String effectiveTimeEnd;
     private Long status;
     private String note;
 }

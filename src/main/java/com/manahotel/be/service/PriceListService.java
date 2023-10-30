@@ -1,9 +1,12 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.PriceListDTO;
 import com.manahotel.be.model.dto.PriceListDetailDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.PriceList;
 import com.manahotel.be.model.entity.PriceListDetail;
 import com.manahotel.be.model.entity.RoomCategory;
@@ -17,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,23 +38,38 @@ public class PriceListService {
     
     @Autowired
     private RoomClassRepository roomClassRepository;
-    public List<PriceList> getAllPriceList(){
-        return priceListRepository.findAll();
+    public ResponseDTO getAllPriceList(){
+        List<Object> AllPriceList = new ArrayList<>();
+        try {
+            List<PriceList> listPriceList =  priceListRepository.findAll();
+            for(PriceList list : listPriceList) {
+                Map<String, Object>  priceListInfo = getPriceListByIdWithPriceListDetailList(list.getPriceListId());
+                AllPriceList.add(priceListInfo);
+            }
+        } catch (ResourceNotFoundException ef) {
+            log.error(ef.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        ResponseDTO responseDTO = ResponseUtils.success(AllPriceList, "GetAllPriceListSuccessfully");
+        return responseDTO;
+
     }
 
     public Map<String, Object> getPriceListByIdWithPriceListDetailList(String id) {
-
         Map<String, Object> priceListInfo = new HashMap<>();
         List<Map<String, Object>> allRoomClasses = new ArrayList<>();
-        List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
-        Map<String, Object> withRoomClass = new HashMap<>();
 
         try {
             PriceList priceList = getPriceListById(id);
             List<String> listRoomCategoryId = priceListDetailRepository.getDistinctRoomClassByPriceList(priceList);
+
             for (String roomCategoryId : listRoomCategoryId) {
                 RoomCategory roomClass = getRoomCategoryById(roomCategoryId);
-                for (PriceListDetail priceListDetail : priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId)) {
+                List<PriceListDetail> listPriceListDetailByRoomClass = priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId);
+                List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
+
+                for (PriceListDetail priceListDetail : listPriceListDetailByRoomClass) {
                     List<String> dayOfWeekList = Arrays.stream(priceListDetail.getDayOfWeek().split("\\|")).collect(Collectors.toList());
                     priceListDetail.setRoomCategory(null);
                     priceListDetail.setPriceList(null);
@@ -57,18 +78,20 @@ public class PriceListService {
                     priceListDetailWithDayOfWeek.put("DayOfWeekList", dayOfWeekList);
                     roomClassPriceListDetailList.add(priceListDetailWithDayOfWeek);
                 }
+                Map<String, Object> withRoomClass = new HashMap<>();
                 withRoomClass.put("RoomClass", roomClass);
-                withRoomClass.put("PriceListDetail", roomClassPriceListDetailList.toArray());
+                withRoomClass.put("PriceListDetailWithDayOfWeek", roomClassPriceListDetailList);
                 allRoomClasses.add(withRoomClass);
             }
 
+            priceListInfo.put("ListPriceListDetail", allRoomClasses);
             priceListInfo.put("PriceList", priceList);
-            priceListInfo.put("ListPriceListDetail", allRoomClasses.toArray());
         } catch (ResourceNotFoundException ef) {
             log.error(ef.getMessage());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+
         return priceListInfo;
     }
 
@@ -149,19 +172,56 @@ public class PriceListService {
         return new ResponseEntity<>("Cập nhật Bảng giá thành công", HttpStatus.OK);
     }
 
+    public ResponseEntity<String> deletePriceListById(String id) {
+        try{
+            PriceList priceList = getPriceListById(id);
+            priceList.setStatus(Status.DELETE);
+            priceListRepository.save(priceList);
+        }catch (ResourceNotFoundException rnf){
+            log.error(rnf.getMessage());
+        }
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
     private void commonMapping(PriceList priceList, PriceListDTO dto) throws IOException {
         priceList.setPriceListId(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
-        priceList.setEffectiveTimeStart(dto.getEffectiveTimeStart() != null ? dto.getEffectiveTimeStart() : priceList.getEffectiveTimeStart());
-        priceList.setEffectiveTimeEnd(dto.getEffectiveTimeEnd() != null ? dto.getEffectiveTimeEnd() : priceList.getEffectiveTimeEnd());
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            if (dto.getEffectiveTimeStart() != null) {
+                Date timesStart = dateFormat.parse(dto.getEffectiveTimeStart());
+                Timestamp timesStartTimestamp = new Timestamp(timesStart.getTime());
+                priceList.setEffectiveTimeStart(timesStartTimestamp);
+            } else if (dto.getEffectiveTimeEnd() != null) {
+                Date timesEnd = dateFormat.parse((dto.getEffectiveTimeEnd()));
+                Timestamp timesEndTimestamp = new Timestamp(timesEnd.getTime());
+                priceList.setEffectiveTimeEnd(timesEndTimestamp);
+            } else {
+                priceList.setEffectiveTimeStart(priceList.getEffectiveTimeStart());
+                priceList.setEffectiveTimeEnd(priceList.getEffectiveTimeEnd());
+            }
+        }catch (ParseException e){
+            throw new RuntimeException(e);
+        }
         priceList.setStatus(dto.getStatus() != null ? dto.getStatus() : priceList.getStatus());
         priceList.setNote(dto.getNote() != null ? dto.getNote() : priceList.getNote());
     }
 
-    private void commonMapping(PriceListDetail priceListDetail, PriceListDetailDTO dto) throws IOException {
+    private void commonMapping( PriceListDetail priceListDetail, PriceListDetailDTO dto) throws IOException {
         priceListDetail.setPriceByDay(dto.getPriceByDay() != null ? dto.getPriceByDay() : priceListDetail.getPriceByDay());
         priceListDetail.setPriceByNight(dto.getPriceByNight() != null ? dto.getPriceByNight() : priceListDetail.getPriceByNight());
         priceListDetail.setPriceByHour(dto.getPriceByHour() != null ? dto.getPriceByHour() : priceListDetail.getPriceByHour());
-        priceListDetail.setTimeApply(dto.getTimeApply() != null ? dto.getTimeApply() : priceListDetail.getTimeApply());
+        try {
+            if(dto.getTimeApply() !=null){
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date timesApply = dateFormat.parse(dto.getTimeApply());
+                Timestamp timesApplyTimestamp = new Timestamp(timesApply.getTime());
+                priceListDetail.setTimeApply(timesApplyTimestamp);
+            }else {
+                priceListDetail.setTimeApply(priceListDetail.getTimeApply());
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public RoomCategory getRoomCategoryById(String id) {

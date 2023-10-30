@@ -14,6 +14,4 @@ public interface GoodsRepository extends JpaRepository<Goods, String> {
     @Query("SELECT g FROM Goods g " +
             "LEFT JOIN GoodsUnit gu ON g.goodsId = gu.goods.goodsId where g.status <> 6")
     List<Object[]> findGoodWithGoodUnits();
-
-    List<Goods> findGoodsByGoodsCategory(boolean goodsCategory);
 }

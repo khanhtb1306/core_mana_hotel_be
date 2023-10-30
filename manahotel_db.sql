@@ -219,14 +219,15 @@ CREATE TABLE `price_list_detail` (
                                      `price_by_day` float DEFAULT NULL,
                                      `price_by_night` float DEFAULT NULL,
                                      `price_by_hour` float DEFAULT NULL,
-                                     `time_apply` timestamp DEFAULT NULL,
+                                     `time_apply` timestamp NULL DEFAULT NULL,
                                      `day_of_week` varchar(255) DEFAULT NULL,
+                                     `status` bigint DEFAULT NULL,
                                      PRIMARY KEY (`price_list_detail_id`),
                                      KEY `pk_pld_pl_idx` (`price_list_id`),
                                      KEY `pk_pld_rc_idx` (`room_category_id`),
                                      CONSTRAINT `pk_pld_pl` FOREIGN KEY (`price_list_id`) REFERENCES `price_list` (`price_list_id`),
                                      CONSTRAINT `pk_pld_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
