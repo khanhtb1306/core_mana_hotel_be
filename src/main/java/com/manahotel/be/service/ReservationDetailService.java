@@ -94,8 +94,10 @@ public class ReservationDetailService {
         room.setBookingStatus((reservationDetailDTO.getBookingStatus() != null) ? reservationDetailDTO.getBookingStatus() : room.getBookingStatus());
         reservationDetail.setRoom(room);
 
-        reservationDetail.setStartDate((reservationDetailDTO.getStartDate() != null) ? reservationDetailDTO.getStartDate() : reservationDetail.getStartDate());
-        reservationDetail.setEndDate((reservationDetailDTO.getEndDate() != null) ? reservationDetailDTO.getEndDate() : reservationDetail.getEndDate());
+        reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
+        reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
+        reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
+        reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
         reservationDetail.setReservationType((reservationDetailDTO.getReservationType() != null) ? reservationDetailDTO.getReservationType() : reservationDetail.getReservationType());
     }

@@ -5,18 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "reservation_detail_room", indexes = {
+@Table(name = "reservation_detail_customer", indexes = {
         @Index(name = "pk_rdr_rd_idx", columnList = "reservation_detail_id"),
         @Index(name = "pk_rdr_c_idx", columnList = "customer_id")
 })
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ReservationDetailRoom {
+@AllArgsConstructor
+public class ReservationDetailCustomer {
     @Id
-    @Column(name = "reservation_detail_room_id", nullable = false)
-    private Long reservationDetailRoomId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reservation_detail_customer_id", nullable = false)
+    private Long reservationDetailCustomerId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "reservation_detail_id", nullable = false)

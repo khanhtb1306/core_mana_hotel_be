@@ -29,11 +29,17 @@ public class ReservationDetail {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @Column(name = "start_date")
-    private Timestamp startDate;
+    @Column(name = "check_in_estimate")
+    private Timestamp checkInEstimate;
 
-    @Column(name = "end_date")
-    private Timestamp endDate;
+    @Column(name = "check_out_estimate")
+    private Timestamp checkOutEstimate;
+
+    @Column(name = "check_in_actual")
+    private Timestamp checkInActual;
+
+    @Column(name = "check_out_actual")
+    private Timestamp checkOutActual;
 
     @Column(name = "price")
     private Float price;
