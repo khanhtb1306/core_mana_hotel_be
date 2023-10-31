@@ -31,8 +31,8 @@ public class PriceListController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePriceList(@PathVariable String id, PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTOList) {
-        return priceListService.updatePriceList(id, priceListDTO, priceListDetailDTOList);
+    public ResponseDTO updatePriceList(@PathVariable String id, PriceListRequest request) {
+        return priceListService.updatePriceList(id, request.getPriceListDTO(), request.getPriceListDetailDTO());
     }
 
     @GetMapping("/{id}")

@@ -106,6 +106,7 @@ public class RoomService {
 
 
     public ResponseEntity<String> deleteRoomById(String id) {
+        log.info("------- DELETE Room By ID Start -------");
         try {
             Room room = getRoomById(id);
             if (room.getStatus() == Status.DELETE) {
@@ -115,6 +116,8 @@ public class RoomService {
             room.setStatus(Status.DELETE);
             roomRepository.save(room);
             log.info("Room deleted successfully");
+
+            log.info("------- DELETE Room By ID End -------");
             return new ResponseEntity<>("Xóa phòng thành công", HttpStatus.OK);
 
         } catch (ResourceNotFoundException e) {
@@ -128,6 +131,7 @@ public class RoomService {
 
 
     public ResponseEntity<Map<String, String>> deleteRoomByList(List<String> idList) {
+        log.info("------- DELETE List Room Start -------");
         Map<String, String> result = new HashMap<>();
 
         if (idList == null || idList.isEmpty()) {
@@ -139,6 +143,7 @@ public class RoomService {
             ResponseEntity<String> deletionResult = deleteRoomById(id);
             result.put(id, deletionResult.getBody());
         }
+        log.info("------- DELETE List Room End -------");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -200,11 +205,13 @@ public class RoomService {
     }
 
     public ResponseEntity<String> deleteFloorById(int id) {
+        log.info("------- Delete Area Start -------");
         try {
             Floor floor = getFloorById((long) id);
 
             floor.setStatus(Status.DELETE);
             floorRepository.save(floor);
+            log.info("------- DELETE Area End -------");
             return new ResponseEntity<>("Xóa khu vực thành công", HttpStatus.OK);
         }catch (ResourceNotFoundException e){
             log.info("Can't find floor id", e.getMessage());

@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.xml.stream.events.DTD;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -39,6 +40,7 @@ public class PriceListService {
     @Autowired
     private RoomClassRepository roomClassRepository;
     public ResponseDTO getAllPriceList(){
+        log.info("------- Get All Price List Start -------");
         List<Object> AllPriceList = new ArrayList<>();
         try {
             List<PriceList> listPriceList =  priceListRepository.findAll();
@@ -51,12 +53,13 @@ public class PriceListService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        ResponseDTO responseDTO = ResponseUtils.success(AllPriceList, "GetAllPriceListSuccessfully");
-        return responseDTO;
-
+        log.info("------- Get All Price List End -------");
+            return ResponseUtils.success(AllPriceList, "GetAllPriceListSuccessfully");
     }
 
     public Map<String, Object> getPriceListByIdWithPriceListDetailList(String id) {
+        log.info("------- Get Price List By ID Start -------");
+
         Map<String, Object> priceListInfo = new HashMap<>();
         List<Map<String, Object>> allRoomClasses = new ArrayList<>();
 
@@ -91,10 +94,12 @@ public class PriceListService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+        log.info("------- Get Price List By ID End -------");
         return priceListInfo;
     }
 
     public ResponseDTO createPriceList(PriceListDTO priceListDTO, List<PriceListDetailDTO> priceListDetailDTO){
+        log.info("------- Create Price List Start -------");
         try{
             PriceList lastestPriceList = priceListRepository.findTopByOrderByPriceListIdDesc();
             String latestId = (lastestPriceList == null) ? null : lastestPriceList.getPriceListId();
@@ -125,26 +130,24 @@ public class PriceListService {
                 log.info("Save Price List Detail Successfully");
             }
         }catch (Exception e){
-            log.info(e.getMessage());
+            return ResponseUtils.error("Thêm bảng giá mới thất bại");
         }
-        return ResponseUtils.success("Cập nhật bảng giá thành công");
+        log.info("------- Create Price List End -------");
+        return ResponseUtils.success("Thêm bảng giá mới thành công");
     }
 
-    public ResponseEntity<String> updatePriceList(String priceListId, PriceListDTO updatedPriceListDTO, List<PriceListDetailDTO> updatedPriceListDetailDTO) {
+    public ResponseDTO updatePriceList(String priceListId, PriceListDTO PriceListDTO, List<PriceListDetailDTO> PriceListDetailDTO) {
+        log.info("------- Update Price List Start -------");
         try {
-            // Tìm danh sách giá dựa trên priceListId
             PriceList priceList = getPriceListById(priceListId);
-
-            // Cập nhật thông tin của danh sách giá
-            commonMapping(priceList, updatedPriceListDTO);
+            commonMapping(priceList, PriceListDTO);
             priceListRepository.save(priceList);
-            log.info("Cập nhật danh sách giá thành công");
+            log.info("Save Price List Successfully");
 
 //            // Xóa tất cả các mục chi tiết danh sách giá cũ
             priceListDetailRepository.deleteByPriceList(priceList);
 
-            // Thêm các mục chi tiết danh sách giá mới
-            for (PriceListDetailDTO updatedPldDTO : updatedPriceListDetailDTO) {
+            for (PriceListDetailDTO updatedPldDTO : PriceListDetailDTO) {
                 PriceListDetail priceListDetail = new PriceListDetail();
                 priceListDetail.setPriceList(priceList);
 
@@ -160,15 +163,15 @@ public class PriceListService {
                 priceListDetail.setDayOfWeek(dayOfWeekBuilder.toString());
                 commonMapping(priceListDetail, updatedPldDTO);
                 priceListDetailRepository.save(priceListDetail);
-                log.info("Thêm mục chi tiết danh sách giá thành công");
+                log.info("Save Price List Detail Successfully");
             }
         }catch (ResourceNotFoundException ex){
-            return new ResponseEntity<>("Danh sách giá không tồn tại", HttpStatus.NOT_FOUND);
+            return ResponseUtils.error("NOT FOUND");
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>("Lỗi khi cập nhật danh sách giá", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtils.error("Lỗi khi cập nhật bảng giá");
         }
-        return new ResponseEntity<>("Cập nhật Bảng giá thành công", HttpStatus.OK);
+        log.info("------- Update Price List End -------");
+        return ResponseUtils.success("Cập nhật bảng giá thành công");
     }
 
     public ResponseEntity<String> deletePriceListById(String id) {

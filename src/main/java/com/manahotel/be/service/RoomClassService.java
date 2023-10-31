@@ -111,6 +111,7 @@ public class RoomClassService {
     }
 
     public ResponseEntity<String> deleteRoomClassById(String id) {
+        log.info("------- Delete Room Class Start -------");
         try {
             RoomCategory roomClass = getRoomCategoryById(id);
             if (roomClass.getStatus() == Status.DELETE) {
@@ -123,8 +124,8 @@ public class RoomClassService {
             }
             roomClass.setStatus(Status.DELETE);
             roomClassRepository.save(roomClass);
-
             log.info("Room class deleted successfully");
+            log.info("------- Delete Room Class end -------");
             return new ResponseEntity<>("Xóa hạng phòng thành công", HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             log.info("Can't find room class");
@@ -135,6 +136,8 @@ public class RoomClassService {
         }
     }
     public ResponseEntity<Map<String, String>> deleteRoomClassesByList(List<String> idList) {
+        log.info("------- Delete List Room Class Start -------");
+
         Map<String, String> result = new HashMap<>();
 
         if (idList == null || idList.isEmpty()) {
@@ -146,6 +149,7 @@ public class RoomClassService {
             ResponseEntity<String> deletionResult = deleteRoomClassById(id);
             result.put(id, deletionResult.getBody());
         }
+        log.info("------- Delete List Room Class End -------");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -157,6 +161,7 @@ public class RoomClassService {
     }
 
     public Map<String, Object> getRoomClassWithListRoom(String id) {
+        log.info("------- GET Room Class With List Room Start -------");
         Map<String, Object> roomInfo = new HashMap<>();
         try {
             RoomCategory roomCategory = getRoomCategoryById(id);
@@ -166,6 +171,7 @@ public class RoomClassService {
         }catch (ResourceNotFoundException e) {
             log.info(e.getMessage());
         }
+        log.info("------- GET Room Class With List Room End -------");
         return roomInfo;
     }
 
