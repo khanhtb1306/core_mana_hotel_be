@@ -1,4 +1,4 @@
-package com.manahotel.be.service;
+package com.manahotel.be.model.dto.response;
 
 public interface InventoryCheckResponse {
     Long getTotalActualInventory();

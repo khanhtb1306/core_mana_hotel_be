@@ -1,6 +1,6 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.service.GoodsRequest;
+import com.manahotel.be.model.dto.request.GoodsRequest;
 import com.manahotel.be.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

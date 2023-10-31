@@ -1,4 +1,4 @@
-package com.manahotel.be.service;
+package com.manahotel.be.model.dto.request;
 
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.dto.GoodsUnitDTO;
