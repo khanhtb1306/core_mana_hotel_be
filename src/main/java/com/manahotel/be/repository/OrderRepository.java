@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<Order,String> {
     Order findTopByOrderByOrderIdDesc();
 
-    Order findByReservationDetail_Id(Long reservationDetailId);
+    Order findByReservationDetail_ReservationDetailId(Long reservationDetailId);
 
 
 

@@ -14,9 +14,19 @@ public class BillService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-//    public List<BillDTO> getBillDTO(String orderId) {
-//        List<BillDTO> bill = new ArrayList<>();
-//        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
-//
-//    }
+    public List<BillDTO> getBillList(String orderId) {
+        List<BillDTO> bill = new ArrayList<>();
+
+
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
+        for (OrderDetail orderDetail : orderDetailList) {
+            BillDTO billDTO = new BillDTO();
+            billDTO.setQuantity(orderDetail.getQuantity());
+            billDTO.setUnitPrice(orderDetail.getPrice());
+            billDTO.setPrice(orderDetail.getQuantity() * orderDetail.getPrice());
+            billDTO.setGoodsName(orderDetail.getGoods().getGoodsName());
+            bill.add(billDTO);
+        }
+        return bill;
+    }
 }

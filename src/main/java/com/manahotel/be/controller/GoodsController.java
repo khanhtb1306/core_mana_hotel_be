@@ -40,4 +40,9 @@ public class GoodsController {
     public ResponseEntity<Map<String, Object>> getGoodsById(@PathVariable String id) {
         return service.getGoodsWithGoodsUnitById(id);
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Map<String, Object>>> getGoodsByCategory(@PathVariable boolean category){
+        return service.findGoodsByCategory(category);
+    }
 }

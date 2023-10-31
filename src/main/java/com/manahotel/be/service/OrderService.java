@@ -80,7 +80,7 @@ public class OrderService {
         try{
             log.info("------- Update Order Start -------");
 
-            Order latestOrder = orderRepository.findByReservationDetail_Id(reservationDetailId);
+            Order latestOrder = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId);
             float total = 0;
             List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(latestOrder.getOrderId());
             for (OrderDetail orderDetail : orderDetailList){
