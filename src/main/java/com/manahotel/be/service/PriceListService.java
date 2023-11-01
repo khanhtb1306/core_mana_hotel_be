@@ -68,8 +68,10 @@ public class PriceListService {
             List<String> listRoomCategoryId = priceListDetailRepository.getDistinctRoomClassByPriceList(priceList);
 
             for (String roomCategoryId : listRoomCategoryId) {
+
                 RoomCategory roomClass = getRoomCategoryById(roomCategoryId);
-                List<PriceListDetail> listPriceListDetailByRoomClass = priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId);
+                List<PriceListDetail> listPriceListDetailByRoomClass = priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId, priceList.getPriceListId());
+
                 List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
 
                 for (PriceListDetail priceListDetail : listPriceListDetailByRoomClass) {
