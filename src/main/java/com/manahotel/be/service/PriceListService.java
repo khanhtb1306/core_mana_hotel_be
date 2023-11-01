@@ -146,9 +146,10 @@ public class PriceListService {
             priceListRepository.save(priceList);
             log.info("Save Price List Successfully");
 
-//            // Xóa tất cả các mục chi tiết danh sách giá cũ
-            priceListDetailRepository.deleteByPriceList(priceList);
-
+            List<PriceListDetail> priceListDetails = priceListDetailRepository.getAllPriceListDetailByPriceListId(priceListId);
+            for(PriceListDetail priceListDetail : priceListDetails){
+                priceListDetailRepository.deleteById(priceListDetail.getPriceListDetailId());
+            }
             for (PriceListDetailDTO updatedPldDTO : PriceListDetailDTO) {
                 PriceListDetail priceListDetail = new PriceListDetail();
                 priceListDetail.setPriceList(priceList);
@@ -170,6 +171,7 @@ public class PriceListService {
         }catch (ResourceNotFoundException ex){
             return ResponseUtils.error("NOT FOUND");
         } catch (Exception e) {
+            log.info(e.getMessage());
             return ResponseUtils.error("Lỗi khi cập nhật bảng giá");
         }
         log.info("------- Update Price List End -------");

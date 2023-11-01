@@ -20,6 +20,7 @@ public interface PriceListDetailRepository extends JpaRepository<PriceListDetail
     @Query("SELECT pld FROM PriceListDetail pld WHERE pld.roomCategory.roomCategoryId = ?1 and pld.priceList.priceListId = ?2")
     List<PriceListDetail> getAllPriceListDetailByRoomCategoryId(String roomCategoryId, String priceListId);
 
-    Void deleteByPriceList(PriceList priceList);
+    @Query("SELECT pld FROM PriceListDetail pld WHERE pld.priceList.priceListId = ?1")
+    List<PriceListDetail> getAllPriceListDetailByPriceListId(String priceListId);
 
 }
