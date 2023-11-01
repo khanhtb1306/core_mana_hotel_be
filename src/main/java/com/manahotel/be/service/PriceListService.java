@@ -191,19 +191,18 @@ public class PriceListService {
         priceList.setPriceListName(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            if (dto.getEffectiveTimeStart() != null) {
+            if (dto.getEffectiveTimeStart() != null && dto.getEffectiveTimeEnd() != null) {
                 Date timesStart = dateFormat.parse(dto.getEffectiveTimeStart());
                 Timestamp timesStartTimestamp = new Timestamp(timesStart.getTime());
                 priceList.setEffectiveTimeStart(timesStartTimestamp);
-            } else if (dto.getEffectiveTimeEnd() != null) {
                 Date timesEnd = dateFormat.parse((dto.getEffectiveTimeEnd()));
                 Timestamp timesEndTimestamp = new Timestamp(timesEnd.getTime());
                 priceList.setEffectiveTimeEnd(timesEndTimestamp);
-            } else {
+            }else {
                 priceList.setEffectiveTimeStart(priceList.getEffectiveTimeStart());
                 priceList.setEffectiveTimeEnd(priceList.getEffectiveTimeEnd());
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             throw new RuntimeException(e);
         }
         priceList.setStatus(dto.getStatus() != null ? dto.getStatus() : priceList.getStatus());
