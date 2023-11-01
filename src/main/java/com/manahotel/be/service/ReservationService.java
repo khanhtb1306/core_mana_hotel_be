@@ -117,6 +117,8 @@ public class ReservationService {
         reservation.setStatus((reservationDTO.getStatus() != null) ? reservationDTO.getStatus() : reservation.getStatus());
         reservation.setTotalDeposit((reservationDTO.getTotalDeposit() != null) ? reservationDTO.getTotalDeposit() : reservation.getTotalDeposit());
         reservation.setTotalPrice((reservationDTO.getTotalPrice() != null) ? reservationDTO.getTotalPrice() : reservation.getTotalPrice());
+        reservation.setDurationStart((reservationDTO.getDurationStart() != null) ? reservationDTO.getDurationStart() : reservation.getDurationStart());
+        reservation.setDurationEnd((reservationDTO.getDurationEnd() != null) ? reservationDTO.getDurationEnd() : reservation.getDurationEnd());
         reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
     }
 

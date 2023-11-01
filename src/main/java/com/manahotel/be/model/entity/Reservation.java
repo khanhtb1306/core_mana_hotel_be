@@ -38,6 +38,12 @@ public class Reservation {
     @Column(name = "total_price")
     private Float totalPrice;
 
+    @Column(name = "duration_start")
+    private Timestamp durationStart;
+
+    @Column(name = "duration_end")
+    private Timestamp durationEnd;
+
     @Column(name = "note", length = 350)
     private String note;
 
