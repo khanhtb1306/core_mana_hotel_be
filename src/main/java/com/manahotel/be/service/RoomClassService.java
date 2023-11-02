@@ -2,10 +2,16 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
+import com.manahotel.be.model.entity.ReservationDetail;
+import com.manahotel.be.model.entity.ReservationDetailCustomer;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
+import com.manahotel.be.repository.ReservationDetailCustomerRepository;
+import com.manahotel.be.repository.ReservationDetailRepository;
 import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +36,48 @@ public class RoomClassService {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private ReservationDetailRepository reservationDetailRepository;
+
+    @Autowired
+    private ReservationDetailCustomerRepository reservationDetailCustomerRepository;
+
+    public ResponseDTO getAllRoomByRoomClass() {
+        List<Object[]> listRoomClass = roomClassRepository.findRoomByRoomCategory();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for(Object[] roomClass : listRoomClass) {
+            RoomCategory roomCategory = (RoomCategory) roomClass[0];
+            List<Room> listRooms = roomRepository.findByRoomCategory(roomCategory);
+            List<Map<String, Object>> roomListWithRDs = new ArrayList<>();
+            for(Room room : listRooms) {
+                List<ReservationDetail> listReservationDetails = reservationDetailRepository.findReservationDetailByRoom(room);
+
+                List<Map<String, Object>> RDListWithRDCs = new ArrayList<>();
+                for(ReservationDetail reservationDetail : listReservationDetails) {
+                    List<ReservationDetailCustomer> listReservationDetailCustomers = reservationDetailCustomerRepository.findReservationDetailCustomerByReservationDetail(reservationDetail);
+
+                    Map<String, Object> reservationDetailCustomerInfo = new HashMap<>();
+                    reservationDetailCustomerInfo.put("reservationDetail", reservationDetail);
+                    reservationDetailCustomerInfo.put("listReservationDetailCustomers", listReservationDetailCustomers.toArray());
+                    RDListWithRDCs.add(reservationDetailCustomerInfo);
+                }
+
+                Map<String, Object> reservationDetailInfo = new HashMap<>();
+                reservationDetailInfo.put("room", room);
+                reservationDetailInfo.put("RDListWithRDCs", RDListWithRDCs.toArray());
+                roomListWithRDs.add(reservationDetailInfo);
+            }
+
+            Map<String, Object> roomInfo = new HashMap<>();
+            roomInfo.put("roomCategory", roomCategory);
+            roomInfo.put("roomListWithRDs", roomListWithRDs.toArray());
+            result.add(roomInfo);
+        }
+
+        return ResponseUtils.success(result, "Hiển thị danh sách phòng theo danh sách hạng phòng thành công");
+    }
 
     public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
         List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();

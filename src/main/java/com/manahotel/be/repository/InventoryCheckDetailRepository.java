@@ -2,7 +2,7 @@ package com.manahotel.be.repository;
 
 import com.manahotel.be.model.entity.InventoryCheck;
 import com.manahotel.be.model.entity.InventoryCheckDetail;
-import com.manahotel.be.service.InventoryCheckResponse;
+import com.manahotel.be.model.dto.response.InventoryCheckResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -3,7 +3,7 @@ package com.manahotel.be.model.dto;
 import lombok.Data;
 
 @Data
-public class ReservationDetailRoomDTO {
+public class ReservationDetailCustomerDTO {
     private Long reservationDetailId;
     private String customerId;
 }

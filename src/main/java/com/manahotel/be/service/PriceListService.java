@@ -68,8 +68,10 @@ public class PriceListService {
             List<String> listRoomCategoryId = priceListDetailRepository.getDistinctRoomClassByPriceList(priceList);
 
             for (String roomCategoryId : listRoomCategoryId) {
+
                 RoomCategory roomClass = getRoomCategoryById(roomCategoryId);
-                List<PriceListDetail> listPriceListDetailByRoomClass = priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId);
+                List<PriceListDetail> listPriceListDetailByRoomClass = priceListDetailRepository.getAllPriceListDetailByRoomCategoryId(roomCategoryId, priceList.getPriceListId());
+
                 List<Map<String, Object>> roomClassPriceListDetailList = new ArrayList<>();
 
                 for (PriceListDetail priceListDetail : listPriceListDetailByRoomClass) {
@@ -144,9 +146,10 @@ public class PriceListService {
             priceListRepository.save(priceList);
             log.info("Save Price List Successfully");
 
-//            // Xóa tất cả các mục chi tiết danh sách giá cũ
-            priceListDetailRepository.deleteByPriceList(priceList);
-
+            List<PriceListDetail> priceListDetails = priceListDetailRepository.getAllPriceListDetailByPriceListId(priceListId);
+            for(PriceListDetail priceListDetail : priceListDetails){
+                priceListDetailRepository.deleteById(priceListDetail.getPriceListDetailId());
+            }
             for (PriceListDetailDTO updatedPldDTO : PriceListDetailDTO) {
                 PriceListDetail priceListDetail = new PriceListDetail();
                 priceListDetail.setPriceList(priceList);
@@ -168,6 +171,7 @@ public class PriceListService {
         }catch (ResourceNotFoundException ex){
             return ResponseUtils.error("NOT FOUND");
         } catch (Exception e) {
+            log.info(e.getMessage());
             return ResponseUtils.error("Lỗi khi cập nhật bảng giá");
         }
         log.info("------- Update Price List End -------");
@@ -189,19 +193,18 @@ public class PriceListService {
         priceList.setPriceListName(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            if (dto.getEffectiveTimeStart() != null) {
+            if (dto.getEffectiveTimeStart() != null && dto.getEffectiveTimeEnd() != null) {
                 Date timesStart = dateFormat.parse(dto.getEffectiveTimeStart());
                 Timestamp timesStartTimestamp = new Timestamp(timesStart.getTime());
                 priceList.setEffectiveTimeStart(timesStartTimestamp);
-            } else if (dto.getEffectiveTimeEnd() != null) {
                 Date timesEnd = dateFormat.parse((dto.getEffectiveTimeEnd()));
                 Timestamp timesEndTimestamp = new Timestamp(timesEnd.getTime());
                 priceList.setEffectiveTimeEnd(timesEndTimestamp);
-            } else {
+            }else {
                 priceList.setEffectiveTimeStart(priceList.getEffectiveTimeStart());
                 priceList.setEffectiveTimeEnd(priceList.getEffectiveTimeEnd());
             }
-        }catch (ParseException e){
+        }catch (Exception e){
             throw new RuntimeException(e);
         }
         priceList.setStatus(dto.getStatus() != null ? dto.getStatus() : priceList.getStatus());

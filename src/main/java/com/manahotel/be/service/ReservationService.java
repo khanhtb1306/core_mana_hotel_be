@@ -113,13 +113,13 @@ public class ReservationService {
 
         reservation.setTotalAdults((reservationDTO.getTotalAdults() != null) ? reservationDTO.getTotalAdults() : reservation.getTotalAdults());
         reservation.setTotalChildren((reservationDTO.getTotalChildren() != null) ? reservationDTO.getTotalChildren() : reservation.getTotalChildren());
-        reservation.setCheckInEstimate((reservationDTO.getCheckInEstimate() != null) ? reservationDTO.getCheckInEstimate() : reservation.getCheckInEstimate());
-        reservation.setCheckOutEstimate((reservationDTO.getCheckOutEstimate() != null) ? reservationDTO.getCheckOutEstimate() : reservation.getCheckOutEstimate());
-        reservation.setCheckInActual((reservationDTO.getCheckInActual() != null) ? reservationDTO.getCheckInActual() : reservation.getCheckInActual());
-        reservation.setCheckOutActual((reservationDTO.getCheckOutActual() != null) ? reservationDTO.getCheckOutActual() : reservation.getCheckOutActual());
+
         reservation.setStatus((reservationDTO.getStatus() != null) ? reservationDTO.getStatus() : reservation.getStatus());
         reservation.setTotalDeposit((reservationDTO.getTotalDeposit() != null) ? reservationDTO.getTotalDeposit() : reservation.getTotalDeposit());
         reservation.setTotalPrice((reservationDTO.getTotalPrice() != null) ? reservationDTO.getTotalPrice() : reservation.getTotalPrice());
+        reservation.setDurationStart((reservationDTO.getDurationStart() != null) ? reservationDTO.getDurationStart() : reservation.getDurationStart());
+        reservation.setDurationEnd((reservationDTO.getDurationEnd() != null) ? reservationDTO.getDurationEnd() : reservation.getDurationEnd());
+        reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
     }
 
     private Reservation findReservation(String id) {

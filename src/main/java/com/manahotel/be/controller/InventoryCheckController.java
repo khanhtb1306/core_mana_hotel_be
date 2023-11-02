@@ -1,8 +1,8 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.entity.InventoryCheckDetail;
-import com.manahotel.be.service.InventoryCheckRequest;
-import com.manahotel.be.service.InventoryCheckResponse;
+import com.manahotel.be.model.dto.request.InventoryCheckRequest;
+import com.manahotel.be.model.dto.response.InventoryCheckResponse;
 import com.manahotel.be.service.InventoryCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

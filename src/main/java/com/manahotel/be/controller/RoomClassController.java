@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.RoomCategoryDTO;
 import com.manahotel.be.service.RoomClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,11 @@ public class RoomClassController {
 
     @Autowired
     private RoomClassService roomClassService;
+
+    @GetMapping("/list-by-room-class")
+    public ResponseDTO getAllRoomByRoomClass() {
+        return roomClassService.getAllRoomByRoomClass();
+    }
 
     @GetMapping
     public List<Map<String, Object>> getAllRoomClass() {
