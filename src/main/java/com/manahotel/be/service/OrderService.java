@@ -11,6 +11,7 @@ import com.manahotel.be.repository.OrderDetailRepository;
 import com.manahotel.be.repository.OrderRepository;
 import com.manahotel.be.repository.ReservationDetailRepository;
 import com.manahotel.be.repository.StaffRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+@AllArgsConstructor
 @Slf4j
 @Service
 public class OrderService {
@@ -43,7 +45,7 @@ public class OrderService {
         order.setStatus(orderDTO.getStatus() != null ? orderDTO.getStatus() : order.getStatus());
     }
 
-    public ResponseDTO createOrder(OrderDTO orderDTO){
+    public ResponseDTO createOrder(OrderDTO orderDTO) {
         try {
             log.info("------- Add Order Start -------");
             Order latestOrder = orderRepository.findTopByOrderByOrderIdDesc();
@@ -52,8 +54,7 @@ public class OrderService {
             Order order = new Order();
             order.setOrderId(nextId);
             order.setCreatedById(findStaff().getStaffId());
-            order.setReservationDetail(findReservationDetail(orderDTO.getReservationDetailId()));
-
+            order.setReservationDetail(reservationDetailRepository.findById(orderDTO.getReservationDetailId()).orElseThrow(() -> new IllegalStateException("reservation with id " + " not exists")));
             commonMapping(order, orderDTO);
 
             orderRepository.save(order);
@@ -61,32 +62,35 @@ public class OrderService {
             log.info("------- Add Order End -------");
             return ResponseUtils.success("Thêm hóa đơn thành công");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Add Order", e.getMessage());
             return ResponseUtils.error("Thêm hóa đơn thất bại");
 
         }
     }
-    public Staff findStaff(){
+
+    public Staff findStaff() {
         String staffName = SecurityContextHolder.getContext().getAuthentication().getName();
         return staffRepository.findByUsername(staffName);
     }
-    public ReservationDetail findReservationDetail(Long reservationDetailId)
-    {
-        return reservationDetailRepository.findById(reservationDetailId).orElseThrow(() -> new IllegalStateException("customer with id "  + " not exists"));
+
+    public Float totalPay(String orderId) {
+        float total = 0;
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
+        for (OrderDetail orderDetail : orderDetailList) {
+            total += (orderDetail.getPrice() * orderDetail.getQuantity());
+        }
+        return total;
     }
 
-    public ResponseDTO updateTotalPayOrder(Long reservationDetailId){
-        try{
+
+    public ResponseDTO updateTotalPayOrder(Long reservationDetailId) {
+        try {
             log.info("------- Update Order Start -------");
 
             Order latestOrder = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId);
-            float total = 0;
-            List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(latestOrder.getOrderId());
-            for (OrderDetail orderDetail : orderDetailList){
-                total += (orderDetail.getPrice() * orderDetail.getQuantity());
-            }
-            latestOrder.setTotalPay(total);
+
+            latestOrder.setTotalPay(totalPay(latestOrder.getOrderId()));
             latestOrder.setCreatedDate(Instant.now());
 
             orderRepository.save(latestOrder);
@@ -94,7 +98,7 @@ public class OrderService {
             log.info("------- Update Order End -------");
             return ResponseUtils.success("Cập nhật hóa đơn thành công");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Update Order", e.getMessage());
             return ResponseUtils.error("Cập nhật hóa đơn thất bại");
         }

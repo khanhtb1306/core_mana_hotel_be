@@ -49,27 +49,55 @@ class CustomerServiceTest {
     }
 
     @Test
-    void createHaveNotNullCustomerNameIsSucessfull() throws IOException {
+    void createIsSucessfull() throws IOException {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerName("huy");
-      customerDTO.setDob("1970-01-01 08:00:00");
+        customerDTO.setDob("1970-01-01 08:00:00");
         ResponseEntity<String> actual = underTest.create(customerDTO);
         ResponseEntity<String> expect = new ResponseEntity<>("Tạo thông tin khách hàng thành công ", HttpStatus.OK);
         Assertions.assertEquals(expect, actual);
     }
-
     @Test
-    void createNullCustomerName() throws IOException {
+    public void testCreateCustomerException() throws IOException {
+        // Arrange
         CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("New Name");
 
-        ResponseEntity<String> actual = underTest.create(customerDTO);
-        ResponseEntity<String> expect = new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
-        ;
-        Assertions.assertEquals(expect, actual);
+        Mockito.when(customerRepository.findTopByOrderByCustomerIdDesc()).thenThrow(new RuntimeException());
+
+        // Act
+        ResponseEntity<String> response = underTest.create(customerDTO);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Tạo thông tin khách hàng thất bại", response.getBody());
+    }
+    @Test
+    public void testUpdateCustomerSuccess() throws IOException {
+        // Arrange
+        String customerId = "123";
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("New Name");
+
+        Customer existingCustomer = new Customer();
+        existingCustomer.setCustomerId(customerId);
+        existingCustomer.setCustomerName("Old Name");
+
+        Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.of(existingCustomer));
+        Mockito.when(customerRepository.save(Mockito.any(Customer.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        // Act
+        ResponseEntity<String> response = underTest.update(customerId, customerDTO);
+
+        // Assert
+        Mockito.verify(customerRepository).findById(customerId);
+        Mockito.verify(customerRepository).save(Mockito.any(Customer.class));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Cập nhật thông tin khách hàng thành công ", response.getBody());
     }
 
     @Test
-    void updateHaveNotNullCustomerNameIsSucessfull() throws IOException {
+    void updateIsSucessfull() throws IOException {
 
         String customerId = "123";
 
@@ -89,22 +117,23 @@ class CustomerServiceTest {
     }
 
     @Test
-    void updateNullCustomerName() throws IOException {
-
-        String id = "000001"; // Assuming an existing floor with this ID
-
+    public void testUpdateCustomerException() throws IOException {
+        // Arrange
+        String customerId = "123";
         CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("New Name");
 
-        Customer exists = new Customer();
-        exists.setCustomerId((String) id);
-        exists.setCustomerName("huy");
+        Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
 
-        ResponseEntity<String> actual = underTest.update(id, customerDTO);
-        ResponseEntity<String> expect = new ResponseEntity<>("Tên khách hàng bị trống", HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertEquals(expect, actual);
+        // Act
+        ResponseEntity<String> response = underTest.update(customerId, customerDTO);
 
+        // Assert
+        Mockito.verify(customerRepository).findById(customerId);
+        Mockito.verify(customerRepository, Mockito.never()).save(Mockito.any(Customer.class));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Cập nhật thông tin khách hàng  thất bại", response.getBody());
     }
-
     @Test
     void delete() {
         String id = "000001"; // Assuming an existing floor with this ID
@@ -123,7 +152,18 @@ class CustomerServiceTest {
         assertEquals("Xóa thông tin khách hàng thành công ", response.getBody());
 
     }
+    @Test
+    public void testDeleteCustomerNoIdException() {
+        // Arrange
+        String customerId = null;
 
+        // Act and Assert
+        ResponseEntity<String> response = underTest.delete(customerId);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("khách hàng có id là " + customerId + " không tồn tại!", response.getBody());
+    }
     @Test
     void getById() {
         String customerId = "000001";

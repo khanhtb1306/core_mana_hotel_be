@@ -47,7 +47,7 @@ public class CustomerService {
         customer.setNationality(customerDTO.getNationality() != null ? customerDTO.getNationality() : customer.getNationality());
         customer.setTaxCode(customerDTO.getTaxCode() != null ? customerDTO.getTaxCode() : customer.getTaxCode());
         customer.setGender(customerDTO.isGender());
-        customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : null);
+        customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : customer.getImage());
 
     }
 
@@ -78,7 +78,7 @@ public class CustomerService {
         log.info("----- Update Customer Start -----");
 
         try {
-            Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists"));
+            Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!"));
 
             commonMapping(c, customerDTO);
 
@@ -98,7 +98,7 @@ public class CustomerService {
         boolean exists = customerRepository.existsById(customerId);
         if (!exists) {
             log.info("Can't delete customer");
-            return new ResponseEntity<>("customer with id " + customerId + " not exists", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("khách hàng có id là " + customerId + " không tồn tại!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         customerRepository.deleteById(customerId);
 
@@ -109,7 +109,7 @@ public class CustomerService {
     public Optional<Customer> getById(String customerId) {
         boolean exists = customerRepository.existsById(customerId);
         if (!exists) {
-            throw new IllegalStateException("customer with id " + customerId + " not exists");
+            throw new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!");
         }
         return customerRepository.findById(customerId);
     }

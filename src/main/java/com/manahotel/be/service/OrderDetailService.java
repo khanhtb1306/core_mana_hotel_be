@@ -12,6 +12,7 @@ import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.OrderDetailRepository;
 import com.manahotel.be.repository.OrderRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@AllArgsConstructor
 @Slf4j
 @Service
 public class OrderDetailService {
@@ -45,8 +47,8 @@ public class OrderDetailService {
 
             OrderDetail orderDetail = new OrderDetail();
             commonMapping(orderDetail, orderDetailDTO);
-            Goods goods = goodsRepository.findById(orderDetailDTO.getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found"));
-            Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new IllegalStateException("Not found"));
+            Goods goods = goodsRepository.findById(orderDetailDTO.getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
+            Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new IllegalStateException("Not found orders"));
 
             orderDetail.setOrder(order);
             orderDetail.setGoods(goods);
@@ -55,7 +57,7 @@ public class OrderDetailService {
 
             orderDetailRepository.save(orderDetail);
             log.info("------- Add OrderDetail End -------");
-            return ResponseUtils.error("Thêm chi tiết hóa đơn thành công");
+            return ResponseUtils.success("Thêm chi tiết hóa đơn thành công");
 
         } catch (Exception e) {
             log.info("Can't Add OrderDetail", e.getMessage());
