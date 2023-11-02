@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @DataJpaTest
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -48,41 +49,44 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new OrderService(orderDetailRepository,orderRepository,reservationDetailRepository,staffRepository);
+        underTest = new OrderService(orderDetailRepository, orderRepository, reservationDetailRepository, staffRepository);
     }
 
+    @Test
+    public void testCreateOrderSuccess() {
+        // Arrange
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setReservationDetailId(1L);
 
-//    @Test
-//    public void testCreateOrderSuccess() {
-//        // Arrange
-//        OrderDTO orderDTO = new OrderDTO();
-//        orderDTO.setReservationDetailId(1L);
-//
-//        Order latestOrder = new Order();
-//        latestOrder.setOrderId("Or001");
-//
-//        String staffName = "staffName";
-//        Staff staff = new Staff();
-//        staff.setUsername(staffName);
-//
-//        ReservationDetail reservationDetail = new ReservationDetail();
-//
-//        Mockito.when(orderRepository.findTopByOrderByOrderIdDesc()).thenReturn(latestOrder);
-////        Mockito.when(authentication.getName()).thenReturn(staffName);
-////        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-////        SecurityContextHolder.setContext(securityContext);
-////        Mockito.when(staffRepository.findByUsername(staffName)).thenReturn(staff);
-//        Mockito.when(reservationDetailRepository.findById(orderDTO.getReservationDetailId())).thenReturn(Optional.of(reservationDetail));
-//        Mockito.when(orderRepository.save(Mockito.any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
-//
-//        // Act
-//        ResponseDTO response = underTest.createOrder(orderDTO);
-//
-//        // Assert
-//        Mockito.verify(orderRepository).findTopByOrderByOrderIdDesc();
-//        Mockito.verify(orderRepository).save(Mockito.any(Order.class));
-//        assertEquals("Thêm hóa đơn thành công", response.getDisplayMessage());
-//    }
+        Order latestOrder = new Order();
+        latestOrder.setOrderId("Or001");
+
+        String staffName = "staffName";
+        Staff staff = new Staff();
+        staff.setUsername(staffName);
+        staff.setStaffId(1L);
+
+        ReservationDetail reservationDetail = new ReservationDetail();
+
+        Mockito.when(orderRepository.findTopByOrderByOrderIdDesc()).thenReturn(latestOrder);
+
+        Mockito.when(authentication.getName()).thenReturn(staffName);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(staffRepository.findByUsername(staffName)).thenReturn(staff);
+
+        Mockito.when(reservationDetailRepository.findById(orderDTO.getReservationDetailId())).thenReturn(Optional.of(reservationDetail));
+        Mockito.when(orderRepository.save(Mockito.any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        // Act
+        ResponseDTO response = underTest.createOrder(orderDTO);
+
+        // Assert
+        Mockito.verify(orderRepository).findTopByOrderByOrderIdDesc();
+        Mockito.verify(orderRepository).save(Mockito.any(Order.class));
+        assertEquals("Thêm hóa đơn thành công", response.getDisplayMessage());
+    }
+
     @Test
     public void testCreateOrderException() {
         // Arrange
@@ -97,6 +101,7 @@ class OrderServiceTest {
         // Assert
         assertEquals("Thêm hóa đơn thất bại", response.getDisplayMessage());
     }
+
     @Test
     public void testFindStaffSuccess() {
         // Arrange
@@ -115,6 +120,7 @@ class OrderServiceTest {
         // Assert
         assertEquals(staff, result);
     }
+
     @Test
     public void testTotalPay() {
         String orderId = "testOrderId";
@@ -134,6 +140,7 @@ class OrderServiceTest {
 
         assertEquals(expectedTotal, actualTotal);
     }
+
     @Test
     public void testUpdateTotalPayOrder() {
         Long reservationDetailId = 1L;
@@ -144,10 +151,15 @@ class OrderServiceTest {
         Mockito.when(orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId))
                 .thenReturn(order);
 
+//        Mockito.when(underTest.totalPay(orderId))
+//                .thenReturn(500.0f);
+
         ResponseDTO response = underTest.updateTotalPayOrder(reservationDetailId);
 
         assertEquals("Cập nhật hóa đơn thành công", response.getDisplayMessage());
-
+//        assertEquals(500.0f, order.getTotalPay());
     }
+
+
 
 }

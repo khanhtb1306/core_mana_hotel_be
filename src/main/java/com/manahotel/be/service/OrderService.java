@@ -54,7 +54,10 @@ public class OrderService {
             Order order = new Order();
             order.setOrderId(nextId);
             order.setCreatedById(findStaff().getStaffId());
-            order.setReservationDetail(reservationDetailRepository.findById(orderDTO.getReservationDetailId()).orElseThrow(() -> new IllegalStateException("reservation with id " + " not exists")));
+
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(orderDTO.getReservationDetailId()).orElseThrow(() -> new IllegalStateException("reservation with id " + " not exists"));
+
+            order.setReservationDetail(reservationDetail);
             commonMapping(order, orderDTO);
 
             orderRepository.save(order);
@@ -70,17 +73,27 @@ public class OrderService {
     }
 
     public Staff findStaff() {
-        String staffName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return staffRepository.findByUsername(staffName);
+        try {
+            String staffName = SecurityContextHolder.getContext().getAuthentication().getName();
+            return staffRepository.findByUsername(staffName);
+        } catch (Exception e) {
+            log.error("Failed to find staff" + e.getMessage());
+            return null;
+        }
     }
 
     public Float totalPay(String orderId) {
         float total = 0;
-        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
-        for (OrderDetail orderDetail : orderDetailList) {
-            total += (orderDetail.getPrice() * orderDetail.getQuantity());
+        try {
+            List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
+            for (OrderDetail orderDetail : orderDetailList) {
+                total += (orderDetail.getPrice() * orderDetail.getQuantity());
+            }
+            return total;
+        }catch (Exception e){
+            log.error("Failed to find order");
+            return null;
         }
-        return total;
     }
 
 
