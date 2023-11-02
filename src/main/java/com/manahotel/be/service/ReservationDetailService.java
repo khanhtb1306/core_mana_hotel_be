@@ -73,7 +73,7 @@ public class ReservationDetailService {
             Long reservationDetailId = reservationDetail.getReservationDetailId();
 
             Room room = reservationDetail.getRoom();
-            room.setBookingStatus(Status.EMPTY);
+            room.setBookingStatus(Status.ROOM_EMPTY);
 
             repository.delete(reservationDetail);
             log.info("----- End delete detail for reservation ------");

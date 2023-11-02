@@ -6,6 +6,8 @@ import com.manahotel.be.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+
 @RestController
 @RequestMapping("/reservation")
 public class ReservationController {
@@ -18,8 +20,13 @@ public class ReservationController {
         return service.getAllReservationWithRooms();
     }
 
+    @GetMapping("/list-empty-rooms")
+    public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
+        return service.getAllEmptyRoomByReservation(startDate, endDate);
+    }
+
     @GetMapping("/{id}")
-    public ResponseDTO getReservationById(String id) {
+    public ResponseDTO getReservationById(@PathVariable String id) {
         return service.getAllReservationWithRoomsById(id);
     }
 

@@ -9,6 +9,7 @@ import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.Reservation;
 import com.manahotel.be.model.entity.ReservationDetail;
+import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.repository.CustomerRepository;
 import com.manahotel.be.repository.ReservationDetailRepository;
 import com.manahotel.be.repository.ReservationRepository;
@@ -17,10 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -34,6 +34,11 @@ public class ReservationService {
 
     @Autowired
     private CustomerRepository repository3;
+
+    public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
+            List<Room> listEmptyRooms = repository.findAllEmptyRoomByReservation(startDate, endDate);
+            return ResponseUtils.success(listEmptyRooms, "Hiển thị phòng trống lịch đặt thành công");
+    }
 
     public ResponseDTO getAllReservationWithRooms() {
         List<Object[]> listReservations = repository.findReservationsWithRooms();
