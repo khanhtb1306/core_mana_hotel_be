@@ -47,11 +47,11 @@ public class CustomerService {
         customer.setNationality(customerDTO.getNationality() != null ? customerDTO.getNationality() : customer.getNationality());
         customer.setTaxCode(customerDTO.getTaxCode() != null ? customerDTO.getTaxCode() : customer.getTaxCode());
         customer.setGender(customerDTO.isGender());
-        customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : null);
+        customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : customer.getImage());
 
     }
 
-    public ResponseEntity<String> create(CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<Map<String, String>> create(CustomerDTO customerDTO) throws IOException {
         log.info("----- Add Customer Start -----");
         try {
             Customer latestCustomer = customerRepository.findTopByOrderByCustomerIdDesc();
@@ -64,31 +64,40 @@ public class CustomerService {
 
             customerRepository.save(c);
             log.info("----- Add Customer End -----");
-            return new ResponseEntity<>("Tạo thông tin khách hàng thành công ", HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo thông tin khách hàng thành công ");
+            response.put("customerId", c.getCustomerId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
             log.info("Can't add customer", e.getMessage());
-            return new ResponseEntity<>("Tạo thông tin khách hàng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo thông tin khách hàng thất bại");
+            return new ResponseEntity<>(response,  HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
-    public ResponseEntity<String> update(String customerId, CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<Map<String, String>> update(String customerId, CustomerDTO customerDTO) throws IOException {
         log.info("----- Update Customer Start -----");
 
         try {
-            Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer with id " + customerId + " not exists"));
+            Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!"));
 
             commonMapping(c, customerDTO);
 
             customerRepository.save(c);
 
             log.info("----- Update Customer End -----");
-            return new ResponseEntity<>("Cập nhật thông tin khách hàng thành công ", HttpStatus.OK);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Cập nhật thông tin khách hàng thành công ");
+            response.put("customerId", c.getCustomerId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't update customer", e.getMessage());
-            return new ResponseEntity<>("Cập nhật thông tin khách hàng  thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Cập nhật thông tin khách hàng  thất bại");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -98,7 +107,7 @@ public class CustomerService {
         boolean exists = customerRepository.existsById(customerId);
         if (!exists) {
             log.info("Can't delete customer");
-            return new ResponseEntity<>("customer with id " + customerId + " not exists", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("khách hàng có id là " + customerId + " không tồn tại!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         customerRepository.deleteById(customerId);
 
@@ -109,7 +118,7 @@ public class CustomerService {
     public Optional<Customer> getById(String customerId) {
         boolean exists = customerRepository.existsById(customerId);
         if (!exists) {
-            throw new IllegalStateException("customer with id " + customerId + " not exists");
+            throw new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!");
         }
         return customerRepository.findById(customerId);
     }

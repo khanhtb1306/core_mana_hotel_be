@@ -25,12 +25,12 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCustomer( CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<Map<String, String>> createCustomer( CustomerDTO customerDTO) throws IOException {
          return service.create(customerDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCustomer(@PathVariable String id,  CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<Map<String, String>> updateCustomer(@PathVariable String id,  CustomerDTO customerDTO) throws IOException {
         return service.update(id, customerDTO);
     }
 
