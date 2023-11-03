@@ -12,8 +12,8 @@ import java.sql.Timestamp;
 })
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Reservation {
     @Id
     @Column(name = "reservation_id", nullable = false, length = 50)
@@ -29,18 +29,6 @@ public class Reservation {
     @Column(name = "total_children")
     private Long totalChildren;
 
-    @Column(name = "check_in_estimate")
-    private Timestamp checkInEstimate;
-
-    @Column(name = "check_out_estimate")
-    private Timestamp checkOutEstimate;
-
-    @Column(name = "check_in_actual")
-    private Timestamp checkInActual;
-
-    @Column(name = "check_out_actual")
-    private Timestamp checkOutActual;
-
     @Column(name = "status")
     private Long status;
 
@@ -48,7 +36,16 @@ public class Reservation {
     private Float totalDeposit;
 
     @Column(name = "total_price")
-    private Double totalPrice;
+    private Float totalPrice;
+
+    @Column(name = "duration_start")
+    private Timestamp durationStart;
+
+    @Column(name = "duration_end")
+    private Timestamp durationEnd;
+
+    @Column(name = "note", length = 350)
+    private String note;
 
     @Column(name = "created_date")
     private Timestamp createdDate;
@@ -61,4 +58,5 @@ public class Reservation {
 
     @Column(name = "staff_check_out")
     private Long staffCheckOut;
+
 }

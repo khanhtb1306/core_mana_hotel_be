@@ -9,11 +9,10 @@ public class ReservationDTO {
     private String customerId;
     private Long totalAdults;
     private Long totalChildren;
-    private Timestamp checkInEstimate;
-    private Timestamp checkOutEstimate;
-    private Timestamp checkInActual;
-    private Timestamp checkOutActual;
     private Long status;
     private Float totalDeposit;
-    private Double totalPrice;
+    private Float totalPrice;
+    private Timestamp durationStart;
+    private Timestamp durationEnd;
+    private String note;
 }

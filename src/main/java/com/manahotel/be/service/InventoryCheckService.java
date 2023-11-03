@@ -7,6 +7,7 @@ import com.manahotel.be.exception.EmptyListException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.InventoryCheckDTO;
 import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
+import com.manahotel.be.model.dto.response.InventoryCheckResponse;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.model.entity.InventoryCheck;

@@ -101,7 +101,7 @@ CREATE TABLE `goods_unit` (
                               PRIMARY KEY (`goods_unit_id`),
                               KEY `pk_gu_g_idx` (`goods_id`),
                               CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +143,7 @@ CREATE TABLE `inventory_check_detail` (
                                           KEY `pk_icd_ic_idx` (`inventory_check_id`),
                                           CONSTRAINT `pk_icd_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
                                           CONSTRAINT `pk_icd_ic` FOREIGN KEY (`inventory_check_id`) REFERENCES `inventory_check` (`inventory_check_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +227,7 @@ CREATE TABLE `price_list_detail` (
                                      KEY `pk_pld_rc_idx` (`room_category_id`),
                                      CONSTRAINT `pk_pld_pl` FOREIGN KEY (`price_list_id`) REFERENCES `price_list` (`price_list_id`),
                                      CONSTRAINT `pk_pld_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,13 +242,10 @@ CREATE TABLE `reservation` (
                                `customer_id` varchar(50) NOT NULL,
                                `total_adults` bigint DEFAULT NULL,
                                `total_children` bigint DEFAULT NULL,
-                               `check_in_estimate` timestamp NULL DEFAULT NULL,
-                               `check_out_estimate` timestamp NULL DEFAULT NULL,
-                               `check_in_actual` timestamp NULL DEFAULT NULL,
-                               `check_out_actual` timestamp NULL DEFAULT NULL,
                                `status` bigint DEFAULT NULL,
                                `total_deposit` float DEFAULT NULL,
                                `total_price` float DEFAULT NULL,
+                               `note` varchar(350) DEFAULT NULL,
                                `created_date` timestamp NULL DEFAULT NULL,
                                `created_by_id` bigint DEFAULT NULL,
                                `staff_check_in` bigint DEFAULT NULL,
@@ -270,8 +267,10 @@ CREATE TABLE `reservation_detail` (
                                       `reservation_detail_id` bigint NOT NULL AUTO_INCREMENT,
                                       `reservation_id` varchar(50) NOT NULL,
                                       `room_id` varchar(50) NOT NULL,
-                                      `start_date` timestamp NULL DEFAULT NULL,
-                                      `end_date` timestamp NULL DEFAULT NULL,
+                                      `check_in_estimate` timestamp NULL DEFAULT NULL,
+                                      `check_out_estimate` timestamp NULL DEFAULT NULL,
+                                      `check_in_actual` timestamp NULL DEFAULT NULL,
+                                      `check_out_actual` timestamp NULL DEFAULT NULL,
                                       `price` float DEFAULT NULL,
                                       `reservation_type` varchar(50) DEFAULT NULL,
                                       PRIMARY KEY (`reservation_detail_id`),
@@ -286,14 +285,14 @@ CREATE TABLE `reservation_detail` (
 -- Table structure for table `reservation_detail_room`
 --
 
-DROP TABLE IF EXISTS `reservation_detail_room`;
+DROP TABLE IF EXISTS `reservation_detail_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservation_detail_room` (
-                                           `reservation_detail_room_id` bigint NOT NULL,
+CREATE TABLE `reservation_detail_customer` (
+                                           `reservation_detail_customer_id` bigint NOT NULL AUTO_INCREMENT,
                                            `reservation_detail_id` bigint NOT NULL,
                                            `customer_id` varchar(50) NOT NULL,
-                                           PRIMARY KEY (`reservation_detail_room_id`),
+                                           PRIMARY KEY (`reservation_detail_customer_id`),
                                            KEY `pk_rdr_rd_idx` (`reservation_detail_id`),
                                            KEY `pk_rdr_c_idx` (`customer_id`),
                                            CONSTRAINT `pk_rdr_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
@@ -386,7 +385,7 @@ CREATE TABLE `staff` (
                          `created_date` timestamp NULL DEFAULT NULL,
                          `updated_date` timestamp NULL DEFAULT NULL,
                          PRIMARY KEY (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -404,7 +403,7 @@ CREATE TABLE `token` (
                          PRIMARY KEY (`token_id`),
                          KEY `fk_prt_s_idx` (`staff_id`),
                          CONSTRAINT `fk_prt_s` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

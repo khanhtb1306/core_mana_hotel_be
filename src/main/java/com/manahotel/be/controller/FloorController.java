@@ -1,10 +1,11 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.FloorDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Floor;
+import com.manahotel.be.service.FloorService;
 import com.manahotel.be.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,14 @@ public class FloorController {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private FloorService floorService;
+
+    @GetMapping("/list-by-floor")
+    public ResponseDTO getAllRoomByFloor() {
+        return floorService.getAllRoomByFloor();
+    }
 
     @GetMapping
     public List<Floor> getAllFloor() {

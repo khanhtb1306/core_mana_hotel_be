@@ -1,5 +1,6 @@
 package com.manahotel.be.repository;
 
+import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,7 @@ public interface RoomRepository extends JpaRepository<Room, String> {
     List<Room> findByRoomCategory(RoomCategory roomCategory);
 
     List<Room> findByStatusNot(Long status);
+
+    List<Room> findByFloor(Floor floor);
 
 }
