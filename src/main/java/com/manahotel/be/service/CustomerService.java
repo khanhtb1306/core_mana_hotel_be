@@ -51,7 +51,7 @@ public class CustomerService {
 
     }
 
-    public ResponseEntity<String> create(CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<Map<String, String>> create(CustomerDTO customerDTO) throws IOException {
         log.info("----- Add Customer Start -----");
         try {
             Customer latestCustomer = customerRepository.findTopByOrderByCustomerIdDesc();
@@ -64,17 +64,20 @@ public class CustomerService {
 
             customerRepository.save(c);
             log.info("----- Add Customer End -----");
-            return new ResponseEntity<>("Tạo thông tin khách hàng thành công ", HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo thông tin khách hàng thành công ");
+            response.put("customerId", c.getCustomerId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
             log.info("Can't add customer", e.getMessage());
-            return new ResponseEntity<>("Tạo thông tin khách hàng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Tạo thông tin khách hàng thất bại");
+            return new ResponseEntity<>(response,  HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
-    public ResponseEntity<String> update(String customerId, CustomerDTO customerDTO) throws IOException {
+    public ResponseEntity<Map<String, String>> update(String customerId, CustomerDTO customerDTO) throws IOException {
         log.info("----- Update Customer Start -----");
 
         try {
@@ -85,10 +88,16 @@ public class CustomerService {
             customerRepository.save(c);
 
             log.info("----- Update Customer End -----");
-            return new ResponseEntity<>("Cập nhật thông tin khách hàng thành công ", HttpStatus.OK);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Cập nhật thông tin khách hàng thành công ");
+            response.put("customerId", c.getCustomerId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Can't update customer", e.getMessage());
-            return new ResponseEntity<>("Cập nhật thông tin khách hàng  thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Cập nhật thông tin khách hàng  thất bại");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

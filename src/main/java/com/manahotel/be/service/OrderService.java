@@ -1,11 +1,9 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.OrderDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.dto.RoomDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.OrderDetailRepository;
 import com.manahotel.be.repository.OrderRepository;
@@ -14,8 +12,6 @@ import com.manahotel.be.repository.StaffRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +49,12 @@ public class OrderService {
             String nextId = IdGenerator.generateId(latestId, "Or");
             Order order = new Order();
             order.setOrderId(nextId);
+
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(orderDTO.getReservationDetailId()).orElseThrow(() -> new IllegalStateException("reservation with id not exists"));
+            order.setReservationDetail(reservationDetail);
+
             order.setCreatedById(findStaff().getStaffId());
 
-            ReservationDetail reservationDetail = reservationDetailRepository.findById(orderDTO.getReservationDetailId()).orElseThrow(() -> new IllegalStateException("reservation with id " + " not exists"));
-
-            order.setReservationDetail(reservationDetail);
             commonMapping(order, orderDTO);
 
             orderRepository.save(order);

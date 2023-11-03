@@ -92,6 +92,23 @@ class OrderServiceTest {
         // Arrange
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setReservationDetailId(1L);
+        Order latestOrder = new Order();
+        latestOrder.setOrderId("Or001");
+        Mockito.when(orderRepository.findTopByOrderByOrderIdDesc()).thenReturn(latestOrder);
+        Mockito.when(reservationDetailRepository.findById(orderDTO.getReservationDetailId())).thenThrow(new IllegalStateException("reservation with id not exists"));
+
+
+        // Act and Assert
+        ResponseDTO response = underTest.createOrder(orderDTO);
+
+        // Assert
+        assertEquals("Thêm hóa đơn thất bại", response.getDisplayMessage());
+    }
+    @Test
+    public void testCreateOrderReservationDetailNotFoundException() {
+        // Arrange
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setReservationDetailId(1L);
 
         Mockito.when(orderRepository.findTopByOrderByOrderIdDesc()).thenThrow(new RuntimeException());
 
@@ -135,7 +152,7 @@ class OrderServiceTest {
         Mockito.when(orderDetailRepository.findByOrder_OrderId(orderId))
                 .thenReturn(Arrays.asList(orderDetail1, orderDetail2));
 
-        Float expectedTotal = 100.0f * 2L + 200.0f * 3L;
+        Float expectedTotal = 800.0f ;
         Float actualTotal = underTest.totalPay(orderId);
 
         assertEquals(expectedTotal, actualTotal);
@@ -151,13 +168,21 @@ class OrderServiceTest {
         Mockito.when(orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId))
                 .thenReturn(order);
 
-//        Mockito.when(underTest.totalPay(orderId))
-//                .thenReturn(500.0f);
-
         ResponseDTO response = underTest.updateTotalPayOrder(reservationDetailId);
 
         assertEquals("Cập nhật hóa đơn thành công", response.getDisplayMessage());
-//        assertEquals(500.0f, order.getTotalPay());
+    }
+    @Test
+    public void testUpdateTotalPayOrderException() {
+        Long reservationDetailId = 1L;
+
+        Mockito.when(orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId))
+                .thenReturn(null);
+
+        ResponseDTO response = underTest.updateTotalPayOrder(reservationDetailId);
+
+        assertEquals("Cập nhật hóa đơn thất bại", response.getDisplayMessage());
+
     }
 
 
