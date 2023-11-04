@@ -28,11 +28,12 @@ public class Status {
     public static final String DAILY = "DAILY";
     public static final String OVERNIGHT = "OVERNIGHT";
 
-    //Reservation
-    public static final long PENDING = 1;
+    // Reservation and Reservation Detail
+    public static final long PENDING = 1; // For reservation only
     public static final long BOOKING = 2;
     public static final long CHECK_IN = 3;
     public static final long CHECK_OUT = 4;
-    public static final long DONE = 5;
+    public static final long DISCARD = 5; // For reservation only
+    public static final long DONE = 6; // For reservation only
 
 }

@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
@@ -113,6 +114,8 @@ public class ReservationService {
     }
 
     private void commonMapping(Reservation reservation, ReservationDTO reservationDTO) {
+        Long userId = UserUtils.getUser().getStaffId();
+
         Customer customer = (reservationDTO.getCustomerId() != null) ? findCustomer(reservationDTO.getCustomerId()) : reservation.getCustomer();
         reservation.setCustomer(customer);
 
@@ -125,6 +128,13 @@ public class ReservationService {
         reservation.setDurationStart((reservationDTO.getDurationStart() != null) ? reservationDTO.getDurationStart() : reservation.getDurationStart());
         reservation.setDurationEnd((reservationDTO.getDurationEnd() != null) ? reservationDTO.getDurationEnd() : reservation.getDurationEnd());
         reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
+
+        if(reservation.getStatus() == Status.CHECK_IN) {
+             reservation.setStaffCheckIn(userId);
+        }
+        if (reservation.getStatus() == Status.CHECK_OUT) {
+            reservation.setStaffCheckOut(userId);
+        }
     }
 
     private Reservation findReservation(String id) {
