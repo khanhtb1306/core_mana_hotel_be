@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.GoodsRequest;
 import com.manahotel.be.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class GoodsController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Map<String, Object>>> getGoodsByCategory(@PathVariable boolean category){
+    public ResponseDTO getGoodsByCategory(@PathVariable boolean category){
         return service.findGoodsByCategory(category);
     }
 }

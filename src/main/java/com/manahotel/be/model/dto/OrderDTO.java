@@ -14,7 +14,7 @@ import java.time.Instant;
 public class OrderDTO {
 //    private String orderId;
     private long reservationDetailId;
-    private Float totalPay;
-    private Long status;
-    private Long createdById;
+//    private Float totalPay;
+//    private Long status;
+//    private Long createdById;
 }

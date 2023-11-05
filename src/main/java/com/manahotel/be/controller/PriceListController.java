@@ -40,6 +40,10 @@ public class PriceListController {
         Map<String, Object> priceListInfo = priceListService.getPriceListByIdWithPriceListDetailList(id);
         ResponseDTO responseDTO = ResponseUtils.success(priceListInfo,"GetPriceListByIdSuccessfully");
         return responseDTO;
+    }
 
+    @GetMapping("/{id}")
+    public ResponseDTO deletePriceListById(@PathVariable String id) {
+        return priceListService.deletePriceListById(id);
     }
 }

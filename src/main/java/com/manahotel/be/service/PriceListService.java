@@ -178,15 +178,19 @@ public class PriceListService {
         return ResponseUtils.success("Cập nhật bảng giá thành công");
     }
 
-    public ResponseEntity<String> deletePriceListById(String id) {
+    public ResponseDTO deletePriceListById(String id) {
         try{
-            PriceList priceList = getPriceListById(id);
-            priceList.setStatus(Status.DELETE);
-            priceListRepository.save(priceList);
+                PriceList priceList = getPriceListById(id);
+                priceList.setStatus(Status.DELETE);
+                priceListRepository.save(priceList);
+
         }catch (ResourceNotFoundException rnf){
-            log.error(rnf.getMessage());
+            return ResponseUtils.error("NOT FOUND");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseUtils.error("Delete Price List Fail");
         }
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return ResponseUtils.success(id + "Delete Price List Successfully");
     }
 
     private void commonMapping(PriceList priceList, PriceListDTO dto) throws IOException {
