@@ -47,6 +47,6 @@ public class ReservationDetail {
     @Column(name = "reservation_type", length = 50)
     private String reservationType;
 
-    @Column(name = "status")
-    private Long status;
+    @Column(name = "status", length = 50)
+    private String status;
 }

@@ -14,5 +14,5 @@ public class ReservationDetailDTO {
     private Timestamp checkOutActual;
     private Float price;
     private String reservationType;
-    private Long status;
+    private String status;
 }

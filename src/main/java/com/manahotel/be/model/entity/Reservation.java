@@ -29,8 +29,8 @@ public class Reservation {
     @Column(name = "total_children")
     private Long totalChildren;
 
-    @Column(name = "status")
-    private Long status;
+    @Column(name = "status", length = 50)
+    private String status;
 
     @Column(name = "total_deposit")
     private Float totalDeposit;

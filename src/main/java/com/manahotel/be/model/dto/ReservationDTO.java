@@ -9,7 +9,7 @@ public class ReservationDTO {
     private String customerId;
     private Long totalAdults;
     private Long totalChildren;
-    private Long status;
+    private String status;
     private Float totalDeposit;
     private Float totalPrice;
     private Timestamp durationStart;
