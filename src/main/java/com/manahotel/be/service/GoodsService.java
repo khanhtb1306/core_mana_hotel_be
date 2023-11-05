@@ -172,7 +172,7 @@ public class GoodsService {
     public ResponseEntity<Map<String, String>> deleteListGoods(List<String> listGoodsId) {
         Map<String, String> result = new HashMap<>();
 
-        if(listGoodsId == null || listGoodsId.isEmpty()) {
+        if (listGoodsId == null || listGoodsId.isEmpty()) {
             result.put("error", "Danh sách Id không hợp lệ");
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
