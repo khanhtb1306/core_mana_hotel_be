@@ -73,7 +73,7 @@ public class ReservationDetailService {
             Long reservationDetailId = reservationDetail.getReservationDetailId();
 
             Room room = reservationDetail.getRoom();
-            room.setBookingStatus(Status.EMPTY);
+            room.setBookingStatus(Status.ROOM_EMPTY);
 
             repository.delete(reservationDetail);
             log.info("----- End delete detail for reservation ------");
@@ -91,13 +91,22 @@ public class ReservationDetailService {
         reservationDetail.setReservation(reservation);
 
         Room room = (reservationDetailDTO.getRoomId() != null) ? findRoom(reservationDetailDTO.getRoomId()) : reservationDetail.getRoom();
-        room.setBookingStatus((reservationDetailDTO.getBookingStatus() != null) ? reservationDetailDTO.getBookingStatus() : room.getBookingStatus());
         reservationDetail.setRoom(room);
 
-        reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
-        reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
-        reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
-        reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
+        if(reservation.getStatus() == Status.BOOKING) {
+            reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
+            reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
+        }
+        else if(reservation.getStatus() == Status.CHECK_IN) {
+            if(reservationDetail.getCheckInEstimate() == null && reservationDetail.getCheckOutEstimate() == null) {
+                reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
+                reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
+            }
+            reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
+            reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
+        }
+
+        reservationDetail.setStatus((reservationDetailDTO.getStatus() != null) ? reservationDetailDTO.getStatus() : reservationDetail.getStatus());
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
         reservationDetail.setReservationType((reservationDetailDTO.getReservationType() != null) ? reservationDetailDTO.getReservationType() : reservationDetail.getReservationType());
     }

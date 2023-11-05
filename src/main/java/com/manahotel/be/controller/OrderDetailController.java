@@ -20,8 +20,8 @@ public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
 
-    @PostMapping
-    public ResponseDTO createOrderDetail(OrderDetailDTO orderDetailDTO) throws IOException {
-        return orderDetailService.createOrderDetail(orderDetailDTO);
-    }
+//    @PostMapping
+//    public ResponseDTO createOrderDetail(OrderDetailDTO orderDetailDTO) throws IOException {
+//        return orderDetailService.createOrderDetail(orderDetailDTO);
+//    }
 }

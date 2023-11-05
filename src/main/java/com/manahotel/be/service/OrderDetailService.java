@@ -24,41 +24,14 @@ public class OrderDetailService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-    @Autowired
-    private GoodsRepository goodsRepository;
+
 
     @Autowired
     private OrderRepository orderRepository;
 
-    private void commonMapping(OrderDetail orderDetail, OrderDetailDTO orderDetailDTO) throws IOException {
-        orderDetail.setQuantity(orderDetailDTO.getQuantity() != null ? orderDetailDTO.getQuantity() : orderDetail.getQuantity());
-        orderDetail.setPrice(orderDetailDTO.getPrice() != null ? orderDetailDTO.getPrice() : orderDetail.getPrice());
-    }
 
-    public ResponseDTO createOrderDetail(OrderDetailDTO orderDetailDTO) {
-        try {
-            log.info("------- Add OrderDetail Start -------");
 
-            OrderDetail orderDetail = new OrderDetail();
-            commonMapping(orderDetail, orderDetailDTO);
-            Goods goods = goodsRepository.findById(orderDetailDTO.getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
-            Order order = orderRepository.findById(orderDetailDTO.getOrderId()).orElseThrow(() -> new IllegalStateException("Not found orders"));
 
-            orderDetail.setOrder(order);
-            orderDetail.setGoods(goods);
-
-            commonMapping(orderDetail, orderDetailDTO);
-
-            orderDetailRepository.save(orderDetail);
-            log.info("------- Add OrderDetail End -------");
-            return ResponseUtils.success("Thêm chi tiết hóa đơn thành công");
-
-        } catch (Exception e) {
-            log.info("Can't Add OrderDetail", e.getMessage());
-            return ResponseUtils.error("Thêm chi tiết hóa đơn Thất bại");
-
-        }
-    }
 
 
 }

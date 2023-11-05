@@ -2,10 +2,12 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.dto.GoodsUnitDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.repository.GoodsRepository;
@@ -49,26 +51,27 @@ public class GoodsService {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    public ResponseEntity<List<Map<String, Object>>> findGoodsByCategory(boolean category) {
+
+    public ResponseDTO findGoodsByCategory(boolean category) {
         List<Map<String, Object>> result = new ArrayList<>();
+        try {
+            List<Goods> goodsList = goodsRepository.findGoodsByGoodsCategory(category);
 
-        List<Goods> goodsList = goodsRepository.findGoodsByGoodsCategory(category);
+            for (Goods good : goodsList) {
+                List<GoodsUnit> listGoodsUnit = goodsUnitRepository.findGoodsUnitByGoods(good);
+                Map<String, Object> goodsInfo = new HashMap<>();
 
-        for (Goods good : goodsList) {
-            List<GoodsUnit> listGoodsUnit = goodsUnitRepository.findGoodsUnitByGoods(good);
-            Map<String, Object> goodsInfo = new HashMap<>();
-
-            for (GoodsUnit goodUnit : listGoodsUnit){
-                goodsInfo.put("goods", good);
-                goodsInfo.put("goodsUnit", goodUnit);
-                result.add(goodsInfo);
+                for (GoodsUnit goodUnit : listGoodsUnit) {
+                    goodsInfo.put("goods", good);
+                    goodsInfo.put("goodsUnit", goodUnit);
+                    result.add(goodsInfo);
+                }
             }
-
+            return ResponseUtils.success(result, "Tìm kiếm thành công");
+        } catch (Exception e) {
+            return ResponseUtils.error("Tìm kiếm thất bại");
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-
     }
-
 
     public ResponseEntity<Map<String, Object>> getGoodsWithGoodsUnitById(String id) {
         Goods goods = findGoodsById(id);

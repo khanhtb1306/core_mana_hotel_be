@@ -29,36 +29,36 @@ public class ReservationDetailCustomerService {
 
     public ResponseDTO createRDCustomer(ReservationDetailCustomerDTO reservationDetailCustomerDTO) {
         try {
-            log.info("----- Start create RDR -----");
-            ReservationDetailCustomer rdr = new ReservationDetailCustomer();
+            log.info("----- Start create RDC -----");
+            ReservationDetailCustomer rdc = new ReservationDetailCustomer();
 
-            commonMapping(rdr, reservationDetailCustomerDTO);
+            commonMapping(rdc, reservationDetailCustomerDTO);
 
-            repository.save(rdr);
-            log.info("----- End create RDR -----");
+            repository.save(rdc);
+            log.info("----- End create RDC -----");
 
-            return ResponseUtils.success(rdr.getReservationDetailCustomerId(), "Tạo thông tin khách hàng theo phòng thành công");
+            return ResponseUtils.success(rdc.getReservationDetailCustomerId(), "Tạo thông tin khách hàng theo phòng thành công");
         }
         catch (Exception e) {
-            log.info("----- Create RDR failed -----\n" + e.getMessage());
+            log.info("----- Create RDC failed -----\n" + e.getMessage());
             return ResponseUtils.error("Tạo thông tin khách hàng theo phòng thất bại");
         }
     }
 
     public ResponseDTO updateRDCustomer(Long id, ReservationDetailCustomerDTO reservationDetailCustomerDTO) {
         try {
-            log.info("----- Start update RDR -----");
-            ReservationDetailCustomer rdr = findReservationDetailRoom(id);
+            log.info("----- Start update RDC -----");
+            ReservationDetailCustomer rdc = findReservationDetailRoom(id);
 
-            commonMapping(rdr, reservationDetailCustomerDTO);
+            commonMapping(rdc, reservationDetailCustomerDTO);
 
-            repository.save(rdr);
-            log.info("----- End update RDR -----");
+            repository.save(rdc);
+            log.info("----- End update RDC -----");
 
-            return ResponseUtils.success(rdr.getReservationDetailCustomerId(), "Cập nhật thông tin khách hàng theo phòng thành công");
+            return ResponseUtils.success(rdc.getReservationDetailCustomerId(), "Cập nhật thông tin khách hàng theo phòng thành công");
         }
         catch (Exception e) {
-            log.info("----- Update RDR failed -----\n" + e.getMessage());
+            log.info("----- Update RDC failed -----\n" + e.getMessage());
             return ResponseUtils.error("Cập nhật thông tin khách hàng theo phòng thất bại");
         }
     }

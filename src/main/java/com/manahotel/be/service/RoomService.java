@@ -65,7 +65,7 @@ public class RoomService {
             room.setFloor(floor);
 
             room.setStatus(Status.ACTIVATE);
-            room.setBookingStatus(Status.EMPTY);
+            room.setBookingStatus(Status.ROOM_EMPTY);
             room.setConditionStatus(Status.CLEAN);
             room.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             roomRepository.save(room);
