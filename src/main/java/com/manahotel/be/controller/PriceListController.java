@@ -42,7 +42,7 @@ public class PriceListController {
         return responseDTO;
     }
 
-    @GetMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseDTO deletePriceListById(@PathVariable String id) {
         return priceListService.deletePriceListById(id);
     }
