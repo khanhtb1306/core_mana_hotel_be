@@ -42,7 +42,4 @@ public class PriceListDetail {
 
     @Column(name = "day_of_week")
     private String dayOfWeek;
-
-    @Column(name = "status")
-    private Long status;
 }
