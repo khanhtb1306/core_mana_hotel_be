@@ -13,4 +13,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     @Query("SELECT r FROM Reservation r " +
             "LEFT JOIN ReservationDetail rd ON r.reservationId = rd.reservation.reservationId")
     List<Object[]> findReservationsWithRooms();
+
+    Reservation findTopByOrderByReservationIdDesc();
 }

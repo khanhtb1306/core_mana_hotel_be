@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 @Data
 public class ReservationDTO {
     private String customerId;
+    private String priceListId;
     private Long totalAdults;
     private Long totalChildren;
     private String status;

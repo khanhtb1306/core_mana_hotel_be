@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Table(name = "reservation", indexes = {
-        @Index(name = "pk_r_c_idx", columnList = "customer_id")
+        @Index(name = "pk_r_c_idx", columnList = "customer_id"),
+        @Index(name = "pk_r_pl_idx", columnList = "price_list_id")
 })
 @Entity
 @Data
@@ -22,6 +23,10 @@ public class Reservation {
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "price_list_id", nullable = false)
+    private PriceList priceList;
 
     @Column(name = "total_adults")
     private Long totalAdults;

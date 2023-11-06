@@ -38,6 +38,9 @@ public class ReservationService {
     @Autowired
     private RoomRepository repository5;
 
+    @Autowired
+    private PriceListRepository repository6;
+
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
         List<Object> list = new ArrayList<>();
 
@@ -134,6 +137,9 @@ public class ReservationService {
         Customer customer = (reservationDTO.getCustomerId() != null) ? findCustomer(reservationDTO.getCustomerId()) : reservation.getCustomer();
         reservation.setCustomer(customer);
 
+        PriceList priceList = (reservationDTO.getPriceListId() != null) ? findPriceList(reservationDTO.getPriceListId()) : reservation.getPriceList();
+        reservation.setPriceList(priceList);
+
         reservation.setTotalAdults((reservationDTO.getTotalAdults() != null) ? reservationDTO.getTotalAdults() : reservation.getTotalAdults());
         reservation.setTotalChildren((reservationDTO.getTotalChildren() != null) ? reservationDTO.getTotalChildren() : reservation.getTotalChildren());
 
@@ -160,5 +166,10 @@ public class ReservationService {
     private Customer findCustomer(String id) {
         return repository3.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + id));
+    }
+
+    private PriceList findPriceList(String id) {
+        return repository6.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Price List not found with id " + id));
     }
 }
