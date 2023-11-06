@@ -196,7 +196,7 @@ public class PriceListService {
     private void commonMapping(PriceList priceList, PriceListDTO dto) throws IOException {
         priceList.setPriceListName(dto.getPriceListName() != null ? dto.getPriceListName() : priceList.getPriceListName());
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             if (dto.getEffectiveTimeStart() != null && dto.getEffectiveTimeEnd() != null) {
                 Date timesStart = dateFormat.parse(dto.getEffectiveTimeStart());
                 Timestamp timesStartTimestamp = new Timestamp(timesStart.getTime());
@@ -221,7 +221,7 @@ public class PriceListService {
         priceListDetail.setPriceByHour(dto.getPriceByHour() != null ? dto.getPriceByHour() : priceListDetail.getPriceByHour());
         try {
             if(dto.getTimeApply() !=null){
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 Date timesApply = dateFormat.parse(dto.getTimeApply());
                 Timestamp timesApplyTimestamp = new Timestamp(timesApply.getTime());
                 priceListDetail.setTimeApply(timesApplyTimestamp);
