@@ -14,9 +14,8 @@ public class Status {
     // Delete
     public static final long DELETE = 6;
 
-    //Booking
+    //Booking status
     public static final String ROOM_EMPTY = "ROOM_EMPTY";
-    public static final String ROOM_BOOKING = "ROOM_BOOKING"; // No use for Reservation Detail
     public static final String ROOM_USING = "ROOM_USING";
 
     //Clean room
@@ -35,5 +34,4 @@ public class Status {
     public static final String CHECK_OUT = "CHECK_OUT";
     public static final String DISCARD = "DISCARD"; // For reservation only
     public static final String DONE = "DONE"; // For reservation only
-
 }

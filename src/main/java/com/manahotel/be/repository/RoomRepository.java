@@ -4,8 +4,10 @@ import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -18,4 +20,18 @@ public interface RoomRepository extends JpaRepository<Room, String> {
 
     List<Room> findByFloor(Floor floor);
 
+    @Query(value = "SELECT r " +
+            "FROM Room r " +
+            "LEFT JOIN RoomCategory rc ON rc.roomCategoryId = r.roomCategory.roomCategoryId " +
+            "WHERE r.status = 1 AND r.roomId NOT IN " +
+            "(SELECT r2.roomId FROM Room r2 " +
+            "LEFT JOIN ReservationDetail rd ON r2.roomId = rd.room.roomId " +
+            "LEFT JOIN Reservation re ON re.reservationId = rd.reservation.reservationId " +
+            "WHERE (re.status NOT IN ('PENDING', 'DISCARD') " +
+            "AND (rd.checkInActual < ?2 OR (rd.checkInActual IS NULL AND rd.checkInEstimate < ?2)) " +
+            "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate > ?1))) " +
+            "GROUP BY r2.roomId) " +
+            "AND rc.roomCategoryId = ?3 " +
+            "ORDER BY r.roomId")
+    List<Room> findEmptyRoom(Timestamp startDate, Timestamp endDate, String roomCategoryId);
 }

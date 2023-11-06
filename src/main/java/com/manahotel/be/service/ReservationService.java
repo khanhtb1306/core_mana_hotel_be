@@ -7,21 +7,17 @@ import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.Customer;
-import com.manahotel.be.model.entity.Reservation;
-import com.manahotel.be.model.entity.ReservationDetail;
-import com.manahotel.be.model.entity.Room;
-import com.manahotel.be.repository.CustomerRepository;
-import com.manahotel.be.repository.ReservationDetailRepository;
-import com.manahotel.be.repository.ReservationRepository;
+import com.manahotel.be.model.entity.*;
+import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -36,9 +32,28 @@ public class ReservationService {
     @Autowired
     private CustomerRepository repository3;
 
+    @Autowired
+    private RoomClassRepository repository4;
+
+    @Autowired
+    private RoomRepository repository5;
+
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
-            List<Room> listEmptyRooms = repository.findAllEmptyRoomByReservation(startDate, endDate);
-            return ResponseUtils.success(listEmptyRooms, "Hiển thị phòng trống lịch đặt thành công");
+        List<Object> list = new ArrayList<>();
+
+        List<RoomCategory> listRoomClasses = repository4.findEmptyRoomCategory(startDate, endDate);
+
+        for (RoomCategory roomClass : listRoomClasses) {
+            List<Room> listEmptyRoom = repository5.findEmptyRoom(startDate, endDate, roomClass.getRoomCategoryId());
+
+            Map<String, Object> listInfo = new HashMap<>();
+
+            listInfo.put("roomClass", roomClass);
+            listInfo.put("listRoom", listEmptyRoom);
+            list.add(listInfo);
+        }
+
+        return ResponseUtils.success(list, "Hiển thị phòng trống lịch đặt thành công");
     }
 
     public ResponseDTO getAllReservationWithRooms() {
@@ -129,10 +144,10 @@ public class ReservationService {
         reservation.setDurationEnd((reservationDTO.getDurationEnd() != null) ? reservationDTO.getDurationEnd() : reservation.getDurationEnd());
         reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
 
-        if(reservation.getStatus() == Status.CHECK_IN) {
+        if(reservation.getStatus().equals(Status.CHECK_IN)) {
              reservation.setStaffCheckIn(userId);
         }
-        if (reservation.getStatus() == Status.CHECK_OUT) {
+        if (reservation.getStatus().equals(Status.CHECK_OUT)) {
             reservation.setStaffCheckOut(userId);
         }
     }
