@@ -34,7 +34,7 @@ public class CustomerService {
         customer.setCustomerGroup(customerDTO.getCustomerGroup() != null ? customerDTO.getCustomerGroup() : customer.getCustomerGroup());
         customer.setPhoneNumber(customerDTO.getPhoneNumber() != null ? customerDTO.getPhoneNumber() : customer.getPhoneNumber());
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date parsedDate = dateFormat.parse(customerDTO.getDob());
             Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
             customer.setDob(dobTimestamp);
