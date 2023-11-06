@@ -29,23 +29,26 @@ public class OrderController {
     public ResponseDTO createOrder(OrderRequest orderRequest) {
         return orderService.createOrder(orderRequest.getOrderDTO(),orderRequest.getOrderDetailDTOList());
     }
-    @PutMapping
-    public ResponseDTO updateOrder(String orderId,OrderRequest orderRequest) {
-        return orderService.updateOrder(orderId,orderRequest.getOrderDetailDTOList());
+    @PutMapping("/{id}")
+    public ResponseDTO updateOrder(@PathVariable String id,OrderRequest orderRequest){
+        return orderService.updateOrder(id,orderRequest.getOrderDetailDTOList());
+    }
+    @PutMapping("/updateStatus/{id}")
+    public ResponseDTO updateStatusOrder(@PathVariable String id,String status){
+        return orderService.updateStatucOrder(id,status);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseDTO deleteOrder(@PathVariable String id) {
+        return orderService.deleteOrder(id);
     }
 
-    @DeleteMapping
-    public ResponseDTO deleteOrder(String orderId) {
-        return orderService.deleteOrder(orderId);
-    }
-
-    @GetMapping
-    public ResponseEntity<ByteArrayResource> printBill(String orderId) {
-        return invoicePrinterService.WriteInvoice(orderId.replace("\n", ""));
+    @GetMapping("/print/{id}")
+    public ResponseEntity<ByteArrayResource> printBill(@PathVariable String id) {
+        return invoicePrinterService.WriteInvoice(id.replace("\n", ""));
     }
 
     @GetMapping("/{id}")
-    public ResponseDTO getOrderDetails(String id){
+    public ResponseDTO getOrderDetails(@PathVariable String id){
         return orderDetailService.getOrderDetails(id.replace("\n", ""));
     }
 }

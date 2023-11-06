@@ -15,6 +15,6 @@ public class OrderDTO {
 //    private String orderId;
     private long reservationDetailId;
     private Float totalPay;
-    private Long status;
+    private String status;
 //    private Long createdById;
 }

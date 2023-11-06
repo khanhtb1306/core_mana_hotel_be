@@ -33,7 +33,7 @@ public class OrderDetailService {
         orderDetail.setPrice(orderDetailDTO.getPrice() != null ? orderDetailDTO.getPrice() : orderDetail.getPrice());
     }
 
-    public void createOrderDetail(OrderDetailDTO orderDetailDTO, Order order) {
+    public void createOrderDetail(OrderDetailDTO orderDetailDTO,Order order) {
         try {
             log.info("------- Add OrderDetail Start -------");
 

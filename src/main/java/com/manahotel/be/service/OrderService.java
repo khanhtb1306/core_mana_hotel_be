@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.OrderDTO;
@@ -38,8 +39,6 @@ public class OrderService {
     @Autowired
     private OrderDetailService orderDetailService;
 
-
-
     public ResponseDTO createOrder(OrderDTO orderDTO, List<OrderDetailDTO> orderDetailDTOList) {
         try {
             log.info("------- Add Order Start -------");
@@ -49,15 +48,13 @@ public class OrderService {
             Order order = new Order();
             order.setOrderId(nextId);
 
-            ReservationDetail reservationDetail = reservationDetailRepository
-                    .findById(orderDTO.getReservationDetailId())
-                    .orElseThrow(()
-                    -> new IllegalStateException("reservation with id not exists"));
+            ReservationDetail reservationDetail = reservationDetailRepository.findById(orderDTO.getReservationDetailId()).orElseThrow(() -> new IllegalStateException("reservation with id not exists"));
             order.setReservationDetail(reservationDetail);
             order.setCreatedById(findStaff().getStaffId());
 
             order.setTotalPay(totalPay(orderDetailDTOList));
             order.setCreatedDate(Instant.now());
+            order.setStatus(Status.UNCONFIMRED);
             orderRepository.save(order);
 
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
@@ -73,13 +70,11 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO updateOrder(String orderId,List<OrderDetailDTO> orderDetailDTOList){
+    public ResponseDTO updateOrder(String orderId,List<OrderDetailDTO> orderDetailDTOList) {
         log.info("------- Update Order Start -------");
 
         try {
-            Order order = orderRepository
-                    .findById(orderId)
-                    .orElseThrow(() -> new IllegalStateException("order with id not exists"));
+            Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
 
             orderDetailService.deleteOrderDetails(orderId);
             order.setTotalPay(totalPay(orderDetailDTOList));
@@ -87,7 +82,7 @@ public class OrderService {
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
                 orderDetailService.createOrderDetail(orderDetail, order);
             }
-            order.setStatus(1L);
+            order.setStatus(Status.UNCONFIMRED);
             orderRepository.save(order);
             log.info("------- Update Order End -------");
             return ResponseUtils.success("Cập nhật hóa đơn thành công");
@@ -101,10 +96,8 @@ public class OrderService {
         log.info("------- Delete Order End -------");
 
         try {
-            Order order = orderRepository
-                    .findById(orderId)
-                    .orElseThrow(() -> new IllegalStateException("order with id not exists"));
-            order.setStatus(1L);
+            Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
+            order.setStatus(Status.CANCELORDER);
             orderDetailService.deleteOrderDetails(order.getOrderId());
             orderRepository.save(order);
             log.info("------- Delete Order End -------");
@@ -113,7 +106,34 @@ public class OrderService {
             log.info("Can't Delete Order", e.getMessage());
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
+    }
+    public ResponseDTO updateStatucOrder(String orderId,String status){
 
+        log.info("------- Update Status Order End -------");
+        try {
+            Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
+            if(status.toUpperCase().equals(Status.UNCONFIMRED)){
+                order.setStatus(Status.UNCONFIMRED);
+            }
+            else if(status.toUpperCase().equals(Status.CONFIMRED)){
+                order.setStatus(Status.CONFIMRED);
+            }
+            else if(status.toUpperCase().equals(Status.PAID)){
+                order.setStatus(Status.PAID);
+            }
+            else if(status.toUpperCase().equals(Status.CANCELORDER)){
+                order.setStatus(Status.CANCELORDER);
+            }
+            else{
+                return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
+            }
+            orderRepository.save(order);
+            log.info("------- Update Status Order End -------");
+            return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");
+        }catch (Exception e){
+            log.info("Can't Update Status Order", e.getMessage());
+            return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
+        }
     }
 
     public Staff findStaff() {

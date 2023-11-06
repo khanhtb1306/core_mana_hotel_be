@@ -31,7 +31,7 @@ public class Order {
     private Float totalPay;
 
     @Column(name = "status")
-    private Long status;
+    private String status;
 
     @Column(name = "created_by_id")
     private Long createdById;

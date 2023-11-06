@@ -34,4 +34,16 @@ public class Status {
     public static final String CHECK_OUT = "CHECK_OUT";
     public static final String DISCARD = "DISCARD"; // For reservation only
     public static final String DONE = "DONE"; // For reservation only
+
+    // Order
+    public static final String UNCONFIMRED = "UNCONFIMRED";
+
+    public static final String CONFIMRED = "CONFIMRED";
+
+    public static final String PAID = "PAID";
+
+    public static final String CANCELORDER = "CANCEL";
+
+
+
 }
