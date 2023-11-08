@@ -3,15 +3,14 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.Customer;
+import com.manahotel.be.model.entity.PriceList;
 import com.manahotel.be.model.entity.Reservation;
 import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.model.entity.Room;
-import com.manahotel.be.repository.ReservationDetailRepository;
-import com.manahotel.be.repository.ReservationRepository;
-import com.manahotel.be.repository.RoomRepository;
+import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +31,15 @@ public class ReservationDetailService {
     private RoomRepository repository3;
 
     @Autowired
+    private PriceListRepository repository4;
+
+    @Autowired
+    private ReservationDetailCustomerRepository repository5;
+
+    @Autowired
     private ReservationDetailCustomerService service;
 
-    public String createReservationDetail(ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
+    public ResponseDTO createReservationDetail(ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
         try {
             log.info("----- Start create detail for reservation ------");
             ReservationDetail reservationDetail = new ReservationDetail();
@@ -48,15 +53,15 @@ public class ReservationDetailService {
             service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
             log.info("----- End create RDC -----");
 
-            return "Tạo chi tiết đặt phòng thành công";
+            return ResponseUtils.success("Tạo chi tiết đặt phòng thành công");
         }
         catch (Exception e) {
             log.info("----- Create detail for reservation failed ------\n" + e.getMessage());
-            return "Tạo chi tiết đặt phòng thất bại";
+            return ResponseUtils.error("Tạo chi tiết đặt phòng thất bại");
         }
     }
 
-    public String updateReservationDetail(Long id, ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
+    public ResponseDTO updateReservationDetail(Long id, ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
         try {
             log.info("----- Start update detail for reservation ------");
             ReservationDetail reservationDetail = findReservationDetail(id);
@@ -70,11 +75,67 @@ public class ReservationDetailService {
             service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
             log.info("----- End create RDC -----");
 
-            return "Cập nhật chi tiết đặt phòng thành công";
+            return ResponseUtils.success("Cập nhật chi tiết đặt phòng thành công");
         }
         catch (Exception e) {
             log.info("----- Update detail for reservation failed ------\n" + e.getMessage());
-            return "Cập nhật chi tiết đặt phòng thất bại";
+            return ResponseUtils.error("Cập nhật chi tiết đặt phòng thất bại");
+        }
+    }
+
+    public ResponseDTO changeRoomInReservation(String reservationId, String roomId, ReservationDTO reservationDTO, ReservationDetailDTO reservationDetailDTO) {
+        try {
+            log.info("----- Start changing room -----");
+            ReservationDetail reservationDetail = repository.findReservationDetailByReservationAndRoom(findReservation(reservationId), findRoom(roomId));
+
+            Room oldRoom = reservationDetail.getRoom();
+            oldRoom.setBookingStatus(Status.ROOM_EMPTY);
+            repository3.save(oldRoom);
+
+            Room newRoom = (reservationDetailDTO.getRoomId() != null) ? findRoom(reservationDetailDTO.getRoomId()) : reservationDetail.getRoom();
+            reservationDetail.setRoom(newRoom);
+
+            if(!oldRoom.getRoomCategory().getRoomCategoryId().equals(newRoom.getRoomCategory().getRoomCategoryId())) {
+                Reservation reservation = findReservation(reservationId);
+
+                PriceList priceList = (reservationDTO.getPriceListId() != null) ? findPriceList(reservationDTO.getPriceListId()) : reservation.getPriceList();
+                reservation.setPriceList(priceList);
+
+                repository2.save(reservation);
+
+                reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
+            }
+
+            if(reservationDetail.getStatus().equals(Status.CHECK_IN)) {
+                newRoom.setBookingStatus(Status.ROOM_USING);
+            }
+
+            repository3.save(newRoom);
+
+            repository.save(reservationDetail);
+            log.info("----- End changing room -----");
+
+            return ResponseUtils.success("Thay đổi phòng thành công");
+        }
+        catch (Exception e) {
+            log.info("----- Change room failed ------\n" + e.getMessage());
+            return ResponseUtils.error("Thay đổi phòng thất bại");
+        }
+    }
+
+    public ResponseDTO deleteReservationDetail(Long id) {
+        try {
+            log.info("----- Start delete Reservation Detail -----");
+            repository5.deleteReservationDetailCustomerByReservationDetailId(id);
+
+            ReservationDetail reservationDetail = findReservationDetail(id);
+            repository.delete(reservationDetail);
+            log.info("----- End delete Reservation Detail -----");
+            return ResponseUtils.success("Xóa chi tiết đặt phòng thành công");
+        }
+        catch (Exception e) {
+            log.info("----- Delete Reservation Detail failed ------\n" + e.getMessage());
+            return ResponseUtils.error("Xóa chi tiết đặt phòng thất bại");
         }
     }
 
@@ -107,6 +168,8 @@ public class ReservationDetailService {
             }
         }
 
+        repository3.save(room);
+
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
         reservationDetail.setReservationType((reservationDetailDTO.getReservationType() != null) ? reservationDetailDTO.getReservationType() : reservationDetail.getReservationType());
     }
@@ -124,5 +187,10 @@ public class ReservationDetailService {
     private Room findRoom(String id) {
         return repository3.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id " + id));
+    }
+
+    private PriceList findPriceList(String id) {
+        return repository4.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Price List not found with id " + id));
     }
 }
