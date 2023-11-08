@@ -45,8 +45,10 @@ public class PriceListService {
         try {
             List<PriceList> listPriceList =  priceListRepository.findAll();
             for(PriceList list : listPriceList) {
-                Map<String, Object>  priceListInfo = getPriceListByIdWithPriceListDetailList(list.getPriceListId());
-                AllPriceList.add(priceListInfo);
+                if(!list.getPriceListId().equals("BG000000")){
+                    Map<String, Object>  priceListInfo = getPriceListByIdWithPriceListDetailList(list.getPriceListId());
+                    AllPriceList.add(priceListInfo);
+                }
             }
         } catch (ResourceNotFoundException ef) {
             log.error(ef.getMessage());
