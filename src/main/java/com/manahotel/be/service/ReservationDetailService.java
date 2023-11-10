@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,15 +36,14 @@ public class ReservationDetailService {
     private PriceListRepository repository4;
 
     @Autowired
-    private ReservationDetailCustomerRepository repository5;
-
-    @Autowired
     private ReservationDetailCustomerService service;
 
     public ResponseDTO createReservationDetail(ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
         try {
             log.info("----- Start create detail for reservation ------");
             ReservationDetail reservationDetail = new ReservationDetail();
+
+            reservationDetail.setReservationDetailStatus(Status.ACTIVATE);
 
             commonMapping(reservationDetail, reservationDetailDTO);
 
@@ -130,10 +131,9 @@ public class ReservationDetailService {
     public ResponseDTO deleteReservationDetail(Long id) {
         try {
             log.info("----- Start delete Reservation Detail -----");
-            repository5.deleteReservationDetailCustomerByReservationDetailId(id);
-
             ReservationDetail reservationDetail = findReservationDetail(id);
-            repository.delete(reservationDetail);
+            reservationDetail.setReservationDetailStatus(Status.DELETE);
+            repository.save(reservationDetail);
             log.info("----- End delete Reservation Detail -----");
             return ResponseUtils.success("Xóa chi tiết đặt phòng thành công");
         }
@@ -144,6 +144,8 @@ public class ReservationDetailService {
     }
 
     private void commonMapping(ReservationDetail reservationDetail, ReservationDetailDTO reservationDetailDTO) {
+        List<ReservationDetail> listReservationDetails;
+
         Reservation reservation = (reservationDetailDTO.getReservationId() != null) ? findReservation(reservationDetailDTO.getReservationId()) : reservationDetail.getReservation();
         reservationDetail.setReservation(reservation);
 
@@ -156,6 +158,12 @@ public class ReservationDetailService {
             case Status.BOOKING -> {
                 reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
+
+                listReservationDetails = repository.checkBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate());
+
+                if(!listReservationDetails.isEmpty()) {
+                    throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+                }
             }
             case Status.CHECK_IN -> {
                 if (reservationDetail.getCheckInEstimate() == null && reservationDetail.getCheckOutEstimate() == null) {
@@ -164,10 +172,22 @@ public class ReservationDetailService {
                 }
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
                 reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
+
+                listReservationDetails = repository.checkBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual());
+
+                if(!listReservationDetails.isEmpty()) {
+                    throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+                }
                 room.setBookingStatus(Status.ROOM_USING);
             }
             case Status.CHECK_OUT -> {
                 reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
+
+                listReservationDetails = repository.checkBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual());
+
+                if(!listReservationDetails.isEmpty()) {
+                    throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+                }
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }

@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.*;
@@ -41,7 +42,7 @@ public class FloorService {
             List<Room> listRooms = roomRepository.findByFloor(f);
             List<Map<String, Object>> roomListWithRDs = new ArrayList<>();
             for (Room room : listRooms) {
-                List<ReservationDetail> listReservationDetails = reservationDetailRepository.findReservationDetailByRoom(room);
+                List<ReservationDetail> listReservationDetails = reservationDetailRepository.findReservationDetailByRoomAndReservationDetailStatus(room, Status.ACTIVATE);
 
                 List<Map<String, Object>> RDListWithRDCs = new ArrayList<>();
                 for (ReservationDetail reservationDetail : listReservationDetails) {
