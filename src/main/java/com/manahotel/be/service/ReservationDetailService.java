@@ -49,9 +49,11 @@ public class ReservationDetailService {
             repository.save(reservationDetail);
             log.info("----- End create detail for reservation ------");
 
-            log.info("----- Start create RDC -----");
-            service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
-            log.info("----- End create RDC -----");
+            if(!customerIds.isEmpty()) {
+                log.info("----- Start create RDC -----");
+                service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
+                log.info("----- End create RDC -----");
+            }
 
             return ResponseUtils.success("Tạo chi tiết đặt phòng thành công");
         }
@@ -71,9 +73,11 @@ public class ReservationDetailService {
             repository.save(reservationDetail);
             log.info("----- End update detail for reservation ------");
 
-            log.info("----- Start create RDC -----");
-            service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
-            log.info("----- End create RDC -----");
+            if(!customerIds.isEmpty()) {
+                log.info("----- Start create RDC -----");
+                service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
+                log.info("----- End create RDC -----");
+            }
 
             return ResponseUtils.success("Cập nhật chi tiết đặt phòng thành công");
         }
