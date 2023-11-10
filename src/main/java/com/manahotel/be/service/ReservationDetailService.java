@@ -34,15 +34,14 @@ public class ReservationDetailService {
     private PriceListRepository repository4;
 
     @Autowired
-    private ReservationDetailCustomerRepository repository5;
-
-    @Autowired
     private ReservationDetailCustomerService service;
 
     public ResponseDTO createReservationDetail(ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
         try {
             log.info("----- Start create detail for reservation ------");
             ReservationDetail reservationDetail = new ReservationDetail();
+
+            reservationDetail.setReservationDetailStatus(Status.ACTIVATE);
 
             commonMapping(reservationDetail, reservationDetailDTO);
 
@@ -130,10 +129,9 @@ public class ReservationDetailService {
     public ResponseDTO deleteReservationDetail(Long id) {
         try {
             log.info("----- Start delete Reservation Detail -----");
-            repository5.deleteReservationDetailCustomerByReservationDetailId(id);
-
             ReservationDetail reservationDetail = findReservationDetail(id);
-            repository.delete(reservationDetail);
+            reservationDetail.setReservationDetailStatus(Status.DELETE);
+            repository.save(reservationDetail);
             log.info("----- End delete Reservation Detail -----");
             return ResponseUtils.success("Xóa chi tiết đặt phòng thành công");
         }

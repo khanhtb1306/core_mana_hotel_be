@@ -66,7 +66,7 @@ public class ReservationService {
 
         for (Object[] reservation : listReservations) {
             Reservation r = (Reservation) reservation[0];
-            List<ReservationDetail> listReservationDetails = repository2.findReservationDetailByReservation(r);
+            List<ReservationDetail> listReservationDetails = repository2.findReservationDetailByReservationAndReservationDetailStatus(r, Status.ACTIVATE);
             Map<String, Object> detailInfo = new HashMap<>();
             detailInfo.put("reservation", r);
             detailInfo.put("listReservationDetails", listReservationDetails.toArray());
@@ -79,7 +79,7 @@ public class ReservationService {
     public ResponseDTO getAllReservationWithRoomsById(String id) {
         Reservation reservation = findReservation(id);
         Map<String, Object> reservationInfo = new HashMap<>();
-        List<ReservationDetail> listReservationDetails = repository2.findReservationDetailByReservation(reservation);
+        List<ReservationDetail> listReservationDetails = repository2.findReservationDetailByReservationAndReservationDetailStatus(reservation, Status.ACTIVATE);
         reservationInfo.put("reservation", reservation);
         reservationInfo.put("listReservationDetails", listReservationDetails.toArray());
         return ResponseUtils.success(reservationInfo, "Hiển thị thành công chi tiết đặt phòng của đơn" + reservation.getReservationId());

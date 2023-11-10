@@ -52,7 +52,7 @@ public class RoomClassService {
             List<Room> listRooms = roomRepository.findByRoomCategory(roomCategory);
             List<Map<String, Object>> roomListWithRDs = new ArrayList<>();
             for(Room room : listRooms) {
-                List<ReservationDetail> listReservationDetails = reservationDetailRepository.findReservationDetailByRoom(room);
+                List<ReservationDetail> listReservationDetails = reservationDetailRepository.findReservationDetailByRoomAndReservationDetailStatus(room, Status.ACTIVATE);
 
                 List<Map<String, Object>> RDListWithRDCs = new ArrayList<>();
                 for(ReservationDetail reservationDetail : listReservationDetails) {

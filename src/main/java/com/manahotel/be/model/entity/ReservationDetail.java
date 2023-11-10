@@ -49,4 +49,7 @@ public class ReservationDetail {
 
     @Column(name = "status", length = 50)
     private String status;
+
+    @Column(name = "reservation_detail_status")
+    private Long reservationDetailStatus;
 }
