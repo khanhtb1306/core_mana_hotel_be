@@ -5,6 +5,7 @@ import lombok.Data;
 import java.sql.Time;
 @Data
 public class TimeUseDTO {
+    private Long timeUseId;
     private Time endTimeNight;
     private Time startTimeDay;
     private Time endTimeDay;

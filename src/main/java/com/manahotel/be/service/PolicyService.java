@@ -46,14 +46,14 @@ public class PolicyService {
         }
     }
 
-    public ResponseDTO createUpdateSetupTimeUse(TimeUse timeUse, TimeUseDTO timeUseDTO) {
+    public ResponseDTO createUpdateSetupTimeUse(TimeUseDTO timeUseDTO) {
             log.info("----- Create Update Setup Time Use Start ------");
         try{
-            TimeUse timeUses = findTimeUse(timeUse.getTimeUseId());
+            TimeUse timeUse = findTimeUse(timeUseDTO.getTimeUseId());
             commonMapping(timeUse, timeUseDTO);
-            timeUseRepository.save(timeUses);
+            timeUseRepository.save(timeUse);
             log.info("----- Create Update Setup Time Use End ------");
-            return ResponseUtils.success(timeUses,"Lưu thành công");
+            return ResponseUtils.success("Lưu thành công");
         }catch (Exception e){
             log.info(e.getMessage());
             return  ResponseUtils.error("Lưu thất bại");
@@ -62,11 +62,18 @@ public class PolicyService {
     }
 
     //TODO other revenue
-    public ResponseDTO getAllPolicyOtherRevenue() {
+    //TODO Additional Person Surcharge
+    //TODO EARLIER_OVERTIME_SURCHARGE
+    //TODO LATER_OVERTIME_SURCHARGE
+    //TODO Cancel room Surcharge
+    //TODO Setup deposit
+    //TODO set promotion policy
+    //TODO Setup Point System
+    public ResponseDTO getAllPolicyDetailByNamePolicy(String PolicyName) {
         log.info("----- Get All Policy Other Revenue Start ------");
         try{
             Map<String, Object> listPolicy = new HashMap<>();
-            Policy policy = policyRepository.getPoliciesByPolicyName(PolicyCont.OTHER_REVENUE);
+            Policy policy = policyRepository.getPoliciesByPolicyName(PolicyName);
             List<PolicyDetail> policyDetail = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(policy.getPolicyId());
             listPolicy.put("Policy", policy);
             listPolicy.put("ListOtherRevenue ", policyDetail);
@@ -79,7 +86,7 @@ public class PolicyService {
 
     }
 
-    public ResponseDTO createUpdatePolicyOtherRevenue(PolicyDetailDTO policyDetailDTO) {
+    public ResponseDTO createUpdatePolicyDetail(PolicyDetailDTO policyDetailDTO) {
         log.info("----- Create Update Policy Other Revenue Start ------");
         try {
             PolicyDetail policyDetail = new PolicyDetail();
@@ -93,86 +100,6 @@ public class PolicyService {
         } catch (Exception e) {
             return ResponseUtils.error("Lưu thất bại");
         }
-    }
-
-
-    public ResponseDTO DeletePolicyOtherRevenue(Long id) {
-        log.info("----- Delete Policy Other Revenue Start ------");
-        try{
-            PolicyDetail policyDetail = findPolicyDetail(id);
-            policyDetail.setStatus(Status.DELETE);
-            policyDetailRepository.save(policyDetail);
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return ResponseUtils.error("Xóa thất bại");
-        }
-        log.info("----- Delete Policy Other Revenue Start ------");
-        return ResponseUtils.success("Xóa thành công");
-    }
-
-    //TODO Additional Person Surcharge
-    public ResponseDTO getAdditionalPersonSurcharge() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO CreateUpdateAdditionalPersonSurcharge() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    //TODO Overtime Surcharge
-    public ResponseDTO getOvertimeSurcharge() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO CreateUpdateOvertimeSurcharge() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    //TODO Cancel room Surcharge
-    public ResponseDTO getCancelRoomSurcharge() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO CreateUpdateCancelRoomSurcharge() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    //TODO Setup deposit
-    public ResponseDTO getSetupDeposit() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO CreateUpdateSetupDeposit() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    //TODO set promotion policy
-    public ResponseDTO setPromotionPolicy() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO CreateUpdatePromotionPolicy() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO GetSetupPointSystem() {
-
-        return ResponseUtils.success("Success");
-    }
-
-    public ResponseDTO CreateUpdateSetupPointSystem() {
-
-        return ResponseUtils.success("Success");
     }
 
 

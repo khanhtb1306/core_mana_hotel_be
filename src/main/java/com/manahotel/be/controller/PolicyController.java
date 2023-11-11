@@ -1,0 +1,38 @@
+package com.manahotel.be.controller;
+
+import com.manahotel.be.model.dto.PolicyDetailDTO;
+import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.TimeUseDTO;
+import com.manahotel.be.service.PolicyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/policy")
+public class PolicyController {
+
+    @Autowired
+    private PolicyService policyService;
+
+    @GetMapping("/{policyName}")
+    public ResponseDTO getAllPolicyDetailByNamePolicy(@PathVariable String policyName) {
+        return policyService.getAllPolicyDetailByNamePolicy(policyName);
+    }
+
+    @PostMapping
+    public ResponseDTO createUpdatePolicyDetail(PolicyDetailDTO policyDetailDTO) {
+        return policyService.createUpdatePolicyDetail(policyDetailDTO);
+    }
+
+    @GetMapping
+    public ResponseDTO getSetupTimeUse() {
+        return policyService.getSetupTimeUse();
+    }
+
+    @PutMapping
+    public ResponseDTO createUpdateSetupTimeUse(TimeUseDTO timeUseDTO) {
+        return policyService.createUpdateSetupTimeUse(timeUseDTO);
+    }
+
+
+}
