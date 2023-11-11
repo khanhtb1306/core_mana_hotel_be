@@ -12,6 +12,4 @@ public interface PolicyDetailRepository extends JpaRepository<PolicyDetail, Long
     @Query("select pd FROM PolicyDetail pd " +
             "where pd.policyId = ?1 and pd.status <> 6")
     List<PolicyDetail> getPolicyDetailByPolicyIdNotStatus6(String policyId);
-
-    PolicyDetail getPolicyDetailByPolicyDetailName(String PolicyDetailName);
 }
