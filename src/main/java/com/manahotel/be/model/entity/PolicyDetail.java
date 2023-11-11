@@ -23,9 +23,6 @@ public class PolicyDetail {
     @Column(name = "room_category_id")
     private String roomCategoryId;
 
-    @Column(name = "policy_detail_name")
-    private String policyDetailName;
-
     @Column(name = "customer_group")
     private String customerGroup;
 
