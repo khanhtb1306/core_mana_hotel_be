@@ -7,6 +7,7 @@ public class PolicyCont {
     public static final String CANCEL_ROOM_SURCHARGE = "CANCEL_ROOM_SURCHARGE";
     public static final String PROMOTION_POLICY = "PROMOTION_POLICY";
     public static final String SETUP_POINT_SYSTEM = "SETUP_POINT_SYSTEM";
+    public static final String SETUP_DEPOSIT = "SETUP_DEPOSIT";
 
 
 
