@@ -35,4 +35,9 @@ public class GoodsUnitController {
     public ResponseEntity<String> deleteGoodsUnit(@PathVariable String id) {
         return service.deleteGoodsUnit(id);
     }
+
+    @PutMapping
+    public ResponseEntity<String> updateGoodsUnitByList(List<GoodsUnitDTO> goodsUnitDTOs) {
+        return service.updateGoodsUnitByList(goodsUnitDTOs);
+    }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class GoodsUnitDTO {
+    private Long goodsUnitId;
     private String goodsUnitName;
     private String goodsId;
     private Float cost;

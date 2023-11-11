@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Slf4j
@@ -38,13 +41,23 @@ public class OrderService {
 
     @Autowired
     private OrderDetailService orderDetailService;
+    private OrderDTO commonMappingResponseOrder(Order order){
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderId(order.getOrderId());
+        orderDTO.setReservationDetailId(order.getReservationDetail().getReservationDetailId() );
+        orderDTO.setTotalPay(order.getTotalPay());
+        orderDTO.setStatus(order.getStatus());
+        orderDTO.setCreatedById(order.getCreatedById());
+        orderDTO.setCreatedDate(order.getCreatedDate());
+        return orderDTO;
+    }
 
     public ResponseDTO createOrder(OrderDTO orderDTO, List<OrderDetailDTO> orderDetailDTOList) {
         try {
             log.info("------- Add Order Start -------");
             Order latestOrder = orderRepository.findTopByOrderByOrderIdDesc();
             String latestId = (latestOrder == null) ? null : latestOrder.getOrderId();
-            String nextId = IdGenerator.generateId(latestId, "OR");
+            String nextId = IdGenerator.generateId(latestId, "HD");
             Order order = new Order();
             order.setOrderId(nextId);
 
@@ -97,7 +110,7 @@ public class OrderService {
 
         try {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
-            order.setStatus(Status.CANCELORDER);
+            order.setStatus(Status.CANCEL_ORDER);
             orderDetailService.deleteOrderDetails(order.getOrderId());
             orderRepository.save(order);
             log.info("------- Delete Order End -------");
@@ -107,7 +120,7 @@ public class OrderService {
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
     }
-    public ResponseDTO updateStatucOrder(String orderId,String status){
+    public ResponseDTO updateStatusOrder(String orderId,String status){
 
         log.info("------- Update Status Order End -------");
         try {
@@ -121,8 +134,8 @@ public class OrderService {
             else if(status.toUpperCase().equals(Status.PAID)){
                 order.setStatus(Status.PAID);
             }
-            else if(status.toUpperCase().equals(Status.CANCELORDER)){
-                order.setStatus(Status.CANCELORDER);
+            else if(status.toUpperCase().equals(Status.CANCEL_ORDER)){
+                order.setStatus(Status.CANCEL_ORDER);
             }
             else{
                 return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
@@ -133,6 +146,26 @@ public class OrderService {
         }catch (Exception e){
             log.info("Can't Update Status Order", e.getMessage());
             return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
+        }
+    }
+    public ResponseDTO getOrderByReservationDetailId(Long reservationId){
+        log.info("------- Get Order Start -------");
+        List<Map<String, Object>> result = new ArrayList<>();
+        OrderDTO orderDTO = new OrderDTO();
+        try{
+            List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationId);
+            for (Order order : orderList)
+            {
+                Map<String, Object> orderInfo = new HashMap<>();
+                orderInfo.put("order", commonMappingResponseOrder(order));
+                result.add(orderInfo);
+            }
+            log.info("------- Get Order End -------");
+            return ResponseUtils.success(result,"Lấy hóa đơn thành công");
+
+        }catch (Exception e){
+            log.info("Can't Get Order", e.getMessage());
+            return ResponseUtils.error("Lấy hóa đơn thất bại");
         }
     }
 

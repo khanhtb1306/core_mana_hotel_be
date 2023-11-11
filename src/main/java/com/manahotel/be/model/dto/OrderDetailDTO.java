@@ -8,7 +8,8 @@ import lombok.Data;
 
 @Data
 public class OrderDetailDTO {
-//    private String orderId;
+    private Long id;
+    private String orderId;
     private String goodsId;
     private Long quantity;
     private Float price;

@@ -42,7 +42,7 @@ public class Status {
 
     public static final String PAID = "PAID";
 
-    public static final String CANCELORDER = "CANCEL";
+    public static final String CANCEL_ORDER = "CANCEL_ORDER";
 
 
 

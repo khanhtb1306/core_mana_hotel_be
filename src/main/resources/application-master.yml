@@ -18,8 +18,12 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: nguyenhuync2937@gmail.com
-    password: huyhuy2937
+    username: manahotelsystem@gmail.com
+    password: igscmsiixgzkzcjs
+#    email.imap.host : imap.example.com
+#    email.imap.port : 993
+#    email.imap.protocol : imap
+#    email.imap.ssl : true
     properties:
       mail:
         smtp:

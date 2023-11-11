@@ -23,7 +23,7 @@ public class Order {
     private String orderId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "reservation_detail_id", nullable = false)
     private ReservationDetail reservationDetail;
 

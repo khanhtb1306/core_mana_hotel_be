@@ -32,13 +32,12 @@ public class GoodsUnitService {
         try {
             log.info("----- Add Unit Start -----");
             GoodsUnit goodsUnit = new GoodsUnit();
-            goodsUnit.setGoodsUnitName(dto.getGoodsUnitName());
 
             Goods goods = findGoods(dto.getGoodsId());
             goodsUnit.setGoods(goods);
 
-            goodsUnit.setPrice(dto.getPrice());
-            goodsUnit.setCost(dto.getCost());
+            commonMapping(goodsUnit, dto);
+
             goodsUnit.setIsDefault(false);
 
             repository.save(goodsUnit);
@@ -55,9 +54,8 @@ public class GoodsUnitService {
         try {
             log.info("----- Update Unit Start -----");
             GoodsUnit goodsUnit = findGoodsUnitById(id);
-            goodsUnit.setGoodsUnitName(dto.getGoodsUnitName() != null ? dto.getGoodsUnitName() : goodsUnit.getGoodsUnitName());
-            goodsUnit.setPrice(dto.getPrice() != null ? dto.getPrice() : goodsUnit.getPrice());
-            goodsUnit.setCost(dto.getCost() != null ? dto.getCost() : goodsUnit.getCost());
+
+            commonMapping(goodsUnit, dto);
 
             repository.save(goodsUnit);
             log.info("----- Update Unit End -----");
@@ -67,6 +65,48 @@ public class GoodsUnitService {
             log.info("Can't update unit", e.getMessage());
             return new ResponseEntity<>("Cập nhật đơn vị thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public ResponseEntity<String> updateGoodsUnitByList(List<GoodsUnitDTO> goodsUnitDTOs) {
+        try {
+            GoodsUnit goodsUnit;
+
+            for (GoodsUnitDTO goodsUnitDTO : goodsUnitDTOs) {
+                if(goodsUnitDTO.getGoodsUnitId() != null) {
+                    goodsUnit = findGoodsUnitById(goodsUnitDTO.getGoodsUnitId());
+
+                    if(!goodsUnitDTO.getGoodsUnitName().equals(goodsUnit.getGoodsUnitName())
+                    || !goodsUnitDTO.getCost().equals(goodsUnit.getCost())
+                    || !goodsUnitDTO.getPrice().equals(goodsUnit.getPrice())) {
+                        commonMapping(goodsUnit, goodsUnitDTO);
+                        repository.save(goodsUnit);
+                    }
+                }
+                else {
+                    goodsUnit = new GoodsUnit();
+
+                    Goods goods = findGoods(goodsUnitDTO.getGoodsId());
+                    goodsUnit.setGoods(goods);
+
+                    commonMapping(goodsUnit, goodsUnitDTO);
+
+                    goodsUnit.setIsDefault(false);
+
+                    repository.save(goodsUnit);
+                }
+            }
+
+            return new ResponseEntity<>("Lưu đơn vị thành công", HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("Lưu đơn vị thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void commonMapping(GoodsUnit goodsUnit, GoodsUnitDTO goodsUnitDTO) {
+        goodsUnit.setGoodsUnitName(goodsUnitDTO.getGoodsUnitName() != null ? goodsUnitDTO.getGoodsUnitName() : goodsUnit.getGoodsUnitName());
+        goodsUnit.setPrice(goodsUnitDTO.getPrice() != null ? goodsUnitDTO.getPrice() : goodsUnit.getPrice());
+        goodsUnit.setCost(goodsUnitDTO.getCost() != null ? goodsUnitDTO.getCost() : goodsUnit.getCost());
     }
 
     public ResponseEntity<String> deleteGoodsUnit(String id) {

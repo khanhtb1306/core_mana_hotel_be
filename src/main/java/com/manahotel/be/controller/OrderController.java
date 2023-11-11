@@ -35,7 +35,7 @@ public class OrderController {
     }
     @PutMapping("/updateStatus/{id}")
     public ResponseDTO updateStatusOrder(@PathVariable String id,String status){
-        return orderService.updateStatucOrder(id,status);
+        return orderService.updateStatusOrder(id,status);
     }
     @DeleteMapping("/{id}")
     public ResponseDTO deleteOrder(@PathVariable String id) {
@@ -50,5 +50,9 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseDTO getOrderDetails(@PathVariable String id){
         return orderDetailService.getOrderDetails(id.replace("\n", ""));
+    }
+    @GetMapping("/reservation/{id}")
+    public ResponseDTO getOrderByReservationId(@PathVariable Long id){
+        return orderService.getOrderByReservationDetailId(id);
     }
 }

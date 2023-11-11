@@ -12,9 +12,11 @@ import java.time.Instant;
 
 @Data
 public class OrderDTO {
-//    private String orderId;
+    private String orderId;
     private long reservationDetailId;
     private Float totalPay;
     private String status;
-//    private Long createdById;
+    private Long createdById;
+    private Instant createdDate;
+
 }
