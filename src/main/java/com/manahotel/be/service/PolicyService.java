@@ -1,7 +1,5 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.PolicyCont;
-import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.PolicyDTO;
@@ -70,24 +68,23 @@ public class PolicyService {
     //TODO set promotion policy
     //TODO Setup Point System
     public ResponseDTO getAllPolicyDetailByNamePolicy(String PolicyName) {
-        log.info("----- Get All Policy Other Revenue Start ------");
+        log.info("----- Get All Policy Detail By " + PolicyName + " Start ------");
         try{
-            Map<String, Object> listPolicy = new HashMap<>();
+            Map<String, Object> Policy = new HashMap<>();
             Policy policy = policyRepository.getPoliciesByPolicyName(PolicyName);
             List<PolicyDetail> policyDetail = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(policy.getPolicyId());
-            listPolicy.put("Policy", policy);
-            listPolicy.put("ListOtherRevenue ", policyDetail);
-            log.info("----- Get All Policy Other Revenue End ------");
-            return ResponseUtils.success(listPolicy,"IsSuccess");
+            Policy.put("Policy", policy);
+            Policy.put("ListOtherRevenue ", policyDetail);
+            log.info("----- Get All Policy Detail By " + PolicyName + " End ------");
+            return ResponseUtils.success(Policy,"IsSuccess");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("GetFail");
         }
-
     }
 
     public ResponseDTO createUpdatePolicyDetail(PolicyDetailDTO policyDetailDTO) {
-        log.info("----- Create Update Policy Other Revenue Start ------");
+        log.info("----- Create Update Policy Detail Start ------");
         try {
             PolicyDetail policyDetail = new PolicyDetail();
             if (policyDetailDTO.getPolicyDetailId() != null) {
@@ -95,7 +92,7 @@ public class PolicyService {
             }
             commonMapping(policyDetail, policyDetailDTO);
             policyDetailRepository.save(policyDetail);
-            log.info("----- Create Update Policy Other Revenue End ------");
+            log.info("----- Create Update Policy Detail End ------");
             return ResponseUtils.success("Lưu thành công");
         } catch (Exception e) {
             return ResponseUtils.error("Lưu thất bại");
