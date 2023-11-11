@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,18 +38,42 @@ public class OrderService {
     private StaffRepository staffRepository;
 
     @Autowired
-    private OrderDetailService orderDetailService;
-    private OrderDTO commonMappingResponseOrder(Order order){
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(order.getOrderId());
-        orderDTO.setReservationDetailId(order.getReservationDetail().getReservationDetailId() );
-        orderDTO.setTotalPay(order.getTotalPay());
-        orderDTO.setStatus(order.getStatus());
-        orderDTO.setCreatedById(order.getCreatedById());
-        orderDTO.setCreatedDate(order.getCreatedDate());
-        return orderDTO;
-    }
+    private OrderDetailRepository orderDetailRepository;
 
+    @Autowired
+    private OrderDetailService orderDetailService;
+
+    public ResponseDTO getOrderByReservationDetailId(Long reservationId){
+        log.info("------- Get Order Start -------");
+        List<Object> result = new ArrayList<>();
+        try{
+            List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationId);
+            for (Order order : orderList)
+            {
+                Map<String, Object> orderInfo = new HashMap<>();
+                order.setReservationDetail(null);
+                orderInfo.put("order", order);
+
+                List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
+                for(OrderDetail g: orderDetailList){
+                    Map<String, Object> orderInfo1 = new HashMap<>();
+                    List<GoodsUnit> goodsUnits = .....(g.getGoods().getGoodsId())
+                    orderInfo1.put("", g);
+                    orderInfo1.put("goodunit", goodsUnits);
+                    List<Object> A.add(orderInfo1);
+                }
+
+                orderInfo.put("OrderDetail", A);
+                result.add(orderInfo);
+            }
+            log.info("------- Get Order End -------");
+            return ResponseUtils.success(result,"Lấy hóa đơn thành công");
+
+        }catch (Exception e){
+            log.info("Can't Get Order", e.getMessage());
+            return ResponseUtils.error("Lấy hóa đơn thất bại");
+        }
+    }
     public ResponseDTO createOrder(OrderDTO orderDTO, List<OrderDetailDTO> orderDetailDTOList) {
         try {
             log.info("------- Add Order Start -------");
@@ -83,7 +105,7 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO updateOrder(String orderId,List<OrderDetailDTO> orderDetailDTOList) {
+    public ResponseDTO updateOrder(String orderId, List<OrderDetailDTO> orderDetailDTOList) {
         log.info("------- Update Order Start -------");
 
         try {
@@ -120,7 +142,7 @@ public class OrderService {
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
     }
-    public ResponseDTO updateStatusOrder(String orderId,String status){
+    public ResponseDTO updateStatusOrder(String orderId, String status){
 
         log.info("------- Update Status Order End -------");
         try {
@@ -146,26 +168,6 @@ public class OrderService {
         }catch (Exception e){
             log.info("Can't Update Status Order", e.getMessage());
             return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
-        }
-    }
-    public ResponseDTO getOrderByReservationDetailId(Long reservationId){
-        log.info("------- Get Order Start -------");
-        List<Map<String, Object>> result = new ArrayList<>();
-        OrderDTO orderDTO = new OrderDTO();
-        try{
-            List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationId);
-            for (Order order : orderList)
-            {
-                Map<String, Object> orderInfo = new HashMap<>();
-                orderInfo.put("order", commonMappingResponseOrder(order));
-                result.add(orderInfo);
-            }
-            log.info("------- Get Order End -------");
-            return ResponseUtils.success(result,"Lấy hóa đơn thành công");
-
-        }catch (Exception e){
-            log.info("Can't Get Order", e.getMessage());
-            return ResponseUtils.error("Lấy hóa đơn thất bại");
         }
     }
 

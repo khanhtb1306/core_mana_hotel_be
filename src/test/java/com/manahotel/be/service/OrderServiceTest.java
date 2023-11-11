@@ -50,10 +50,10 @@ class OrderServiceTest {
     private OrderService underTest;
 
 
-    @BeforeEach
-    void setUp() {
-        underTest = new OrderService(orderRepository, reservationDetailRepository, staffRepository, orderDetailService);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        underTest = new OrderService(orderRepository, reservationDetailRepository, staffRepository, orderDetailService);
+//    }
 
     @Test
     public void testCreateOrderReservationDetailNotFoundException() {

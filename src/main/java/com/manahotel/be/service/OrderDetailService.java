@@ -36,27 +36,6 @@ public class OrderDetailService {
         orderDetail.setQuantity(orderDetailDTO.getQuantity() != null ? orderDetailDTO.getQuantity() : orderDetail.getQuantity());
         orderDetail.setPrice(orderDetailDTO.getPrice() != null ? orderDetailDTO.getPrice() : orderDetail.getPrice());
     }
-    private OrderDetailDTO commonMappingResponseOrderDetail(OrderDetail orderDetail){
-        OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
-        orderDetailDTO.setId(orderDetail.getId());
-        orderDetailDTO.setOrderId(orderDetail.getOrder().getOrderId() );
-        orderDetailDTO.setGoodsId(orderDetail.getGoods().getGoodsId());
-        orderDetailDTO.setQuantity(orderDetail.getQuantity());
-        orderDetailDTO.setPrice(orderDetail.getPrice());
-        return orderDetailDTO;
-
-    }
-    private OrderDTO commonMappingResponseOrder(Order order){
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderId(order.getOrderId());
-        orderDTO.setReservationDetailId(order.getReservationDetail().getReservationDetailId() );
-        orderDTO.setTotalPay(order.getTotalPay());
-        orderDTO.setStatus(order.getStatus());
-        orderDTO.setCreatedById(order.getCreatedById());
-        orderDTO.setCreatedDate(order.getCreatedDate());
-        return orderDTO;
-    }
-
     public void createOrderDetail(OrderDetailDTO orderDetailDTO, Order order) {
         try {
             log.info("------- Add OrderDetail Start -------");
@@ -76,35 +55,6 @@ public class OrderDetailService {
         }
     }
 
-    public ResponseDTO getOrderDetails(String orderId) {
-        OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
-        OrderDTO orderDTO = new OrderDTO();
-        Map<String, Object> result = new HashMap<>();
-        List<OrderDetailDTO> orderDetailDTOS = new ArrayList<>();
-        try {
-            log.info("------- Get OrderDetails Start -------");
-            List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(orderId);
-            if(orderDetailList.isEmpty()) {
-                log.info("Can't Get OrderDetails");
-                return ResponseUtils.error("Lấy chi tiết hóa đơn Thất bại");
-            }
-            for (OrderDetail orderDetail : orderDetailList){
-                orderDetailDTO  = commonMappingResponseOrderDetail(orderDetail);
-                orderDetailDTOS.add(orderDetailDTO);
-                orderDTO = commonMappingResponseOrder(orderDetail.getOrder());
-            }
-            result.put("orderDetail",orderDetailDTOS);
-            result.put("order",orderDTO);
-
-            log.info("------- Get OrderDetails End -------");
-            return ResponseUtils.success(result, "Lấy chi tiết hóa đơn thành công");
-
-        } catch (Exception e) {
-            log.info("Can't Get OrderDetails", e.getMessage());
-            return ResponseUtils.error("Lấy chi tiết hóa đơn Thất bại");
-
-        }
-    }
 
     public void deleteOrderDetails(String orderId) {
         try {

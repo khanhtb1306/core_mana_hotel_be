@@ -22,9 +22,13 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private InvoicePrinterService invoicePrinterService;
-    @Autowired
-    private OrderDetailService orderDetailService;
+//    @Autowired
+//    private OrderDetailService orderDetailService;
 
+    @GetMapping("/reservation/{id}")
+    public ResponseDTO getOrderByReservationId(@PathVariable Long id){
+        return orderService.getOrderByReservationDetailId(id);
+    }
     @PostMapping
     public ResponseDTO createOrder(OrderRequest orderRequest) {
         return orderService.createOrder(orderRequest.getOrderDTO(),orderRequest.getOrderDetailDTOList());
@@ -46,13 +50,8 @@ public class OrderController {
     public ResponseEntity<ByteArrayResource> printBill(@PathVariable String id) {
         return invoicePrinterService.WriteInvoice(id.replace("\n", ""));
     }
-
-    @GetMapping("/{id}")
-    public ResponseDTO getOrderDetails(@PathVariable String id){
-        return orderDetailService.getOrderDetails(id.replace("\n", ""));
-    }
-    @GetMapping("/reservation/{id}")
-    public ResponseDTO getOrderByReservationId(@PathVariable Long id){
-        return orderService.getOrderByReservationDetailId(id);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseDTO getOrderDetails(@PathVariable String id){
+//        return orderDetailService.getOrderDetails(id.replace("\n", ""));
+//    }
 }
