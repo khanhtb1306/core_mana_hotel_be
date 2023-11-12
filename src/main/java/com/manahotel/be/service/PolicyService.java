@@ -6,12 +6,8 @@ import com.manahotel.be.model.dto.PolicyDTO;
 import com.manahotel.be.model.dto.PolicyDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.TimeUseDTO;
-import com.manahotel.be.model.entity.Policy;
-import com.manahotel.be.model.entity.PolicyDetail;
-import com.manahotel.be.model.entity.TimeUse;
-import com.manahotel.be.repository.PolicyDetailRepository;
-import com.manahotel.be.repository.PolicyRepository;
-import com.manahotel.be.repository.TimeUseRepository;
+import com.manahotel.be.model.entity.*;
+import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +26,12 @@ public class PolicyService {
 
     @Autowired
     private TimeUseRepository timeUseRepository;
+
+    @Autowired
+    private RoomClassRepository roomClassRepository;
+
+    @Autowired
+    private CustomerGroupRepository customerGroupRepository;
 
     //TODO Setup Time USE
     public ResponseDTO getSetupTimeUse() {
@@ -108,8 +110,10 @@ public class PolicyService {
     }
 
     private void commonMapping(PolicyDetail policyDetail, PolicyDetailDTO dto) {
-//        policyDetail.setRoomCategory(dto.getRoomCategoryId() != null ? dto.getRoomCategoryId() : policyDetail.getRoomCategory());
-//        policyDetail.setCustomerGroup(dto.getCustomerGroupId() != null ? dto.getCustomerGroupId() : policyDetail.getCustomerGroup());
+        RoomCategory roomCategory = (dto.getRoomCategoryId() != null) ? findRoomCategory(dto.getRoomCategoryId()) : policyDetail.getRoomCategory();
+        policyDetail.setRoomCategory(roomCategory);
+        CustomerGroup customerGroup = (dto.getCustomerGroupId() !=null) ? findCustomerGroup(dto.getCustomerGroupId()) : policyDetail.getCustomerGroup();
+        policyDetail.setCustomerGroup(customerGroup);
         policyDetail.setFrom(dto.getFrom() != null ? dto.getFrom() : policyDetail.getFrom());
         policyDetail.setTo(dto.getTo() != null ? dto.getTo() : policyDetail.getTo());
         policyDetail.setCondition(dto.getCondition() != null ? dto.getCondition() : policyDetail.getCondition());
@@ -144,8 +148,16 @@ public class PolicyService {
 
     private TimeUse findTimeUse(Long id) {
         return timeUseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Time User not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Time Use not found with id " + id));
     }
 
+    private RoomCategory findRoomCategory(String id) {
+        return roomClassRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Room Class not found with id " + id));
+    }
 
+    private CustomerGroup findCustomerGroup(String id) {
+        return customerGroupRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Room Class not found with id " + id));
+    }
 }
