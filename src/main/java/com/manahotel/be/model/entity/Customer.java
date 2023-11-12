@@ -50,7 +50,7 @@ public class Customer {
     private byte[] image;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( optional = false)
     @JoinColumn(name = "customer_group_id", nullable = false)
     private CustomerGroup customerGroup;
 
