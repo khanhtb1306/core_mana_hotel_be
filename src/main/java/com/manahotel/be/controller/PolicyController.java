@@ -7,6 +7,7 @@ import com.manahotel.be.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class PolicyController {
     }
 
     @PostMapping
-    public ResponseDTO createUpdatePolicyDetail(List<PolicyDetailDTO> policyDetailDTO) {
+    public ResponseDTO createUpdatePolicyDetail(ArrayList<PolicyDetailDTO> policyDetailDTO) {
         return policyService.createUpdatePolicyDetail(policyDetailDTO);
     }
 
