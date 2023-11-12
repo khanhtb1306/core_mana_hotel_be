@@ -55,15 +55,15 @@ public class OrderService {
                 orderInfo.put("order", order);
 
                 List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
-                for(OrderDetail g: orderDetailList){
-                    Map<String, Object> orderInfo1 = new HashMap<>();
-                    List<GoodsUnit> goodsUnits = .....(g.getGoods().getGoodsId())
-                    orderInfo1.put("", g);
-                    orderInfo1.put("goodunit", goodsUnits);
-                    List<Object> A.add(orderInfo1);
-                }
+//                for(OrderDetail g: orderDetailList){
+//                    Map<String, Object> orderInfo1 = new HashMap<>();
+//                    List<GoodsUnit> goodsUnits = .....(g.getGoods().getGoodsId())
+//                    orderInfo1.put("", g);
+//                    orderInfo1.put("goodunit", goodsUnits);
+//                    List<Object> A.add(orderInfo1);
+//                }
 
-                orderInfo.put("OrderDetail", A);
+//                orderInfo.put("OrderDetail", A);
                 result.add(orderInfo);
             }
             log.info("------- Get Order End -------");
