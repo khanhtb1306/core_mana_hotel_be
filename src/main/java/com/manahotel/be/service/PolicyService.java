@@ -88,7 +88,13 @@ public class PolicyService {
     public ResponseDTO createUpdatePolicyDetail(List<PolicyDetailDTO> policyDetailDTOList) {
         log.info("----- Create Update Policy Detail Start ------");
         try {
-            String policyId = policyDetailDTOList.get(0).getPolicyId();
+            String policyId = null;
+            for (PolicyDetailDTO dto : policyDetailDTOList) {
+                if (dto.getPolicyId() != null) {
+                    policyId = dto.getPolicyId();
+                    break;
+                }
+            }
             List<PolicyDetail> existingPolicyDetails = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(policyId);
                 for (PolicyDetail dbPolicyDetail : existingPolicyDetails) {
                     if (!policyDetailDTOList.stream()
