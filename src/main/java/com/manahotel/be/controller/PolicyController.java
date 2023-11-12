@@ -7,6 +7,8 @@ import com.manahotel.be.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/policy")
 public class PolicyController {
@@ -20,16 +22,16 @@ public class PolicyController {
     }
 
     @PostMapping
-    public ResponseDTO createUpdatePolicyDetail(PolicyDetailDTO policyDetailDTO) {
+    public ResponseDTO createUpdatePolicyDetail(List<PolicyDetailDTO> policyDetailDTO) {
         return policyService.createUpdatePolicyDetail(policyDetailDTO);
     }
 
-    @GetMapping
+    @GetMapping("/time_use")
     public ResponseDTO getSetupTimeUse() {
         return policyService.getSetupTimeUse();
     }
 
-    @PutMapping
+    @PostMapping("/time_use")
     public ResponseDTO createUpdateSetupTimeUse(TimeUseDTO timeUseDTO) {
         return policyService.createUpdateSetupTimeUse(timeUseDTO);
     }

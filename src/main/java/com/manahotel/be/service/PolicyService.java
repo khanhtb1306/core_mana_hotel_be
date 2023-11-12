@@ -85,15 +85,41 @@ public class PolicyService {
         }
     }
 
-    public ResponseDTO createUpdatePolicyDetail(PolicyDetailDTO policyDetailDTO) {
+    public ResponseDTO createUpdatePolicyDetail(List<PolicyDetailDTO> policyDetailDTOList) {
         log.info("----- Create Update Policy Detail Start ------");
         try {
-            PolicyDetail policyDetail = new PolicyDetail();
-            if (policyDetailDTO.getPolicyDetailId() != null) {
-                policyDetail = findPolicyDetail(policyDetailDTO.getPolicyDetailId());
+            for (PolicyDetailDTO Pd : policyDetailDTOList) {
+                List<PolicyDetail> allPolicyDetails = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(Pd.getPolicyId());
+                allPolicyDetails.removeIf(dbPolicyDetail ->
+                        policyDetailDTOList.stream()
+                                .anyMatch(dto -> dto.getPolicyDetailId() != null && dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))
+                );
+                for (PolicyDetail dbPolicyDetail : allPolicyDetails) {
+                    dbPolicyDetail.setStatus(6L);
+                    policyDetailRepository.save(dbPolicyDetail);
+                }
+                break;
             }
-            commonMapping(policyDetail, policyDetailDTO);
-            policyDetailRepository.save(policyDetail);
+            for(PolicyDetailDTO dto: policyDetailDTOList){
+
+                PolicyDetail policyDetail = new PolicyDetail();
+                if (dto.getPolicyDetailId() != null)
+                {
+                    policyDetail = findPolicyDetail(dto.getPolicyDetailId());
+
+                    if(dto.getType()!=policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getFrom() != policyDetail.getFrom()
+                            ||dto.getTypeValue() != policyDetail.getTypeValue() || dto.getValue() != policyDetail.getValue()
+                            ||dto.getCondition() != policyDetail.getCondition() || dto.getOther() != policyDetail.getOther()
+                            ||dto.getNote() != policyDetail.getNote() || dto.getAutoAddToInvoice() != policyDetail.getAutoAddToInvoice())
+                    {
+                        commonMapping(policyDetail, dto);
+                        policyDetailRepository.save(policyDetail);
+                    }
+                }else {
+                    commonMapping(policyDetail, dto);
+                    policyDetailRepository.save(policyDetail);
+                }
+            }
             log.info("----- Create Update Policy Detail End ------");
             return ResponseUtils.success("Lưu thành công");
         } catch (Exception e) {
