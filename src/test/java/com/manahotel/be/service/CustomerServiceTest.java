@@ -42,13 +42,13 @@ class CustomerServiceTest {
     private CustomerService underTest;
 
     @Mock
-    private CustomerGroupService cutomerGroupService;
+    private CustomerGroupService customerGroupService;
     @Captor
     private ArgumentCaptor<Customer> customerArgumentCaptor;
 
     @BeforeEach
     void setUp() {
-        underTest = new CustomerService(customerRepository,cutomerGroupService);
+        underTest = new CustomerService(customerRepository,customerGroupService);
     }
 
 //    @Test

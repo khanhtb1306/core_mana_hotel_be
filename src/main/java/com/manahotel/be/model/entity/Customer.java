@@ -1,6 +1,7 @@
 package com.manahotel.be.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +49,7 @@ public class Customer {
     @Column(name = "image")
     private byte[] image;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_group_id", nullable = false)
     private CustomerGroup customerGroup;

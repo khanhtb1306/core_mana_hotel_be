@@ -58,6 +58,7 @@ public class CustomerController {
     public ResponseDTO createAndUpdateCustomerGroup(CustomerGroupDTO customerGroupDTO) {
         return groupService.createAndUpdateCustomerGroup(customerGroupDTO);
     }
+
     @DeleteMapping("/customerGroup/{id}")
     public ResponseDTO deleteCustomerGroup(@PathVariable String id)
     {

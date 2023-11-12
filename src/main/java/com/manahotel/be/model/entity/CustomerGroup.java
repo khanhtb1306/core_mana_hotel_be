@@ -27,4 +27,5 @@ public class CustomerGroup {
     @Size(max = 45)
     @Column(name = "status", length = 45)
     private String status;
+
 }
