@@ -37,7 +37,7 @@ class OrderDetailServiceTest {
     private OrderDetailService underTest;
     @BeforeEach
     void setUp() {
-        underTest = new OrderDetailService(orderDetailRepository,goodsRepository);
+//        underTest = new OrderDetailService(orderDetailRepository,goodsRepository);
     }
     @Test
     public void testDeleteOrderDetails() throws Exception {

@@ -13,4 +13,5 @@ public class OrderDetailDTO {
     private String goodsId;
     private Long quantity;
     private Float price;
+    private Long goodsUnitId;
 }

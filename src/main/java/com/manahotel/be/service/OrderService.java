@@ -55,15 +55,17 @@ public class OrderService {
                 orderInfo.put("order", order);
 
                 List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
-//                for(OrderDetail g: orderDetailList){
-//                    Map<String, Object> orderInfo1 = new HashMap<>();
-//                    List<GoodsUnit> goodsUnits = .....(g.getGoods().getGoodsId())
-//                    orderInfo1.put("", g);
-//                    orderInfo1.put("goodunit", goodsUnits);
-//                    List<Object> A.add(orderInfo1);
-//                }
+                List<Map<String, Object>> inforList = new ArrayList<>();
+                for(OrderDetail orderDetail: orderDetailList){
+                    Map<String, Object> orderInfo1 = new HashMap<>();
+                    GoodsUnit goodsUnits = orderDetail.getGoodsUnit();
+                    Goods goods = orderDetail.getGoods();
+                    orderInfo1.put("goods", goods);
+                    orderInfo1.put("goodsunit", goodsUnits);
+                    inforList.add(orderInfo1);
+                }
 
-//                orderInfo.put("OrderDetail", A);
+                orderInfo.put("OrderDetail", inforList);
                 result.add(orderInfo);
             }
             log.info("------- Get Order End -------");
@@ -89,7 +91,7 @@ public class OrderService {
 
             order.setTotalPay(totalPay(orderDetailDTOList));
             order.setCreatedDate(Instant.now());
-            order.setStatus(Status.UNCONFIMRED);
+            order.setStatus(Status.UNCONFIRMED);
             orderRepository.save(order);
 
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
@@ -117,7 +119,7 @@ public class OrderService {
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
                 orderDetailService.createOrderDetail(orderDetail, order);
             }
-            order.setStatus(Status.UNCONFIMRED);
+            order.setStatus(Status.UNCONFIRMED);
             orderRepository.save(order);
             log.info("------- Update Order End -------");
             return ResponseUtils.success("Cập nhật hóa đơn thành công");
@@ -147,21 +149,7 @@ public class OrderService {
         log.info("------- Update Status Order End -------");
         try {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
-            if(status.toUpperCase().equals(Status.UNCONFIMRED)){
-                order.setStatus(Status.UNCONFIMRED);
-            }
-            else if(status.toUpperCase().equals(Status.CONFIMRED)){
-                order.setStatus(Status.CONFIMRED);
-            }
-            else if(status.toUpperCase().equals(Status.PAID)){
-                order.setStatus(Status.PAID);
-            }
-            else if(status.toUpperCase().equals(Status.CANCEL_ORDER)){
-                order.setStatus(Status.CANCEL_ORDER);
-            }
-            else{
-                return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
-            }
+            order.setStatus(status);
             orderRepository.save(order);
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");

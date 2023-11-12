@@ -1,25 +1,20 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.util.ResponseUtils;
-import com.manahotel.be.model.dto.OrderDTO;
 import com.manahotel.be.model.dto.OrderDetailDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Goods;
+import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.model.entity.Order;
 import com.manahotel.be.model.entity.OrderDetail;
 import com.manahotel.be.repository.GoodsRepository;
+import com.manahotel.be.repository.GoodsUnitRepository;
 import com.manahotel.be.repository.OrderDetailRepository;
-import com.manahotel.be.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @AllArgsConstructor
 @Slf4j
@@ -32,6 +27,9 @@ public class OrderDetailService {
     @Autowired
     private GoodsRepository goodsRepository;
 
+    @Autowired
+    private GoodsUnitRepository goodsUnitRepository;
+
     private void commonMapping(OrderDetail orderDetail, OrderDetailDTO orderDetailDTO) throws IOException {
         orderDetail.setQuantity(orderDetailDTO.getQuantity() != null ? orderDetailDTO.getQuantity() : orderDetail.getQuantity());
         orderDetail.setPrice(orderDetailDTO.getPrice() != null ? orderDetailDTO.getPrice() : orderDetail.getPrice());
@@ -43,8 +41,10 @@ public class OrderDetailService {
             OrderDetail orderDetail = new OrderDetail();
             commonMapping(orderDetail, orderDetailDTO);
             Goods goods = goodsRepository.findById(orderDetailDTO.getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
+            GoodsUnit goodsUnit = goodsUnitRepository.findById(orderDetailDTO.getGoodsUnitId()).orElseThrow(() -> new IllegalStateException("Not found goodsUnit"));
             orderDetail.setOrder(order);
             orderDetail.setGoods(goods);
+            orderDetail.setGoodsUnit(goodsUnit);
             commonMapping(orderDetail, orderDetailDTO);
             goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
             goodsRepository.save(goods);

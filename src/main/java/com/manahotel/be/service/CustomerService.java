@@ -3,6 +3,7 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.entity.Customer;
+import com.manahotel.be.model.entity.CustomerGroup;
 import com.manahotel.be.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.SimpleFormatter;
 
 @Slf4j
 @AllArgsConstructor
@@ -25,13 +25,15 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private CustomerGroupService customerGroupService;
+
     public List<Customer> getAll() {
         return customerRepository.findAll();
     }
 
     private void commonMapping(Customer customer, CustomerDTO customerDTO) throws IOException {
         customer.setCustomerName((customerDTO.getCustomerName() != null && !customerDTO.getCustomerName().isEmpty()) ? customerDTO.getCustomerName() : customer.getCustomerName());
-        customer.setCustomerGroup(customerDTO.getCustomerGroup() != null ? customerDTO.getCustomerGroup() : customer.getCustomerGroup());
         customer.setPhoneNumber(customerDTO.getPhoneNumber() != null ? customerDTO.getPhoneNumber() : customer.getPhoneNumber());
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -59,6 +61,8 @@ public class CustomerService {
             String nextId = IdGenerator.generateId(latestId, "C");
             Customer c = new Customer();
             c.setCustomerId(nextId);
+            CustomerGroup customerGroup = customerGroupService.getCustomerGroupById(customerDTO.getCustomerGroupId());
+            c.setCustomerGroup(customerGroup);
 
             commonMapping(c, customerDTO);
 
@@ -82,7 +86,8 @@ public class CustomerService {
 
         try {
             Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!"));
-
+            CustomerGroup customerGroup = customerGroupService.getCustomerGroupById(customerDTO.getCustomerGroupId());
+            c.setCustomerGroup(customerGroup);
             commonMapping(c, customerDTO);
 
             customerRepository.save(c);

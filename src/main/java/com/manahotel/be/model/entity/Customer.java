@@ -20,9 +20,6 @@ public class Customer {
     @Column(name = "customer_name", length = 250)
     private String customerName;
 
-    @Column(name = "customer_group", length = 250)
-    private String customerGroup;
-
     @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 
@@ -50,4 +47,12 @@ public class Customer {
     @Lob
     @Column(name = "image")
     private byte[] image;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_group_id", nullable = false)
+    private CustomerGroup customerGroup;
+
+    @Column(name = "point")
+    private Float point;
+
 }

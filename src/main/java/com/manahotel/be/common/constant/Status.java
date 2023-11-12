@@ -36,13 +36,17 @@ public class Status {
     public static final String DONE = "DONE"; // For reservation only
 
     // Order
-    public static final String UNCONFIMRED = "UNCONFIMRED";
+    public static final String UNCONFIRMED = "UNCONFIRMED";
 
-    public static final String CONFIMRED = "CONFIMRED";
+    public static final String CONFIRMED = "CONFIRMED";
 
     public static final String PAID = "PAID";
 
     public static final String CANCEL_ORDER = "CANCEL_ORDER";
+
+    //CustomerGroup
+    public static final String ACTIVE = "ACTIVE";
+    public static final String NO_ACTIVE = "NO_ACTIVE";
 
 
 

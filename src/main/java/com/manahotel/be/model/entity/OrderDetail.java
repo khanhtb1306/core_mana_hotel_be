@@ -35,4 +35,8 @@ public class OrderDetail {
     @Column(name = "price")
     private Float price;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "goods_unit_id", nullable = false)
+    private GoodsUnit goodsUnit;
+
 }
