@@ -7,7 +7,7 @@ public class PolicyDetailDTO {
     private Long policyDetailId;
     private String policyId;
     private String roomCategoryId;
-    private String customerGroup;
+    private String customerGroupId;
     private String type;
     private String unit;
     private Long from;

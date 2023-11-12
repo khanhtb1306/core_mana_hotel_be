@@ -108,8 +108,8 @@ public class PolicyService {
     }
 
     private void commonMapping(PolicyDetail policyDetail, PolicyDetailDTO dto) {
-//        policyDetail.setRoomCategoryId(dto.getRoomCategoryId() != null ? dto.getRoomCategoryId() : policyDetail.getRoomCategoryId());
-        policyDetail.setCustomerGroup(dto.getCustomerGroup() != null ? dto.getCustomerGroup() : policyDetail.getCustomerGroup());
+//        policyDetail.setRoomCategory(dto.getRoomCategoryId() != null ? dto.getRoomCategoryId() : policyDetail.getRoomCategory());
+//        policyDetail.setCustomerGroup(dto.getCustomerGroupId() != null ? dto.getCustomerGroupId() : policyDetail.getCustomerGroup());
         policyDetail.setFrom(dto.getFrom() != null ? dto.getFrom() : policyDetail.getFrom());
         policyDetail.setTo(dto.getTo() != null ? dto.getTo() : policyDetail.getTo());
         policyDetail.setCondition(dto.getCondition() != null ? dto.getCondition() : policyDetail.getCondition());

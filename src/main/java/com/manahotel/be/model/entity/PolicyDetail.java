@@ -25,8 +25,9 @@ public class PolicyDetail {
     @JoinColumn(name = "room_category_id", nullable = false)
     private RoomCategory roomCategory;
 
-    @Column(name = "customer_group", length = 250)
-    private String customerGroup;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_group_id", nullable = false)
+    private CustomerGroup customerGroup;
 
     @Column(name = "type", length = 250)
     private String type;
