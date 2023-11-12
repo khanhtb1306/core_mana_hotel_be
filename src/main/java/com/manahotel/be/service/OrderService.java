@@ -61,7 +61,7 @@ public class OrderService {
                     GoodsUnit goodsUnits = orderDetail.getGoodsUnit();
                     Goods goods = orderDetail.getGoods();
                     orderInfo1.put("goods", goods);
-                    orderInfo1.put("goodsunit", goodsUnits);
+                    orderInfo1.put("goodsUnit", goodsUnits);
                     inforList.add(orderInfo1);
                 }
 
