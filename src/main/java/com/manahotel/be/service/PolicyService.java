@@ -76,7 +76,7 @@ public class PolicyService {
             Policy policy = policyRepository.getPolicyByPolicyName(PolicyName);
             List<PolicyDetail> policyDetail = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(policy.getPolicyId());
             Policy.put("Policy", policy);
-            Policy.put("List" + PolicyName + "Detail", policyDetail);
+            Policy.put("LIST_" + PolicyName + "_DETAIL", policyDetail);
             log.info("----- Get All Policy Detail By " + PolicyName + " End ------");
             return ResponseUtils.success(Policy,"IsSuccess");
         }catch (Exception e){
