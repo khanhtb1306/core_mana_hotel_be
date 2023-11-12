@@ -73,7 +73,7 @@ public class PolicyService {
         log.info("----- Get All Policy Detail By " + PolicyName + " Start ------");
         try{
             Map<String, Object> Policy = new HashMap<>();
-            Policy policy = policyRepository.getPoliciesByPolicyName(PolicyName);
+            Policy policy = policyRepository.getPolicyByPolicyName(PolicyName);
             List<PolicyDetail> policyDetail = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(policy.getPolicyId());
             Policy.put("Policy", policy);
             Policy.put("ListOtherRevenue ", policyDetail);
