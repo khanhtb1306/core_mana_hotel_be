@@ -102,6 +102,7 @@ public class PolicyService {
                                     || dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))) {
                         dbPolicyDetail.setStatus(6L);
                         policyDetailRepository.save(dbPolicyDetail);
+                        log.info("Delete policy detail success" + dbPolicyDetail.getPolicyDetailId());
                     }
                 }
             // Create or update new policy details
@@ -118,11 +119,13 @@ public class PolicyService {
                     {
                         commonMapping(policyDetail, dto);
                         policyDetailRepository.save(policyDetail);
+                        log.info("Update policyDetail success" + policyDetail.getPolicyDetailId());
                     }
                 } else {
                     policyDetail = new PolicyDetail();
                     commonMapping(policyDetail, dto);
                     policyDetailRepository.save(policyDetail);
+                    log.info("Create policyDetail success" + policyDetail.getPolicyDetailId());
                 }
             }
 
