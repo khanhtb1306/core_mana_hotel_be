@@ -14,7 +14,7 @@ public interface PolicyDetailRepository extends JpaRepository<PolicyDetail, Long
     List<PolicyDetail> getPolicyDetailByPolicyIdNotStatus6(String policyId);
 
     @Query("SELECT pd FROM PolicyDetail pd " +
-            "WHERE pd.policy.policyId = ?1 AND pd.roomCategory.roomCategoryId = ?2 " +
+            "WHERE pd.policy.policyName = ?1 AND pd.roomCategory.roomCategoryId = ?2 " +
             "ORDER BY pd.from DESC")
-    List<PolicyDetail> findPolicyDetailByPolicyIdAndRoomCategoryId(String policyId, String roomCategoryId);
+    List<PolicyDetail> findPolicyDetailByPolicyNameAndRoomCategoryId(String policyName, String roomCategoryId);
 }
