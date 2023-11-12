@@ -88,23 +88,21 @@ public class PolicyService {
     public ResponseDTO createUpdatePolicyDetail(List<PolicyDetailDTO> policyDetailDTOList) {
         log.info("----- Create Update Policy Detail Start ------");
         try {
-            for (PolicyDetailDTO Pd : policyDetailDTOList) {
-                List<PolicyDetail> allPolicyDetails = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(Pd.getPolicyId());
-                allPolicyDetails.removeIf(dbPolicyDetail ->
-                        policyDetailDTOList.stream()
-                                .anyMatch(dto -> dto.getPolicyDetailId() != null && dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))
-                );
-                for (PolicyDetail dbPolicyDetail : allPolicyDetails) {
-                    dbPolicyDetail.setStatus(6L);
-                    policyDetailRepository.save(dbPolicyDetail);
+            String policyId = policyDetailDTOList.get(0).getPolicyId();
+            List<PolicyDetail> existingPolicyDetails = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(policyId);
+                for (PolicyDetail dbPolicyDetail : existingPolicyDetails) {
+                    if (!policyDetailDTOList.stream()
+                            .anyMatch(dto -> dto.getPolicyDetailId() != null
+                                    || dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))) {
+                        dbPolicyDetail.setStatus(6L);
+                        policyDetailRepository.save(dbPolicyDetail);
+                    }
                 }
-                break;
-            }
-            for(PolicyDetailDTO dto: policyDetailDTOList){
+            // Create or update new policy details
+            for (PolicyDetailDTO dto : policyDetailDTOList) {
+                PolicyDetail policyDetail;
 
-                PolicyDetail policyDetail = new PolicyDetail();
-                if (dto.getPolicyDetailId() != null)
-                {
+                if (dto.getPolicyDetailId() != null) {
                     policyDetail = findPolicyDetail(dto.getPolicyDetailId());
 
                     if(dto.getType()!=policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getFrom() != policyDetail.getFrom()
@@ -115,17 +113,20 @@ public class PolicyService {
                         commonMapping(policyDetail, dto);
                         policyDetailRepository.save(policyDetail);
                     }
-                }else {
+                } else {
+                    policyDetail = new PolicyDetail();
                     commonMapping(policyDetail, dto);
                     policyDetailRepository.save(policyDetail);
                 }
             }
+
             log.info("----- Create Update Policy Detail End ------");
             return ResponseUtils.success("Lưu thành công");
         } catch (Exception e) {
             return ResponseUtils.error("Lưu thất bại");
         }
     }
+
 
 
     private void commonMapping(Policy policy, PolicyDTO dto) {
