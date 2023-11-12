@@ -10,6 +10,11 @@ import java.util.List;
 public interface PolicyDetailRepository extends JpaRepository<PolicyDetail, Long> {
 
     @Query("select pd FROM PolicyDetail pd " +
-            "where pd.policyId = ?1 and pd.status <> 6")
+            "where pd.policy.policyId = ?1 and pd.status <> 6")
     List<PolicyDetail> getPolicyDetailByPolicyIdNotStatus6(String policyId);
+
+    @Query("SELECT pd FROM PolicyDetail pd " +
+            "WHERE pd.policy.policyId = ?1 AND pd.roomCategory.roomCategoryId = ?2 " +
+            "ORDER BY pd.from DESC")
+    List<PolicyDetail> findPolicyDetailByPolicyIdAndRoomCategoryId(String policyId, String roomCategoryId);
 }

@@ -14,22 +14,24 @@ import lombok.Setter;
 public class PolicyDetail {
     @Id
     @Column(name = "policy_detail_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long policyDetailId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "policy_id", nullable = false)
-    private Policy policyId;
+    private Policy policy;
 
-    @Column(name = "room_category_id")
-    private String roomCategoryId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "room_category_id", nullable = false)
+    private RoomCategory roomCategory;
 
-    @Column(name = "customer_group")
+    @Column(name = "customer_group", length = 250)
     private String customerGroup;
 
-    @Column(name = "type")
+    @Column(name = "type", length = 250)
     private String type;
 
-    @Column(name = "unit")
+    @Column(name = "unit", length = 250)
     private String unit;
 
     @Column(name = "from")
@@ -38,19 +40,19 @@ public class PolicyDetail {
     @Column(name = "to")
     private Long to;
 
-    @Column(name = "type_value")
+    @Column(name = "type_value", length = 250)
     private String typeValue;
 
-    @Column(name = "other")
+    @Column(name = "other", length = 250)
     private String other;
 
-    @Column(name = "condition")
+    @Column(name = "condition", length = 250)
     private String condition;
 
     @Column(name = "value")
     private Float value;
 
-    @Column(name = "note")
+    @Column(name = "note", length = 350)
     private String note;
 
     @Column(name = "auto_add_to_invoice")

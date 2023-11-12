@@ -19,13 +19,13 @@ import java.sql.Timestamp;
 @Table(name = "policy")
 public class Policy {
     @Id
-    @Column(name = "policy_id")
+    @Column(name = "policy_id", length = 50)
     private String policyId;
 
-    @Column(name = "policy_name")
+    @Column(name = "policy_name", length = 250)
     private String policyName;
 
-    @Column(name = "note")
+    @Column(name = "note", length = 350)
     private String note;
 
     @Column(name = "start_time")
