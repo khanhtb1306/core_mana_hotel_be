@@ -123,6 +123,7 @@ public class PolicyService {
                     }
                 } else {
                     policyDetail = new PolicyDetail();
+                    policyDetail.setStatus(1L);
                     commonMapping(policyDetail, dto);
                     policyDetailRepository.save(policyDetail);
                     log.info("Create policyDetail success" + policyDetail.getPolicyDetailId());
