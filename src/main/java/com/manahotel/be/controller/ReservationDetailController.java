@@ -33,9 +33,4 @@ public class ReservationDetailController {
     public ResponseDTO deleteReservationDetail(@PathVariable Long id) {
         return service.deleteReservationDetail(id);
     }
-
-    @GetMapping("/calculate-late-surcharge")
-    public ResponseDTO calculateLateSurcharge(String roomCategoryId, Long lateTime) {
-        return service.calculateLateSurcharge(roomCategoryId, lateTime);
-    }
 }

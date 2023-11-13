@@ -3,11 +3,10 @@ package com.manahotel.be.controller;
 import com.manahotel.be.model.dto.PolicyDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.TimeUseDTO;
+import com.manahotel.be.model.dto.request.PolicyDetailRequest;
 import com.manahotel.be.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/policy")
@@ -22,8 +21,8 @@ public class PolicyController {
     }
 
     @PostMapping
-    public ResponseDTO createUpdatePolicyDetail(ArrayList<PolicyDetailDTO> policyDetailDTO) {
-        return policyService.createUpdatePolicyDetail(policyDetailDTO);
+    public ResponseDTO createUpdatePolicyDetail(PolicyDetailRequest request) {
+        return policyService.createUpdatePolicyDetail(request.getPolicyDetailDTO());
     }
 
     @GetMapping("/time_use")
@@ -31,7 +30,7 @@ public class PolicyController {
         return policyService.getSetupTimeUse();
     }
 
-    @PostMapping("/time_use")
+    @PutMapping("/time_use")
     public ResponseDTO createUpdateSetupTimeUse(TimeUseDTO timeUseDTO) {
         return policyService.createUpdateSetupTimeUse(timeUseDTO);
     }

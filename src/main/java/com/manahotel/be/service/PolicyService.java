@@ -99,7 +99,7 @@ public class PolicyService {
                 for (PolicyDetail dbPolicyDetail : existingPolicyDetails) {
                     if (!policyDetailDTOList.stream()
                             .anyMatch(dto -> dto.getPolicyDetailId() != null
-                                    || dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))) {
+                                    && dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))) {
                         dbPolicyDetail.setStatus(6L);
                         policyDetailRepository.save(dbPolicyDetail);
                         log.info("Delete policy detail success" + dbPolicyDetail.getPolicyDetailId());
@@ -112,9 +112,9 @@ public class PolicyService {
                 if (dto.getPolicyDetailId() != null) {
                     policyDetail = findPolicyDetail(dto.getPolicyDetailId());
 
-                    if(dto.getType()!=policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getFrom() != policyDetail.getFrom()
-                            ||dto.getTypeValue() != policyDetail.getTypeValue() || dto.getValue() != policyDetail.getValue()
-                            ||dto.getCondition() != policyDetail.getCondition() || dto.getOther() != policyDetail.getOther()
+                    if(dto.getType()!=policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getLimitValue() != policyDetail.getLimitValue()
+                            ||dto.getTypeValue() != policyDetail.getTypeValue() || dto.getPolicyValue() != policyDetail.getPolicyValue()
+                            ||dto.getRequirement() != policyDetail.getRequirement() || dto.getOther() != policyDetail.getOther()
                             ||dto.getNote() != policyDetail.getNote() || dto.getAutoAddToInvoice() != policyDetail.getAutoAddToInvoice())
                     {
                         commonMapping(policyDetail, dto);
@@ -132,6 +132,7 @@ public class PolicyService {
             log.info("----- Create Update Policy Detail End ------");
             return ResponseUtils.success("Lưu thành công");
         } catch (Exception e) {
+            log.info(e.getMessage());
             return ResponseUtils.error("Lưu thất bại");
         }
     }
@@ -146,17 +147,18 @@ public class PolicyService {
     }
 
     private void commonMapping(PolicyDetail policyDetail, PolicyDetailDTO dto) {
+        Policy policy = (dto.getPolicyId() != null) ? findPolicy(dto.getPolicyId()) : policyDetail.getPolicy();
+        policyDetail.setPolicy(policy);
         RoomCategory roomCategory = (dto.getRoomCategoryId() != null) ? findRoomCategory(dto.getRoomCategoryId()) : policyDetail.getRoomCategory();
         policyDetail.setRoomCategory(roomCategory);
         CustomerGroup customerGroup = (dto.getCustomerGroupId() !=null) ? findCustomerGroup(dto.getCustomerGroupId()) : policyDetail.getCustomerGroup();
         policyDetail.setCustomerGroup(customerGroup);
-        policyDetail.setFrom(dto.getFrom() != null ? dto.getFrom() : policyDetail.getFrom());
-        policyDetail.setTo(dto.getTo() != null ? dto.getTo() : policyDetail.getTo());
-        policyDetail.setCondition(dto.getCondition() != null ? dto.getCondition() : policyDetail.getCondition());
+        policyDetail.setLimitValue(dto.getLimitValue() != null ? dto.getLimitValue() : policyDetail.getLimitValue());
+        policyDetail.setRequirement(dto.getRequirement() != null ? dto.getRequirement() : policyDetail.getRequirement());
         policyDetail.setOther(dto.getOther() != null ? dto.getOther() : policyDetail.getOther());
         policyDetail.setType(dto.getType() != null ? dto.getType() : policyDetail.getType());
         policyDetail.setTypeValue(dto.getTypeValue() != null ? dto.getTypeValue() : policyDetail.getTypeValue());
-        policyDetail.setValue(dto.getValue() != null ? dto.getValue() : policyDetail.getValue());
+        policyDetail.setPolicyValue(dto.getPolicyValue() != null ? dto.getPolicyValue() : policyDetail.getPolicyValue());
         policyDetail.setNote(dto.getNote() != null ? dto.getNote() : policyDetail.getNote());
         policyDetail.setAutoAddToInvoice(dto.getAutoAddToInvoice());
     }

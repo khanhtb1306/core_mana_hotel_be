@@ -10,12 +10,11 @@ public class PolicyDetailDTO {
     private String customerGroupId;
     private String type;
     private String unit;
-    private Long from;
-    private Long to;
+    private Long limitValue;
     private String typeValue;
     private String other;
-    private String condition;
-    private Float value;
+    private String requirement;
+    private Float policyValue;
     private String note;
     private Long status;
     private Boolean autoAddToInvoice;

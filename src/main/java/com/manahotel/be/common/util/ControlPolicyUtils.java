@@ -30,10 +30,10 @@ public class ControlPolicyUtils {
         float surcharge = 0;
 
         for(PolicyDetail policyDetail : policyDetails) {
-            for(long i = lateTime; i >= policyDetail.getFrom(); i--) {
-                surcharge += policyDetail.getValue();
+            for(long i = lateTime; i >= policyDetail.getLimitValue(); i--) {
+                surcharge += policyDetail.getPolicyValue();
 
-                if(i == policyDetail.getFrom()) {
+                if(i == policyDetail.getLimitValue()) {
                     lateTime = i - 1;
                 }
             }

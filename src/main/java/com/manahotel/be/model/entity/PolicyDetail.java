@@ -35,11 +35,8 @@ public class PolicyDetail {
     @Column(name = "unit", length = 250)
     private String unit;
 
-    @Column(name = "from")
-    private Long from;
-
-    @Column(name = "to")
-    private Long to;
+    @Column(name = "limit_value")
+    private Long limitValue;
 
     @Column(name = "type_value", length = 250)
     private String typeValue;
@@ -47,11 +44,11 @@ public class PolicyDetail {
     @Column(name = "other", length = 250)
     private String other;
 
-    @Column(name = "condition", length = 250)
-    private String condition;
+    @Column(name = "requirement", length = 250)
+    private String requirement;
 
-    @Column(name = "value")
-    private Float value;
+    @Column(name = "policy_value")
+    private Float policyValue;
 
     @Column(name = "note", length = 350)
     private String note;

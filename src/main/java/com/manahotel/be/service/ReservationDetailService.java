@@ -1,21 +1,21 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.constant.Status;
+import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.PriceList;
-import com.manahotel.be.model.entity.Reservation;
-import com.manahotel.be.model.entity.ReservationDetail;
-import com.manahotel.be.model.entity.Room;
+import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
