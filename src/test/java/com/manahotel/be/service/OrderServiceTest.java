@@ -45,14 +45,15 @@ class OrderServiceTest {
 
     @Mock
     private OrderDetailService orderDetailService;
-
+    @Mock
+    private OrderDetailRepository orderDetailRepository;
 
     private OrderService underTest;
 
 
     @BeforeEach
     void setUp() {
-//        underTest = new OrderService(orderRepository, reservationDetailRepository, staffRepository);
+        underTest = new OrderService(orderRepository, reservationDetailRepository, staffRepository,orderDetailRepository, orderDetailService);
     }
 
     @Test

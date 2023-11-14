@@ -1,7 +1,9 @@
 package com.manahotel.be.model.entity;
 
+import com.manahotel.be.model.entity.Department;
 import com.manahotel.be.common.constant.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +42,7 @@ public class Staff implements UserDetails {
     private Role role;
 
     @Column(name = "status")
-    private Long status;
+    private String status;
 
     @Column(name = "dob")
     private Timestamp dob;
@@ -78,6 +80,11 @@ public class Staff implements UserDetails {
 
     @Column(name = "updated_date")
     private Timestamp updatedDate;
+
+
+    @ManyToOne( optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
 
     @Override

@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .requestMatchers(WHITE_LIST_URL)
                 .permitAll()
                 .requestMatchers("/customer/**").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/staff/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/Floor/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/goods/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/goods-unit/**").hasAnyAuthority("ROLE_MANAGER")

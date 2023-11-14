@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 
 @Data
 public class StaffDTO {
+    private Long staffId;
+    private String staffName;
     private String username;
     private String password;
-    private Long status;
-    private String role;
-    private Timestamp dob;
+    private String dob;
     private String address;
     private String email;
     private boolean gender;
@@ -19,4 +19,5 @@ public class StaffDTO {
     private String taxCode;
     private String phoneNumber;
     private MultipartFile image;
+    private String departmentId;
 }

@@ -6,10 +6,7 @@ import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.Order;
 import com.manahotel.be.model.entity.OrderDetail;
-import com.manahotel.be.repository.CustomerRepository;
-import com.manahotel.be.repository.GoodsRepository;
-import com.manahotel.be.repository.OrderDetailRepository;
-import com.manahotel.be.repository.OrderRepository;
+import com.manahotel.be.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +22,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @DataJpaTest
 @ExtendWith(MockitoExtension.class)
 class OrderDetailServiceTest {
@@ -33,12 +31,15 @@ class OrderDetailServiceTest {
     private OrderDetailRepository orderDetailRepository;
     @Mock
     private GoodsRepository goodsRepository;
-
+    @Mock
+    private GoodsUnitRepository goodsUnitRepository;
     private OrderDetailService underTest;
+
     @BeforeEach
     void setUp() {
-//        underTest = new OrderDetailService(orderDetailRepository,goodsRepository);
+        underTest = new OrderDetailService(orderDetailRepository, goodsRepository, goodsUnitRepository);
     }
+
     @Test
     public void testDeleteOrderDetails() throws Exception {
         String orderId = "testOrderId";
@@ -67,6 +68,7 @@ class OrderDetailServiceTest {
         Mockito.verify(orderDetailRepository, Mockito.times(1)).deleteAll(Arrays.asList(orderDetail1, orderDetail2));
         assertEquals(15, goods.getInventory());
     }
+
     @Test
     public void testDeleteOrderDetailsException() {
         String orderId = "testOrderId";
@@ -87,7 +89,6 @@ class OrderDetailServiceTest {
             underTest.deleteOrderDetails(orderId);
         });
     }
-
 
 
 }

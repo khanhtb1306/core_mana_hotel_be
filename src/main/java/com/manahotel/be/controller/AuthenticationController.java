@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.security.*;
 import com.manahotel.be.security.request.PasswordReset;
@@ -55,7 +56,7 @@ public class AuthenticationController {
         if (staff.isPresent()) {
             passwordResetToken = UUID.randomUUID().toString();
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
-            passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken);
+            passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken,passwordRequestUtil.getType());
         }
         else{
             return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.OK);
@@ -75,6 +76,15 @@ public class AuthenticationController {
 
         Staff staff = staffService.findUserByPasswordToken(passwordResetToken);
         if (staff != null) {
+            if(passwordResetRequest.getType() == 1)
+            {
+                ResponseDTO responseDTO= staffService.changePassword(staff.getStaffId(), passwordResetRequest.getOldPassword(), passwordResetRequest.getNewPassword());
+                if (responseDTO.isSuccess())
+                {
+                    return new ResponseEntity<>(responseDTO.getDisplayMessage(), HttpStatus.OK);
+                }
+                return new ResponseEntity<>(responseDTO.getDisplayMessage(),  HttpStatus.OK);
+            }
             service.ResetPassword(staff, passwordResetRequest.getNewPassword());
             return new ResponseEntity<>("Đổi mật khẩu thành công", HttpStatus.OK);
         }

@@ -1,5 +1,8 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.StaffRepository;
 import com.manahotel.be.security.*;
@@ -79,13 +82,20 @@ public class AuthenticationService {
         staffRepository.save(staff);
 
     }
+
     public String applicationUrl(HttpServletRequest request) {
         return "http://localhost:3000";
     }
 
-    public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
-        String url = applicationUrl + "/resetPassword?" + passwordResetToken;
-        eventListener.sendPasswordResetVerificationEmail(url,staff);
+    public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken, int type) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
+        String url = "";
+        if (type == 1) {
+            url = applicationUrl + "/resetPassword?" + passwordResetToken;
+            eventListener.sendVerificationEmail(url, staff);
+        } else {
+            url = applicationUrl + "/resetPassword?" + passwordResetToken;
+            eventListener.sendPasswordResetVerificationEmail(url, staff);
+        }
         log.info("Click the link to reset your password : ", url);
         return url;
     }

@@ -49,7 +49,6 @@ public class Customer {
     @Column(name = "image")
     private byte[] image;
 
-    @NotNull
     @ManyToOne( optional = false)
     @JoinColumn(name = "customer_group_id", nullable = false)
     private CustomerGroup customerGroup;

@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.model.dto.CustomerDTO;
+import com.manahotel.be.model.dto.CustomerGroupDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.CustomerGroup;
 import com.manahotel.be.repository.CustomerRepository;

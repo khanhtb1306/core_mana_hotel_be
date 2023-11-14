@@ -44,7 +44,7 @@ public class Status {
 
     public static final String CANCEL_ORDER = "CANCEL_ORDER";
 
-    //CustomerGroup
+    //CustomerGroup and Staff
     public static final String ACTIVE = "ACTIVE";
     public static final String NO_ACTIVE = "NO_ACTIVE";
 

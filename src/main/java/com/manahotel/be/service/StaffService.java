@@ -1,25 +1,169 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Const;
+import com.manahotel.be.common.constant.Status;
+import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.StaffDTO;
+import com.manahotel.be.model.entity.CustomerGroup;
+import com.manahotel.be.model.entity.Department;
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.repository.TokenRepository;
+import com.manahotel.be.repository.DepartmentRepository;
 import com.manahotel.be.repository.StaffRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
+import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
+import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class StaffService {
     @Autowired
     private StaffRepository repository;
 
-//    @Autowired
-//    private TokenService tokenService;
-
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+
+    public ResponseDTO getAll() {
+        log.info("----- Get All Staff Start------");
+        try {
+            List<Staff> staffs = repository.findAll();
+            log.info("----- Get All Staff End ------");
+            return ResponseUtils.success(staffs,"Lấy tất cả thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Lấy tất cả thất bại");
+        }
+    }
+
+    public ResponseDTO createAndUpdateStaff(StaffDTO staffDTO){
+        log.info("----- Create And Update Staff Start------");
+        try {
+            Staff staff = new Staff();
+
+            if (staffDTO.getStaffId() != null) {
+                staff = getStaffById(staffDTO.getStaffId());
+            }
+            if(findByEmail(staffDTO.getEmail()).isPresent()||
+                   findByuserName(staffDTO.getUsername())!=null
+            ) {
+                log.info("----- Create And Update Staff End ------");
+                return ResponseUtils.error("Username hoặc email đã tồn tại");
+            }
+            commonMapping(staff, staffDTO);
+            repository.save(staff);
+
+            log.info("----- Create And Update Staff End ------");
+            return ResponseUtils.success(staff.getStaffId(),"Lưu thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Lưu thất bại");
+        }
+    }
+    public ResponseDTO deleteStaff(Long staffId) {
+        log.info("----- Delete Staff Start------");
+        try {
+            Staff staff = getStaffById(staffId);
+            staff.setStatus(Status.NO_ACTIVE);
+            repository.save(staff);
+            log.info("----- Delete Staff End ------");
+            return ResponseUtils.success("Xóa thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Xóa thất bại");
+        }
+    }
+    public ResponseDTO getDetailsStaffById(Long staffId){
+        log.info("----- Get Staff Start------");
+        try {
+            Staff staff = getStaffById(staffId);
+            log.info("----- Get Staff End ------");
+            return ResponseUtils.success(staff,"Lấy thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Lấy thất bại");
+        }
+    }
+
+
+
+    private void commonMapping(Staff staff, StaffDTO staffDTO) throws IOException {
+        staff.setStaffId(staffDTO.getStaffId() != null ? staffDTO.getStaffId() : staff.getStaffId());
+        staff.setStaffName(staffDTO.getStaffName() != null ? staffDTO.getStaffName() : staff.getStaffName());
+        staff.setUsername(staffDTO.getUsername() != null ? staffDTO.getUsername() : staff.getUsername());
+        staff.setPassword(staffDTO.getPassword() != null ? passwordCoder(staffDTO.getPassword()) : staff.getPassword());
+        staff.setStatus(Status.ACTIVE);
+        staff.setRole(ROLE_RECEPTIONIST);
+        Department department = departmentRepository.findById(staffDTO.getDepartmentId()).orElseThrow(() -> new IllegalStateException("Department not found"));
+        staff.setDepartment(department);
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = dateFormat.parse(staffDTO.getDob());
+            Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
+            staff.setDob(dobTimestamp);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        staff.setAddress(staffDTO.getAddress() != null ? staffDTO.getAddress() : staff.getAddress());
+        staff.setEmail(staffDTO.getEmail() != null ? staffDTO.getEmail() : staff.getEmail());
+        staff.setGender(staffDTO.isGender());
+        staff.setIdentity(staffDTO.getIdentity() != null ? staffDTO.getIdentity() : staff.getIdentity());
+        staff.setTaxCode(staffDTO.getTaxCode() != null ? staffDTO.getTaxCode() : staff.getTaxCode());
+        staff.setPhoneNumber(staffDTO.getPhoneNumber() != null ? staffDTO.getPhoneNumber() : staff.getPhoneNumber());
+        staff.setImage(staffDTO.getImage() != null ? staffDTO.getImage().getBytes() : staff.getImage());
+
+    }
+    public ResponseDTO changePassword(Long staffId, String oldPassword, String newPassword){
+        log.info("----- Change Password Start------");
+        try {
+            Staff staff = getStaffById(staffId);
+            if(bcryptEncoder.matches(oldPassword,staff.getPassword()))
+            {
+                staff.setPassword(passwordCoder(newPassword));
+                repository.save(staff);
+                log.info("----- Change Password End ------");
+                return ResponseUtils.success("Thay đổi mật khẩu thành công");
+            }
+            log.info("----- Change Password End ------");
+            return ResponseUtils.error("Thay đổi mật khẩu thất bại");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Thay đổi mật khẩu thất bại");
+        }
+    }
+
+    public String passwordCoder(String password) {
+        return bcryptEncoder.encode(password);
+    }
+    public Staff getStaffById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
+
+    }
 
     public Staff findByuserName(String username) {
         Staff staff = repository.findByUsername(username);
@@ -32,7 +176,6 @@ public class StaffService {
     }
 
     public void createPasswordResetTokenForUser(Staff staff, String token) {
-
         jwtService.createTokenForUser(staff, token);
     }
 

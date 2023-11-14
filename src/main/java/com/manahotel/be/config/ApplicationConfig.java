@@ -1,6 +1,7 @@
 package com.manahotel.be.config;
 
 import com.manahotel.be.model.entity.Staff;
+import com.manahotel.be.repository.StaffRepository;
 import com.manahotel.be.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
     @Autowired
-    private final StaffService staffService;
+    private final StaffRepository staffRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                Staff staff = staffService.findByuserName(username);
+                Staff staff = staffRepository.findByUsername(username);
                 return staff;
             }
         };
