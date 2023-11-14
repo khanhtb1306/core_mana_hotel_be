@@ -25,6 +25,11 @@ public class PolicyController {
         return policyService.createUpdatePolicyDetail(request.getPolicyDetailDTO());
     }
 
+    @PostMapping("/other")
+    public ResponseDTO createUpdateOnlyOnePolicyDetail(PolicyDetailDTO policyDetailDTO) {
+        return policyService.createUpdateOnlyOnePolicyDetail(policyDetailDTO);
+    }
+
     @GetMapping("/time_use")
     public ResponseDTO getSetupTimeUse() {
         return policyService.getSetupTimeUse();

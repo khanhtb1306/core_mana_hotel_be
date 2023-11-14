@@ -112,7 +112,7 @@ public class PolicyService {
                 if (dto.getPolicyDetailId() != null) {
                     policyDetail = findPolicyDetail(dto.getPolicyDetailId());
 
-                    if(dto.getType()!=policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getLimitValue() != policyDetail.getLimitValue()
+                    if(dto.getType() != policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getLimitValue() != policyDetail.getLimitValue()
                             ||dto.getTypeValue() != policyDetail.getTypeValue() || dto.getPolicyValue() != policyDetail.getPolicyValue()
                             ||dto.getRequirement() != policyDetail.getRequirement() || dto.getOther() != policyDetail.getOther()
                             ||dto.getNote() != policyDetail.getNote() || dto.getAutoAddToInvoice() != policyDetail.getAutoAddToInvoice())
@@ -139,6 +139,28 @@ public class PolicyService {
     }
 
 
+    public ResponseDTO createUpdateOnlyOnePolicyDetail(PolicyDetailDTO dto) {
+        log.info("----- Create Update Only One Policy Detail Start ------");
+        try {
+            if (dto.getPolicyDetailId() != null) {
+                PolicyDetail pd = findPolicyDetail(dto.getPolicyDetailId());
+                commonMapping(pd, dto);
+                policyDetailRepository.save(pd);
+                log.info("Update policyDetail success" + pd.getPolicyDetailId());
+            } else {
+                PolicyDetail pd = new PolicyDetail();
+                pd.setStatus(1L);
+                commonMapping(pd, dto);
+                policyDetailRepository.save(pd);
+                log.info("Create policyDetail success" + pd.getPolicyDetailId());
+            }
+            log.info("----- Create Update Only One Policy Detail End ------");
+            return ResponseUtils.success("Lưu thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Lưu thất bại");
+        }
+    }
 
     private void commonMapping(Policy policy, PolicyDTO dto) {
         policy.setPolicyName(dto.getPolicyName() != null ? dto.getPolicyName() : policy.getPolicyName());
