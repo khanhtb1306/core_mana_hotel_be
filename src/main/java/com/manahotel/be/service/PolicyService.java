@@ -101,7 +101,7 @@ public class PolicyService {
                     if (!policyDetailDTOList.stream()
                             .anyMatch(dto -> dto.getPolicyDetailId() != null
                                     && dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))) {
-                        dbPolicyDetail.setStatus(6L);
+                        dbPolicyDetail.setStatus(Status.DELETE);
                         policyDetailRepository.save(dbPolicyDetail);
                         log.info("Delete policy detail success" + dbPolicyDetail.getPolicyDetailId());
                     }
@@ -145,17 +145,19 @@ public class PolicyService {
         try {
             if (dto.getPolicyDetailId() != null) {
                 PolicyDetail pd = findPolicyDetail(dto.getPolicyDetailId());
-                if(dto.getStatus() == Status.DELETE){
+                if (dto.getStatus() != null && dto.getStatus() == Status.DELETE) {
                     pd.setStatus(Status.DELETE);
+                } else if(dto.getStatus() != null && dto.getStatus() == Status.DEACTIVATE) {
+                    pd.setStatus(Status.DEACTIVATE);
                 }else {
-                    pd.setStatus(dto.getStatus() != null ? dto.getStatus(): pd.getStatus());
+                    pd.setStatus(pd.getStatus());
                 }
                 commonMapping(pd, dto);
                 policyDetailRepository.save(pd);
                 log.info("Update policyDetail success" + pd.getPolicyDetailId());
             } else {
                 PolicyDetail pd = new PolicyDetail();
-                pd.setStatus(1L);
+                pd.setStatus(Status.ACTIVATE);
                 commonMapping(pd, dto);
                 policyDetailRepository.save(pd);
                 log.info("Create policyDetail success" + pd.getPolicyDetailId());
