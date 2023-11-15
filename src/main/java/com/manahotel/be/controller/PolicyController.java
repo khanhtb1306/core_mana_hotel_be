@@ -4,6 +4,7 @@ import com.manahotel.be.model.dto.PolicyDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.TimeUseDTO;
 import com.manahotel.be.model.dto.request.PolicyDetailRequest;
+import com.manahotel.be.model.dto.request.RequestPolicyDetailOnlyOne;
 import com.manahotel.be.service.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,8 @@ public class PolicyController {
     }
 
     @PostMapping("/other")
-    public ResponseDTO createUpdateOnlyOnePolicyDetail(PolicyDetailDTO policyDetailDTO) {
-        return policyService.createUpdateOnlyOnePolicyDetail(policyDetailDTO);
+    public ResponseDTO createUpdateOnlyOnePolicyDetail(RequestPolicyDetailOnlyOne request) {
+        return policyService.createUpdateOnlyOnePolicyDetail(request.getPolicyDetailDTO());
     }
 
     @GetMapping("/time_use")
