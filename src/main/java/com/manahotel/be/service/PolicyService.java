@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.PolicyDTO;
@@ -144,8 +145,8 @@ public class PolicyService {
         try {
             if (dto.getPolicyDetailId() != null) {
                 PolicyDetail pd = findPolicyDetail(dto.getPolicyDetailId());
-                if(dto.getStatus() == 6){
-                    pd.setStatus(6L);
+                if(dto.getStatus() == Status.DELETE){
+                    pd.setStatus(Status.DELETE);
                 }else {
                     pd.setStatus(dto.getStatus() != null ? dto.getStatus(): pd.getStatus());
                 }
