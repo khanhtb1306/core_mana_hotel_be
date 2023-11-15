@@ -144,6 +144,11 @@ public class PolicyService {
         try {
             if (dto.getPolicyDetailId() != null) {
                 PolicyDetail pd = findPolicyDetail(dto.getPolicyDetailId());
+                if(dto.getStatus() == 6){
+                    pd.setStatus(6L);
+                }else {
+                    pd.setStatus(dto.getStatus() != null ? dto.getStatus(): pd.getStatus());
+                }
                 commonMapping(pd, dto);
                 policyDetailRepository.save(pd);
                 log.info("Update policyDetail success" + pd.getPolicyDetailId());
@@ -174,7 +179,7 @@ public class PolicyService {
         policyDetail.setPolicy(policy);
         RoomCategory roomCategory = (dto.getRoomCategoryId() != null) ? findRoomCategory(dto.getRoomCategoryId()) : policyDetail.getRoomCategory();
         policyDetail.setRoomCategory(roomCategory);
-        CustomerGroup customerGroup = (dto.getCustomerGroupId() !=null) ? findCustomerGroup(dto.getCustomerGroupId()) : policyDetail.getCustomerGroup();
+        CustomerGroup customerGroup = (dto.getCustomerGroupId() != null) ? findCustomerGroup(dto.getCustomerGroupId()) : policyDetail.getCustomerGroup();
         policyDetail.setCustomerGroup(customerGroup);
         policyDetail.setLimitValue(dto.getLimitValue() != null ? dto.getLimitValue() : policyDetail.getLimitValue());
         policyDetail.setRequirement(dto.getRequirement() != null ? dto.getRequirement() : policyDetail.getRequirement());
