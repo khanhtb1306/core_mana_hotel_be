@@ -23,4 +23,14 @@ public class OverviewController {
     public ResponseDTO getCountRoomCapacity() {
         return overviewService.getRoomCapacity();
     }
+
+    @GetMapping("/report_room_capacity_current_month")
+    public ResponseDTO getReportRoomCapacityCurrentMonth() {
+        return overviewService.getReportRoomCapacityCurrentMonth();
+    }
+
+    @GetMapping("/report_room_capacity_last_month")
+    public ResponseDTO getReportRoomCapacityLastMonth() {
+        return overviewService.getReportRoomCapacityLastMonth();
+    }
 }

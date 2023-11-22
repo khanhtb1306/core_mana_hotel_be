@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.ReservationDetailCustomerDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.ReservationDetail;
@@ -12,8 +13,6 @@ import com.manahotel.be.repository.ReservationDetailRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -32,32 +31,64 @@ public class ReservationDetailCustomerService {
         return ResponseUtils.success(repository.findReservationDetailCustomerByReservationDetail(findReservationDetail(reservationDetailId)), "Hiển thị thông tin khách hàng theo đơn đặt phòng thành công");
     }
 
-    public String createRDCustomer(List<String> customerIds, Long reservationDetailId) {
+    public ResponseDTO createRDCustomer(ReservationDetailCustomerDTO dto) {
         try {
             log.info("----- Start create RDC -----");
             ReservationDetailCustomer rdc = new ReservationDetailCustomer();
 
-            commonMapping(customerIds, reservationDetailId);
+            commonMapping(rdc, dto);
 
             repository.save(rdc);
             log.info("----- End create RDC -----");
 
-            return "Tạo thông tin khách hàng theo phòng thành công";
-        }
-        catch (Exception e) {
+            return ResponseUtils.success("Tạo thông tin khách hàng theo phòng thành công");
+        } catch (Exception e) {
             log.info("----- Create RDC failed -----\n" + e.getMessage());
-            return "Tạo thông tin khách hàng theo phòng thất bại";
+            return ResponseUtils.error("Tạo thông tin khách hàng theo phòng thất bại");
         }
     }
 
-    private void commonMapping(List<String> customerIds, Long reservationDetailId) {
-        repository.deleteReservationDetailCustomerByReservationDetailId(reservationDetailId);
+    public ResponseDTO updateRDCustomer(Long id, ReservationDetailCustomerDTO dto) {
+        try {
+            log.info("----- Start update RDC -----");
+            ReservationDetailCustomer rdc = findReservationDetailCustomer(id);
 
-        for(String customerId : customerIds) {
-            ReservationDetailCustomer rdc = new ReservationDetailCustomer();
-            rdc.setCustomer(findCustomer(customerId));
-            rdc.setReservationDetail(findReservationDetail(reservationDetailId));
+            commonMapping(rdc, dto);
+
+            repository.save(rdc);
+            log.info("----- End update RDC -----");
+
+            return ResponseUtils.success("Cập nhật thông tin khách hàng theo phòng thành công");
+        } catch (Exception e) {
+            log.info("----- Update RDC failed -----\n" + e.getMessage());
+            return ResponseUtils.error("Cập nhật thông tin khách hàng theo phòng thất bại");
         }
+    }
+
+    public ResponseDTO deleteRDCustomer(Long id) {
+        try {
+            log.info("----- Start delete RDC -----");
+            ReservationDetailCustomer rdc = findReservationDetailCustomer(id);
+
+            repository.delete(rdc);
+
+            log.info("----- End delete RDC -----");
+
+            return ResponseUtils.success("Xóa thông tin khách hàng theo phòng thành công");
+        } catch (Exception e) {
+            log.info("----- Delete RDC failed -----\n" + e.getMessage());
+            return ResponseUtils.error("Xóa thông tin khách hàng theo phòng thất bại");
+        }
+    }
+
+    private void commonMapping(ReservationDetailCustomer rdc, ReservationDetailCustomerDTO dto) {
+        rdc.setCustomer(findCustomer(dto.getCustomerId()));
+        rdc.setReservationDetail(findReservationDetail(dto.getReservationDetailId()));
+    }
+
+    private ReservationDetailCustomer findReservationDetailCustomer(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation Detail Customer not found with id " + id));
     }
 
     private ReservationDetail findReservationDetail(Long id) {

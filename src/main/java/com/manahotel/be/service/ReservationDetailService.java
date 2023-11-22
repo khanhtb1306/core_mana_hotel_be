@@ -42,7 +42,7 @@ public class ReservationDetailService {
         return service.getListCustomersByReservationDetailId(id);
     }
 
-    public ResponseDTO createReservationDetail(ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
+    public ResponseDTO createReservationDetail(ReservationDetailDTO reservationDetailDTO) {
         try {
             log.info("----- Start create detail for reservation ------");
             ReservationDetail reservationDetail = new ReservationDetail();
@@ -54,13 +54,7 @@ public class ReservationDetailService {
             repository.save(reservationDetail);
             log.info("----- End create detail for reservation ------");
 
-            if(!customerIds.isEmpty()) {
-                log.info("----- Start create RDC -----");
-                service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
-                log.info("----- End create RDC -----");
-            }
-
-            return ResponseUtils.success("Tạo chi tiết đặt phòng thành công");
+            return ResponseUtils.success(reservationDetail.getReservationDetailId(), "Tạo chi tiết đặt phòng thành công");
         }
         catch (Exception e) {
             log.info("----- Create detail for reservation failed ------\n" + e.getMessage());
@@ -68,7 +62,7 @@ public class ReservationDetailService {
         }
     }
 
-    public ResponseDTO updateReservationDetail(Long id, ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
+    public ResponseDTO updateReservationDetail(Long id, ReservationDetailDTO reservationDetailDTO) {
         try {
             log.info("----- Start update detail for reservation ------");
             ReservationDetail reservationDetail = findReservationDetail(id);
@@ -78,13 +72,7 @@ public class ReservationDetailService {
             repository.save(reservationDetail);
             log.info("----- End update detail for reservation ------");
 
-            if(!customerIds.isEmpty()) {
-                log.info("----- Start create RDC -----");
-                service.createRDCustomer(customerIds, reservationDetail.getReservationDetailId());
-                log.info("----- End create RDC -----");
-            }
-
-            return ResponseUtils.success("Cập nhật chi tiết đặt phòng thành công");
+            return ResponseUtils.success(reservationDetail.getReservationDetailId(), "Cập nhật chi tiết đặt phòng thành công");
         }
         catch (Exception e) {
             log.info("----- Update detail for reservation failed ------\n" + e.getMessage());

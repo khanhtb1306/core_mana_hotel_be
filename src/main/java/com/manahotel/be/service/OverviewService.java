@@ -17,14 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.PanelUI;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -42,52 +48,47 @@ public class OverviewService {
 
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
-    @Scheduled(cron = "0 59 23 * * ?")  // Chạy vào 23:59 hàng ngày
-    public void checkRoomCapacityDaily(){
-        try {
-            List<Room> listRoom = roomRepository.findByStatus(Status.ACTIVATE);
-            int totalRooms = listRoom.size();
-            int totalTimeUseOfRoomsMax = totalRooms * 24*60*60*1000;
-            LocalDate today = LocalDate.now();
-            int totalTimeUseToday = 0;
-            for(Room room : listRoom){
-                List<ReservationDetail> rdList = reservationDetailRepository.checkRoomCapacityDaily(room.getRoomId());
-                int TotalTimestamp = 0;
-                for(ReservationDetail rd:  rdList ){
-                    int timestamp = 0;
-                    LocalDate checkInDate = rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    if(rd.getStatus().equals(Status.CHECK_IN)){
-                        if (!checkInDate.equals(today)) {
-                            timestamp = 24 * 60 * 60 * 1000; // 24 hours
-                        }else {
-                            long timestampMillis = (24 * 60 * 60 * 1000) - rd.getCheckInEstimate().getTime();
-                            timestamp = (int) timestampMillis;
-                        }
-                    }else if(rd.getStatus().equals(Status.CHECK_OUT)){
-                        long timestampMillis;
-                        if (!checkInDate.equals(today)) {
-                            timestampMillis = rd.getCheckOutActual().getTime();
-                        }else {
-                            timestampMillis = rd.getCheckOutActual().getTime() - rd.getCheckInEstimate().getTime();
-                        }
-                        timestamp = (int) timestampMillis;
-                    }
-                    TotalTimestamp += timestamp;
-                }
-                totalTimeUseToday += TotalTimestamp;
-            }
-            float RoomCapacityToday = totalTimeUseToday/totalTimeUseOfRoomsMax;
 
-            ReportRoomCapacity reportRoomCapacity = new ReportRoomCapacity();
-            reportRoomCapacity.setRoomCapacityValue(RoomCapacityToday);
-            reportRoomCapacity.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            reportRoomCapacityRepository.save(reportRoomCapacity);
-        }catch (Exception e){
-            log.error(e.getMessage());
+    public ResponseDTO getReportRoomCapacityCurrentMonth() {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
+
+            List<ReportRoomCapacity> reportRoomCapacities = reportRoomCapacityRepository.findAllInCurrentMonth();
+
+            List<String> daysOfMonth = reportRoomCapacities.stream()
+                    .map(report -> report.getCreateDate().toLocalDateTime().toLocalDate().format(formatter))
+                    .collect(Collectors.toList());
+
+            List<Float> roomCapacityValues = reportRoomCapacities.stream()
+                    .map(report -> BigDecimal.valueOf(report.getRoomCapacityValue()).setScale(2, RoundingMode.HALF_UP).floatValue())
+                    .collect(Collectors.toList());
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("daysOfMonth", daysOfMonth);
+            result.put("roomCapacityValues", roomCapacityValues);
+
+            return ResponseUtils.success(result, "IsSuccess");
+        } catch (Exception e) {
+            log.error("Error retrieving report room capacities: {}", e.getMessage(), e);
+            return ResponseUtils.error("IsFail");
         }
     }
 
-    public ResponseDTO getRoomCapacity() {
+
+
+
+        public ResponseDTO getReportRoomCapacityLastMonth() {
+            try {
+                List<ReportRoomCapacity> reportRoomCapacities = reportRoomCapacityRepository.findAllInLastMonth();
+                return ResponseUtils.success(reportRoomCapacities,"IsSuccess");
+            }catch (Exception e){
+                log.error(e.getMessage());
+                return ResponseUtils.error("IsFail");
+            }
+        }
+
+
+        public ResponseDTO getRoomCapacity() {
         try {
             List<Object[]> roomCapacityList = roomRepository.getTotalAndEmptyRoomCounts();
             if (roomCapacityList != null && !roomCapacityList.isEmpty()) {
@@ -146,5 +147,70 @@ public class OverviewService {
             return false;
         }
         return true;
+    }
+
+    //    @Scheduled(initialDelay = 0, fixedDelay = 100000)
+    @Scheduled(cron = "0 59 23 * * ?")  // Chạy vào 23:59 hàng ngày
+    public void checkRoomCapacityDaily() {
+        log.info("----- Check Room Capacity Daily Start ------");
+        try {
+            List<Room> listRoom = roomRepository.findByStatus(Status.ACTIVATE);
+            long totalRooms = listRoom.size();
+            long totalTimeUseOfRoomsMax = totalRooms * 24 * 60 * 60 * 1000;
+            LocalDate today = LocalDate.now();
+            long totalTimeUseToday = 0;
+            long totalTimestamp = 0;
+            long timestamp = 0;
+            long timestampMillis = 0;
+            for (Room room : listRoom) {
+                List<ReservationDetail> rdList = reservationDetailRepository.checkRoomCapacityDaily(room.getRoomId());
+                for (ReservationDetail rd : rdList) {
+
+                    LocalDate checkInDate = rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    if (rd.getStatus().equals(Status.CHECK_IN)) {
+
+                        if (!checkInDate.equals(today)) {
+                            timestamp = 24 * 60 * 60 * 1000;
+                        } else {
+                            long DurationCheckInEstimate = ChronoUnit.MILLIS.between(
+                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault())
+                            );
+                            timestamp = (24 * 60 * 60 * 1000) - DurationCheckInEstimate;
+                        }
+
+                    } else if (rd.getStatus().equals(Status.CHECK_OUT)) {
+
+                        if (!checkInDate.equals(today)) {
+                            timestampMillis = ChronoUnit.MILLIS.between(
+                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                        } else {
+                            long DurationCheckOutActual = ChronoUnit.MILLIS.between(
+                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                            long DurationCheckInEstimate = ChronoUnit.MILLIS.between(
+                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                            timestampMillis = DurationCheckOutActual - DurationCheckInEstimate;
+                        }
+                        timestamp = timestampMillis;
+                    }
+                    totalTimestamp += timestamp;
+                    totalTimeUseToday += totalTimestamp;
+                }
+            }
+
+            float roomCapacityToday = ((float) totalTimeUseToday/totalTimeUseOfRoomsMax)*100;
+            ReportRoomCapacity reportRoomCapacity = new ReportRoomCapacity();
+            reportRoomCapacity.setRoomCapacityValue(roomCapacityToday);
+            reportRoomCapacity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+            reportRoomCapacityRepository.save(reportRoomCapacity);
+
+            log.info("----- Check Room Capacity Daily End ------");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }

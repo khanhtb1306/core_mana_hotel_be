@@ -7,10 +7,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
-
+@Repository
 public interface ReservationDetailRepository extends JpaRepository<ReservationDetail, Long> {
 
     List<ReservationDetail> findReservationDetailByReservationAndReservationDetailStatus(Reservation reservation, Long status);
@@ -20,7 +21,7 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
     ReservationDetail findReservationDetailByReservationAndRoom(Reservation reservation, Room room);
 
     @Query("SELECT rd FROM ReservationDetail rd " +
-            "WHERE rd.room.roomId = ?1 " +
+            "WHERE rd.room.roomId = ?1  AND rd.status <> 'BOOKING'" +
             "AND rd.reservationDetailStatus = 1 " +
             "AND ((rd.status = 'CHECK_IN') OR (rd.status = 'CHECK_OUT' AND DATE(rd.checkOutActual) = CURRENT_DATE))")
     List<ReservationDetail> checkRoomCapacityDaily(String roomId);
