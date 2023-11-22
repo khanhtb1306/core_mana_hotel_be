@@ -1,6 +1,7 @@
 package com.manahotel.be.common.util;
 
 import com.manahotel.be.common.constant.PolicyCont;
+import com.manahotel.be.exception.NoEarlySurchargePolicyException;
 import com.manahotel.be.exception.NoLateSurchargePolicyException;
 import com.manahotel.be.model.entity.PolicyDetail;
 import com.manahotel.be.repository.PolicyDetailRepository;
@@ -38,6 +39,23 @@ public class ControlPolicyUtils {
                 }
             }
         }
+        return surcharge;
+    }
+
+    public static float calculateEarlySurcharge(String roomCategoryId, long earlyTime) {
+        List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.EARLIER_OVERTIME_SURCHARGE, roomCategoryId);
+        if(policyDetails.isEmpty()) {
+            throw new NoEarlySurchargePolicyException("Chính sách phụ thu nhận sớm của hạng phòng " + roomCategoryId + "không tồn tại");
+        }
+
+        float surcharge = 0;
+
+        for(PolicyDetail policyDetail : policyDetails) {
+            if(earlyTime <= policyDetail.getLimitValue()) {
+                surcharge = earlyTime * policyDetail.getPolicyValue();
+            }
+        }
+
         return surcharge;
     }
 }

@@ -14,6 +14,11 @@ public class ReservationDetailController {
     @Autowired
     private ReservationDetailService service;
 
+    @GetMapping("/list-customers/{id}")
+    public ResponseDTO getListCustomersByReservationDetailId(@PathVariable Long id) {
+        return service.getListCustomersByReservationDetailId(id);
+    }
+
     @PostMapping
     public ResponseDTO createReservationDetail(ReservationDetailRequest request) {
         return service.createReservationDetail(request.getReservationDetailDTO(), request.getCustomerIds());

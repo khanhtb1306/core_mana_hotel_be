@@ -1,6 +1,8 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.model.entity.ReservationDetailCustomer;
@@ -25,6 +27,10 @@ public class ReservationDetailCustomerService {
 
     @Autowired
     private CustomerRepository repository3;
+
+    public ResponseDTO getListCustomersByReservationDetailId(Long reservationDetailId) {
+        return ResponseUtils.success(repository.findReservationDetailCustomerByReservationDetail(findReservationDetail(reservationDetailId)), "Hiển thị thông tin khách hàng theo đơn đặt phòng thành công");
+    }
 
     public String createRDCustomer(List<String> customerIds, Long reservationDetailId) {
         try {

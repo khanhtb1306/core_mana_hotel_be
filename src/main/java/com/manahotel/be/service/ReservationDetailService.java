@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,10 @@ public class ReservationDetailService {
 
     @Autowired
     private ReservationDetailCustomerService service;
+
+    public ResponseDTO getListCustomersByReservationDetailId(Long id) {
+        return service.getListCustomersByReservationDetailId(id);
+    }
 
     public ResponseDTO createReservationDetail(ReservationDetailDTO reservationDetailDTO, List<String> customerIds) {
         try {
@@ -192,6 +197,14 @@ public class ReservationDetailService {
         }
 
         repository3.save(room);
+
+        Timestamp start = repository2.findMinCheckIn(reservation);
+        Timestamp end = repository2.findMaxCheckOut(reservation);
+
+        reservation.setDurationStart(start);
+        reservation.setDurationEnd(end);
+
+        repository2.save(reservation);
 
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
         reservationDetail.setReservationType((reservationDetailDTO.getReservationType() != null) ? reservationDetailDTO.getReservationType() : reservationDetail.getReservationType());

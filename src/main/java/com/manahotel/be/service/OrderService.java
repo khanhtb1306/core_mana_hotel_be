@@ -58,10 +58,7 @@ public class OrderService {
                 List<Map<String, Object>> inforList = new ArrayList<>();
                 for(OrderDetail orderDetail: orderDetailList){
                     Map<String, Object> orderInfo1 = new HashMap<>();
-                    GoodsUnit goodsUnits = orderDetail.getGoodsUnit();
-                    Goods goods = orderDetail.getGoods();
-                    orderInfo1.put("goods", goods);
-                    orderInfo1.put("goodsUnit", goodsUnits);
+                    orderInfo1.put("OrderDetail", orderDetail);
                     inforList.add(orderInfo1);
                 }
 

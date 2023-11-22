@@ -18,6 +18,8 @@ public interface RoomRepository extends JpaRepository<Room, String> {
 
     List<Room> findByStatusNot(Long status);
 
+    List<Room> findByStatus(Long status);
+
     List<Room> findByFloor(Floor floor);
 
     @Query(value = "SELECT r " +
@@ -36,4 +38,13 @@ public interface RoomRepository extends JpaRepository<Room, String> {
             "AND rc.roomCategoryId = ?3 " +
             "ORDER BY r.roomId")
     List<Room> findEmptyRoom(Timestamp startDate, Timestamp endDate, String roomCategoryId);
+
+
+    @Query(value = "SELECT " +
+            "(SELECT COUNT(*) FROM room WHERE status = 1) as totalRooms, " +
+            "(SELECT COUNT(*) FROM room WHERE booking_status = 'ROOM_USING' AND status = 1) as roomsInUse, " +
+            "(SELECT COUNT(*) FROM room WHERE booking_status = 'ROOM_EMPTY' AND status = 1) as emptyRooms", nativeQuery = true)
+    List<Object[]> getTotalAndEmptyRoomCounts();
+
+
 }
