@@ -77,18 +77,18 @@ public class OverviewService {
 
 
 
-        public ResponseDTO getReportRoomCapacityLastMonth() {
-            try {
-                List<ReportRoomCapacity> reportRoomCapacities = reportRoomCapacityRepository.findAllInLastMonth();
-                return ResponseUtils.success(reportRoomCapacities,"IsSuccess");
-            }catch (Exception e){
-                log.error(e.getMessage());
-                return ResponseUtils.error("IsFail");
-            }
+    public ResponseDTO getReportRoomCapacityLastMonth() {
+        try {
+            List<ReportRoomCapacity> reportRoomCapacities = reportRoomCapacityRepository.findAllInLastMonth();
+            return ResponseUtils.success(reportRoomCapacities,"IsSuccess");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseUtils.error("IsFail");
         }
+    }
 
 
-        public ResponseDTO getRoomCapacity() {
+    public ResponseDTO getRoomCapacity() {
         try {
             List<Object[]> roomCapacityList = roomRepository.getTotalAndEmptyRoomCounts();
             if (roomCapacityList != null && !roomCapacityList.isEmpty()) {
@@ -161,7 +161,6 @@ public class OverviewService {
             long totalTimeUseToday = 0;
             long totalTimestamp = 0;
             long timestamp = 0;
-            long timestampMillis = 0;
             for (Room room : listRoom) {
                 List<ReservationDetail> rdList = reservationDetailRepository.checkRoomCapacityDaily(room.getRoomId());
                 for (ReservationDetail rd : rdList) {
@@ -173,29 +172,41 @@ public class OverviewService {
                         if (!checkInDate.equals(today)) {
                             timestamp = 24 * 60 * 60 * 1000;
                         } else {
-                            long DurationCheckInEstimate = ChronoUnit.MILLIS.between(
-                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault())
-                            );
-                            timestamp = (24 * 60 * 60 * 1000) - DurationCheckInEstimate;
+                            long DurationCheckIn;
+                            if(rd.getCheckInEstimate().getTime() >= rd.getCheckInActual().getTime()){
+                                DurationCheckIn = ChronoUnit.MILLIS.between(
+                                        rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                            }else {
+                                DurationCheckIn = ChronoUnit.MILLIS.between(
+                                        rd.getCheckInActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckInActual().toInstant().atZone(ZoneId.systemDefault()));
+                            }
+                            timestamp = (24 * 60 * 60 * 1000) - DurationCheckIn;
                         }
 
                     } else if (rd.getStatus().equals(Status.CHECK_OUT)) {
 
                         if (!checkInDate.equals(today)) {
-                            timestampMillis = ChronoUnit.MILLIS.between(
+                            timestamp = ChronoUnit.MILLIS.between(
                                     rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
                                     rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
                         } else {
                             long DurationCheckOutActual = ChronoUnit.MILLIS.between(
                                     rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
                                     rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
-                            long DurationCheckInEstimate = ChronoUnit.MILLIS.between(
-                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                    rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()));
-                            timestampMillis = DurationCheckOutActual - DurationCheckInEstimate;
+                            long DurationCheckInEstimate;
+                            if(rd.getCheckInEstimate().getTime() >= rd.getCheckInActual().getTime()){
+                                DurationCheckInEstimate = ChronoUnit.MILLIS.between(
+                                        rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                            }else {
+                                DurationCheckInEstimate = ChronoUnit.MILLIS.between(
+                                        rd.getCheckInActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                            }
+                            timestamp = DurationCheckOutActual - DurationCheckInEstimate;
                         }
-                        timestamp = timestampMillis;
                     }
                     totalTimestamp += timestamp;
                     totalTimeUseToday += totalTimestamp;
