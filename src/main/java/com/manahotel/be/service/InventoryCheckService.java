@@ -8,14 +8,8 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.InventoryCheckDTO;
 import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
 import com.manahotel.be.model.dto.response.InventoryCheckResponse;
-import com.manahotel.be.model.entity.Goods;
-import com.manahotel.be.model.entity.GoodsUnit;
-import com.manahotel.be.model.entity.InventoryCheck;
-import com.manahotel.be.model.entity.InventoryCheckDetail;
-import com.manahotel.be.repository.GoodsRepository;
-import com.manahotel.be.repository.GoodsUnitRepository;
-import com.manahotel.be.repository.InventoryCheckDetailRepository;
-import com.manahotel.be.repository.InventoryCheckRepository;
+import com.manahotel.be.model.entity.*;
+import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +34,12 @@ public class InventoryCheckService {
 
     @Autowired
     private GoodsUnitRepository repository4;
+
+    @Autowired
+    private StaffRepository repository5;
+
+    @Autowired
+    private OverviewService overviewService;
 
     public ResponseEntity<List<Map<String, Object>>> getAllInventoryCheckWithDetails() {
         List<Object[]> listInventoryChecks = repository.findAllInventoryChecksWithDetails();
@@ -96,12 +96,24 @@ public class InventoryCheckService {
             detail.setCost(goodsUnit.getCost());
 
             list.add(detail);
+
+            if (check.getStatus().equals(Status.BALANCE)) {
+                goods.setInventory(detail.getActualInventory());
+                repository3.save(goods);
+            }
         }
 
         if (!list.isEmpty()) {
             repository2.saveAll(list);
         } else {
             throw new EmptyListException("Chi tiết kiểm kho không được để trống");
+        }
+
+        if (check.getStatus().equals(Status.BALANCE)) {
+            Long userId = UserUtils.getUser().getStaffId();
+            Staff staff = findStaff(userId);
+
+            overviewService.writeRecentActivity(staff.getUsername(), "thực hiện kiểm kho", 0, new Timestamp(System.currentTimeMillis()));
         }
     }
 
@@ -136,7 +148,6 @@ public class InventoryCheckService {
     public ResponseEntity<String> updateInventoryCheck(String id, InventoryCheckDTO dto, List<InventoryCheckDetailDTO> listDetailDTO) {
         try {
             log.info("----- Update Check Start -----");
-            Long userId = UserUtils.getUser().getStaffId();
 
             InventoryCheck check = findInventoryCheckById(id);
 
@@ -178,6 +189,11 @@ public class InventoryCheckService {
     private Goods findGoods(String id) {
         return repository3.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Goods not found with id " + id));
+    }
+
+    private Staff findStaff(Long id) {
+        return repository5.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
     }
 
     public ResponseEntity<InventoryCheckResponse> getInventoryCheckSummary(String id) {

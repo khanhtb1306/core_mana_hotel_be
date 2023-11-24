@@ -24,4 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     @Query("SELECT MAX(CASE WHEN rd.checkOutActual IS NULL THEN rd.checkOutEstimate ELSE rd.checkOutActual END) FROM ReservationDetail rd " +
             "WHERE rd.reservation = ?1 AND rd.reservationDetailStatus <> 6")
     Timestamp findMaxCheckOut(Reservation reservation);
+
+
 }

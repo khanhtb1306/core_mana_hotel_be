@@ -140,9 +140,6 @@ public class ReservationService {
         PriceList priceList = (reservationDTO.getPriceListId() != null) ? findPriceList(reservationDTO.getPriceListId()) : reservation.getPriceList();
         reservation.setPriceList(priceList);
 
-        reservation.setTotalAdults((reservationDTO.getTotalAdults() != null) ? reservationDTO.getTotalAdults() : reservation.getTotalAdults());
-        reservation.setTotalChildren((reservationDTO.getTotalChildren() != null) ? reservationDTO.getTotalChildren() : reservation.getTotalChildren());
-
         reservation.setStatus((reservationDTO.getStatus() != null) ? reservationDTO.getStatus() : reservation.getStatus());
         reservation.setTotalDeposit((reservationDTO.getTotalDeposit() != null) ? reservationDTO.getTotalDeposit() : reservation.getTotalDeposit());
         reservation.setTotalPrice((reservationDTO.getTotalPrice() != null) ? reservationDTO.getTotalPrice() : reservation.getTotalPrice());

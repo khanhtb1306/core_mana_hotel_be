@@ -10,6 +10,7 @@ public class Status {
     public static final long CANCEL = 3;
     public static final long TEMPORARY = 4;
     public static final long BALANCE = 5;
+    public static final long IMPORT = 7;
 
     // Delete
     public static final long DELETE = 6;

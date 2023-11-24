@@ -5,11 +5,13 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.ReservationDetailCustomerDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Customer;
+import com.manahotel.be.model.entity.Reservation;
 import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.model.entity.ReservationDetailCustomer;
 import com.manahotel.be.repository.CustomerRepository;
 import com.manahotel.be.repository.ReservationDetailCustomerRepository;
 import com.manahotel.be.repository.ReservationDetailRepository;
+import com.manahotel.be.repository.ReservationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,11 +29,14 @@ public class ReservationDetailCustomerService {
     @Autowired
     private CustomerRepository repository3;
 
+    @Autowired
+    private ReservationRepository repository4;
+
     public ResponseDTO getListCustomersByReservationDetailId(Long reservationDetailId) {
         return ResponseUtils.success(repository.findReservationDetailCustomerByReservationDetail(findReservationDetail(reservationDetailId)), "Hiển thị thông tin khách hàng theo đơn đặt phòng thành công");
     }
 
-    public ResponseDTO createRDCustomer(ReservationDetailCustomerDTO dto) {
+    public ResponseDTO createRDCustomer(ReservationDetailCustomerDTO dto, boolean isAdult) {
         try {
             log.info("----- Start create RDC -----");
             ReservationDetailCustomer rdc = new ReservationDetailCustomer();
@@ -41,6 +46,17 @@ public class ReservationDetailCustomerService {
             repository.save(rdc);
             log.info("----- End create RDC -----");
 
+            Reservation reservation = findReservationDetail(dto.getReservationDetailId()).getReservation();
+
+            if(isAdult) {
+                reservation.setTotalAdults((reservation.getTotalAdults() != null ? reservation.getTotalAdults() : 0) + 1);
+            }
+            else {
+                reservation.setTotalChildren((reservation.getTotalChildren() != null ? reservation.getTotalChildren() : 0) + 1);
+            }
+
+            repository4.save(reservation);
+
             return ResponseUtils.success("Tạo thông tin khách hàng theo phòng thành công");
         } catch (Exception e) {
             log.info("----- Create RDC failed -----\n" + e.getMessage());
@@ -48,31 +64,49 @@ public class ReservationDetailCustomerService {
         }
     }
 
-    public ResponseDTO updateRDCustomer(Long id, ReservationDetailCustomerDTO dto) {
+    public ResponseDTO updateRDCustomer(ReservationDetailCustomerDTO dto, boolean check) {
         try {
-            log.info("----- Start update RDC -----");
-            ReservationDetailCustomer rdc = findReservationDetailCustomer(id);
+            Reservation reservation = findReservationDetail(dto.getReservationDetailId()).getReservation();
 
-            commonMapping(rdc, dto);
+            if(check) {
+                reservation.setTotalAdults((reservation.getTotalAdults() != null ? reservation.getTotalAdults() : 0) - 1);
+                reservation.setTotalChildren((reservation.getTotalChildren() != null ? reservation.getTotalChildren() : 0) + 1);
+            }
+            else {
+                reservation.setTotalAdults((reservation.getTotalAdults() != null ? reservation.getTotalAdults() : 0) + 1);
+                reservation.setTotalChildren((reservation.getTotalChildren() != null ? reservation.getTotalChildren() : 0) - 1);
+            }
 
-            repository.save(rdc);
-            log.info("----- End update RDC -----");
+            repository4.save(reservation);
 
-            return ResponseUtils.success("Cập nhật thông tin khách hàng theo phòng thành công");
+            return ResponseUtils.success("Tạo thông tin khách hàng theo phòng thành công");
         } catch (Exception e) {
-            log.info("----- Update RDC failed -----\n" + e.getMessage());
-            return ResponseUtils.error("Cập nhật thông tin khách hàng theo phòng thất bại");
+            log.info("----- Create RDC failed -----\n" + e.getMessage());
+            return ResponseUtils.error("Tạo thông tin khách hàng theo phòng thất bại");
         }
     }
 
-    public ResponseDTO deleteRDCustomer(Long id) {
+    public ResponseDTO deleteRDCustomer(Long id, boolean isAdult) {
         try {
             log.info("----- Start delete RDC -----");
             ReservationDetailCustomer rdc = findReservationDetailCustomer(id);
 
+            Long reservationDetailId = rdc.getReservationDetail().getReservationDetailId();
+
             repository.delete(rdc);
 
             log.info("----- End delete RDC -----");
+
+            Reservation reservation = findReservationDetail(reservationDetailId).getReservation();
+
+            if(isAdult) {
+                reservation.setTotalAdults((reservation.getTotalAdults() != null ? reservation.getTotalAdults() : 0) - 1);
+            }
+            else {
+                reservation.setTotalChildren((reservation.getTotalChildren() != null ? reservation.getTotalChildren() : 0) - 1);
+            }
+
+            repository4.save(reservation);
 
             return ResponseUtils.success("Xóa thông tin khách hàng theo phòng thành công");
         } catch (Exception e) {

@@ -133,7 +133,7 @@ public class OverviewService {
         }
     }
 
-    public boolean writeRecentActivity(String staff_name, String action, float value, Timestamp create_time){
+    public void writeRecentActivity(String staff_name, String action, float value, Timestamp create_time){
         try{
             RecentActivity recentActivity = RecentActivity.builder()
                     .staffName(staff_name)
@@ -144,9 +144,7 @@ public class OverviewService {
             recentActivityRepository.save(recentActivity);
         } catch (Exception ex) {
             log.error(String.valueOf(ex));
-            return false;
         }
-        return true;
     }
 
     //    @Scheduled(initialDelay = 0, fixedDelay = 100000)

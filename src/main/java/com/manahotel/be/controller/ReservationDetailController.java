@@ -4,6 +4,7 @@ import com.manahotel.be.model.dto.ReservationDetailCustomerDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.ChangeRoomRequest;
+import com.manahotel.be.model.dto.request.ReservationDetailCustomerRequest;
 import com.manahotel.be.service.ReservationDetailCustomerService;
 import com.manahotel.be.service.ReservationDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +46,17 @@ public class ReservationDetailController {
     }
 
     @PostMapping("/reservation-detail-customer")
-    public ResponseDTO createRDCustomer(ReservationDetailCustomerDTO reservationDetailCustomerDTO) {
-        return service2.createRDCustomer(reservationDetailCustomerDTO);
+    public ResponseDTO createRDCustomer(ReservationDetailCustomerRequest request) {
+        return service2.createRDCustomer(request.getReservationDetailCustomerDTO(), request.isAdult());
     }
 
-    @PutMapping("/reservation-detail-customer/{id}")
-    public ResponseDTO updateRDCustomer(@PathVariable Long id, ReservationDetailCustomerDTO reservationDetailCustomerDTO) {
-        return service2.updateRDCustomer(id, reservationDetailCustomerDTO);
+    @PutMapping("/reservation-detail-customer")
+    public ResponseDTO updateRDCustomer(ReservationDetailCustomerRequest request) {
+        return service2.updateRDCustomer(request.getReservationDetailCustomerDTO(), request.isCheck());
     }
 
     @DeleteMapping("/reservation-detail-customer/{id}")
-    public ResponseDTO deleteRDCustomer(@PathVariable Long id) {
-        return service2.deleteRDCustomer(id);
+    public ResponseDTO deleteRDCustomer(@PathVariable Long id, boolean isAdult) {
+        return service2.deleteRDCustomer(id, isAdult);
     }
 }
