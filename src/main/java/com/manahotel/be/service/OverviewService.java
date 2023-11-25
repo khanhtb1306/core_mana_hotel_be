@@ -186,13 +186,26 @@ public class OverviewService {
                     } else if (rd.getStatus().equals(Status.CHECK_OUT)) {
 
                         if (!checkInDate.equals(today)) {
-                            timestamp = ChronoUnit.MILLIS.between(
-                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                            if(rd.getCheckOutEstimate().getTime() >= rd.getCheckInActual().getTime()) {
+                                timestamp = ChronoUnit.MILLIS.between(
+                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                            }else {
+                                timestamp = ChronoUnit.MILLIS.between(
+                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                            }
                         } else {
-                            long DurationCheckOutActual = ChronoUnit.MILLIS.between(
-                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                    rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                            long DurationCheckOutActual;
+                            if(rd.getCheckInActual().getTime() >= rd.getCheckOutEstimate().getTime()){
+                                DurationCheckOutActual = ChronoUnit.MILLIS.between(
+                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                            }else {
+                                DurationCheckOutActual = ChronoUnit.MILLIS.between(
+                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                            }
                             long DurationCheckInEstimate;
                             if(rd.getCheckInEstimate().getTime() >= rd.getCheckInActual().getTime()){
                                 DurationCheckInEstimate = ChronoUnit.MILLIS.between(

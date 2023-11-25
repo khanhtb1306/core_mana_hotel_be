@@ -41,6 +41,12 @@ public class ReservationService {
     @Autowired
     private PriceListRepository repository6;
 
+    @Autowired
+    private OrderRepository repository7;
+
+    @Autowired
+    private OrderDetailRepository repository8;
+
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
         List<Object> list = new ArrayList<>();
 
@@ -83,6 +89,43 @@ public class ReservationService {
         reservationInfo.put("reservation", reservation);
         reservationInfo.put("listReservationDetails", listReservationDetails.toArray());
         return ResponseUtils.success(reservationInfo, "Hiển thị thành công chi tiết đặt phòng của đơn" + reservation.getReservationId());
+    }
+
+    public ResponseDTO getAllPayment() {
+        List<Object[]> listReservations = repository.findReservationsWithStatusDone();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object[] reservation : listReservations) {
+            Reservation r = (Reservation) reservation[0];
+            List<ReservationDetail> listReservationDetails = repository2.findReservationDetailByReservationAndReservationDetailStatus(r, Status.ACTIVATE);
+
+            List<Map<String, Object>> listReservationDetailsWithOrders = new ArrayList<>();
+            for(ReservationDetail reservationDetail : listReservationDetails) {
+                List<Order> listOrders = repository7.findOrderByReservationDetail(reservationDetail);
+
+                List<Map<String , Object>> listOrdersWithOrderDetails = new ArrayList<>();
+                for(Order order : listOrders) {
+                    List<OrderDetail> listOrderDetails = repository8.findOrderDetailByOrder(order);
+
+                    Map<String, Object> listOrderDetailsInfo = new HashMap<>();
+                    listOrderDetailsInfo.put("order", order);
+                    listOrderDetailsInfo.put("listOrderDetails", listOrderDetails.toArray());
+                    listOrdersWithOrderDetails.add(listOrderDetailsInfo);
+                }
+
+                Map<String, Object> listOrdersInfo = new HashMap<>();
+                listOrdersInfo.put("reservationDetail", reservationDetail);
+                listOrdersInfo.put("listOrdersWithOrderDetails", listOrdersWithOrderDetails.toArray());
+                listReservationDetailsWithOrders.add(listOrdersInfo);
+            }
+
+            Map<String, Object> detailInfo = new HashMap<>();
+            detailInfo.put("reservation", r);
+            detailInfo.put("listReservationDetailsWithOrders", listReservationDetailsWithOrders.toArray());
+            result.add(detailInfo);
+        }
+
+        return ResponseUtils.success(result, "Hiển thị danh sách hóa đơn thành công");
     }
 
     public ResponseDTO createReservation(ReservationDTO reservationDTO) {

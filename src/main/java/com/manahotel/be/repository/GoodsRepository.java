@@ -16,4 +16,7 @@ public interface GoodsRepository extends JpaRepository<Goods, String> {
     List<Object[]> findGoodWithGoodUnits();
 
     List<Goods> findGoodsByGoodsCategory(boolean goodsCategory);
+
+    @Query(value = "SELECT COUNT(*) > 0 FROM goods g WHERE g.goods_name = ?1 AND g.status = 1 AND g.goods_id <> ?2", nativeQuery = true)
+    boolean existsByGoodsNameAndNotId(String goodsName, String goodsId);
 }

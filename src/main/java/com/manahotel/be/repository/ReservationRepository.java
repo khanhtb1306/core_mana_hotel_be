@@ -25,5 +25,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             "WHERE rd.reservation = ?1 AND rd.reservationDetailStatus <> 6")
     Timestamp findMaxCheckOut(Reservation reservation);
 
-
+    @Query("SELECT r FROM Reservation r " +
+            "LEFT JOIN ReservationDetail rd ON r.reservationId = rd.reservation.reservationId " +
+            "WHERE r.status = 'DONE'")
+    List<Object[]> findReservationsWithStatusDone();
 }

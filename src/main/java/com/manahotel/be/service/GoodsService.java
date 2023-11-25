@@ -4,6 +4,7 @@ import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
+import com.manahotel.be.exception.DuplicateNameException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.GoodsDTO;
 import com.manahotel.be.model.dto.GoodsUnitDTO;
@@ -193,6 +194,11 @@ public class GoodsService {
 
     private void commonMapping(Goods goods, GoodsDTO dto) throws IOException {
         goods.setGoodsName((dto.getGoodsName() != null && !dto.getGoodsName().isEmpty()) ? dto.getGoodsName() : goods.getGoodsName());
+
+        if(goodsRepository.existsByGoodsNameAndNotId(goods.getGoodsName(), goods.getGoodsId())) {
+            throw new DuplicateNameException("Tên hàng hóa hoặc dịch vụ đang bị trùng tên trong danh sách");
+        }
+
         goods.setGoodsCategory(dto.isGoodsCategory());
         goods.setInventory(dto.getInventory() != null ? dto.getInventory() : goods.getInventory());
         goods.setMinInventory(dto.getMinInventory() != null ? dto.getMinInventory() : goods.getMinInventory());

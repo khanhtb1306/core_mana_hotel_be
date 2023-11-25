@@ -26,7 +26,7 @@ public interface RoomClassRepository extends JpaRepository<RoomCategory, String>
     @Query(value = "SELECT rc " +
             "FROM RoomCategory rc " +
             "LEFT JOIN Room r ON rc.roomCategoryId = r.roomCategory.roomCategoryId " +
-            "WHERE r.status = 1 AND r.roomId NOT IN " +
+            "WHERE rc.status = 1 AND r.status = 1 AND r.roomId NOT IN " +
             "(SELECT r2.roomId FROM Room r2 " +
             "LEFT JOIN ReservationDetail rd ON r2.roomId = rd.room.roomId " +
             "LEFT JOIN Reservation re ON re.reservationId = rd.reservation.reservationId " +

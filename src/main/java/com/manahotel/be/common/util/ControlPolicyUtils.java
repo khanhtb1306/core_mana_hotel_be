@@ -21,7 +21,7 @@ public class ControlPolicyUtils {
     }
 
 
-    public static float calculateLateSurcharge(String roomCategoryId, long lateTime) {
+    public static float calculateLateSurcharge(String roomCategoryId, long lateTime, float value) {
         List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.LATER_OVERTIME_SURCHARGE, roomCategoryId);
 
         if(policyDetails.isEmpty()) {
@@ -31,18 +31,15 @@ public class ControlPolicyUtils {
         float surcharge = 0;
 
         for(PolicyDetail policyDetail : policyDetails) {
-            for(long i = lateTime; i >= policyDetail.getLimitValue(); i--) {
-                surcharge += policyDetail.getPolicyValue();
-
-                if(i == policyDetail.getLimitValue()) {
-                    lateTime = i - 1;
-                }
+            if(policyDetail.getLimitValue() <= lateTime) {
+                surcharge = (policyDetail.getPolicyValue() / 100) * value;
+                break;
             }
         }
         return surcharge;
     }
 
-    public static float calculateEarlySurcharge(String roomCategoryId, long earlyTime) {
+    public static float calculateEarlySurcharge(String roomCategoryId, long earlyTime, float value) {
         List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.EARLIER_OVERTIME_SURCHARGE, roomCategoryId);
         if(policyDetails.isEmpty()) {
             throw new NoEarlySurchargePolicyException("Chính sách phụ thu nhận sớm của hạng phòng " + roomCategoryId + "không tồn tại");
@@ -51,8 +48,9 @@ public class ControlPolicyUtils {
         float surcharge = 0;
 
         for(PolicyDetail policyDetail : policyDetails) {
-            if(earlyTime <= policyDetail.getLimitValue()) {
-                surcharge = earlyTime * policyDetail.getPolicyValue();
+            if(policyDetail.getLimitValue() <= earlyTime) {
+                surcharge = (policyDetail.getPolicyValue() / 100) * value;
+                break;
             }
         }
 

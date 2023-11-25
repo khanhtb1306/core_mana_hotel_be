@@ -39,4 +39,9 @@ public class ReservationController {
     public ResponseDTO updateReservation(@PathVariable String id, ReservationDTO reservationDTO) {
         return service.updateReservation(id, reservationDTO);
     }
+
+    @GetMapping("/list-payment")
+    public ResponseDTO getAllPayment() {
+        return service.getAllPayment();
+    }
 }
