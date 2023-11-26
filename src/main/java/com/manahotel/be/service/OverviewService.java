@@ -2,7 +2,6 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
-import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.RecentActivity;
 import com.manahotel.be.model.entity.ReportRoomCapacity;
@@ -17,14 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.PanelUI;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -147,8 +142,8 @@ public class OverviewService {
         }
     }
 
-    //    @Scheduled(initialDelay = 0, fixedDelay = 100000)
-    @Scheduled(cron = "0 59 23 * * ?")  // Chạy vào 23:59 hàng ngày
+//        @Scheduled(initialDelay = 0, fixedDelay = 100000)
+    @Scheduled(cron = "59 58 23 * * ?")  // Chạy vào 23:59 hàng ngày
     public void checkRoomCapacityDaily() {
         log.info("----- Check Room Capacity Daily Start ------");
         try {
@@ -156,17 +151,21 @@ public class OverviewService {
             long totalRooms = listRoom.size();
             long totalTimeUseOfRoomsMax = totalRooms * 24 * 60 * 60 * 1000;
             LocalDate today = LocalDate.now();
+            DayOfWeek dayOfWeek = today.getDayOfWeek();
             long totalTimeUseToday = 0;
-            long totalTimestamp = 0;
-            long timestamp = 0;
+
             for (Room room : listRoom) {
+                long totalTimestamp = 0;
+
                 List<ReservationDetail> rdList = reservationDetailRepository.checkRoomCapacityDaily(room.getRoomId());
+
                 for (ReservationDetail rd : rdList) {
+
+                    long timestamp = 0;
 
                     LocalDate checkInDate = rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     if (rd.getStatus().equals(Status.CHECK_IN)) {
-
                         if (!checkInDate.equals(today)) {
                             timestamp = 24 * 60 * 60 * 1000;
                         } else {
@@ -182,7 +181,6 @@ public class OverviewService {
                             }
                             timestamp = (24 * 60 * 60 * 1000) - DurationCheckIn;
                         }
-
                     } else if (rd.getStatus().equals(Status.CHECK_OUT)) {
 
                         if (!checkInDate.equals(today)) {
@@ -220,14 +218,16 @@ public class OverviewService {
                         }
                     }
                     totalTimestamp += timestamp;
-                    totalTimeUseToday += totalTimestamp;
                 }
+                totalTimeUseToday += totalTimestamp;
             }
+
 
             float roomCapacityToday = ((float) totalTimeUseToday/totalTimeUseOfRoomsMax)*100;
             ReportRoomCapacity reportRoomCapacity = new ReportRoomCapacity();
             reportRoomCapacity.setRoomCapacityValue(roomCapacityToday);
             reportRoomCapacity.setCreateDate(new Timestamp(System.currentTimeMillis()));
+            reportRoomCapacity.setDayOfWeek(dayOfWeek.toString());
             reportRoomCapacityRepository.save(reportRoomCapacity);
 
             log.info("----- Check Room Capacity Daily End ------");
