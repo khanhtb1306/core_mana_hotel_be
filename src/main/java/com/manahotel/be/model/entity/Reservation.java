@@ -43,6 +43,9 @@ public class Reservation {
     @Column(name = "total_price")
     private Float totalPrice;
 
+    @Column(name = "paid_method", length = 50)
+    private String paidMethod;
+
     @Column(name = "duration_start")
     private Timestamp durationStart;
 
@@ -63,5 +66,4 @@ public class Reservation {
 
     @Column(name = "staff_check_out")
     private Long staffCheckOut;
-
 }

@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .requestMatchers("/control-policy/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/fund-book/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/import-goods/**").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/qr-code/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
                 .anyRequest()
                 .authenticated()
                 .and()

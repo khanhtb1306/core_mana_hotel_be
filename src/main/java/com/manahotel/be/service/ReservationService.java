@@ -47,6 +47,15 @@ public class ReservationService {
     @Autowired
     private OrderDetailRepository repository8;
 
+    @Autowired
+    private FundBookRepository repository9;
+
+    @Autowired
+    private StaffRepository repository10;
+
+    @Autowired
+    private OverviewService overviewService;
+
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
         List<Object> list = new ArrayList<>();
 
@@ -186,6 +195,7 @@ public class ReservationService {
         reservation.setStatus((reservationDTO.getStatus() != null) ? reservationDTO.getStatus() : reservation.getStatus());
         reservation.setTotalDeposit((reservationDTO.getTotalDeposit() != null) ? reservationDTO.getTotalDeposit() : reservation.getTotalDeposit());
         reservation.setTotalPrice((reservationDTO.getTotalPrice() != null) ? reservationDTO.getTotalPrice() : reservation.getTotalPrice());
+        reservation.setPaidMethod((reservationDTO.getPaidMethod() != null) ? reservationDTO.getPaidMethod() : reservation.getPaidMethod());
         reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
 
         if(reservation.getStatus().equals(Status.CHECK_IN)) {
@@ -196,6 +206,25 @@ public class ReservationService {
         }
         if(reservation.getStatus().equals(Status.DISCARD)) {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
+        }
+        if(reservation.getStatus().equals(Status.DONE)) {
+            Staff staff = findStaff(userId);
+            overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", reservation.getTotalPrice(), new Timestamp(System.currentTimeMillis()));
+
+            FundBook fundBook = new FundBook();
+            fundBook.setFundBookId("TT" + reservation.getReservationId());
+            fundBook.setOrderId(reservation.getReservationId());
+            fundBook.setTime(new Timestamp(System.currentTimeMillis()));
+            fundBook.setType(Status.INCOME);
+            fundBook.setPaidMethod(reservation.getPaidMethod());
+            fundBook.setValue(reservation.getTotalPrice());
+            fundBook.setPrepaid(0F);
+            fundBook.setPaid(reservation.getTotalPrice());
+            fundBook.setPayer(customer.getCustomerName());
+            fundBook.setStaff(staff.getStaffName());
+            fundBook.setNote("Thu tiền khách trả");
+            fundBook.setStatus(Status.COMPLETE);
+            repository9.save(fundBook);
         }
     }
 
@@ -212,5 +241,10 @@ public class ReservationService {
     private PriceList findPriceList(String id) {
         return repository6.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Price List not found with id " + id));
+    }
+
+    private Staff findStaff(Long id) {
+        return repository10.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
     }
 }

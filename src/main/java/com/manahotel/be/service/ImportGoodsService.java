@@ -38,6 +38,9 @@ public class ImportGoodsService {
     private StaffRepository repository5;
 
     @Autowired
+    private FundBookRepository repository6;
+
+    @Autowired
     private OverviewService overviewService;
 
     public ResponseDTO getAllImportGoodsWithDetails() {
@@ -156,6 +159,21 @@ public class ImportGoodsService {
             Staff staff = findStaff(userId);
 
             overviewService.writeRecentActivity(staff.getUsername(), "tạo phiếu nhập hàng", importGoods.getPrice(), new Timestamp(System.currentTimeMillis()));
+
+            FundBook fundBook = new FundBook();
+            fundBook.setFundBookId("TT" + importGoods.getImportGoodsId());
+            fundBook.setOrderId(importGoods.getImportGoodsId());
+            fundBook.setTime(new Timestamp(System.currentTimeMillis()));
+            fundBook.setType(Status.EXPENSE);
+            fundBook.setPaidMethod(null);
+            fundBook.setValue(importGoods.getPrice());
+            fundBook.setPrepaid(0F);
+            fundBook.setPaid(importGoods.getPrice());
+            fundBook.setPayer(importGoods.getSupplier());
+            fundBook.setStaff(staff.getStaffName());
+            fundBook.setNote("Chi tiền trả nhà cung cấp");
+            fundBook.setStatus(Status.COMPLETE);
+            repository6.save(fundBook);
         }
     }
 

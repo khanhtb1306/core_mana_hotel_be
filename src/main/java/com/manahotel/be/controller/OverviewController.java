@@ -33,4 +33,9 @@ public class OverviewController {
     public ResponseDTO getReportRoomCapacityLastMonth() {
         return overviewService.getReportRoomCapacityLastMonth();
     }
+
+    @GetMapping("/report_revenue_each_day_by_month")
+    public ResponseDTO getReportRevenueEachDayByMonth(Integer month) {
+        return overviewService.getReportRevenueEachDayByMonth(month);
+    }
 }

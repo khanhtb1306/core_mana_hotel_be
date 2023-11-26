@@ -195,9 +195,9 @@ public class GoodsService {
     private void commonMapping(Goods goods, GoodsDTO dto) throws IOException {
         goods.setGoodsName((dto.getGoodsName() != null && !dto.getGoodsName().isEmpty()) ? dto.getGoodsName() : goods.getGoodsName());
 
-        if(goodsRepository.existsByGoodsNameAndNotId(goods.getGoodsName(), goods.getGoodsId())) {
-            throw new DuplicateNameException("Tên hàng hóa hoặc dịch vụ đang bị trùng tên trong danh sách");
-        }
+//        if(goodsRepository.existsByGoodsNameAndNotId(goods.getGoodsName(), goods.getGoodsId())) {
+//            throw new DuplicateNameException("Tên hàng hóa hoặc dịch vụ đang bị trùng tên trong danh sách");
+//        }
 
         goods.setGoodsCategory(dto.isGoodsCategory());
         goods.setInventory(dto.getInventory() != null ? dto.getInventory() : goods.getInventory());

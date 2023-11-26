@@ -45,10 +45,22 @@ public class Status {
 
     public static final String CANCEL_ORDER = "CANCEL_ORDER";
 
-    //CustomerGroup and Staff
+    // CustomerGroup and Staff
     public static final String ACTIVE = "ACTIVE";
     public static final String NO_ACTIVE = "NO_ACTIVE";
 
+    // Payment Method
+    public static final String CASH = "CASH";
+    public static final String CARD = "CARD";
+    public static final String TRANSFER = "TRANSFER";
 
+    // Income and Expense
+    public static final String INCOME = "INCOME"; // Collect customer's money
+    public static final String EXPENSE = "EXPENSE"; // Pay supplier
+    public static final String OTHER_INCOME = "OTHER_INCOME";
+    public static final String OTHER_EXPENSE = "OTHER_EXPENSE";
 
+    // Status FundBook
+    public static final String COMPLETE = "COMPLETE";
+    public static final String ABORT = "ABORT";
 }

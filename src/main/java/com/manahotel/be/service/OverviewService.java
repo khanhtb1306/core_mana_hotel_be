@@ -3,14 +3,8 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.RecentActivity;
-import com.manahotel.be.model.entity.ReportRoomCapacity;
-import com.manahotel.be.model.entity.ReservationDetail;
-import com.manahotel.be.model.entity.Room;
-import com.manahotel.be.repository.RecentActivityRepository;
-import com.manahotel.be.repository.ReportRoomCapacityRepository;
-import com.manahotel.be.repository.ReservationDetailRepository;
-import com.manahotel.be.repository.RoomRepository;
+import com.manahotel.be.model.entity.*;
+import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,9 +13,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +39,12 @@ public class OverviewService {
 
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
+
+    @Autowired
+    private ReportRevenueRepository reportRevenueRepository;
+
+    @Autowired
+    private FundBookRepository fundBookRepository;
 
     public ResponseDTO getReportRoomCapacityCurrentMonth() {
         try {
@@ -234,5 +236,41 @@ public class OverviewService {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    @Scheduled(cron = "59 59 23 * * *")
+    public void checkRevenueDaily() {
+        Timestamp logTime = new Timestamp(System.currentTimeMillis());
+        Float totalIncome = fundBookRepository.getAllExpenseByDay(logTime);
+
+        ReportRevenue reportRevenue = new ReportRevenue();
+        reportRevenue.setCreatedDate(logTime);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+        String dayOfWeek = dateFormat.format(new Date(logTime.getTime()));
+        reportRevenue.setDayOfWeeks(dayOfWeek);
+
+        reportRevenue.setRevenueValue(totalIncome != null ? totalIncome : 0);
+
+        reportRevenueRepository.save(reportRevenue);
+    }
+
+    public ResponseDTO getReportRevenueEachDayByMonth(Integer month) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
+        List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByMonth(month);
+
+        List<String> daysOfMonth = reportRevenues.stream()
+                .map(report -> report.getCreatedDate().toLocalDateTime().toLocalDate().format(formatter))
+                .collect(Collectors.toList());
+
+        List<Float> revenueValues = reportRevenues.stream()
+                .map(report -> BigDecimal.valueOf(report.getRevenueValue()).floatValue())
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("daysOfMonth", daysOfMonth);
+        result.put("revenueValues", revenueValues);
+
+        return ResponseUtils.success(result, "Hiển thị doanh thu từng ngày theo tháng thành công");
     }
 }

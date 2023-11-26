@@ -1,5 +1,7 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
+import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.FundBookDTO;
@@ -27,23 +29,24 @@ public class FundBookService {
     public ResponseDTO createFundBook(FundBookDTO fundBookDTO) {
         try {
             log.info("----- Start create fund book -----");
+            FundBook latestOther = repository.findTopByFundBookIdContainingOrderByFundBookIdDesc("TTK");
+            String latestOtherId = (latestOther == null) ? null : latestOther.getFundBookId();
+            String nextId = IdGenerator.generateId(latestOtherId, "TTK");
+
             FundBook fundBook = new FundBook();
-            fundBook.setFundBookId(fundBookDTO.getFundBookId());
-            fundBook.setOrderId(fundBook.getOrderId());
+            fundBook.setFundBookId(nextId);
 
             Timestamp time = Optional.ofNullable(fundBookDTO.getTime())
                     .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
             fundBook.setTime(time);
 
             fundBook.setType(fundBookDTO.getType());
-            fundBook.setPaidMethod(fundBook.getPaidMethod());
+            fundBook.setPaidMethod(Status.CASH);
             fundBook.setValue(fundBookDTO.getValue());
-            fundBook.setPrepaid(fundBookDTO.getPrepaid());
-            fundBook.setPaid(fundBookDTO.getPaid());
             fundBook.setPayer(fundBookDTO.getPayer());
             fundBook.setStaff(fundBookDTO.getStaff());
             fundBook.setNote(fundBookDTO.getNote());
-            fundBook.setStatus(fundBookDTO.getStatus());
+            fundBook.setStatus(Status.COMPLETE);
 
             repository.save(fundBook);
             log.info("----- End create fund book -----");
@@ -52,7 +55,7 @@ public class FundBookService {
         }
         catch (Exception e) {
             log.info("----- Create fund book failed -----\n" + e.getMessage());
-            return ResponseUtils.success("Tạo phiếu thất bại");
+            return ResponseUtils.error("Tạo phiếu thất bại");
         }
     }
 
@@ -77,7 +80,7 @@ public class FundBookService {
         }
         catch (Exception e) {
             log.info("----- Create fund book failed -----\n" + e.getMessage());
-            return ResponseUtils.success("Cập nhật phiếu thất bại");
+            return ResponseUtils.error("Cập nhật phiếu thất bại");
         }
     }
 
