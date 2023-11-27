@@ -44,61 +44,76 @@ public class OverviewService {
     @Autowired
     private FundBookRepository fundBookRepository;
 
-    public ResponseDTO getReportRoomCapacityByMonth(Date date) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
-            List<String> allDaysOfMonth = new ArrayList<>();
-            YearMonth yearMonth = YearMonth.of(date.getYear(), date.getMonth());
-            int lengthOfMonth = yearMonth.lengthOfMonth();
-            for (int day = 1; day <= lengthOfMonth; day++) {
-                allDaysOfMonth.add(String.format("%02d", day));
+        public ResponseDTO getReportRoomCapacityByMonth(String dateString) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                LocalDate date = LocalDate.parse(dateString, formatter);
+
+                DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+                List<String> allDaysOfMonth = new ArrayList<>();
+                YearMonth yearMonth = YearMonth.of(date.getYear(), date.getMonthValue());
+                int lengthOfMonth = yearMonth.lengthOfMonth();
+                for (int day = 1; day <= lengthOfMonth && LocalDate.of(date.getYear(), date.getMonth(), day).isBefore(LocalDate.now()); day++) {
+                    allDaysOfMonth.add(String.format("%02d", day));
+                }
+
+                List<ReportRoomCapacity> reportRoomCapacities = reportRoomCapacityRepository.findAllInCurrentMonth(date.getMonthValue(), date.getYear());
+                Map<String, Float> roomCapacityMap = new HashMap<>();
+
+                reportRoomCapacities.forEach(report -> {
+                    LocalDate reportDate = report.getCreateDate().toLocalDateTime().toLocalDate();
+                    if (!reportDate.isAfter(LocalDate.now())) {
+                        String dayOfMonth = reportDate.format(dayFormatter);
+                        Float roomCapacityValue = BigDecimal.valueOf(report.getRoomCapacityValue()).setScale(2, RoundingMode.HALF_UP).floatValue();
+                        roomCapacityMap.put(dayOfMonth, roomCapacityValue);
+                    }
+                });
+                allDaysOfMonth.forEach(day -> {
+                    if (LocalDate.of(date.getYear(), date.getMonth(), Integer.parseInt(day)).isBefore(LocalDate.now())) {
+                        roomCapacityMap.putIfAbsent(day, 0.0f);
+                    }
+                });
+
+                List<String> sortedDaysOfMonth = new ArrayList<>(roomCapacityMap.keySet());
+                sortedDaysOfMonth.sort(Comparator.naturalOrder());
+
+                List<Float> roomCapacityValues = sortedDaysOfMonth.stream()
+                        .map(roomCapacityMap::get)
+                        .collect(Collectors.toList());
+
+                Map<String, Object> result = new HashMap<>();
+                result.put("label", sortedDaysOfMonth);
+                result.put("data", roomCapacityValues);
+
+                return ResponseUtils.success(result, "IsSuccess");
+            } catch (Exception e) {
+                log.error("Error retrieving report room capacities: {}", e.getMessage(), e);
+                return ResponseUtils.error("IsFail");
             }
-            List<ReportRoomCapacity> reportRoomCapacities = reportRoomCapacityRepository.findAllInCurrentMonth(date.getMonth(), date.getYear());
-            Map<String, Float> roomCapacityMap = new HashMap<>();
-            reportRoomCapacities.forEach(report -> {
-                String dayOfMonth = report.getCreateDate().toLocalDateTime().toLocalDate().format(formatter);
-                Float roomCapacityValue = BigDecimal.valueOf(report.getRoomCapacityValue()).setScale(2,
-                        RoundingMode.HALF_UP).floatValue();
-                roomCapacityMap.put(dayOfMonth, roomCapacityValue);
-            });
-            allDaysOfMonth.forEach(day -> roomCapacityMap.putIfAbsent(day, 0.0f));
-            List<String> sortedDaysOfMonth = new ArrayList<>(roomCapacityMap.keySet());
-            sortedDaysOfMonth.sort(Comparator.naturalOrder());
-            List<Float> roomCapacityValues = sortedDaysOfMonth.stream()
-                    .map(roomCapacityMap::get)
-                    .collect(Collectors.toList());
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("daysOfMonth", sortedDaysOfMonth);
-            result.put("roomCapacityValues", roomCapacityValues);
-
-            return ResponseUtils.success(result, "IsSuccess");
-        } catch (Exception e) {
-            log.error("Error retrieving report room capacities: {}", e.getMessage(), e);
-            return ResponseUtils.error("IsFail");
         }
-    }
 
     public ResponseDTO getReportRoomCapacityByYear(Integer year) {
         try {
             List<Object[]> reportRoomCapacities = reportRoomCapacityRepository.findAverageRoomCapacityByYear(year);
             List<String> months = new ArrayList<>();
             List<Float> averageRoomCapacities = new ArrayList<>();
-
+            LocalDate currentDate = LocalDate.now();
+            Map<Integer, Double> monthDataMap = new HashMap<>();
             for (Object[] row : reportRoomCapacities) {
                 int month = (int) row[1];
                 double averageRoomCapacity = (double) row[2];
-
+                monthDataMap.put(month, averageRoomCapacity);
+            }
+            for (int month = 1; month <= currentDate.getMonthValue(); month++) {
                 String monthString = String.format("%02d", month);
                 months.add(monthString);
-
+                double averageRoomCapacity = monthDataMap.getOrDefault(month, 0.0);
                 BigDecimal bd = new BigDecimal(averageRoomCapacity).setScale(2, RoundingMode.HALF_UP);
                 averageRoomCapacities.add(bd.floatValue());
             }
-
             Map<String, List<?>> result = new HashMap<>();
-            result.put("months", months);
-            result.put("averageRoomCapacities", averageRoomCapacities);
+            result.put("label", months);
+            result.put("data", averageRoomCapacities);
 
             return ResponseUtils.success(result, "IsSuccess");
         } catch (Exception e) {
@@ -125,8 +140,8 @@ public class OverviewService {
             }
 
             Map<String, List<?>> result = new HashMap<>();
-            result.put("dayOfWeek", listDayOfWeek);
-            result.put("averageRoomCapacities", averageRoomCapacities);
+            result.put("label", listDayOfWeek);
+            result.put("data", averageRoomCapacities);
 
             return ResponseUtils.success(result, "IsSuccess");
         } catch (Exception e) {

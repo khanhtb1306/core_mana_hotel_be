@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @RestController
@@ -28,7 +29,7 @@ public class OverviewController {
     }
 
     @GetMapping("/report_room_capacity_by_month")
-    public ResponseDTO getReportRoomCapacityCurrentMonth(Date date) {
+    public ResponseDTO getReportRoomCapacityCurrentMonth(String date) {
         return overviewService.getReportRoomCapacityByMonth(date);
     }
 
