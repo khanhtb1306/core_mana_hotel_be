@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/customer/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/staff/**").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/account/**").hasAnyAuthority("ROLE_MANAGER","ROLE_RECEPTIONIST")
                 .requestMatchers("/Floor/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/goods/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/goods-unit/**").hasAnyAuthority("ROLE_MANAGER")

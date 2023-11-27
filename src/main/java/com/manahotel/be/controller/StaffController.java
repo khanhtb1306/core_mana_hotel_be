@@ -10,6 +10,8 @@ import com.manahotel.be.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/staff")
 public class StaffController {
@@ -33,9 +35,15 @@ public class StaffController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseDTO deleteStaff(@PathVariable Long id)
+    public ResponseDTO deleteStaff(@PathVariable List<Long> id)
     {
-        return staffService.deleteStaff(id);
+        return staffService.deleteStaffByList(id);
+    }
+
+    @PutMapping("/admin/{id}")
+    public ResponseDTO adminStaff(@PathVariable Long id)
+    {
+        return staffService.adminStaff(id);
     }
 
     @PostMapping

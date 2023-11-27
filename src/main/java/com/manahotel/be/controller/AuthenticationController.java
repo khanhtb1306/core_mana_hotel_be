@@ -47,18 +47,17 @@ public class AuthenticationController {
 
     @PostMapping("/password-reset-request")
     public ResponseEntity<String> resetPasswordRequest(@RequestBody PasswordResetRequest passwordRequestUtil,
-                                       final HttpServletRequest servletRequest)
+                                                       final HttpServletRequest servletRequest)
             throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
 
         Optional<Staff> staff = staffService.findByEmail(passwordRequestUtil.getEmail());
         String passwordResetUrl = "";
-        String passwordResetToken="";
+        String passwordResetToken = "";
         if (staff.isPresent()) {
             passwordResetToken = UUID.randomUUID().toString();
             staffService.createPasswordResetTokenForUser(staff.get(), passwordResetToken);
-            passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken,passwordRequestUtil.getType());
-        }
-        else{
+            passwordResetUrl = service.passwordResetEmailLink(staff.get(), service.applicationUrl(servletRequest), passwordResetToken, passwordRequestUtil);
+        } else {
             return new ResponseEntity<>("Không tìm thấy email!", HttpStatus.OK);
         }
         log.info(passwordResetUrl);
@@ -67,8 +66,8 @@ public class AuthenticationController {
 
 
     @PostMapping("/reset-password")
-    public  ResponseEntity<String>  resetPassword(@RequestBody PasswordReset passwordResetRequest,
-                                @RequestParam("token") String passwordResetToken) {
+    public ResponseEntity<String> resetPassword(@RequestBody PasswordReset passwordResetRequest,
+                                                @RequestParam("token") String passwordResetToken) {
         String tokenValidationResult = staffService.validatePasswordResetToken(passwordResetToken);
         if (!tokenValidationResult.equalsIgnoreCase("valid")) {
             return new ResponseEntity<>("Mã thay đổi không hợp lệ", HttpStatus.OK);
@@ -76,14 +75,12 @@ public class AuthenticationController {
 
         Staff staff = staffService.findUserByPasswordToken(passwordResetToken);
         if (staff != null) {
-            if(passwordResetRequest.getType() == 1)
-            {
-                ResponseDTO responseDTO= staffService.changePassword(staff.getStaffId(), passwordResetRequest.getOldPassword(), passwordResetRequest.getNewPassword());
-                if (responseDTO.isSuccess())
-                {
+            if (passwordResetRequest.getType() == 1) {
+                ResponseDTO responseDTO = staffService.changePassword(staff.getStaffId(), passwordResetRequest.getOldPassword(), passwordResetRequest.getNewPassword());
+                if (responseDTO.isSuccess()) {
                     return new ResponseEntity<>(responseDTO.getDisplayMessage(), HttpStatus.OK);
                 }
-                return new ResponseEntity<>(responseDTO.getDisplayMessage(),  HttpStatus.OK);
+                return new ResponseEntity<>(responseDTO.getDisplayMessage(), HttpStatus.OK);
             }
             service.ResetPassword(staff, passwordResetRequest.getNewPassword());
             return new ResponseEntity<>("Đổi mật khẩu thành công", HttpStatus.OK);

@@ -7,6 +7,7 @@ import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.StaffRepository;
 import com.manahotel.be.security.*;
 import com.manahotel.be.security.request.AuthenticationRequest;
+import com.manahotel.be.security.request.PasswordResetRequest;
 import com.manahotel.be.security.request.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
 
 import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
 import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
@@ -87,11 +89,15 @@ public class AuthenticationService {
         return "http://localhost:3000";
     }
 
-    public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken, int type) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
+    public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken, PasswordResetRequest passwordResetRequest) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String url = "";
-        if (type == 1) {
+        if (passwordResetRequest.getType() == 1) {
             url = applicationUrl + "/resetPassword?" + passwordResetToken;
-            eventListener.sendVerificationEmail(url, staff);
+
+            String password = generateRandomPassword(6);
+            staff.setPassword(staffService.passwordCoder(password));
+            staffRepository.save(staff);
+            eventListener.sendVerificationEmail(url, staff,password);
         } else {
             url = applicationUrl + "/resetPassword?" + passwordResetToken;
             eventListener.sendPasswordResetVerificationEmail(url, staff);
@@ -99,5 +105,20 @@ public class AuthenticationService {
         log.info("Click the link to reset your password : ", url);
         return url;
     }
+    public static String generateRandomPassword(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        StringBuilder password = new StringBuilder();
+
+        SecureRandom random = new SecureRandom();
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(characters.length());
+            password.append(characters.charAt(randomIndex));
+        }
+
+        return password.toString();
+    }
+
 
 }

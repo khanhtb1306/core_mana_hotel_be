@@ -30,7 +30,14 @@ public class CustomerService {
     private CustomerGroupService customerGroupService;
 
     public List<Customer> getAll() {
-        return customerRepository.findAll();
+
+        List<Customer> allCustomers = customerRepository.findAll();
+
+        if (!allCustomers.isEmpty()) {
+            allCustomers.remove(0);
+        }
+
+        return allCustomers;
     }
 
     private void commonMapping(Customer customer, CustomerDTO customerDTO) throws IOException {
@@ -64,6 +71,16 @@ public class CustomerService {
             c.setCustomerId(nextId);
             CustomerGroup customerGroup = customerGroupService.getCustomerGroupById(customerDTO.getCustomerGroupId());
             c.setCustomerGroup(customerGroup);
+            if (!validateDob(customerDTO.getDob())) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Ngày sinh nhỏ hơn ngày hiện tại!");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            if (customerRepository.findByIdentity(customerDTO.getIdentity()) != null) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Số chứng minh thư đã tồn tại!");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
             commonMapping(c, customerDTO);
 
@@ -78,7 +95,18 @@ public class CustomerService {
             log.info("Can't add customer", e.getMessage());
             Map<String, String> response = new HashMap<>();
             response.put("message", "Tạo thông tin khách hàng thất bại");
-            return new ResponseEntity<>(response,  HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public boolean validateDob(String dob) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = dateFormat.parse(dob);
+            Date currentDate = new Date();
+            return parsedDate.before(currentDate);
+        } catch (ParseException e) {
+            return false;
         }
     }
 
@@ -89,6 +117,11 @@ public class CustomerService {
             Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!"));
             CustomerGroup customerGroup = customerGroupService.getCustomerGroupById(customerDTO.getCustomerGroupId());
             c.setCustomerGroup(customerGroup);
+            if (!validateDob(customerDTO.getDob())) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Ngày sinh nhỏ hơn ngày hiện tại!");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             commonMapping(c, customerDTO);
 
             customerRepository.save(c);

@@ -1,5 +1,6 @@
 package com.manahotel.be.model.dto;
 
+import com.manahotel.be.common.constant.Role;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,4 +21,5 @@ public class StaffDTO {
     private String phoneNumber;
     private MultipartFile image;
     private String departmentId;
+    private Role role;
 }

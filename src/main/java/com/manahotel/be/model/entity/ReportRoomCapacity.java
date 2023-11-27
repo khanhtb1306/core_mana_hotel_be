@@ -21,9 +21,6 @@ public class ReportRoomCapacity {
     @Column(name = "create_date")
     private Timestamp createDate;
 
-    @Column(name = "day_of_week")
-    private String dayOfWeek;
-
     @Column(name = "room_capacity_value")
     private Float roomCapacityValue;
 }

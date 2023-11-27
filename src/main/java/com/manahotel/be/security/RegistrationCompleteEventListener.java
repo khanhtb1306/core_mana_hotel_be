@@ -23,15 +23,16 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     }
 
-    public void sendVerificationEmail(String url, Staff staff) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
+    public void sendVerificationEmail(String url, Staff staff, String password) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String subject = "Tài khoản nhân viên";
-        String senderName = "Dịch vụ người dùng";
+        String senderName = "ManaHotel";
         String mailContent = "<p> Chào, " + staff.getStaffName() + ", </p>" +
                 "<p><b>Gần đây bạn đã được kích hoạt tài khoản, hãy đặt lại mật khẩu của mình</b></p>"  +
                 "<p>Vui lòng nhấp vào liên kết bên dưới để hoàn thành hành động.</p>" +
                 "<p>Tên đăng nhập: "+ staff.getUsername()+"</p>"+
-                "<p>Mật khẩu: "+ staff.getPassword()+"</p>"+
-                "<a href=\"" + url + "\">Đặt lại mật khẩu</a>" +
+                "<p>Mật khẩu: "+ password+"</p>"+
+//                "<a href=\"" + url + "\">Đặt lại mật khẩu</a>" +
+                "<p>Vào thông tin nhân viên để đổi mật khẩu</p>"+
                 "<p> Dịch vụ cổng đăng ký người dùng";
 
         jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
@@ -45,7 +46,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     public void sendPasswordResetVerificationEmail(String url, Staff staff) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String subject = "Xác minh yêu cầu đặt lại mật khẩu";
-        String senderName = "Dịch vụ người dùng";
+        String senderName = "ManaHotel";
         String mailContent = "<p> Chào, " + staff.getStaffName() + ", </p>" +
                 "<p><b>Gần đây bạn đã yêu cầu đặt lại mật khẩu của mình</b></p>"  +
                 "<p>Vui lòng nhấp vào liên kết bên dưới để hoàn thành hành động.</p>" +
