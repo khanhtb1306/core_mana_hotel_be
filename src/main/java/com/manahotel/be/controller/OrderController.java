@@ -43,4 +43,8 @@ public class OrderController {
         return invoicePrinterService.WriteInvoice(id.replace("\n", ""));
     }
 
+    @GetMapping("/get-all-retail-payment")
+    public ResponseDTO getAllRetailPayment() {
+        return orderService.getAllRetailPayment();
+    }
 }

@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
@@ -122,11 +123,16 @@ public class OverviewService {
         }
     }
 
-    public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(String dateString) {
+    public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(String dateString, boolean check) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
             LocalDate date = LocalDate.parse(dateString, formatter);
-            List<Object[]> reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(date.getMonthValue(), date.getYear());
+            List<Object[]> reportRoomCapacities;
+            if(check){
+                reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(date.getMonthValue(), date.getYear());
+            }else {
+                reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(null, date.getYear());
+            }
             List<String> listDayOfWeek = new ArrayList<>();
             List<Float> averageRoomCapacities = new ArrayList<>();
 
@@ -313,7 +319,6 @@ public class OverviewService {
                 totalTimeUseToday += totalTimestamp;
             }
 
-
             float roomCapacityToday = ((float) totalTimeUseToday/totalTimeUseOfRoomsMax)*100;
             ReportRoomCapacity reportRoomCapacity = new ReportRoomCapacity();
             reportRoomCapacity.setRoomCapacityValue(roomCapacityToday);
@@ -333,11 +338,6 @@ public class OverviewService {
 
         ReportRevenue reportRevenue = new ReportRevenue();
         reportRevenue.setCreatedDate(logTime);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
-        String dayOfWeek = dateFormat.format(new Date(logTime.getTime()));
-        reportRevenue.setDayOfWeeks(dayOfWeek);
-
         reportRevenue.setRevenueValue(totalIncome != null ? totalIncome : 0);
 
         reportRevenueRepository.save(reportRevenue);
@@ -356,9 +356,60 @@ public class OverviewService {
                 .collect(Collectors.toList());
 
         Map<String, Object> result = new HashMap<>();
-        result.put("daysOfMonth", daysOfMonth);
-        result.put("revenueValues", revenueValues);
+        result.put("label", daysOfMonth);
+        result.put("data", revenueValues);
 
         return ResponseUtils.success(result, "Hiển thị doanh thu từng ngày theo tháng thành công");
+    }
+
+    public ResponseDTO getReportRevenueDayOfWeekByMonthOrYear(Integer time, boolean isSearchByMonth) {
+        List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(time) : reportRevenueRepository.findAllByYear(time);
+
+        DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE");
+
+        Map<String, Float> dayOfWeeksRevenueSum = reportRevenues.stream()
+                .collect(Collectors.groupingBy(
+                        report -> report.getCreatedDate().toLocalDateTime().format(dayOfWeekFormatter),
+                        Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
+                ))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().floatValue()
+                ));
+
+        List<String> daysOfWeek = new ArrayList<>(dayOfWeeksRevenueSum.keySet());
+        List<Float> revenueValues = new ArrayList<>(dayOfWeeksRevenueSum.values());
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("label", daysOfWeek);
+        result.put("data", revenueValues);
+
+        return ResponseUtils.success(result, isSearchByMonth ? "Hiển thị doanh thu từng thứ theo tháng thành công" : "Hiển thị doanh thu từng thứ theo năm thành công");
+    }
+
+    public ResponseDTO getReportRevenueMonthByYear(Integer year) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+        List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByYear(year);
+
+        Map<String, Float> monthsOfYearRevenueSum = reportRevenues.stream()
+                .collect(Collectors.groupingBy(
+                        report -> report.getCreatedDate().toLocalDateTime().format(formatter),
+                        Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
+                ))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().floatValue()
+                ));
+
+        List<String> monthsOfYear = new ArrayList<>(monthsOfYearRevenueSum.keySet());
+        List<Float> revenueValues = new ArrayList<>(monthsOfYearRevenueSum.values());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("label", monthsOfYear);
+        result.put("data", revenueValues);
+
+        return ResponseUtils.success(result, "Hiển thị doanh thu từng tháng theo năm thành công");
     }
 }

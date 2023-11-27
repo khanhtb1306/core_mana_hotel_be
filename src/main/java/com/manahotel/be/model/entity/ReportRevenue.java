@@ -21,9 +21,6 @@ public class ReportRevenue {
     @Column(name = "created_date")
     private Timestamp createdDate;
 
-    @Column(name = "day_of_weeks", length = 50)
-    private String dayOfWeeks;
-
     @Column(name = "revenue_value")
     private Float revenueValue;
 }

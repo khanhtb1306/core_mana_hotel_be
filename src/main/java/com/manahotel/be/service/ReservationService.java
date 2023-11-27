@@ -151,6 +151,9 @@ public class ReservationService {
 
             commonMapping(reservation, reservationDTO);
 
+            reservation.setTotalAdults(0L);
+            reservation.setTotalChildren(0L);
+
             reservation.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             reservation.setCreatedById(userId);
 
@@ -208,6 +211,8 @@ public class ReservationService {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
         }
         if(reservation.getStatus().equals(Status.DONE)) {
+            reservation.setTransactionCode((reservationDTO.getTransactionCode() != null) ? reservationDTO.getTransactionCode() : reservation.getTransactionCode());
+
             Staff staff = findStaff(userId);
             overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", reservation.getTotalPrice(), new Timestamp(System.currentTimeMillis()));
 

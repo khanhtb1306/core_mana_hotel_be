@@ -178,4 +178,20 @@ public class OrderService {
             return null;
         }
     }
+
+    public ResponseDTO getAllRetailPayment() {
+        List<Object[]> listOrders = orderRepository.findAllRetailOrdersWithDetails();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(Object[] order : listOrders) {
+            Order o = (Order) order[0];
+            List<OrderDetail> listOrderDetails = orderDetailRepository.findOrderDetailByOrder(o);
+            Map<String, Object> orderInfo = new HashMap<>();
+            orderInfo.put("order", o);
+            orderInfo.put("listOrderDetails", listOrderDetails);
+            result.add(orderInfo);
+        }
+
+        return ResponseUtils.success(result, "Hiển thị danh sách hóa đơn bán lẻ thành công");
+    }
 }

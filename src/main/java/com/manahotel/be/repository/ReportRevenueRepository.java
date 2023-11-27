@@ -11,4 +11,7 @@ import java.util.List;
 public interface ReportRevenueRepository extends JpaRepository<ReportRevenue, Long> {
     @Query("SELECT rr FROM ReportRevenue rr WHERE MONTH(rr.createdDate) = ?1 AND YEAR(rr.createdDate) = YEAR(CURRENT_DATE())")
     List<ReportRevenue> findAllByMonth(Integer month);
+
+    @Query("SELECT rr FROM ReportRevenue rr WHERE YEAR(rr.createdDate) = ?1")
+    List<ReportRevenue> findAllByYear(Integer year);
 }
