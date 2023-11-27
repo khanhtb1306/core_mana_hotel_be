@@ -75,7 +75,7 @@ public class AuthenticationService {
             } else {
                 log.error("Password is wrong");
             }
-            return AuthenticationResponse.builder().response("Tên đăng nhập hoặc mật khẩu sai").build();
+            return AuthenticationResponse.builder().response("Tên người dùng hoặc mật khẩu sai").build();
         }
     }
 

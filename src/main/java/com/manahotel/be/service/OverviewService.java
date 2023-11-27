@@ -122,9 +122,11 @@ public class OverviewService {
         }
     }
 
-    public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(Date date) {
+    public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(String dateString) {
         try {
-            List<Object[]> reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(date.getMonth(), date.getYear());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate date = LocalDate.parse(dateString, formatter);
+            List<Object[]> reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(date.getMonthValue(), date.getYear());
             List<String> listDayOfWeek = new ArrayList<>();
             List<Float> averageRoomCapacities = new ArrayList<>();
 

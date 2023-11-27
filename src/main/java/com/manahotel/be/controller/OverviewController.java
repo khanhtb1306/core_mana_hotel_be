@@ -39,7 +39,7 @@ public class OverviewController {
     }
 
     @GetMapping("/report_room_capacity_with_day_of_week_by_month")
-    public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(Date date) {
+    public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(String date) {
         return overviewService.getReportRoomCapacityWithDayOfWeekByMonth(date);
     }
 
