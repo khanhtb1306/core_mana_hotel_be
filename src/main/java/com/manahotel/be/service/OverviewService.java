@@ -362,8 +362,11 @@ public class OverviewService {
         return ResponseUtils.success(result, "Hiển thị doanh thu từng ngày theo tháng thành công");
     }
 
-    public ResponseDTO getReportRevenueDayOfWeekByMonthOrYear(Integer time, boolean isSearchByMonth) {
-        List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(time) : reportRevenueRepository.findAllByYear(time);
+    public ResponseDTO getReportRevenueDayOfWeekByMonthOrYear(String time, boolean isSearchByMonth) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate date = LocalDate.parse(time, formatter);
+        List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(date.getMonthValue()) : reportRevenueRepository.findAllByYear(date.getYear());
 
         DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE");
 

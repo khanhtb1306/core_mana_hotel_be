@@ -64,7 +64,6 @@ public class QRCodeController {
                 entity,
                 String.class
         );
-
         return response;
     }
 }

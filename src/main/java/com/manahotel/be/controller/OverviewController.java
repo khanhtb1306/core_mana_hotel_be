@@ -49,9 +49,15 @@ public class OverviewController {
     }
 
     @GetMapping("/report_revenue_day_of_week_by_month")
-    public ResponseDTO getReportRevenueDayOfWeekByMonthOrYear(Integer time, boolean isSearchByMonth) {
-        return overviewService.getReportRevenueDayOfWeekByMonthOrYear(time, isSearchByMonth);
+    public ResponseDTO getReportRevenueDayOfWeekByMonth(String time) {
+        return overviewService.getReportRevenueDayOfWeekByMonthOrYear(time, true);
     }
+
+    @GetMapping("/report_revenue_day_of_week_by_year")
+    public ResponseDTO getReportRevenueDayOfWeekByYear(String time) {
+        return overviewService.getReportRevenueDayOfWeekByMonthOrYear(time, false);
+    }
+
 
     @GetMapping("/report_revenue_month_by_year")
     public ResponseDTO getReportRevenueMonthByYear(Integer year) {
