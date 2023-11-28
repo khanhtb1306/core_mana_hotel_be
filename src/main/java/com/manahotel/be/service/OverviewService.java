@@ -363,9 +363,9 @@ public class OverviewService {
     }
 
     public ResponseDTO getReportRevenueDayOfWeekByMonthOrYear(String time, boolean isSearchByMonth) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(time, formatter);
+
         List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(date.getMonthValue()) : reportRevenueRepository.findAllByYear(date.getYear());
 
         DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE");
