@@ -1,9 +1,9 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.model.dto.BankAccountDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.QRCodeRequest;
+import com.manahotel.be.model.dto.response.QRCodeResponse;
 import com.manahotel.be.model.entity.BankAccount;
 import com.manahotel.be.service.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class QRCodeController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<String> generateQRCode(String reservationId, Long bankAccountId, Float amount) {
+    public ResponseEntity<QRCodeResponse> generateQRCode(String reservationId, Long bankAccountId, Float amount, String template) {
         BankAccount bankAccount = service.findBankAccount(bankAccountId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -50,6 +50,8 @@ public class QRCodeController {
         qrCodeRequest.setAcqId(bankAccount.getBankId());
         qrCodeRequest.setAmount(Math.round(amount));
         qrCodeRequest.setAddInfo(transactionCode);
+        qrCodeRequest.setFormat("text");
+        qrCodeRequest.setTemplate(template);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -58,12 +60,18 @@ public class QRCodeController {
 
         HttpEntity<QRCodeRequest> entity = new HttpEntity<>(qrCodeRequest, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<QRCodeResponse> responseEntity = restTemplate.exchange(
                 "https://api.vietqr.io/v2/generate",
                 HttpMethod.POST,
                 entity,
-                String.class
+                QRCodeResponse.class
         );
-        return response;
+
+        QRCodeResponse response = responseEntity.getBody();
+        if(response != null) {
+            response.setTransactionCode(transactionCode);
+        }
+
+        return responseEntity;
     }
 }
