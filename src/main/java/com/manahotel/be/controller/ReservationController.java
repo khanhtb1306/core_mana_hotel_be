@@ -44,4 +44,14 @@ public class ReservationController {
     public ResponseDTO getAllPayment() {
         return service.getAllPayment();
     }
+
+    @GetMapping("/calculate-early-surcharge")
+    public ResponseDTO calculateEarlySurcharge(String roomCategoryId, long lateTime, float value) {
+        return service.calculateEarlySurcharge(roomCategoryId, lateTime, value);
+    }
+
+    @GetMapping("/calculate-late-surcharge")
+    public ResponseDTO calculateLateSurcharge(String roomCategoryId, long lateTime, float value) {
+        return service.calculateLateSurcharge(roomCategoryId, lateTime, value);
+    }
 }
