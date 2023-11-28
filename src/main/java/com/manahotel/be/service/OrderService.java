@@ -80,27 +80,30 @@ public class OrderService {
             List<Object> ListResultByReservationId = new ArrayList<>();
             List<ReservationDetail> reservationDetails = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
             for (ReservationDetail reservationDetail : reservationDetails) {
-                List<Object> listOrderByReservationId = new ArrayList<>();
                 List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                if (!orderList.isEmpty()){
+                    List<Object> listOrderByReservationDetailId = new ArrayList<>();
+                    for (Order order : orderList) {
+                        Map<String, Object> orderInfo = new HashMap<>();
+                        order.setReservationDetail(null);
+                        orderInfo.put("order", order);
 
-                for (Order order : orderList) {
-                    Map<String, Object> orderInfo = new HashMap<>();
-                    order.setReservationDetail(null);
-                    orderInfo.put("order", order);
-
-                    List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
-                    List<Map<String, Object>> listOrderDetail = new ArrayList<>();
-                    for (OrderDetail orderDetail : orderDetailList) {
-                        Map<String, Object> orderInfo1 = new HashMap<>();
-                        orderInfo1.put("orderDetail", orderDetail);
-                        listOrderDetail.add(orderInfo1);
+                        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
+                        List<Map<String, Object>> listOrderDetail = new ArrayList<>();
+                        for (OrderDetail orderDetail : orderDetailList) {
+                            Map<String, Object> orderInfo1 = new HashMap<>();
+                            orderInfo1.put("orderDetail", orderDetail);
+                            listOrderDetail.add(orderInfo1);
+                        }
+                        orderInfo.put("listOrderDetailByOrder", listOrderDetail);
+                        listOrderByReservationDetailId.add(orderInfo);
                     }
-                    orderInfo.put("listOrderDetailByOrder", listOrderDetail);
-                    listOrderByReservationId.add(orderInfo);
+
+                    Map<String, Object> OrderByReservationDetailId = new HashMap<>();
+                    OrderByReservationDetailId.put("ReservationDetailId", reservationDetail.getReservationDetailId());
+                    OrderByReservationDetailId.put("listOrderByReservationDetailId", listOrderByReservationDetailId);
+                    ListResultByReservationId.add(OrderByReservationDetailId);
                 }
-                Map<String, Object> orderInfo2 = new HashMap<>();
-                orderInfo2.put("listOrderByReservationDetailId", listOrderByReservationId);
-                ListResultByReservationId.add(orderInfo2);
             }
             log.info("------- Get Order By Reservation End -------");
             return ResponseUtils.success(ListResultByReservationId, "Lấy hóa đơn thành công");
