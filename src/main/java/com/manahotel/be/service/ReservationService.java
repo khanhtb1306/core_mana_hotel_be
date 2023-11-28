@@ -1,6 +1,7 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
+import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
@@ -231,6 +232,14 @@ public class ReservationService {
             fundBook.setStatus(Status.COMPLETE);
             repository9.save(fundBook);
         }
+    }
+
+    public ResponseDTO calculateLateSurcharge(String roomCategoryId, long lateTime, float value) {
+        return ResponseUtils.success(ControlPolicyUtils.calculateLateSurcharge(roomCategoryId, lateTime, value), "Tính phụ thu muộn thành công");
+    }
+
+    public ResponseDTO calculateEarlySurcharge(String roomCategoryId, long lateTime, float value) {
+        return ResponseUtils.success(ControlPolicyUtils.calculateEarlySurcharge(roomCategoryId, lateTime, value), "Tính phụ thu sớm thành công");
     }
 
     private Reservation findReservation(String id) {
