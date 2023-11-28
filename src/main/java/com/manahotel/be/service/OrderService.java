@@ -43,11 +43,11 @@ public class OrderService {
     @Autowired
     private OrderDetailService orderDetailService;
 
-    public ResponseDTO getOrderByReservationDetailId(Long reservationId){
+    public ResponseDTO getOrderByReservationDetailId(Long reservationDetailId){
         log.info("------- Get Order Start -------");
         List<Object> result = new ArrayList<>();
         try{
-            List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationId);
+            List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId);
             for (Order order : orderList)
             {
                 Map<String, Object> orderInfo = new HashMap<>();
@@ -67,6 +67,42 @@ public class OrderService {
             }
             log.info("------- Get Order End -------");
             return ResponseUtils.success(result,"Lấy hóa đơn thành công");
+
+        }catch (Exception e){
+            log.info("Can't Get Order", e.getMessage());
+            return ResponseUtils.error("Lấy hóa đơn thất bại");
+        }
+    }
+
+    public ResponseDTO getOrderByReservationId(String reservationId){
+        log.info("------- Get Order By Reservation Start -------");
+        try{
+            List<Object> resultByReservation = new ArrayList<>();
+            List<ReservationDetail> reservationDetails = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
+            for(ReservationDetail reservationDetail : reservationDetails) {
+                List<Object> result = new ArrayList<>();
+                List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                for (Order order : orderList) {
+                    Map<String, Object> orderInfo = new HashMap<>();
+                    order.setReservationDetail(null);
+                    orderInfo.put("order", order);
+
+                    List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
+                    List<Map<String, Object>> inforList = new ArrayList<>();
+                    for (OrderDetail orderDetail : orderDetailList) {
+                        Map<String, Object> orderInfo1 = new HashMap<>();
+                        orderInfo1.put("OrderDetail", orderDetail);
+                        inforList.add(orderInfo1);
+                    }
+                    orderInfo.put("listOrderDetail", inforList);
+                    result.add(orderInfo);
+                }
+                Map<String, Object> orderInfo2 = new HashMap<>();
+                orderInfo2.put("ListOrderByReservation", result);
+                resultByReservation.add(orderInfo2);
+            }
+            log.info("------- Get Order By Reservation End -------");
+            return ResponseUtils.success(resultByReservation,"Lấy hóa đơn thành công");
 
         }catch (Exception e){
             log.info("Can't Get Order", e.getMessage());

@@ -21,6 +21,10 @@ public class OrderController {
     public ResponseDTO getOrderByReservationId(@PathVariable Long id){
         return orderService.getOrderByReservationDetailId(id);
     }
+    @GetMapping("/by_reservation/{id}")
+    public ResponseDTO getOrderByReservationId(@PathVariable String id){
+        return orderService.getOrderByReservationId(id);
+    }
     @PostMapping
     public ResponseDTO createOrder(OrderRequest orderRequest) {
         return orderService.createOrder(orderRequest.getOrderDTO(),orderRequest.getOrderDetailDTOList());
