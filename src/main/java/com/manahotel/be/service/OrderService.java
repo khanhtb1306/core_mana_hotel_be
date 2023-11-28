@@ -74,13 +74,13 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO getOrderByReservationId(String reservationId){
+    public ResponseDTO getOrderByReservationId(String reservationId) {
         log.info("------- Get Order By Reservation Start -------");
-        try{
-            List<Object> resultByReservation = new ArrayList<>();
+        try {
+            List<Object> ListResultByReservationId = new ArrayList<>();
             List<ReservationDetail> reservationDetails = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
-            for(ReservationDetail reservationDetail : reservationDetails) {
-                List<Object> result = new ArrayList<>();
+            for (ReservationDetail reservationDetail : reservationDetails) {
+                List<Object> listOrderByReservationId = new ArrayList<>();
                 List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
                 for (Order order : orderList) {
                     Map<String, Object> orderInfo = new HashMap<>();
@@ -88,27 +88,29 @@ public class OrderService {
                     orderInfo.put("order", order);
 
                     List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
-                    List<Map<String, Object>> inforList = new ArrayList<>();
+                    List<Map<String, Object>> listOrderDetail = new ArrayList<>();
                     for (OrderDetail orderDetail : orderDetailList) {
                         Map<String, Object> orderInfo1 = new HashMap<>();
-                        orderInfo1.put("OrderDetail", orderDetail);
-                        inforList.add(orderInfo1);
+                        orderInfo1.put("orderDetail", orderDetail);
+                        listOrderDetail.add(orderInfo1);
                     }
-                    orderInfo.put("listOrderDetail", inforList);
-                    result.add(orderInfo);
+                    orderInfo.put("listOrderDetailByOrder", listOrderDetail);
+                    listOrderByReservationId.add(orderInfo);
                 }
                 Map<String, Object> orderInfo2 = new HashMap<>();
-                orderInfo2.put("ListOrderByReservation", result);
-                resultByReservation.add(orderInfo2);
+                orderInfo2.put("listOrderByReservationId", listOrderByReservationId);
+                ListResultByReservationId.add(orderInfo2);
             }
             log.info("------- Get Order By Reservation End -------");
-            return ResponseUtils.success(resultByReservation,"Lấy hóa đơn thành công");
+            return ResponseUtils.success(ListResultByReservationId, "Lấy hóa đơn thành công");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Get Order", e.getMessage());
             return ResponseUtils.error("Lấy hóa đơn thất bại");
         }
     }
+
+
     public ResponseDTO createOrder(OrderDTO orderDTO, List<OrderDetailDTO> orderDetailDTOList) {
         try {
             log.info("------- Add Order Start -------");
