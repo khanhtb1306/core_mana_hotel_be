@@ -82,6 +82,7 @@ public class OrderService {
             for (ReservationDetail reservationDetail : reservationDetails) {
                 List<Object> listOrderByReservationId = new ArrayList<>();
                 List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+
                 for (Order order : orderList) {
                     Map<String, Object> orderInfo = new HashMap<>();
                     order.setReservationDetail(null);
@@ -98,7 +99,7 @@ public class OrderService {
                     listOrderByReservationId.add(orderInfo);
                 }
                 Map<String, Object> orderInfo2 = new HashMap<>();
-                orderInfo2.put("listOrderByReservationId", listOrderByReservationId);
+                orderInfo2.put("listOrderByReservationDetailId", listOrderByReservationId);
                 ListResultByReservationId.add(orderInfo2);
             }
             log.info("------- Get Order By Reservation End -------");
