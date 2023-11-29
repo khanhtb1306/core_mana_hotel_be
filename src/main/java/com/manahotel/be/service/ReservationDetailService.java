@@ -91,13 +91,6 @@ public class ReservationDetailService {
             reservationDetail.setRoom(newRoom);
 
             if(!oldRoom.getRoomCategory().getRoomCategoryId().equals(newRoom.getRoomCategory().getRoomCategoryId())) {
-                Reservation reservation = findReservation(reservationId);
-
-                PriceList priceList = (reservationDTO.getPriceListId() != null) ? findPriceList(reservationDTO.getPriceListId()) : reservation.getPriceList();
-                reservation.setPriceList(priceList);
-
-                repository2.save(reservation);
-
                 reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
             }
 
