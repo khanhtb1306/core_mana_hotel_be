@@ -234,12 +234,12 @@ public class ReservationService {
         }
     }
 
-    public ResponseDTO calculateLateSurcharge(String roomCategoryId, long lateTime, float value) {
-        return ResponseUtils.success(ControlPolicyUtils.calculateLateSurcharge(roomCategoryId, lateTime, value), "Tính phụ thu muộn thành công");
+    public ResponseDTO calculateLateSurcharge(String roomCategoryId, long lateTime, float roomPrice) {
+        return ResponseUtils.success(ControlPolicyUtils.calculateLateSurcharge(roomCategoryId, lateTime, roomPrice), "Tính phụ thu muộn thành công");
     }
 
-    public ResponseDTO calculateEarlySurcharge(String roomCategoryId, long lateTime, float value) {
-        return ResponseUtils.success(ControlPolicyUtils.calculateEarlySurcharge(roomCategoryId, lateTime, value), "Tính phụ thu sớm thành công");
+    public ResponseDTO calculateEarlySurcharge(String roomCategoryId, long lateTime, float roomPrice) {
+        return ResponseUtils.success(ControlPolicyUtils.calculateEarlySurcharge(roomCategoryId, lateTime, roomPrice), "Tính phụ thu sớm thành công");
     }
 
     private Reservation findReservation(String id) {

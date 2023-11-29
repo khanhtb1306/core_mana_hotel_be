@@ -21,7 +21,7 @@ public class ControlPolicyUtils {
     }
 
 
-    public static float calculateLateSurcharge(String roomCategoryId, long lateTime, float value) {
+    public static float calculateLateSurcharge(String roomCategoryId, long lateTime, float roomPrice) {
         List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.LATER_OVERTIME_SURCHARGE, roomCategoryId);
 
         if(policyDetails.isEmpty()) {
@@ -32,14 +32,14 @@ public class ControlPolicyUtils {
 
         for(PolicyDetail policyDetail : policyDetails) {
             if(policyDetail.getLimitValue() <= lateTime) {
-                surcharge = (policyDetail.getPolicyValue() / 100) * value;
+                surcharge = (policyDetail.getPolicyValue() / 100) * roomPrice;
                 break;
             }
         }
         return surcharge;
     }
 
-    public static float calculateEarlySurcharge(String roomCategoryId, long earlyTime, float value) {
+    public static float calculateEarlySurcharge(String roomCategoryId, long earlyTime, float roomPrice) {
         List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.EARLIER_OVERTIME_SURCHARGE, roomCategoryId);
         if(policyDetails.isEmpty()) {
             throw new NoEarlySurchargePolicyException("Chính sách phụ thu nhận sớm của hạng phòng " + roomCategoryId + "không tồn tại");
@@ -49,7 +49,7 @@ public class ControlPolicyUtils {
 
         for(PolicyDetail policyDetail : policyDetails) {
             if(policyDetail.getLimitValue() <= earlyTime) {
-                surcharge = (policyDetail.getPolicyValue() / 100) * value;
+                surcharge = (policyDetail.getPolicyValue() / 100) * roomPrice;
                 break;
             }
         }
