@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .requestMatchers("/import-goods/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/qr-code/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
                 .requestMatchers("/overview/**").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/invoice/**").hasAnyAuthority("ROLE_MANAGER")
                 .anyRequest()
                 .authenticated()
                 .and()
