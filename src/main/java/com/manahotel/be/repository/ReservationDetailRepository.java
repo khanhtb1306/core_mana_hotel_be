@@ -20,6 +20,8 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
 
     ReservationDetail findReservationDetailByReservationAndRoom(Reservation reservation, Room room);
 
+    List<ReservationDetail> findReservationDetailByReservation_ReservationId(String reservationId);
+
     @Query("SELECT rd FROM ReservationDetail rd " +
             "WHERE rd.room.roomId = ?1  AND rd.status <> 'BOOKING'" +
             "AND rd.reservationDetailStatus = 1 " +
