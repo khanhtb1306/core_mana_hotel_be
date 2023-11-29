@@ -343,9 +343,13 @@ public class OverviewService {
         reportRevenueRepository.save(reportRevenue);
     }
 
-    public ResponseDTO getReportRevenueEachDayByMonth(Integer month) {
+    public ResponseDTO getReportRevenueEachDayByMonth(String dateString) {
+
+        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate date = LocalDate.parse(dateString, formatDate);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
-        List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByMonth(month);
+        List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByMonth(date.getMonthValue(), date.getYear());
 
         List<String> daysOfMonth = reportRevenues.stream()
                 .map(report -> report.getCreatedDate().toLocalDateTime().toLocalDate().format(formatter))
@@ -366,7 +370,7 @@ public class OverviewService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(time, formatter);
 
-        List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(date.getMonthValue()) : reportRevenueRepository.findAllByYear(date.getYear());
+        List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(date.getMonthValue(), date.getYear()) : reportRevenueRepository.findAllByYear(date.getYear());
 
         DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE");
 
