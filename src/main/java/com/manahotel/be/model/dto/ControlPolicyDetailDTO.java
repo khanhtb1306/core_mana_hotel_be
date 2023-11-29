@@ -6,7 +6,6 @@ import lombok.Data;
 public class ControlPolicyDetailDTO {
     private Long controlPolicyDetailId;
     private Long reservationDetailId;
-    private String controlPolicyId;
     private Long policyDetailId;
     private String typeValue;
     private Float value;
