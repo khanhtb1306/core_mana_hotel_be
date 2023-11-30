@@ -113,19 +113,28 @@ public class ControlPolicyService {
     }
 
     public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note){
-        log.info("----- Add Info To Control Policy Start------");
+        log.info("----- Add or Update Info To Control Policy Start------");
         try {
-            ControlPolicy controlPolicy = new ControlPolicy();
+            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetailId);
+            if(controlPolicy != null){
+                controlPolicy.setValue(surcharge);
+                controlPolicy.setDiscrepancy(discrepancy);
+                log.info("Update ");
+            }else {
+            controlPolicy = new ControlPolicy();
             controlPolicy.setReservationDetail(findReservationDetail(reservationDetailId));
             controlPolicy.setPolicy(policyRepository.getPolicyByPolicyName(policyName));
             controlPolicy.setTypeValue(typeValue);
             controlPolicy.setValue(surcharge);
             controlPolicy.setDiscrepancy(discrepancy);
             controlPolicy.setNote(note);
+                log.info("Add ");
+            }
             controlPolicyRepository.save(controlPolicy);
+            log.info("Control policy successfully");
         }catch (Exception e){
-            log.error("Add Control Policy fail" + e.getMessage());
+            log.error("Control Policy fail" + e.getMessage());
         }
-        log.info("----- Add Info To Control Policy End------");
+        log.info("----- Add or Update Info To Control Policy End------");
     }
 }
