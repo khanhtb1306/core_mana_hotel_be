@@ -350,10 +350,8 @@ public class OverviewService {
 
         List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByMonth(date.getMonthValue(), date.getYear());
 
-        // Create a map to store revenue values for each day
         Map<Integer, Float> dailyRevenueMap = new HashMap<>();
 
-        // Populate the map with existing records
         reportRevenues.forEach(report -> {
             int dayOfMonth = report.getCreatedDate().toLocalDateTime().getDayOfMonth();
             float revenueValue = BigDecimal.valueOf(report.getRevenueValue()).floatValue();
@@ -366,12 +364,10 @@ public class OverviewService {
             dailyRevenueMap.putIfAbsent(day, 0.0f);
         }
 
-        // Sort the map by day
         Map<Integer, Float> sortedDailyRevenueMap = dailyRevenueMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-        // Extract labels and data from the sorted map
         List<String> daysOfMonth = sortedDailyRevenueMap.keySet().stream()
                 .map(Object::toString)
                 .collect(Collectors.toList());
@@ -394,14 +390,12 @@ public class OverviewService {
 
         DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE", new Locale("vi", "VN"));
 
-        // Create a map with all days of the week initialized to zero
         Map<String, Float> dayOfWeeksRevenueSum = new LinkedHashMap<>();
         DayOfWeek[] daysOfWeekArray = DayOfWeek.values();
         for (DayOfWeek dayOfWeek : daysOfWeekArray) {
             dayOfWeeksRevenueSum.put(dayOfWeek.getDisplayName(TextStyle.FULL, new Locale("vi", "VN")), 0.0f);
         }
 
-        // Populate the map with existing records
         dayOfWeeksRevenueSum.putAll(reportRevenues.stream()
                 .collect(Collectors.groupingBy(
                         report -> report.getCreatedDate().toLocalDateTime().format(dayOfWeekFormatter),
@@ -433,7 +427,6 @@ public class OverviewService {
             monthsOfYearRevenueSum.put(String.format("%02d", month), 0.0f);
         }
 
-        // Populate the map with existing records
         monthsOfYearRevenueSum.putAll(reportRevenues.stream()
                 .collect(Collectors.groupingBy(
                         report -> report.getCreatedDate().toLocalDateTime().format(formatter),
