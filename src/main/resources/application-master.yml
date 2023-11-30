@@ -9,23 +9,11 @@ spring:
     url: jdbc:mysql://manahoteldb.chcfkjpxl2uk.ap-southeast-1.rds.amazonaws.com:3306/MANAHOTEL_DB
     username: manahoteldb
     password: manahoteldb_123
-  #    hikari:
-  #      poolName: Hikari
-  #      auto-commit: true
-  #      data-source-properties:
-  #        cachePrepStmts: true
-  #        prepStmtCacheSize: 250
-  #        prepStmtCacheSqlLimit: 2048
-  #        useServerPrepStmts: true
   mail:
     host: smtp.gmail.com
     port: 587
     username: manahotelsystem@gmail.com
     password: igscmsiixgzkzcjs
-#    email.imap.host : imap.example.com
-#    email.imap.port : 993
-#    email.imap.protocol : imap
-#    email.imap.ssl : true
     properties:
       mail:
         smtp:

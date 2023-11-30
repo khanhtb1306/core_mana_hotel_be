@@ -1,15 +1,10 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
-import com.manahotel.be.exception.NoEarlySurchargePolicyException;
-import com.manahotel.be.exception.NoLateSurchargePolicyException;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.*;
@@ -218,10 +213,7 @@ public class ReservationService {
         }
         if(reservation.getStatus().equals(Status.DONE)) {
             reservation.setTransactionCode((reservationDTO.getTransactionCode() != null) ? reservationDTO.getTransactionCode() : reservation.getTransactionCode());
-
             Staff staff = findStaff(userId);
-            overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", reservation.getTotalPrice(), new Timestamp(System.currentTimeMillis()));
-
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId("TT" + reservation.getReservationId());
             fundBook.setOrderId(reservation.getReservationId());
@@ -236,6 +228,7 @@ public class ReservationService {
             fundBook.setNote("Thu tiền khách trả");
             fundBook.setStatus(Status.COMPLETE);
             repository9.save(fundBook);
+            overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", reservation.getTotalPrice(), new Timestamp(System.currentTimeMillis()));
         }
     }
 

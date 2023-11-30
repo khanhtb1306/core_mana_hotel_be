@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -94,6 +95,31 @@ public class OverviewService {
             }
         }
 
+    public ResponseDTO getReportRoomCapacityByManyYear(Integer startYear) {
+        ZoneId vietnamTimeZone = ZoneId.of("Asia/Ho_Chi_Minh");
+        int currentYear = Year.now(vietnamTimeZone).getValue();
+        List<Object[]> reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityByYearRange(startYear);
+        List<String> years = new ArrayList<>();
+        List<Float> roomCapacities = new ArrayList<>();
+        Map<Integer, Double> roomCapacitiesMap = new HashMap<>();
+        for (Object[] result : reportRoomCapacities) {
+            Integer year = (Integer) result[0];
+            Double averageRoomCapacity = (Double) result[1];
+            roomCapacitiesMap.put(year, averageRoomCapacity);
+        }
+        for (int year = startYear; year <= currentYear; year++) {
+            years.add(Integer.toString(year));
+            Double averageRoomCapacity = roomCapacitiesMap.getOrDefault(year, 0.0);
+            BigDecimal bd = new BigDecimal(averageRoomCapacity).setScale(2, RoundingMode.HALF_UP);
+            roomCapacities.add(bd.floatValue());
+        }
+        Map<String, List<?>> resultMap = new HashMap<>();
+        resultMap.put("label", years);
+        resultMap.put("data", roomCapacities);
+        return ResponseUtils.success(resultMap, "IsSuccess");
+    }
+
+
     public ResponseDTO getReportRoomCapacityByYear(Integer year) {
         try {
             List<Object[]> reportRoomCapacities = reportRoomCapacityRepository.findAverageRoomCapacityByYear(year);
@@ -129,9 +155,9 @@ public class OverviewService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
             LocalDate date = LocalDate.parse(dateString, formatter);
             List<Object[]> reportRoomCapacities;
-            if(check){
+            if (check) {
                 reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(date.getMonthValue(), date.getYear());
-            }else {
+            } else {
                 reportRoomCapacities = reportRoomCapacityRepository.findRoomCapacityWithDayOfWeekByMonth(null, date.getYear());
             }
             List<String> listDayOfWeek = new ArrayList<>();
@@ -143,9 +169,17 @@ public class OverviewService {
                 double averageRoomCapacity = ((Number) row[1]).doubleValue();
 
                 listDayOfWeek.add(dayOfWeek);
-
                 BigDecimal bd = new BigDecimal(averageRoomCapacity).setScale(2, RoundingMode.HALF_UP);
                 averageRoomCapacities.add(bd.floatValue());
+            }
+
+            // Di chuyển ngày chủ nhật (1) xuống cuối danh sách
+            if (!listDayOfWeek.isEmpty() && listDayOfWeek.get(0).equals("Chủ nhật")) {
+                String firstDayOfWeek = listDayOfWeek.remove(0);
+                listDayOfWeek.add(firstDayOfWeek);
+
+                Float firstAverageRoomCapacity = averageRoomCapacities.remove(0);
+                averageRoomCapacities.add(firstAverageRoomCapacity);
             }
 
             Map<String, List<?>> result = new HashMap<>();
@@ -158,6 +192,7 @@ public class OverviewService {
             return ResponseUtils.error("IsFail");
         }
     }
+
 
     private String getDayOfWeekNameInVietnamese(int numericalDayOfWeek) {
         switch (numericalDayOfWeek) {
@@ -447,4 +482,7 @@ public class OverviewService {
 
         return ResponseUtils.success(result, "Hiển thị doanh thu từng tháng theo năm thành công");
     }
+
+
+
 }

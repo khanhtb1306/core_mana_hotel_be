@@ -30,7 +30,6 @@ spring:
     # đổi sang email dưới này nhé
 #    username: manahotelsystem@gmail.com
 #    password: Manahotelsystem123
-
     properties:
       mail:
         smtp:

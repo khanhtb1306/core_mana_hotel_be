@@ -60,10 +60,12 @@ public class ReservationController {
     public ResponseDTO calculateLateSurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice) {
         return controlPolicyService.calculateLateSurcharge(reservationDetailId, roomCategoryId, lateTime, roomPrice);
     }
+
     @GetMapping("/calculate_additional_adult_surcharge")
     public ResponseDTO calculateAdditionalAdultSurcharge(long reservationDetailId, String roomCategoryId, long totalAdult, float roomPrice, long timeUse) {
         return controlPolicyService.calculateAdditionalAdultSurcharge(reservationDetailId, roomCategoryId, totalAdult, roomPrice, timeUse);
     }
+
     @GetMapping("/calculate_additional_children_surcharge")
     public ResponseDTO calculateAdditionalChildrenSurcharge(long reservationDetailId, String roomCategoryId, float roomPrice, List<CustomerDTO> customerDTOS, long timeUse) {
         return controlPolicyService.calculateAdditionalChildrenSurcharge(reservationDetailId, roomCategoryId, roomPrice, customerDTOS, timeUse);
