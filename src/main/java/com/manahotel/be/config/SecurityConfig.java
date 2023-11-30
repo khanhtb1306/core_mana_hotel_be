@@ -65,7 +65,6 @@ public class SecurityConfig {
                 .requestMatchers("/order/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
                 .requestMatchers("/reservation-detail-customer/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
                 .requestMatchers("/policy/**").hasAnyAuthority("ROLE_MANAGER")
-                .requestMatchers("/control-policy-detail/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/fund-book/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/import-goods/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/qr-code/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_MANAGER")
