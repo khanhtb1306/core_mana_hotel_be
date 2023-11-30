@@ -1,59 +1,89 @@
 package com.manahotel.be.common.util;
 
-import com.manahotel.be.common.constant.PolicyCont;
-import com.manahotel.be.exception.NoEarlySurchargePolicyException;
-import com.manahotel.be.exception.NoLateSurchargePolicyException;
+import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.entity.PolicyDetail;
-import com.manahotel.be.repository.PolicyDetailRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
+@Slf4j
 @Component
 public class ControlPolicyUtils {
 
-    private static PolicyDetailRepository policyDetailRepository;
-
-    @Autowired
-    public ControlPolicyUtils(PolicyDetailRepository policyDetailRepository) {
-        ControlPolicyUtils.policyDetailRepository = policyDetailRepository;
-    }
-
-
-    public static float calculateLateSurcharge(String roomCategoryId, long lateTime, float roomPrice) {
-        List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.LATER_OVERTIME_SURCHARGE, roomCategoryId);
-
-        if(policyDetails.isEmpty()) {
-            throw new NoLateSurchargePolicyException("Chính sách phụ thu trả muộn của hạng phòng " + roomCategoryId + "không tồn tại");
+    public static float calculateLateSurcharge(long lateTime, float roomPrice, List<PolicyDetail> policyDetails) {
+        float surcharge = 0;
+        try {
+            for(PolicyDetail policyDetail : policyDetails) {
+                if(policyDetail.getLimitValue() <= lateTime) {
+                    surcharge = (policyDetail.getPolicyValue() / 100) * roomPrice;
+                    break;
+                }
+            }
+        }catch (Exception e){
+            log.error("calculate Late Surcharge is fail " + e.getMessage());
         }
 
-        float surcharge = 0;
+        return surcharge;
+    }
 
-        for(PolicyDetail policyDetail : policyDetails) {
-            if(policyDetail.getLimitValue() <= lateTime) {
-                surcharge = (policyDetail.getPolicyValue() / 100) * roomPrice;
-                break;
+    public static float calculateEarlySurcharge(long earlyTime, float roomPrice, List<PolicyDetail> policyDetails) {
+        float surcharge = 0;
+        try{
+            for(PolicyDetail policyDetail : policyDetails) {
+                if(policyDetail.getLimitValue() <= earlyTime) {
+                    surcharge = (policyDetail.getPolicyValue() / 100) * roomPrice;
+                    break;
+                }
             }
+        }catch (Exception e){
+            log.error("calculate Early Surcharge is fail " + e.getMessage());
         }
         return surcharge;
     }
 
-    public static float calculateEarlySurcharge(String roomCategoryId, long earlyTime, float roomPrice) {
-        List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.EARLIER_OVERTIME_SURCHARGE, roomCategoryId);
-        if(policyDetails.isEmpty()) {
-            throw new NoEarlySurchargePolicyException("Chính sách phụ thu nhận sớm của hạng phòng " + roomCategoryId + "không tồn tại");
-        }
+    public static float calculateAdditionalAdultSurcharge(long totalAdult, float priceRoom, long timeUse, List<PolicyDetail> policyDetails) {
+        float result = 0;
+        try{
+            float surcharge = 0;
+            for(PolicyDetail policyDetail : policyDetails) {
+                for(long i = totalAdult; i >= policyDetail.getLimitValue(); i--) {
+                    surcharge += (policyDetail.getPolicyValue()*priceRoom);
 
-        float surcharge = 0;
-
-        for(PolicyDetail policyDetail : policyDetails) {
-            if(policyDetail.getLimitValue() <= earlyTime) {
-                surcharge = (policyDetail.getPolicyValue() / 100) * roomPrice;
-                break;
+                    if(i == policyDetail.getLimitValue()) {
+                        totalAdult = i - 1;
+                    }
+                }
             }
+            result = surcharge * timeUse;
+        }catch (Exception e){
+            log.error("calculate Additional Adult Surcharge is fail " + e.getMessage());
         }
+        return result;
+    }
 
-        return surcharge;
+    public static float calculateAdditionalChildrenSurcharge(List<PolicyDetail> policyDetails, List<CustomerDTO> customerDTOS, float priceRoom, long timeUse) {
+        float result = 0;
+        float TotalSurcharge = 0;
+        try{
+            for (CustomerDTO dto : customerDTOS) {
+                LocalDateTime dobDateTime = LocalDateTime.parse(dto.getDob(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                int age = Period.between(
+                        dobDateTime.atZone(ZoneId.systemDefault()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        LocalDate.now()).getYears();
+                float surcharge = 0;
+                for(PolicyDetail policyDetail : policyDetails) {
+                    if(policyDetail.getLimitValue() <= age){
+                        surcharge = (policyDetail.getPolicyValue()/100)*priceRoom;
+                    }
+                }
+                TotalSurcharge += surcharge;
+            }
+            result = TotalSurcharge * timeUse;
+        }catch (Exception e){
+            log.error("calculate Additional Children Surcharge is fail " + e.getMessage());
+        }
+        return result;
     }
 }

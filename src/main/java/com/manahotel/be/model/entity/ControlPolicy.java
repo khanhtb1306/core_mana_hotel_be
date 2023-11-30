@@ -5,24 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "control_policy")
+@Table(name = "control_policy", indexes = {
+        @Index(name = "pk_cp_rd_idx", columnList = "reservation_id"),
+        @Index(name = "pk_cp_p_idx", columnList = "policy_id")
+})
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ControlPolicyDetail {
+public class ControlPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "control_policy_detail_id")
-    private Long controlPolicyDetailId;
+    @Column(name = "control_policy_id")
+    private Long controlPolicyId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "reservation_detail_id", nullable = false)
     private ReservationDetail reservationDetail;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "policy_detail_id", nullable = false)
-    private PolicyDetail policyDetail;
+    @JoinColumn(name = "policy_id", nullable = false)
+    private Policy policy;
 
     @Column(name = "type_value", length = 250)
     private String typeValue;
