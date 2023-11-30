@@ -33,6 +33,10 @@ public class OverviewController {
     public ResponseDTO getReportRoomCapacityByYear(Integer year) {
         return overviewService.getReportRoomCapacityByYear(year);
     }
+    @GetMapping("/report_room_capacity_by_many_year")
+    public ResponseDTO getReportRoomCapacityByManyYear(Integer year) {
+        return overviewService.getReportRoomCapacityByManyYear(year);
+    }
 
     @GetMapping("/report_room_capacity_with_day_of_week_by_month")
     public ResponseDTO getReportRoomCapacityWithDayOfWeekByMonth(String date) {

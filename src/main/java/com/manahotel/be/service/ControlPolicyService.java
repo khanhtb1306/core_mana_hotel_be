@@ -9,7 +9,6 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.ControlPolicy;
-import com.manahotel.be.model.entity.Policy;
 import com.manahotel.be.model.entity.PolicyDetail;
 import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.repository.ControlPolicyRepository;
@@ -38,6 +37,7 @@ public class ControlPolicyService {
     private ReservationDetailRepository reservationDetailRepository;
 
     public ResponseDTO calculateLateSurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice) {
+        log.info("----- Calculate Late Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.LATER_OVERTIME_SURCHARGE, roomCategoryId);
             if(policyDetails.isEmpty()) {
@@ -46,7 +46,7 @@ public class ControlPolicyService {
             float surcharge = ControlPolicyUtils.calculateLateSurcharge(lateTime, roomPrice, policyDetails);
 
             addControlPolicy(reservationDetailId, PolicyCont.LATER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu trả muộn");
-
+            log.info("----- Calculate Late Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu trả muộn thành công");
         }catch (Exception e){
             log.error(e.getMessage());
@@ -55,6 +55,7 @@ public class ControlPolicyService {
     }
 
     public ResponseDTO calculateEarlySurcharge(long reservationDetailId ,String roomCategoryId, long lateTime, float roomPrice) {
+        log.info("----- Calculate Early Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.EARLIER_OVERTIME_SURCHARGE, roomCategoryId);
             if(policyDetails.isEmpty()) {
@@ -63,6 +64,7 @@ public class ControlPolicyService {
             float surcharge = ControlPolicyUtils.calculateEarlySurcharge(lateTime, roomPrice, policyDetails);
             addControlPolicy(reservationDetailId, PolicyCont.EARLIER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu nhận sớm");
 
+            log.info("----- Calculate Early Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu nhận sớm thành công");
         }catch (Exception e){
             log.error(e.getMessage());
@@ -71,6 +73,7 @@ public class ControlPolicyService {
     }
 
     public ResponseDTO calculateAdditionalAdultSurcharge(long reservationDetailId, String roomCategoryId, long totalAdult, float roomPrice, long timeUse) {
+        log.info("----- Calculate Additional Adult Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.ADDITIONAL_ADULT_SURCHARGE, roomCategoryId);
             if(policyDetails.isEmpty()) {
@@ -78,6 +81,8 @@ public class ControlPolicyService {
             }
             float surcharge = ControlPolicyUtils.calculateAdditionalAdultSurcharge(totalAdult, roomPrice, timeUse, policyDetails);
             addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_ADULT_SURCHARGE, "VND", surcharge, String.valueOf(totalAdult), "Phụ thu quá nguười lớn");
+
+            log.info("----- Calculate Additional Adult Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu quá người lớn thành công");
         }catch (Exception e){
             log.error(e.getMessage());
@@ -85,6 +90,7 @@ public class ControlPolicyService {
         }
     }
     public ResponseDTO calculateAdditionalChildrenSurcharge(long reservationDetailId, String roomCategoryId, float roomPrice, List<CustomerDTO> customerDTOS, long timeUse) {
+        log.info("----- Calculate Additional Children Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.ADDITIONAL_CHILDREN_SURCHARGE, roomCategoryId);
             if(policyDetails.isEmpty()) {
@@ -92,6 +98,8 @@ public class ControlPolicyService {
             }
             float surcharge = ControlPolicyUtils.calculateAdditionalChildrenSurcharge(policyDetails,customerDTOS, roomPrice, timeUse);
             addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_CHILDREN_SURCHARGE, "VND", surcharge, String.valueOf(customerDTOS.size()), "Phụ thu trẻ em");
+
+            log.info("----- Calculate Additional Children Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu trẻ em thành công");
         }catch (Exception e){
             log.error(e.getMessage());
@@ -105,6 +113,7 @@ public class ControlPolicyService {
     }
 
     public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note){
+        log.info("----- Add Info To Control Policy Start------");
         try {
             ControlPolicy controlPolicy = new ControlPolicy();
             controlPolicy.setReservationDetail(findReservationDetail(reservationDetailId));
@@ -115,8 +124,8 @@ public class ControlPolicyService {
             controlPolicy.setNote(note);
             controlPolicyRepository.save(controlPolicy);
         }catch (Exception e){
-            log.error("add Control Policy fail" + e.getMessage());
+            log.error("Add Control Policy fail" + e.getMessage());
         }
+        log.info("----- Add Info To Control Policy End------");
     }
-
 }
