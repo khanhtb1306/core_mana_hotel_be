@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Table(name = "control_policy", indexes = {
-        @Index(name = "pk_cp_rd_idx", columnList = "reservation_id"),
+        @Index(name = "pk_cp_rd_idx", columnList = "reservation_detail_id"),
         @Index(name = "pk_cp_p_idx", columnList = "policy_id")
 })
 @Entity
