@@ -18,4 +18,7 @@ public interface ReportRevenueRepository extends JpaRepository<ReportRevenue, Lo
             "ORDER BY rr.createdDate ASC")
     List<ReportRevenue> findAllByYear(Integer year);
 
+    @Query("SELECT rr FROM ReportRevenue rr WHERE YEAR(rr.createdDate) BETWEEN ?1 AND YEAR(CURRENT_DATE) " +
+            "ORDER BY rr.createdDate ASC")
+    List<ReportRevenue> findAllByYearRange(Integer year);
 }

@@ -382,6 +382,7 @@ public class OverviewService {
     public ResponseDTO getReportRevenueEachDayByMonth(String dateString) {
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(dateString, formatDate);
+        LocalDate currentDate = LocalDate.now();
 
         List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByMonth(date.getMonthValue(), date.getYear());
 
@@ -393,10 +394,13 @@ public class OverviewService {
             dailyRevenueMap.put(dayOfMonth, revenueValue);
         });
 
-        // Add missing days with zero revenue
         int daysInMonth = date.lengthOfMonth();
+
         for (int day = 1; day <= daysInMonth; day++) {
-            dailyRevenueMap.putIfAbsent(day, 0.0f);
+            LocalDate currentDateWithDay = currentDate.withDayOfMonth(day);
+            if (currentDate.isAfter(date) || (currentDate.isEqual(date) && !currentDateWithDay.isAfter(LocalDate.now()))) {
+                dailyRevenueMap.putIfAbsent(day, 0.0f);
+            }
         }
 
         Map<Integer, Float> sortedDailyRevenueMap = dailyRevenueMap.entrySet().stream()
@@ -456,22 +460,27 @@ public class OverviewService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
         List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByYear(year);
 
-        // Create a map with all months initialized to zero
+        LocalDate currentDate = LocalDate.now();
         Map<String, Float> monthsOfYearRevenueSum = new LinkedHashMap<>();
+
         for (int month = 1; month <= 12; month++) {
-            monthsOfYearRevenueSum.put(String.format("%02d", month), 0.0f);
+            if (year < currentDate.getYear() || (year == currentDate.getYear() && month <= currentDate.getMonthValue())) {
+                monthsOfYearRevenueSum.put(String.format("%02d", month), 0.0f);
+            }
         }
 
-        monthsOfYearRevenueSum.putAll(reportRevenues.stream()
-                .collect(Collectors.groupingBy(
-                        report -> report.getCreatedDate().toLocalDateTime().format(formatter),
-                        Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
-                ))
-                .entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().floatValue()
-                )));
+        if (year == currentDate.getYear()) {
+            reportRevenues.stream()
+                    .collect(Collectors.groupingBy(
+                            report -> report.getCreatedDate().toLocalDateTime().format(formatter),
+                            Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
+                    ))
+                    .forEach((key, value) -> monthsOfYearRevenueSum.put(key, value.floatValue()));
+
+            for (int month = currentDate.getMonthValue() + 1; month <= 12; month++) {
+                monthsOfYearRevenueSum.remove(String.format("%02d", month));
+            }
+        }
 
         List<String> monthsOfYear = new ArrayList<>(monthsOfYearRevenueSum.keySet());
         List<Float> revenueValues = new ArrayList<>(monthsOfYearRevenueSum.values());
@@ -483,6 +492,27 @@ public class OverviewService {
         return ResponseUtils.success(result, "Hiển thị doanh thu từng tháng theo năm thành công");
     }
 
+    public ResponseDTO getReportRevenueByManyYears(Integer startYear) {
+        List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByYearRange(startYear);
 
+        Map<Integer, Double> yearlySumMap = reportRevenues.stream()
+                .collect(Collectors.groupingBy(
+                        report -> report.getCreatedDate().toLocalDateTime().getYear(),
+                        Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
+                ));
 
+        int currentYear = LocalDate.now().getYear();
+        for (int year = startYear; year <= currentYear; year++) {
+            yearlySumMap.putIfAbsent(year, 0.0);
+        }
+
+        List<Integer> years = new ArrayList<>(yearlySumMap.keySet());
+        List<Double> revenueValues = new ArrayList<>(yearlySumMap.values());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("label", years);
+        result.put("data", revenueValues);
+
+        return ResponseUtils.success(result, "Hiển thị doanh thu theo nhiều năm thành công");
+    }
 }

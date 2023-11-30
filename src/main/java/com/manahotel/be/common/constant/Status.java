@@ -60,7 +60,7 @@ public class Status {
     public static final String OTHER_INCOME = "OTHER_INCOME";
     public static final String OTHER_EXPENSE = "OTHER_EXPENSE";
 
-    // Status FundBook
+    // Status FundBook and Invoice
     public static final String COMPLETE = "COMPLETE";
     public static final String ABORT = "ABORT";
 }

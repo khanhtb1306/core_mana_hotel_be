@@ -62,9 +62,13 @@ public class OverviewController {
         return overviewService.getReportRevenueDayOfWeekByMonthOrYear(date, false);
     }
 
-
     @GetMapping("/report_revenue_month_by_year")
     public ResponseDTO getReportRevenueMonthByYear(Integer year) {
         return overviewService.getReportRevenueMonthByYear(year);
+    }
+
+    @GetMapping("/report_revenue_by_many_years")
+    public ResponseDTO getReportRevenueByManyYears(Integer startYear) {
+        return overviewService.getReportRevenueByManyYears(startYear);
     }
 }
