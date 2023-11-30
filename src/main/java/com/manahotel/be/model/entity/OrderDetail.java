@@ -40,4 +40,7 @@ public class OrderDetail {
     @JoinColumn(name = "goods_unit_id", nullable = false)
     private GoodsUnit goodsUnit;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
 }

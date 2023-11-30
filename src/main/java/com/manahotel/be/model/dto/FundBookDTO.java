@@ -14,7 +14,7 @@ public class FundBookDTO {
     private Float value;
     private Float prepaid;
     private Float paid;
-    private String payer;
+    private String payerReceiver;
     private String staff;
     private String note;
     private String status;
