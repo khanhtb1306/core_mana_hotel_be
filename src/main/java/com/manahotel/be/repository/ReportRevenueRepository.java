@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ReportRevenueRepository extends JpaRepository<ReportRevenue, Long> {
-    @Query("SELECT rr FROM ReportRevenue rr WHERE MONTH(rr.createdDate) = ?1 AND YEAR(rr.createdDate) = YEAR(CURRENT_DATE()) " +
+    @Query("SELECT rr FROM ReportRevenue rr WHERE MONTH(rr.createdDate) = ?1 AND YEAR(rr.createdDate) = ?2 " +
             "ORDER BY rr.createdDate ASC")
-    List<ReportRevenue> findAllByMonth(Integer month);
+    List<ReportRevenue> findAllByMonth(Integer month, Integer year);
 
     @Query("SELECT rr FROM ReportRevenue rr WHERE YEAR(rr.createdDate) = ?1 " +
             "ORDER BY rr.createdDate ASC")

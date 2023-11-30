@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -344,20 +345,38 @@ public class OverviewService {
     }
 
     public ResponseDTO getReportRevenueEachDayByMonth(String dateString) {
-
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(dateString, formatDate);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
         List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByMonth(date.getMonthValue(), date.getYear());
 
-        List<String> daysOfMonth = reportRevenues.stream()
-                .map(report -> report.getCreatedDate().toLocalDateTime().toLocalDate().format(formatter))
+        // Create a map to store revenue values for each day
+        Map<Integer, Float> dailyRevenueMap = new HashMap<>();
+
+        // Populate the map with existing records
+        reportRevenues.forEach(report -> {
+            int dayOfMonth = report.getCreatedDate().toLocalDateTime().getDayOfMonth();
+            float revenueValue = BigDecimal.valueOf(report.getRevenueValue()).floatValue();
+            dailyRevenueMap.put(dayOfMonth, revenueValue);
+        });
+
+        // Add missing days with zero revenue
+        int daysInMonth = date.lengthOfMonth();
+        for (int day = 1; day <= daysInMonth; day++) {
+            dailyRevenueMap.putIfAbsent(day, 0.0f);
+        }
+
+        // Sort the map by day
+        Map<Integer, Float> sortedDailyRevenueMap = dailyRevenueMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        // Extract labels and data from the sorted map
+        List<String> daysOfMonth = sortedDailyRevenueMap.keySet().stream()
+                .map(Object::toString)
                 .collect(Collectors.toList());
 
-        List<Float> revenueValues = reportRevenues.stream()
-                .map(report -> BigDecimal.valueOf(report.getRevenueValue()).floatValue())
-                .collect(Collectors.toList());
+        List<Float> revenueValues = new ArrayList<>(sortedDailyRevenueMap.values());
 
         Map<String, Object> result = new HashMap<>();
         result.put("label", daysOfMonth);
@@ -366,15 +385,24 @@ public class OverviewService {
         return ResponseUtils.success(result, "Hiển thị doanh thu từng ngày theo tháng thành công");
     }
 
+
     public ResponseDTO getReportRevenueDayOfWeekByMonthOrYear(String time, boolean isSearchByMonth) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(time, formatter);
 
         List<ReportRevenue> reportRevenues = isSearchByMonth ? reportRevenueRepository.findAllByMonth(date.getMonthValue(), date.getYear()) : reportRevenueRepository.findAllByYear(date.getYear());
 
-        DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE");
+        DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE", new Locale("vi", "VN"));
 
-        Map<String, Float> dayOfWeeksRevenueSum = reportRevenues.stream()
+        // Create a map with all days of the week initialized to zero
+        Map<String, Float> dayOfWeeksRevenueSum = new LinkedHashMap<>();
+        DayOfWeek[] daysOfWeekArray = DayOfWeek.values();
+        for (DayOfWeek dayOfWeek : daysOfWeekArray) {
+            dayOfWeeksRevenueSum.put(dayOfWeek.getDisplayName(TextStyle.FULL, new Locale("vi", "VN")), 0.0f);
+        }
+
+        // Populate the map with existing records
+        dayOfWeeksRevenueSum.putAll(reportRevenues.stream()
                 .collect(Collectors.groupingBy(
                         report -> report.getCreatedDate().toLocalDateTime().format(dayOfWeekFormatter),
                         Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
@@ -383,7 +411,7 @@ public class OverviewService {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().floatValue()
-                ));
+                )));
 
         List<String> daysOfWeek = new ArrayList<>(dayOfWeeksRevenueSum.keySet());
         List<Float> revenueValues = new ArrayList<>(dayOfWeeksRevenueSum.values());
@@ -399,7 +427,14 @@ public class OverviewService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
         List<ReportRevenue> reportRevenues = reportRevenueRepository.findAllByYear(year);
 
-        Map<String, Float> monthsOfYearRevenueSum = reportRevenues.stream()
+        // Create a map with all months initialized to zero
+        Map<String, Float> monthsOfYearRevenueSum = new LinkedHashMap<>();
+        for (int month = 1; month <= 12; month++) {
+            monthsOfYearRevenueSum.put(String.format("%02d", month), 0.0f);
+        }
+
+        // Populate the map with existing records
+        monthsOfYearRevenueSum.putAll(reportRevenues.stream()
                 .collect(Collectors.groupingBy(
                         report -> report.getCreatedDate().toLocalDateTime().format(formatter),
                         Collectors.summingDouble(report -> BigDecimal.valueOf(report.getRevenueValue()).doubleValue())
@@ -408,7 +443,7 @@ public class OverviewService {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().floatValue()
-                ));
+                )));
 
         List<String> monthsOfYear = new ArrayList<>(monthsOfYearRevenueSum.keySet());
         List<Float> revenueValues = new ArrayList<>(monthsOfYearRevenueSum.values());

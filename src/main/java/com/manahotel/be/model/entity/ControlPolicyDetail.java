@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "control_policy", indexes = {
-        @Index(name = "pk_cp_r_idx", columnList = "reservation_id"),
-        @Index(name = "pk_cp_p_idx", columnList = "policy_id")
-})
+@Table(name = "control_policy")
 @Entity
 @Data
 @AllArgsConstructor
