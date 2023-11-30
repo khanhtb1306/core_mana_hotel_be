@@ -22,11 +22,11 @@ public class ControlPolicyDetailService {
     @Autowired
     private PolicyDetailRepository repository3;
 
-    public ResponseDTO getAllControlPolicyWithControlPolicyDetails() {
+    public ResponseDTO getAllControlPolicyDetails() {
         return ResponseUtils.success(repository.findAll(), "Hiển thị danh sách thành công");
     }
 
-    public ResponseDTO getControlPolicyWithControlPolicyDetailsById(String id) {
+    public ResponseDTO getControlPolicyDetailsById(String id) {
         return ResponseUtils.success(repository.findAll(), "Hiển thị chi tiết thành công");
     }
 

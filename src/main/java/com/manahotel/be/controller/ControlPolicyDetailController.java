@@ -14,13 +14,13 @@ public class ControlPolicyDetailController {
     private ControlPolicyDetailService service;
 
     @GetMapping
-    public ResponseDTO getAllControlPolicyWithControlPolicyDetails() {
-        return service.getAllControlPolicyWithControlPolicyDetails();
+    public ResponseDTO getAllControlPolicyDetails() {
+        return service.getAllControlPolicyDetails();
     }
 
     @GetMapping("/{id}")
-    public ResponseDTO getControlPolicyWithControlPolicyDetailsById(@PathVariable String id) {
-        return service.getControlPolicyWithControlPolicyDetailsById(id);
+    public ResponseDTO getControlPolicyDetailsById(@PathVariable String id) {
+        return service.getControlPolicyDetailsById(id);
     }
 
     @PostMapping
