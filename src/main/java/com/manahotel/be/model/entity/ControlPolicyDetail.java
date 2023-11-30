@@ -24,10 +24,6 @@ public class ControlPolicyDetail {
     private ReservationDetail reservationDetail;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "control_policy_id", nullable = false)
-    private ControlPolicy controlPolicy;
-
-    @ManyToOne(optional = false)
     @JoinColumn(name = "policy_detail_id", nullable = false)
     private PolicyDetail policyDetail;
 

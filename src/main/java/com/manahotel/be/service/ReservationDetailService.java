@@ -33,9 +33,6 @@ public class ReservationDetailService {
     private RoomRepository repository3;
 
     @Autowired
-    private PriceListRepository repository4;
-
-    @Autowired
     private ReservationDetailCustomerService service;
 
     public ResponseDTO getListCustomersByReservationDetailId(Long id) {
@@ -189,11 +186,6 @@ public class ReservationDetailService {
     private Room findRoom(String id) {
         return repository3.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id " + id));
-    }
-
-    private PriceList findPriceList(String id) {
-        return repository4.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Price List not found with id " + id));
     }
 
     private void checkDuplicateBooking(Timestamp checkIn, Timestamp checkOut, Room room, Long reservationDetailId) {

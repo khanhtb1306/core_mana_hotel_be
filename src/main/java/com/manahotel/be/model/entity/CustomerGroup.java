@@ -21,6 +21,9 @@ public class CustomerGroup {
     @Column(name = "customer_group_name", length = 45)
     private String customerGroupName;
 
+    @Column(name = "discount")
+    private String discount;
+
     @Column(name = "status", length = 45)
     private String status;
 
