@@ -36,10 +36,10 @@ public class ControlPolicyService {
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
 
-    public ResponseDTO getControlPolicyByReservationDetail(long reservationDetailId){
+    public ResponseDTO getControlPolicyByReservationDetail(long reservationDetailId, String policyName){
         log.info("----- get Control Policy By Reservation Detail Start------");
         try{
-            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetailId);
+            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
             log.info("getControlPolicy_isSuccessfully");
             log.info("----- get Control Policy By Reservation Detail End------");
             return ResponseUtils.success(controlPolicy,"getControlPolicy_isSuccessfully");
@@ -47,7 +47,6 @@ public class ControlPolicyService {
             log.error("getControlPolicy_isFail");
             return ResponseUtils.error("getControlPolicy_isFail");
         }
-
     }
 
     public ResponseDTO calculateLateSurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice, boolean status) {
@@ -129,7 +128,7 @@ public class ControlPolicyService {
     public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
         log.info("----- Add or Update Info To Control Policy Start------");
         try {
-            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetailId);
+            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
             if(controlPolicy != null){
                 controlPolicy.setValue(surcharge);
                 controlPolicy.setDiscrepancy(discrepancy);

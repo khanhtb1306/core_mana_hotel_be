@@ -72,7 +72,7 @@ public class ReservationController {
     }
 
     @GetMapping("/get_control_policy_by_reservation_detail")
-    public ResponseDTO getControlPolicy(long reservationDetailId) {
-        return controlPolicyService.getControlPolicyByReservationDetail(reservationDetailId);
+    public ResponseDTO getControlPolicy(long reservationDetailId, String policyName) {
+        return controlPolicyService.getControlPolicyByReservationDetail(reservationDetailId, policyName);
     }
 }
