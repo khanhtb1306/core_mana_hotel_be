@@ -75,7 +75,7 @@ public class ReservationDetailService {
         }
     }
 
-    public ResponseDTO changeRoomInReservation(String reservationId, String roomId, ReservationDTO reservationDTO, ReservationDetailDTO reservationDetailDTO) {
+    public ResponseDTO changeRoomInReservation(String reservationId, String roomId, ReservationDetailDTO reservationDetailDTO) {
         try {
             log.info("----- Start changing room -----");
             ReservationDetail reservationDetail = repository.findReservationDetailByReservationAndRoom(findReservation(reservationId), findRoom(roomId));
