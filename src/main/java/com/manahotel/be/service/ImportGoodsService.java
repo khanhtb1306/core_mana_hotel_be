@@ -169,7 +169,7 @@ public class ImportGoodsService {
             fundBook.setValue(importGoods.getPrice());
             fundBook.setPrepaid(0F);
             fundBook.setPaid(importGoods.getPrice());
-            fundBook.setPayer(importGoods.getSupplier());
+            fundBook.setPayerReceiver(importGoods.getSupplier());
             fundBook.setStaff(staff.getStaffName());
             fundBook.setNote("Chi tiền trả nhà cung cấp");
             fundBook.setStatus(Status.COMPLETE);
