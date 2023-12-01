@@ -126,7 +126,7 @@ public class ControlPolicyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation detail not found with id " + id));
     }
 
-    public boolean addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
+    public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
         log.info("----- Add or Update Info To Control Policy Start------");
         try {
             ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetailId);
