@@ -36,6 +36,20 @@ public class ControlPolicyService {
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
 
+    public ResponseDTO getControlPolicyByReservationDetail(long reservationDetailId){
+        log.info("----- get Control Policy By Reservation Detail Start------");
+        try{
+            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetailId);
+            log.info("getControlPolicy_isSuccessfully");
+            log.info("----- get Control Policy By Reservation Detail End------");
+            return ResponseUtils.success(controlPolicy,"getControlPolicy_isSuccessfully");
+        }catch (Exception e){
+            log.error("getControlPolicy_isFail");
+            return ResponseUtils.error("getControlPolicy_isFail");
+        }
+
+    }
+
     public ResponseDTO calculateLateSurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice, boolean status) {
         log.info("----- Calculate Late Surcharge Start------");
         try{
@@ -112,7 +126,7 @@ public class ControlPolicyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation detail not found with id " + id));
     }
 
-    public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
+    public boolean addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
         log.info("----- Add or Update Info To Control Policy Start------");
         try {
             ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetailId);

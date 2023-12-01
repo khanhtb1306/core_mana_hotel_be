@@ -70,4 +70,9 @@ public class ReservationController {
     public ResponseDTO calculateAdditionalChildrenSurcharge(long reservationDetailId, String roomCategoryId, float roomPrice, List<CustomerDTO> customerDTOS, long timeUse, boolean status) {
         return controlPolicyService.calculateAdditionalChildrenSurcharge(reservationDetailId, roomCategoryId, roomPrice, customerDTOS, timeUse, status);
     }
+
+    @GetMapping("/get_control_policy_by_reservation_detail")
+    public ResponseDTO getControlPolicy(long reservationDetailId) {
+        return controlPolicyService.getControlPolicyByReservationDetail(reservationDetailId);
+    }
 }
