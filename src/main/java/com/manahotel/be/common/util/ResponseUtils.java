@@ -23,4 +23,12 @@ public class ResponseUtils {
         responseDto.setDisplayMessage(errorMessage);
         return responseDto;
     }
+
+    public static ResponseDTO error(Object result, String errorMessage) {
+        ResponseDTO responseDto = new ResponseDTO();
+        responseDto.setResult(result);
+        responseDto.setSuccess(false);
+        responseDto.setDisplayMessage(errorMessage);
+        return responseDto;
+    }
 }
