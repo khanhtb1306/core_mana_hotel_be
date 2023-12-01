@@ -52,22 +52,22 @@ public class ReservationController {
     }
 
     @GetMapping("/calculate-early-surcharge")
-    public ResponseDTO calculateEarlySurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice) {
-        return controlPolicyService.calculateEarlySurcharge(reservationDetailId, roomCategoryId, lateTime, roomPrice);
+    public ResponseDTO calculateEarlySurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice, boolean status) {
+        return controlPolicyService.calculateEarlySurcharge(reservationDetailId, roomCategoryId, lateTime, roomPrice, status);
     }
 
     @GetMapping("/calculate-late-surcharge")
-    public ResponseDTO calculateLateSurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice) {
-        return controlPolicyService.calculateLateSurcharge(reservationDetailId, roomCategoryId, lateTime, roomPrice);
+    public ResponseDTO calculateLateSurcharge(long reservationDetailId, String roomCategoryId, long lateTime, float roomPrice, boolean status) {
+        return controlPolicyService.calculateLateSurcharge(reservationDetailId, roomCategoryId, lateTime, roomPrice, status);
     }
 
     @GetMapping("/calculate_additional_adult_surcharge")
-    public ResponseDTO calculateAdditionalAdultSurcharge(long reservationDetailId, String roomCategoryId, long totalAdult, float roomPrice, long timeUse) {
-        return controlPolicyService.calculateAdditionalAdultSurcharge(reservationDetailId, roomCategoryId, totalAdult, roomPrice, timeUse);
+    public ResponseDTO calculateAdditionalAdultSurcharge(long reservationDetailId, String roomCategoryId, long totalAdult, float roomPrice, long timeUse, boolean status) {
+        return controlPolicyService.calculateAdditionalAdultSurcharge(reservationDetailId, roomCategoryId, totalAdult, roomPrice, timeUse, status);
     }
 
     @GetMapping("/calculate_additional_children_surcharge")
-    public ResponseDTO calculateAdditionalChildrenSurcharge(long reservationDetailId, String roomCategoryId, float roomPrice, List<CustomerDTO> customerDTOS, long timeUse) {
-        return controlPolicyService.calculateAdditionalChildrenSurcharge(reservationDetailId, roomCategoryId, roomPrice, customerDTOS, timeUse);
+    public ResponseDTO calculateAdditionalChildrenSurcharge(long reservationDetailId, String roomCategoryId, float roomPrice, List<CustomerDTO> customerDTOS, long timeUse, boolean status) {
+        return controlPolicyService.calculateAdditionalChildrenSurcharge(reservationDetailId, roomCategoryId, roomPrice, customerDTOS, timeUse, status);
     }
 }

@@ -39,4 +39,7 @@ public class ControlPolicy {
     @Column(name = "note", length = 350)
     private String note;
 
+    @Column(name = "status", length = 350)
+    private boolean status;
+
 }
