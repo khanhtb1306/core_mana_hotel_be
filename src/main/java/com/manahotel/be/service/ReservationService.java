@@ -218,6 +218,8 @@ public class ReservationService {
             reservation.setTransactionCode((reservationDTO.getTransactionCode() != null) ? reservationDTO.getTransactionCode() : reservation.getTransactionCode());
             Staff staff = findStaff(userId);
 
+            // Invoice
+
             Invoice latestInvoice = repository11.findTopByOrderByInvoiceIdDesc();
             String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
             String nextId = IdGenerator.generateId(latestId, "HD");
@@ -234,6 +236,8 @@ public class ReservationService {
             invoice.setNote("");
 
             repository11.save(invoice);
+
+            // FundBook
 
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId("TT" + invoice.getInvoiceId());
