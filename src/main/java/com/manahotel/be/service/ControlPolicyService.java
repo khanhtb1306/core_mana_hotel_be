@@ -39,7 +39,7 @@ public class ControlPolicyService {
     public ResponseDTO getControlPolicyByReservationDetail(long reservationDetailId, String policyName){
         log.info("----- get Control Policy By Reservation Detail Start------");
         try{
-            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
+            ControlPolicy controlPolicy = controlPolicyRepository.findByReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
             log.info("getControlPolicy_isSuccessfully");
             log.info("----- get Control Policy By Reservation Detail End------");
             return ResponseUtils.success(controlPolicy,"getControlPolicy_isSuccessfully");
@@ -128,7 +128,7 @@ public class ControlPolicyService {
     public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
         log.info("----- Add or Update Info To Control Policy Start------");
         try {
-            ControlPolicy controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
+            ControlPolicy controlPolicy = controlPolicyRepository.findByReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
             if(controlPolicy != null){
                 controlPolicy.setValue(surcharge);
                 controlPolicy.setDiscrepancy(discrepancy);
