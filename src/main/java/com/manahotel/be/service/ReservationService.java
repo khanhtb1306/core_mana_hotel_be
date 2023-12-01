@@ -54,6 +54,9 @@ public class ReservationService {
     private StaffRepository repository10;
 
     @Autowired
+    private InvoiceRepository repository11;
+
+    @Autowired
     private OverviewService overviewService;
 
 
@@ -214,21 +217,40 @@ public class ReservationService {
         if(reservation.getStatus().equals(Status.DONE)) {
             reservation.setTransactionCode((reservationDTO.getTransactionCode() != null) ? reservationDTO.getTransactionCode() : reservation.getTransactionCode());
             Staff staff = findStaff(userId);
+
+            Invoice latestInvoice = repository11.findTopByOrderByInvoiceIdDesc();
+            String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
+            String nextId = IdGenerator.generateId(latestId, "HD");
+
+            Invoice invoice = new Invoice();
+            invoice.setInvoiceId(nextId);
+            invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            invoice.setCreatedById(UserUtils.getUser().getStaffId());
+            invoice.setCustomer(customer);
+            invoice.setReservation(reservation);
+            invoice.setTotal(reservation.getTotalPrice());
+            invoice.setDiscount(0F);
+            invoice.setStatus(Status.COMPLETE);
+            invoice.setNote("");
+
+            repository11.save(invoice);
+
             FundBook fundBook = new FundBook();
-            fundBook.setFundBookId("TT" + reservation.getReservationId());
+            fundBook.setFundBookId("TT" + invoice.getInvoiceId());
             fundBook.setOrderId(reservation.getReservationId());
             fundBook.setTime(new Timestamp(System.currentTimeMillis()));
             fundBook.setType(Status.INCOME);
             fundBook.setPaidMethod(reservation.getPaidMethod());
-            fundBook.setValue(reservation.getTotalPrice());
+            fundBook.setValue(invoice.getTotal() - invoice.getDiscount());
             fundBook.setPrepaid(0F);
             fundBook.setPaid(reservation.getTotalPrice());
-            fundBook.setPayer(customer.getCustomerName());
+            fundBook.setPayerReceiver(customer.getCustomerName());
             fundBook.setStaff(staff.getStaffName());
             fundBook.setNote("Thu tiền khách trả");
             fundBook.setStatus(Status.COMPLETE);
             repository9.save(fundBook);
-            overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", reservation.getTotalPrice(), new Timestamp(System.currentTimeMillis()));
+
+            overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", fundBook.getValue(), new Timestamp(System.currentTimeMillis()));
         }
     }
 

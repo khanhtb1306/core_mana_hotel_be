@@ -71,7 +71,7 @@ public class ReservationDetailService {
         }
         catch (Exception e) {
             log.info("----- Update detail for reservation failed ------\n" + e.getMessage());
-            return ResponseUtils.error("Cập nhật chi tiết đặt phòng thất bại");
+            return ResponseUtils.error(findReservationDetail(id).getReservationDetailId(), "Cập nhật chi tiết đặt phòng thất bại");
         }
     }
 

@@ -41,8 +41,8 @@ public class FundBook {
     @Column(name = "paid")
     private Float paid;
 
-    @Column(name = "payer", length = 250)
-    private String payer;
+    @Column(name = "payer_receiver", length = 250)
+    private String payerReceiver;
 
     @Column(name = "staff", length = 250)
     private String staff;
