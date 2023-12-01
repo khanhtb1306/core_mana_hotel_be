@@ -43,7 +43,7 @@ public class FundBookService {
             fundBook.setType(fundBookDTO.getType());
             fundBook.setPaidMethod(Status.CASH);
             fundBook.setValue(fundBookDTO.getValue());
-            fundBook.setPayer(fundBookDTO.getPayer());
+            fundBook.setPayerReceiver(fundBookDTO.getPayerReceiver());
             fundBook.setStaff(fundBookDTO.getStaff());
             fundBook.setNote(fundBookDTO.getNote());
             fundBook.setStatus(Status.COMPLETE);
