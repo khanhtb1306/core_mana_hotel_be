@@ -1,6 +1,7 @@
 package com.manahotel.be.repository;
 
 import com.manahotel.be.model.entity.Reservation;
+import com.manahotel.be.model.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,4 +30,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             "LEFT JOIN ReservationDetail rd ON r.reservationId = rd.reservation.reservationId " +
             "WHERE r.status = 'DONE'")
     List<Object[]> findReservationsWithStatusDone();
+
+    @Query("SELECT COUNT(rd) > 0 " +
+            "FROM ReservationDetail rd " +
+            "WHERE rd.room = ?1 AND rd.reservation.reservationId = ?2")
+    boolean existsInReservation(Room room, String reservationId);
 }

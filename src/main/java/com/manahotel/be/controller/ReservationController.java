@@ -27,8 +27,8 @@ public class ReservationController {
     }
 
     @GetMapping("/list-empty-rooms")
-    public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
-        return service.getAllEmptyRoomByReservation(startDate, endDate);
+    public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate, String reservationId) {
+        return service.getAllEmptyRoomByReservation(startDate, endDate, reservationId);
     }
 
     @GetMapping("/{id}")

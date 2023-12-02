@@ -50,7 +50,7 @@ public class ReservationDetailService {
 
             log.info("----- End create detail for reservation ------");
 
-            return ResponseUtils.success(reservationDetail.getReservationDetailId(), "Tạo chi tiết đặt phòng thành công");
+            return ResponseUtils.success(reservationDetail, "Tạo chi tiết đặt phòng thành công");
         }
         catch (Exception e) {
             log.info("----- Create detail for reservation failed ------\n" + e.getMessage());
