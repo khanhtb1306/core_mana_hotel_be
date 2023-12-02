@@ -36,7 +36,7 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "AND r.status NOT IN ('PENDING', 'DISCARD') " +
             "AND rd.status NOT IN ('CHECK_OUT') " +
             "AND (rd.checkInActual < ?2 OR (rd.checkInActual IS NULL AND rd.checkInEstimate < ?2)) " +
-            "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND ADDTIME(rd.checkOutEstimate, CONCAT(?5, ':00:00')) > ?1)) " +
+            "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate > (?1 - ?5))) " +
             "AND rd.reservationDetailStatus = 1 " +
             "AND rd.room = ?3 " +
             "AND (?4 IS NULL OR rd.reservationDetailId <> ?4)")

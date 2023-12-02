@@ -196,7 +196,7 @@ public class ReservationDetailService {
                 throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
             }
         }catch (Exception e){
-            log.error("Check loi add time: " +e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }
