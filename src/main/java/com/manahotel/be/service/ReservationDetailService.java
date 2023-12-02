@@ -189,10 +189,14 @@ public class ReservationDetailService {
     }
 
     private void checkDuplicateBooking(Timestamp checkIn, Timestamp checkOut, Room room, Long reservationDetailId, Integer timeClean) {
-        List<ReservationDetail> listReservationDetails = repository.checkBooking(checkIn, checkOut, room, reservationDetailId, timeClean);
+        try{
+            List<ReservationDetail> listReservationDetails = repository.checkBooking(checkIn, checkOut, room, reservationDetailId, timeClean);
 
-        if(!listReservationDetails.isEmpty()) {
-            throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+            if(!listReservationDetails.isEmpty()) {
+                throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+            }
+        }catch (Exception e){
+            log.error("Check loi add time: " +e.getMessage());
         }
     }
 }
