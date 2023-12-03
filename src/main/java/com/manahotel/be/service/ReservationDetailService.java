@@ -1,23 +1,23 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.exception.RoomInUseException;
-import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.*;
-import com.manahotel.be.repository.*;
+import com.manahotel.be.model.entity.Reservation;
+import com.manahotel.be.model.entity.ReservationDetail;
+import com.manahotel.be.model.entity.Room;
+import com.manahotel.be.repository.ReservationDetailRepository;
+import com.manahotel.be.repository.ReservationRepository;
+import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -72,7 +72,7 @@ public class ReservationDetailService {
         }
         catch (Exception e) {
             log.info("----- Update detail for reservation failed ------\n" + e.getMessage());
-            return ResponseUtils.error(findReservationDetail(id).getReservationDetailId(), "Cập nhật chi tiết đặt phòng thất bại");
+            return ResponseUtils.error(findReservationDetail(id).getReservationDetailId(), e.getMessage());
         }
     }
 
@@ -145,7 +145,7 @@ public class ReservationDetailService {
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
 
                 if(room.getBookingStatus().equals(Status.ROOM_USING)) {
-                    throw new RoomInUseException("Phòng " + room.getRoomName() + "đang được sử dụng, không thể nhận phòng");
+                    throw new RoomInUseException("Phòng " + room.getRoomName() + " đang được sử dụng, không thể nhận phòng");
                 }
                 checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
 
@@ -198,4 +198,6 @@ public class ReservationDetailService {
             throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
         }
     }
+
+
 }
