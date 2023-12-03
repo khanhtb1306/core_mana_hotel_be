@@ -148,15 +148,23 @@ public class ReservationDetailService {
             case Status.CHECK_IN -> {
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
-                checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+
+                if(room.getBookingStatus().equals(Status.ROOM_USING)) {
+                    throw new RoomInUseException("Phòng " + room.getRoomName() + "đang được sử dụng, không thể nhận phòng");
+                }
+                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+
                 room.setBookingStatus(Status.ROOM_USING);
             }
             case Status.CHECK_OUT -> {
                 reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
-                checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+
+                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }
+
         repository3.save(room);
 
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
