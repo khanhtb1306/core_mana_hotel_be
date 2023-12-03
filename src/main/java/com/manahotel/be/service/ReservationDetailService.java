@@ -152,6 +152,13 @@ public class ReservationDetailService {
                 if(room.getBookingStatus().equals(Status.ROOM_USING)) {
                     throw new RoomInUseException("Phòng " + room.getRoomName() + "đang được sử dụng, không thể nhận phòng");
                 }
+
+                if(reservationDetailDTO.getReservationType().equals(Status.DAILY)) {
+                    TimeUse timeUse = timeUseRepository.findTopByOrderByTimeUseId();
+                    checkTimeUse(reservationDetail, reservationDetailDTO, room, timeUse);
+                }else {
+                    checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                }
                 checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
 
                 room.setBookingStatus(Status.ROOM_USING);
@@ -209,7 +216,7 @@ public class ReservationDetailService {
         Timestamp timeUseStart = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getStartTimeDay());
         Timestamp timeUseEnd = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getEndTimeDay());
 
-        if (timeUseStart.getTime() >= checkOutEstimate.getTime() && checkOutEstimate.getTime() >= timeUseEnd.getTime()) {
+        if (timeUseStart.getTime() >= checkOutEstimate.getTime() && checkOutEstimate.getTime() <= timeUseEnd.getTime()) {
             int hours = DateUtil.calculateDurationInHours(timeUseStart, timeUseEnd);
             Timestamp newCheckOutEstimate = DateUtil.addHoursToTimestamp(checkOutEstimate, hours);
             List<ReservationDetail> listReservationDetails = repository.checkBooking(reservationDetail.getCheckInEstimate(), newCheckOutEstimate, reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
