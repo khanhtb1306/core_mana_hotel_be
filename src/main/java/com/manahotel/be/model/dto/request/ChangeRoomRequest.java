@@ -8,6 +8,5 @@ import lombok.Data;
 public class ChangeRoomRequest {
     private String reservationId;
     private String roomId;
-    private ReservationDTO reservationDTO;
     private ReservationDetailDTO reservationDetailDTO;
 }

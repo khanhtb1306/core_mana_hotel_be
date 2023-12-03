@@ -37,7 +37,7 @@ public class ReservationDetailController {
 
     @PutMapping("/change-room")
     public ResponseDTO changeRoomInReservation(ChangeRoomRequest request) {
-        return service.changeRoomInReservation(request.getReservationId(), request.getRoomId(), request.getReservationDTO(), request.getReservationDetailDTO());
+        return service.changeRoomInReservation(request.getReservationId(), request.getRoomId(), request.getReservationDetailDTO());
     }
 
     @DeleteMapping("/{id}")

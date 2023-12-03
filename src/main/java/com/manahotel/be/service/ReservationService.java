@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -60,20 +61,43 @@ public class ReservationService {
     private OverviewService overviewService;
 
 
-    public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate) {
+    public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate, String reservationId) {
         List<Object> list = new ArrayList<>();
 
         List<RoomCategory> listRoomClasses = repository4.findEmptyRoomCategory(startDate, endDate);
 
-        for (RoomCategory roomClass : listRoomClasses) {
-            List<Room> listEmptyRoom = repository5.findEmptyRoom(startDate, endDate, roomClass.getRoomCategoryId());
+        listRoomClasses.stream()
+                .filter(roomClass -> {
+                    List<Room> listEmptyRoom = repository5.findEmptyRoom(startDate, endDate, roomClass.getRoomCategoryId());
 
-            Map<String, Object> listInfo = new HashMap<>();
+                    List<Room> filteredEmptyRooms;
+                    if (reservationId != null) {
+                        filteredEmptyRooms = listEmptyRoom.stream()
+                                .filter(room -> !repository.existsInReservation(room, reservationId))
+                                .collect(Collectors.toList());
+                    } else {
+                        filteredEmptyRooms = listEmptyRoom;
+                    }
 
-            listInfo.put("roomClass", roomClass);
-            listInfo.put("listRoom", listEmptyRoom);
-            list.add(listInfo);
-        }
+                    return !filteredEmptyRooms.isEmpty();
+                })
+                .forEach(roomClass -> {
+                    List<Room> listEmptyRoom = repository5.findEmptyRoom(startDate, endDate, roomClass.getRoomCategoryId());
+
+                    List<Room> filteredEmptyRooms;
+                    if (reservationId != null) {
+                        filteredEmptyRooms = listEmptyRoom.stream()
+                                .filter(room -> !repository.existsInReservation(room, reservationId))
+                                .collect(Collectors.toList());
+                    } else {
+                        filteredEmptyRooms = listEmptyRoom;
+                    }
+
+                    Map<String, Object> listInfo = new HashMap<>();
+                    listInfo.put("roomClass", roomClass);
+                    listInfo.put("listRoom", filteredEmptyRooms);
+                    list.add(listInfo);
+                });
 
         return ResponseUtils.success(list, "Hiển thị phòng trống lịch đặt thành công");
     }
