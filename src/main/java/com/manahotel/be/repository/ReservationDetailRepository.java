@@ -46,4 +46,10 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
     @Modifying
     @Transactional
     void deleteReservationDetailByReservationId(String reservationId);
+
+    @Query("SELECT COUNT(rd) > 0 " +
+            "FROM ReservationDetail rd " +
+            "WHERE rd.status = 'CHECK_IN' AND " +
+            " rd = ?1")
+    boolean existInReservationDetail(ReservationDetail reservationDetail);
 }

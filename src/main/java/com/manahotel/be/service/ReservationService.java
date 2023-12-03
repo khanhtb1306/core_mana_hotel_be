@@ -234,20 +234,20 @@ public class ReservationService {
             Staff staff = findStaff(userId);
             // FundBook
 
-            FundBook fundBook = new FundBook();
-            fundBook.setFundBookId("TT" + invoice.getInvoiceId());
-            fundBook.setOrderId(reservation.getReservationId());
-            fundBook.setTime(new Timestamp(System.currentTimeMillis()));
-            fundBook.setType(Status.INCOME);
-            fundBook.setPaidMethod(reservation.getPaidMethod());
-            fundBook.setValue(invoice.getTotal() - invoice.getDiscount());
-            fundBook.setPrepaid(0F);
-            fundBook.setPaid(reservation.getTotalPrice());
-            fundBook.setPayerReceiver(customer.getCustomerName());
-            fundBook.setStaff(staff.getStaffName());
-            fundBook.setNote("Thu tiền khách trả");
-            fundBook.setStatus(Status.COMPLETE);
-            repository9.save(fundBook);
+//            FundBook fundBook = new FundBook();
+//            fundBook.setFundBookId("TT" + invoice.getInvoiceId());
+//            fundBook.setOrderId(reservation.getReservationId());
+//            fundBook.setTime(new Timestamp(System.currentTimeMillis()));
+//            fundBook.setType(Status.INCOME);
+//            fundBook.setPaidMethod(reservation.getPaidMethod());
+//            fundBook.setValue(invoice.getTotal() - invoice.getDiscount());
+//            fundBook.setPrepaid(0F);
+//            fundBook.setPaid(reservation.getTotalPrice());
+//            fundBook.setPayerReceiver(customer.getCustomerName());
+//            fundBook.setStaff(staff.getStaffName());
+//            fundBook.setNote("Thu tiền khách trả");
+//            fundBook.setStatus(Status.COMPLETE);
+//            repository9.save(fundBook);
 
         }
     }
