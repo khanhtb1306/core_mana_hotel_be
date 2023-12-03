@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 
 @Data
 public class ReservationDetailDTO {
+    private Long reservationDetailId;
     private String reservationId;
     private String roomId;
     private Timestamp checkInEstimate;

@@ -49,16 +49,7 @@ public class ReservationService {
     private OrderDetailRepository repository8;
 
     @Autowired
-    private FundBookRepository repository9;
-
-    @Autowired
     private StaffRepository repository10;
-
-    @Autowired
-    private InvoiceRepository repository11;
-
-    @Autowired
-    private OverviewService overviewService;
 
 
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate, String reservationId) {
@@ -241,26 +232,6 @@ public class ReservationService {
         if(reservation.getStatus().equals(Status.DONE)) {
             reservation.setTransactionCode((reservationDTO.getTransactionCode() != null) ? reservationDTO.getTransactionCode() : reservation.getTransactionCode());
             Staff staff = findStaff(userId);
-
-            // Invoice
-
-            Invoice latestInvoice = repository11.findTopByOrderByInvoiceIdDesc();
-            String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
-            String nextId = IdGenerator.generateId(latestId, "HD");
-
-            Invoice invoice = new Invoice();
-            invoice.setInvoiceId(nextId);
-            invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            invoice.setCreatedById(UserUtils.getUser().getStaffId());
-            invoice.setCustomer(customer);
-            invoice.setReservation(reservation);
-            invoice.setTotal(reservation.getTotalPrice());
-            invoice.setDiscount(0F);
-            invoice.setStatus(Status.COMPLETE);
-            invoice.setNote("");
-
-            repository11.save(invoice);
-
             // FundBook
 
             FundBook fundBook = new FundBook();
@@ -278,7 +249,6 @@ public class ReservationService {
             fundBook.setStatus(Status.COMPLETE);
             repository9.save(fundBook);
 
-            overviewService.writeRecentActivity(staff.getUsername(), "tạo hóa đơn", fundBook.getValue(), new Timestamp(System.currentTimeMillis()));
         }
     }
 

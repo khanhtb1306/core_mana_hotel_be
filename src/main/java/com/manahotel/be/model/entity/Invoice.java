@@ -43,6 +43,12 @@ public class Invoice {
     @Column(name = "status", length = 50)
     private String status;
 
-    @Column(name = "note", length = 45)
+    @Column(name = "note", length = 250)
     private String note;
+
+    @Column(name = "paid_method", length = 50)
+    private String paidMethod;
+
+    @Column(name = "transaction_code", length = 50)
+    private String transactionCode;
 }
