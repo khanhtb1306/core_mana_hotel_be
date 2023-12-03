@@ -216,6 +216,8 @@ public class ReservationDetailService {
         Timestamp timeUseStart = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getStartTimeDay());
         Timestamp timeUseEnd = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getEndTimeDay());
 
+        checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+
         if (timeUseStart.getTime() >= checkOutEstimate.getTime() && checkOutEstimate.getTime() <= timeUseEnd.getTime()) {
             int hours = DateUtil.calculateDurationInHours(timeUseStart, timeUseEnd);
             Timestamp newCheckOutEstimate = DateUtil.addHoursToTimestamp(checkOutEstimate, hours);
@@ -223,8 +225,6 @@ public class ReservationDetailService {
             if (!listReservationDetails.isEmpty()) {
                 throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng vào thời gian dọn phòng");
             }
-        }else {
-            checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
         }
     }
 }
