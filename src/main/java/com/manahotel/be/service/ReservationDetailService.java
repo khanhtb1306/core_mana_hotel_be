@@ -3,6 +3,7 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ControlPolicyUtils;
+import com.manahotel.be.common.util.DateUtil;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
@@ -15,9 +16,15 @@ import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.helpers.AttributesImpl;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -35,6 +42,9 @@ public class ReservationDetailService {
 
     @Autowired
     private ReservationDetailCustomerService service;
+
+    @Autowired
+    private TimeUseRepository timeUseRepository;
 
     public ResponseDTO getListCustomersByReservationDetailId(Long id) {
         return service.getListCustomersByReservationDetailId(id);
@@ -138,28 +148,25 @@ public class ReservationDetailService {
             case Status.BOOKING -> {
                 reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
-                checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                if(reservationDetailDTO.getReservationType().equals(Status.DAILY)) {
+                    TimeUse timeUse = timeUseRepository.findTopByOrderByTimeUseId();
+                    checkTimeUse(reservationDetail, reservationDetailDTO, room, timeUse);
+                }else {
+                    checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                }
             }
             case Status.CHECK_IN -> {
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
-
-                if(room.getBookingStatus().equals(Status.ROOM_USING)) {
-                    throw new RoomInUseException("Phòng " + room.getRoomName() + "đang được sử dụng, không thể nhận phòng");
-                }
-                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
-
+                checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
                 room.setBookingStatus(Status.ROOM_USING);
             }
             case Status.CHECK_OUT -> {
                 reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
-
-                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
-
+                checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }
-
         repository3.save(room);
 
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
@@ -198,4 +205,21 @@ public class ReservationDetailService {
             throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
         }
     }
+
+    private void checkTimeUse(ReservationDetail reservationDetail, ReservationDetailDTO reservationDetailDTO, Room room, TimeUse timeUse) {
+        Timestamp checkOutEstimate = reservationDetailDTO.getCheckOutEstimate();
+        Timestamp timeUseStart = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getStartTimeDay());
+        Timestamp timeUseEnd = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getEndTimeDay());
+
+        if (timeUseStart.getTime() >= checkOutEstimate.getTime() && checkOutEstimate.getTime() >= timeUseEnd.getTime()) {
+            int hours = DateUtil.calculateDurationInHours(timeUseStart, timeUseEnd);
+            Timestamp newCheckOutEstimate = DateUtil.addHoursToTimestamp(checkOutEstimate, hours);
+            List<ReservationDetail> listReservationDetails = repository.checkBooking(reservationDetail.getCheckInEstimate(), newCheckOutEstimate, reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+            if (!listReservationDetails.isEmpty()) {
+                throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng vào thời gian dọn phòng");
+            }
+        }
+    }
+
+
 }
