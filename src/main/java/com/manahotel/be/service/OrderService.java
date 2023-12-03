@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
@@ -134,7 +135,7 @@ public class OrderService {
             orderRepository.save(order);
 
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
-                orderDetailService.createOrderDetail(orderDetail, order);
+                orderDetailService.createOrderDetail(orderDetail, order.getOrderId(), Const.INVOICE_ID);
             }
             log.info("------- Add Order End -------");
             return ResponseUtils.success("Thêm hóa đơn thành công");
@@ -156,7 +157,7 @@ public class OrderService {
             order.setTotalPay(totalPay(orderDetailDTOList));
             order.setCreatedDate(Instant.now());
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
-                orderDetailService.createOrderDetail(orderDetail, order);
+                orderDetailService.createOrderDetail(orderDetail, order.getOrderId(), Const.INVOICE_ID);
             }
             order.setStatus(Status.UNCONFIRMED);
             orderRepository.save(order);

@@ -3,7 +3,10 @@ package com.manahotel.be.common.constant;
 import java.util.regex.Pattern;
 
 public class Const {
+    public static final String INVOICE_ID = "HD000000";
+    public static final String ORDER_ID = "HD000000";
+    public static final String RESERVATION_ID = "DP000000";
+    public static final String CUSTOMER_ID = "C000000";
 
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
 }

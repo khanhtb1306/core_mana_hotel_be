@@ -2,10 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.model.dto.OrderDetailDTO;
 import com.manahotel.be.model.entity.*;
-import com.manahotel.be.repository.GoodsRepository;
-import com.manahotel.be.repository.GoodsUnitRepository;
-import com.manahotel.be.repository.InvoiceRepository;
-import com.manahotel.be.repository.OrderDetailRepository;
+import com.manahotel.be.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +30,22 @@ public class OrderDetailService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     private void commonMapping(OrderDetail orderDetail, OrderDetailDTO orderDetailDTO) throws IOException {
         orderDetail.setQuantity(orderDetailDTO.getQuantity() != null ? orderDetailDTO.getQuantity() : orderDetail.getQuantity());
         orderDetail.setPrice(orderDetailDTO.getPrice() != null ? orderDetailDTO.getPrice() : orderDetail.getPrice());
     }
-    public void createOrderDetail(OrderDetailDTO orderDetailDTO, Order order) {
+    public void createOrderDetail(OrderDetailDTO orderDetailDTO, String orderId, String invoiceId) {
         try {
             log.info("------- Add OrderDetail Start -------");
-
             OrderDetail orderDetail = new OrderDetail();
             commonMapping(orderDetail, orderDetailDTO);
             Goods goods = goodsRepository.findById(orderDetailDTO.getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
             GoodsUnit goodsUnit = goodsUnitRepository.findById(orderDetailDTO.getGoodsUnitId()).orElseThrow(() -> new IllegalStateException("Not found goodsUnit"));
-            Invoice invoice = invoiceRepository.findById(orderDetailDTO.getInvoiceId()).orElseThrow(() -> new IllegalStateException("Not found invoice"));
+            Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new IllegalStateException("Not found invoice"));
+            Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
             orderDetail.setOrder(order);
             orderDetail.setGoods(goods);
             orderDetail.setGoodsUnit(goodsUnit);
