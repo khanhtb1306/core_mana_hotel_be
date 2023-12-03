@@ -208,6 +208,8 @@ public class ReservationDetailService {
             if (!listReservationDetails.isEmpty()) {
                 throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng vào thời gian dọn phòng");
             }
+        }else {
+            checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
         }
     }
 }
