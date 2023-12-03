@@ -14,9 +14,15 @@ import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.helpers.AttributesImpl;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -35,6 +41,9 @@ public class ReservationDetailService {
     @Autowired
     private ReservationDetailCustomerService service;
 
+    @Autowired
+    private TimeUseRepository timeUseRepository;
+
     public ResponseDTO getListCustomersByReservationDetailId(Long id) {
         return service.getListCustomersByReservationDetailId(id);
     }
@@ -43,9 +52,6 @@ public class ReservationDetailService {
         try {
             log.info("----- Start create detail for reservation ------");
             ReservationDetail reservationDetail = new ReservationDetail();
-
-            reservationDetail.setReservationDetailStatus(Status.ACTIVATE);
-
             commonMapping(reservationDetail, reservationDetailDTO);
 
             log.info("----- End create detail for reservation ------");
@@ -135,23 +141,50 @@ public class ReservationDetailService {
 
         switch (reservationDetail.getStatus()) {
             case Status.BOOKING -> {
-                reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
-                reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
-                checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                if(reservationDetailDTO.getReservationType().equals(Status.DAILY)) {
+                    Calendar calendar = Calendar.getInstance();
+                    //Check timeUseStart, timeUseEnd, hours
+                    List<Object> listObject= checkTimeUse(reservationDetailDTO.getCheckOutEstimate(), calendar);
+                    int hours = (int) listObject.get(0);
+                    Timestamp timeUseStart = (Timestamp) listObject.get(1);
+                    Timestamp timeUseEnd = (Timestamp) listObject.get(2);
+
+                    if (timeUseStart.getTime() >= reservationDetail.getCheckOutEstimate().getTime() && reservationDetail.getCheckOutEstimate().getTime() >= timeUseEnd.getTime()) {
+                        Timestamp checkOutEstimate = reservationDetail.getCheckOutEstimate();
+                        calendar.setTime(checkOutEstimate);
+                        calendar.add(Calendar.HOUR_OF_DAY, hours);
+                        reservationDetail.setCheckOutEstimate(new Timestamp(calendar.getTimeInMillis()));
+                        List<ReservationDetail> listReservationDetails = checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                        if(!listReservationDetails.isEmpty()) {
+                            throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng vào thời gian dọn phòng");
+                        }
+                    }
+                    reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
+                    reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
+
+                    List<ReservationDetail> listReservationDetails = checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                    if(!listReservationDetails.isEmpty()) {
+                        throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+                    }
+                }
             }
             case Status.CHECK_IN -> {
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
 
-                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
-
+                List<ReservationDetail> listReservationDetails = checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                if(!listReservationDetails.isEmpty()) {
+                    throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+                }
                 room.setBookingStatus(Status.ROOM_USING);
             }
             case Status.CHECK_OUT -> {
                 reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
 
-                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
-
+                List<ReservationDetail> listReservationDetails = checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                if(!listReservationDetails.isEmpty()) {
+                    throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+                }
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }
@@ -187,11 +220,34 @@ public class ReservationDetailService {
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id " + id));
     }
 
-    private void checkDuplicateBooking(Timestamp checkIn, Timestamp checkOut, Room room, Long reservationDetailId) {
+    private List<ReservationDetail> checkDuplicateBooking(Timestamp checkIn, Timestamp checkOut, Room room, Long reservationDetailId) {
         List<ReservationDetail> listReservationDetails = repository.checkBooking(checkIn, checkOut, room, reservationDetailId);
-
-        if(!listReservationDetails.isEmpty()) {
-            throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
-        }
+        return listReservationDetails;
     }
+    private List<Object> checkTimeUse(Date checkOutDate, Calendar calendar) {
+        TimeUse timeUse = timeUseRepository.findTopByOrderByTimeUseId();
+        Time startTime = timeUse.getStartTimeDay();
+        Time endTime = timeUse.getEndTimeDay();
+
+        calendar.setTime(checkOutDate);
+        calendar.set(Calendar.HOUR_OF_DAY, startTime.getHours());
+        calendar.set(Calendar.MINUTE, startTime.getMinutes());
+        calendar.set(Calendar.SECOND, startTime.getSeconds());
+        long startTimeInMillis = calendar.getTimeInMillis();
+
+        calendar.set(Calendar.HOUR_OF_DAY, endTime.getHours());
+        calendar.set(Calendar.MINUTE, endTime.getMinutes());
+        calendar.set(Calendar.SECOND, endTime.getSeconds());
+        long endTimeInMillis = calendar.getTimeInMillis();
+
+        long timeDifferenceMillis = Math.abs(startTimeInMillis - endTimeInMillis);
+        Duration duration = Duration.ofMillis(timeDifferenceMillis);
+
+        List<Object> objects = new ArrayList<>();
+        objects.add(duration.toHours());
+        objects.add(new Timestamp(startTimeInMillis));
+        objects.add(new Timestamp(endTimeInMillis));
+        return objects;
+    }
+
 }
