@@ -1,14 +1,11 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.DateUtil;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.exception.RoomInUseException;
-import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.*;
@@ -16,15 +13,8 @@ import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.xml.sax.helpers.AttributesImpl;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -220,6 +210,4 @@ public class ReservationDetailService {
             }
         }
     }
-
-
 }
