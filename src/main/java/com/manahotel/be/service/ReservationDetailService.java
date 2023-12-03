@@ -201,7 +201,7 @@ public class ReservationDetailService {
         }
     }
 
-    private void checkTimeUse(,ReservationDetail reservationDetail, ReservationDetailDTO reservationDetailDTO, Room room, TimeUse timeUse, boolean isDaily) {
+    private void checkTimeUse(ReservationDetail reservationDetail, ReservationDetailDTO reservationDetailDTO, Room room, TimeUse timeUse, boolean isDaily) {
         Timestamp checkOutEstimate = reservationDetailDTO.getCheckOutEstimate();
         Timestamp checkInEstimate = reservationDetailDTO.getCheckInEstimate();
 
