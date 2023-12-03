@@ -3,6 +3,7 @@ package com.manahotel.be.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
 @Table(name = "invoice_reservation_detail", indexes = {
         @Index(name = "pk_ird_i", columnList = "invoice_id"),
         @Index(name = "pk_ird_rd", columnList = "reservation_detail_id")
