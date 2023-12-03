@@ -6,6 +6,7 @@ import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.exception.RoomInUseException;
 import com.manahotel.be.model.dto.ReservationDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
@@ -81,21 +82,21 @@ public class ReservationDetailService {
             ReservationDetail reservationDetail = repository.findReservationDetailByReservationAndRoom(findReservation(reservationId), findRoom(roomId));
 
             Room oldRoom = reservationDetail.getRoom();
-            oldRoom.setBookingStatus(Status.ROOM_EMPTY);
-            repository3.save(oldRoom);
-
             Room newRoom = (reservationDetailDTO.getRoomId() != null) ? findRoom(reservationDetailDTO.getRoomId()) : reservationDetail.getRoom();
-            reservationDetail.setRoom(newRoom);
-
-            if(!oldRoom.getRoomCategory().getRoomCategoryId().equals(newRoom.getRoomCategory().getRoomCategoryId())) {
-                reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
-            }
 
             if(reservationDetail.getStatus().equals(Status.CHECK_IN)) {
+                if(newRoom.getBookingStatus().equals(Status.ROOM_USING)) {
+                    throw new RoomInUseException("Phòng " + newRoom.getRoomName() + "đang được sử dụng, không thể nhận phòng");
+                }
+
+                oldRoom.setBookingStatus(Status.ROOM_EMPTY);
+                repository3.save(oldRoom);
+
                 newRoom.setBookingStatus(Status.ROOM_USING);
+                repository3.save(newRoom);
             }
 
-            repository3.save(newRoom);
+            reservationDetail.setRoom(newRoom);
 
             repository.save(reservationDetail);
             log.info("----- End changing room -----");
@@ -143,6 +144,9 @@ public class ReservationDetailService {
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
 
+                if(room.getBookingStatus().equals(Status.ROOM_USING)) {
+                    throw new RoomInUseException("Phòng " + room.getRoomName() + "đang được sử dụng, không thể nhận phòng");
+                }
                 checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
 
                 room.setBookingStatus(Status.ROOM_USING);
