@@ -42,7 +42,7 @@ public class QRCodeController {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
-        String transactionCode = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + reservationId;
+        String transactionCode =  reservationId.isEmpty() ? null : "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + reservationId;
 
         QRCodeRequest qrCodeRequest = new QRCodeRequest();
         qrCodeRequest.setAccountNo(bankAccount.getBankAccountNumber());

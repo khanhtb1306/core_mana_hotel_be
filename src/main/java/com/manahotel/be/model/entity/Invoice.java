@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Table(name = "invoice", indexes = {
-        @Index(name = "pk_i_c_idx", columnList = "customer_id"),
-        @Index(name = "pk_i_r_idx", columnList = "reservation_id")
+        @Index(name = "pk_i_c_idx", columnList = "customer_id")
 })
 @Entity
 @Data

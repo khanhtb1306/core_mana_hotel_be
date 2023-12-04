@@ -7,8 +7,6 @@ import com.manahotel.be.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-// Invoice controller
-
 @RestController
 @RequestMapping("/invoice")
 public class InvoiceController {
@@ -20,6 +18,11 @@ public class InvoiceController {
     public ResponseDTO getAllInvoices() {
         return invoiceService.getAllInvoices();
     }
+    @GetMapping("/reservation/{id}")
+    public ResponseDTO getInvoiceByReservation(@PathVariable String id) {
+        return invoiceService.getInvoiceByReservation(id);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseDTO getInvoiceById(@PathVariable String id) {
