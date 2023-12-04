@@ -138,6 +138,7 @@ public class ReservationDetailService {
         reservationDetail.setRoom(room);
 
         reservationDetail.setStatus((reservationDetailDTO.getStatus() != null) ? reservationDetailDTO.getStatus() : reservationDetail.getStatus());
+        reservationDetail.setReservationType((reservationDetailDTO.getReservationType() != null) ? reservationDetailDTO.getReservationType() : reservationDetail.getReservationType());
 
         switch (reservationDetail.getStatus()) {
             case Status.BOOKING -> {
@@ -170,7 +171,6 @@ public class ReservationDetailService {
         repository3.save(room);
 
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
-        reservationDetail.setReservationType((reservationDetailDTO.getReservationType() != null) ? reservationDetailDTO.getReservationType() : reservationDetail.getReservationType());
 
         repository.save(reservationDetail);
 
