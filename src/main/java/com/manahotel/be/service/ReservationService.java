@@ -217,7 +217,6 @@ public class ReservationService {
         reservation.setStatus((reservationDTO.getStatus() != null) ? reservationDTO.getStatus() : reservation.getStatus());
         reservation.setTotalDeposit((reservationDTO.getTotalDeposit() != null) ? reservationDTO.getTotalDeposit() : reservation.getTotalDeposit());
         reservation.setTotalPrice((reservationDTO.getTotalPrice() != null) ? reservationDTO.getTotalPrice() : reservation.getTotalPrice());
-        reservation.setPaidMethod((reservationDTO.getPaidMethod() != null) ? reservationDTO.getPaidMethod() : reservation.getPaidMethod());
         reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
 
         if(reservation.getStatus().equals(Status.CHECK_IN)) {
@@ -228,10 +227,6 @@ public class ReservationService {
         }
         if(reservation.getStatus().equals(Status.DISCARD)) {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
-        }
-        if(reservation.getStatus().equals(Status.DONE)) {
-//            reservation.setTransactionCode((reservationDTO.getTransactionCode() != null) ? reservationDTO.getTransactionCode() : reservation.getTransactionCode());
-//            Staff staff = findStaff(userId);
         }
     }
 

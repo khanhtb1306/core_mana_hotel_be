@@ -43,12 +43,6 @@ public class Reservation {
     @Column(name = "total_price")
     private Float totalPrice;
 
-    @Column(name = "paid_method", length = 50)
-    private String paidMethod;
-
-    @Column(name = "transaction_code", length = 50)
-    private String transactionCode;
-
     @Column(name = "duration_start")
     private Timestamp durationStart;
 

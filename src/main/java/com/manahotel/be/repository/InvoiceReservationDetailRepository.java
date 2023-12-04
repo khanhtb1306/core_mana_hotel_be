@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface InvoiceReservationDetailRepository extends JpaRepository<InvoiceReservationDetail, Long> {
     InvoiceReservationDetail findInvoiceReservationDetailByReservationDetail_ReservationDetailId(Long reservationDetailId);
+    List<InvoiceReservationDetail> findInvoiceReservationDetailByInvoice_InvoiceId(String invoiceId);
 }
