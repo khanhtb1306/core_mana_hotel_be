@@ -1,9 +1,6 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +17,9 @@ public class FundBook {
     @Column(name = "fund_book_id", nullable = false, length = 50)
     private String fundBookId;
 
-    @Column(name = "order_id", length = 50)
-    private String orderId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
 
     @Column(name = "time")
     private Timestamp time;
