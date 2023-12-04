@@ -141,11 +141,7 @@ public class ReservationDetailService {
                 reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
                 TimeUse timeUse = timeUseRepository.findTopByOrderByTimeUseId();
-                if(reservationDetailDTO.getReservationType().equals(Status.DAILY)) {
-                    checkTimeUse(reservationDetail, room, timeUse, true);
-                }else {
-                    checkTimeUse(reservationDetail, room, timeUse, false);
-                }
+                checkTimeUse(reservationDetail, room, timeUse, reservationDetail.getReservationType().equals(Status.DAILY));
             }
             case Status.CHECK_IN -> {
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
