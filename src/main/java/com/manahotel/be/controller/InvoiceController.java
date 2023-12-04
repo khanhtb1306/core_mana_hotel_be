@@ -1,6 +1,7 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.request.InvoicePurchaseRequest;
 import com.manahotel.be.model.dto.request.InvoiceRequest;
 import com.manahotel.be.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,9 @@ public class InvoiceController {
     @PostMapping
     public ResponseDTO createReservationInvoice(InvoiceRequest request) {
         return invoiceService.createReservationInvoice(request.getReservationDetailDTO(), request.getInvoiceDTO(), request.isPartial());
+    }
+    @PostMapping
+    public ResponseDTO createPurchaseInvoice(InvoicePurchaseRequest request) {
+        return invoiceService.createPurchaseInvoice(request.getInvoiceDTO(), request.getOrderDetailDTOList());
     }
 }
