@@ -47,7 +47,7 @@ public class InvoiceService {
     @Autowired
     private FundBookService fundBookService;
 
-    public ResponseDTO createReservationInvoice(List<ReservationDetailDTO> reservationDetailDTO, InvoiceDTO invoiceDTO, boolean partial){
+    public ResponseDTO createReservationInvoice(List<ReservationDetailDTO> reservationDetailDTO, InvoiceDTO invoiceDTO){
         log.info("----- Create Reservation Invoice Start -----");
         try{
             Reservation reservation = findReservation(reservationDetailDTO.get(0).getReservationId());
@@ -56,12 +56,10 @@ public class InvoiceService {
             Invoice invoice = new Invoice();
             commonMapping(invoiceDTO, invoice);
 
-            invoice.setReservation(reservation);
             invoice.setCustomer(customer);
             invoice.setTotal(invoiceDTO.getTotal());
 
             invoiceRepository.save(invoice);
-            if(partial){
                 for (ReservationDetailDTO dto: reservationDetailDTO) {
                     ReservationDetail reservationDetail = findReservationDetail(dto.getReservationDetailId());
                     InvoiceReservationDetail invoiceReservationDetail = new InvoiceReservationDetail();
@@ -72,30 +70,21 @@ public class InvoiceService {
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
                 fundBookService.writeFundBook(invoice);
                 log.info("----- Create Reservation Invoice End -----");
-                return ResponseUtils.success("Tạo hóa đơn đặt phòng một phần thành công");
-            }else {
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
-                fundBookService.writeFundBook(invoice);
-                log.info("----- Create Reservation Invoice Partial End -----");
-                return ResponseUtils.success("Tạo hóa đơn thành công");
-            }
+                return ResponseUtils.success("Tạo hóa thành công");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("Tạo hóa đơn thất bại");
         }
-
     }
 
     public ResponseDTO createPurchaseInvoice(InvoiceDTO invoiceDTO, List<OrderDetailDTO> orderDetailDTOList){
         log.info("----- Create Purchase Invoice Start -----");
         try{
-            Reservation reservation = findReservation(Const.RESERVATION_ID);
             Customer customer = findCustomer(Const.CUSTOMER_ID);
 
             Invoice invoice = new Invoice();
             commonMapping(invoiceDTO, invoice);
 
-            invoice.setReservation(reservation);
             invoice.setCustomer(customer);
             invoice.setTotal(orderService.totalPay(orderDetailDTOList));
 

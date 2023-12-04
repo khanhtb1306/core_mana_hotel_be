@@ -10,5 +10,4 @@ import java.util.List;
 public class InvoiceRequest {
     private List<ReservationDetailDTO> reservationDetailDTO;
     private InvoiceDTO invoiceDTO;
-    private boolean partial;
 }
