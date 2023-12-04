@@ -24,10 +24,6 @@ public class Invoice {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "reservation_id", nullable = false)
-    private Reservation reservation;
-
     @Column(name = "created_by_id")
     private Long createdById;
 

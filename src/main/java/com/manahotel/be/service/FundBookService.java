@@ -3,10 +3,11 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.FundBookDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.FundBook;
+import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.FundBookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,31 @@ public class FundBookService {
             return ResponseUtils.error("Tạo phiếu thất bại");
         }
     }
+
+    public void writeFundBook(Invoice invoice){
+        log.info("----- Write Fund Book Start  -----");
+        try{
+            FundBook fundBook = new FundBook();
+            fundBook.setFundBookId("TT" + invoice.getInvoiceId());
+            fundBook.setInvoice(invoice);
+            fundBook.setTime(new Timestamp(System.currentTimeMillis()));
+            fundBook.setType(Status.INCOME);
+            fundBook.setPaidMethod(invoice.getPaidMethod());
+            fundBook.setValue(invoice.getTotal() - invoice.getDiscount());
+            fundBook.setPrepaid(0F);
+            fundBook.setPaid(invoice.getTotal() - invoice.getDiscount());
+            fundBook.setPayerReceiver("Khách Hàng");
+            fundBook.setStaff(UserUtils.getUser().getStaffName());
+            fundBook.setNote("Thu tiền khách trả");
+            fundBook.setStatus(Status.COMPLETE);
+            repository.save(fundBook);
+            log.info("writeFundBook_isSuccess");
+        }catch (Exception e){
+            log.error("writeFundBook_isFail");
+        }
+        log.info("----- Write Fund Book Start  -----");
+    }
+
 
     public ResponseDTO updateFundBook(String id, FundBookDTO fundBookDTO) {
         try {

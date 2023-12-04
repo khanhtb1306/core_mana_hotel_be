@@ -10,7 +10,6 @@ import com.manahotel.be.model.dto.*;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.agent.builder.AgentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,39 +44,33 @@ public class InvoiceService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private FundBookService fundBookService;
 
-    public ResponseDTO createReservationInvoice(ReservationDetailDTO reservationDetailDTO, InvoiceDTO invoiceDTO, boolean partial){
+    public ResponseDTO createReservationInvoice(List<ReservationDetailDTO> reservationDetailDTO, InvoiceDTO invoiceDTO){
+        log.info("----- Create Reservation Invoice Start -----");
         try{
-            Invoice latestInvoice = invoiceRepository.findTopByOrderByInvoiceIdDesc();
-            String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
-            String nextId = IdGenerator.generateId(latestId, "HD");
-
-            Reservation reservation = findReservation(reservationDetailDTO.getReservationId());
+            Reservation reservation = findReservation(reservationDetailDTO.get(0).getReservationId());
             Customer customer = findCustomer(reservation.getCustomer().getCustomerId());
-            ReservationDetail reservationDetail = findReservationDetail(reservationDetailDTO.getReservationDetailId());
 
             Invoice invoice = new Invoice();
-            invoice.setInvoiceId(nextId);
-            invoice.setCreatedById(UserUtils.getUser().getStaffId());
-            invoice.setReservation(reservation);
+            commonMapping(invoiceDTO, invoice);
+
             invoice.setCustomer(customer);
             invoice.setTotal(invoiceDTO.getTotal());
-            invoice.setDiscount(invoiceDTO.getDiscount());
-            invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            invoice.setStatus(Status.COMPLETE);
-            invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
+
             invoiceRepository.save(invoice);
-            if(partial){
-                InvoiceReservationDetail invoiceReservationDetail = new InvoiceReservationDetail();
-                invoiceReservationDetail.setReservationDetail(reservationDetail);
-                invoiceReservationDetail.setInvoice(invoice);
-                invoiceReservationDetailRepository.save(invoiceReservationDetail);
+                for (ReservationDetailDTO dto: reservationDetailDTO) {
+                    ReservationDetail reservationDetail = findReservationDetail(dto.getReservationDetailId());
+                    InvoiceReservationDetail invoiceReservationDetail = new InvoiceReservationDetail();
+                    invoiceReservationDetail.setReservationDetail(reservationDetail);
+                    invoiceReservationDetail.setInvoice(invoice);
+                    invoiceReservationDetailRepository.save(invoiceReservationDetail);
+                }
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
-                return ResponseUtils.success("Tạo hóa đơn đặt phòng một phần thành công");
-            }else {
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
-                return ResponseUtils.success("Tạo hóa đơn đặt phòng thành công");
-            }
+                fundBookService.writeFundBook(invoice);
+                log.info("----- Create Reservation Invoice End -----");
+                return ResponseUtils.success("Tạo hóa thành công");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("Tạo hóa đơn thất bại");
@@ -85,33 +78,46 @@ public class InvoiceService {
     }
 
     public ResponseDTO createPurchaseInvoice(InvoiceDTO invoiceDTO, List<OrderDetailDTO> orderDetailDTOList){
+        log.info("----- Create Purchase Invoice Start -----");
         try{
-            Invoice latestInvoice = invoiceRepository.findTopByOrderByInvoiceIdDesc();
-            String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
-            String nextId = IdGenerator.generateId(latestId, "HD");
-
-            Reservation reservation = findReservation(Const.RESERVATION_ID);
             Customer customer = findCustomer(Const.CUSTOMER_ID);
+
             Invoice invoice = new Invoice();
-            invoice.setInvoiceId(nextId);
-            invoice.setCreatedById(UserUtils.getUser().getStaffId());
-            invoice.setReservation(reservation);
+            commonMapping(invoiceDTO, invoice);
+
             invoice.setCustomer(customer);
             invoice.setTotal(orderService.totalPay(orderDetailDTOList));
-            invoice.setDiscount(invoiceDTO.getDiscount());
-            invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            invoice.setStatus(Status.COMPLETE);
-            invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
+
             invoiceRepository.save(invoice);
 
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
                 orderDetailService.createOrderDetail(orderDetail, invoice.getInvoiceId(), Const.ORDER_ID);
             }
+            overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
+            fundBookService.writeFundBook(invoice);
+            log.info("----- Create Purchase Invoice End -----");
+            return ResponseUtils.error("Tạo hóa đơn thành công");
         }catch (Exception e){
-
+            log.error("create Purchase Invoice IsFail");
+            return ResponseUtils.error("Tạo hóa đơn thất bại");
         }
+    }
 
-        return ResponseUtils.error("Tạo hóa đơn thất bại");
+    private void commonMapping(InvoiceDTO invoiceDTO, Invoice invoice) {
+        Invoice latestInvoice = invoiceRepository.findTopByOrderByInvoiceIdDesc();
+        String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
+        String nextId = IdGenerator.generateId(latestId, "HD");
+        invoice.setInvoiceId(nextId);
+
+        invoice.setCreatedById(UserUtils.getUser().getStaffId());
+        invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        invoice.setStatus(Status.COMPLETE);
+        invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+
+        invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : invoice.getDiscount());
+        invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
+        invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
+        invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
     }
 
     public ResponseDTO getAllInvoices() {
