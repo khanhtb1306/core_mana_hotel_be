@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -52,8 +53,7 @@ public class ReservationDetailService {
             log.info("----- End create detail for reservation ------");
 
             return ResponseUtils.success(reservationDetail, "Tạo chi tiết đặt phòng thành công");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("----- Create detail for reservation failed ------\n" + e.getMessage());
             return ResponseUtils.error("Tạo chi tiết đặt phòng thất bại");
         }
@@ -69,8 +69,7 @@ public class ReservationDetailService {
             log.info("----- End update detail for reservation ------");
 
             return ResponseUtils.success(reservationDetail.getReservationDetailId(), "Cập nhật chi tiết đặt phòng thành công");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("----- Update detail for reservation failed ------\n" + e.getMessage());
             return ResponseUtils.error(findReservationDetail(id).getReservationDetailId(), e.getMessage());
         }
@@ -84,8 +83,8 @@ public class ReservationDetailService {
             Room oldRoom = reservationDetail.getRoom();
             Room newRoom = (reservationDetailDTO.getRoomId() != null) ? findRoom(reservationDetailDTO.getRoomId()) : reservationDetail.getRoom();
 
-            if(reservationDetail.getStatus().equals(Status.CHECK_IN)) {
-                if(newRoom.getBookingStatus().equals(Status.ROOM_USING) && !repository.existInReservationDetail(reservationDetail)) {
+            if (reservationDetail.getStatus().equals(Status.CHECK_IN)) {
+                if (newRoom.getBookingStatus().equals(Status.ROOM_USING) && !repository.existInReservationDetail(reservationDetail)) {
                     throw new RoomInUseException("Phòng " + newRoom.getRoomName() + " đang được sử dụng, không thể nhận phòng");
                 }
 
@@ -104,8 +103,7 @@ public class ReservationDetailService {
             log.info("----- End changing room -----");
 
             return ResponseUtils.success("Thay đổi phòng thành công");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("----- Change room failed ------\n" + e.getMessage());
             return ResponseUtils.error("Thay đổi phòng thất bại");
         }
@@ -119,8 +117,7 @@ public class ReservationDetailService {
             repository.save(reservationDetail);
             log.info("----- End delete Reservation Detail -----");
             return ResponseUtils.success("Xóa chi tiết đặt phòng thành công");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("----- Delete Reservation Detail failed ------\n" + e.getMessage());
             return ResponseUtils.error("Xóa chi tiết đặt phòng thất bại");
         }
@@ -140,26 +137,25 @@ public class ReservationDetailService {
             case Status.BOOKING -> {
                 reservationDetail.setCheckInEstimate((reservationDetailDTO.getCheckInEstimate() != null) ? reservationDetailDTO.getCheckInEstimate() : reservationDetail.getCheckInEstimate());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
-                TimeUse timeUse = timeUseRepository.findTopByOrderByTimeUseId();
-                if(reservationDetailDTO.getReservationType().equals(Status.DAILY)) {
-                    checkTimeUse(reservationDetail, room, timeUse, true);
-                }else {
-                    checkTimeUse(reservationDetail, room, timeUse, false);
-                }
+
+                checkTimeUse(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), room, reservationDetail.getReservationDetailId(), reservationDetail.getReservationType().equals(Status.DAILY));
             }
             case Status.CHECK_IN -> {
                 reservationDetail.setCheckInActual((reservationDetailDTO.getCheckInActual() != null) ? reservationDetailDTO.getCheckInActual() : reservationDetail.getCheckInActual());
                 reservationDetail.setCheckOutEstimate((reservationDetailDTO.getCheckOutEstimate() != null) ? reservationDetailDTO.getCheckOutEstimate() : reservationDetail.getCheckOutEstimate());
 
-                if(room.getBookingStatus().equals(Status.ROOM_USING) && !repository.existInReservationDetail(reservationDetail)) {
+                if (room.getBookingStatus().equals(Status.ROOM_USING) && !repository.existInReservationDetail(reservationDetail)) {
                     throw new RoomInUseException("Phòng " + room.getRoomName() + " đang được sử dụng, không thể nhận phòng");
                 }
+
+                checkTimeUse(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutEstimate(), room, reservationDetail.getReservationDetailId(), reservationDetail.getReservationType().equals(Status.DAILY));
+
                 room.setBookingStatus(Status.ROOM_USING);
             }
             case Status.CHECK_OUT -> {
                 reservationDetail.setCheckOutActual((reservationDetailDTO.getCheckOutActual() != null) ? reservationDetailDTO.getCheckOutActual() : reservationDetail.getCheckOutActual());
 
-                checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
+                checkTimeUse(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), room, reservationDetail.getReservationDetailId(), reservationDetail.getReservationType().equals(Status.DAILY));
 
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
@@ -199,28 +195,30 @@ public class ReservationDetailService {
     private void checkDuplicateBooking(Timestamp checkIn, Timestamp checkOut, Room room, Long reservationDetailId) {
         List<ReservationDetail> listReservationDetails = repository.checkBooking(checkIn, checkOut, room, reservationDetailId);
 
-        if(!listReservationDetails.isEmpty()) {
+        if (!listReservationDetails.isEmpty()) {
             throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
         }
     }
 
-    private void checkTimeUse(ReservationDetail reservationDetail, Room room, TimeUse timeUse, boolean isDaily) {
-        Timestamp checkOutEstimate = reservationDetail.getCheckOutEstimate();
-        Timestamp checkInEstimate = reservationDetail.getCheckInEstimate();
+    private void checkTimeUse(Timestamp start, Timestamp end, Room room, Long reservationDetailId, boolean isDaily) {
+        checkDuplicateBooking(start, end, room, reservationDetailId);
 
-        Timestamp timeUseStart = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getStartTimeDay());
-        Timestamp timeUseEnd = DateUtil.calculateTimestamp(checkOutEstimate, timeUse.getEndTimeDay());
+        TimeUse timeUse = timeUseRepository.findTopByOrderByTimeUseId();
 
-            checkDuplicateBooking(reservationDetail.getCheckInEstimate(), reservationDetail.getCheckOutEstimate(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
-            int hours = 2;
-            if(isDaily) {
-                hours = DateUtil.calculateDurationInHours(timeUseStart, timeUseEnd);
-            }
-            Timestamp newCheckOutEstimate = DateUtil.addHoursToTimestamp(checkOutEstimate, hours);
-            Timestamp newCheckInEstimate = DateUtil.addHoursToTimestamp(checkInEstimate, -hours);
-            List<ReservationDetail> listReservationDetails = repository.checkBooking(newCheckInEstimate, newCheckOutEstimate, reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
-            if (!listReservationDetails.isEmpty()) {
-                throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng vào thời gian dọn phòng");
-            }
+        int hours = 2;
+
+        if (isDaily) {
+            long timeDifferenceMillis = Math.abs(timeUse.getStartTimeDay().getTime() - timeUse.getEndTimeDay().getTime());
+            Duration duration = Duration.ofMillis(timeDifferenceMillis);
+            hours = (int) duration.toHours();
+        }
+
+        Timestamp newCheckInEstimate = DateUtil.addHoursToTimestamp(start, -hours);
+        Timestamp newCheckOutEstimate = DateUtil.addHoursToTimestamp(end, hours);
+
+        List<ReservationDetail> listReservationDetails = repository.checkBooking(newCheckInEstimate, newCheckOutEstimate, room, reservationDetailId);
+        if (!listReservationDetails.isEmpty()) {
+            throw new BookingConflictException("Lịch phòng " + room.getRoomName() + " đang trùng vào thời gian dọn phòng");
+        }
     }
 }
