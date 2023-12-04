@@ -18,6 +18,11 @@ public class InvoiceController {
     public ResponseDTO getAllInvoices() {
         return invoiceService.getAllInvoices();
     }
+    @GetMapping("/reservation/{id}")
+    public ResponseDTO getInvoiceByReservation(@PathVariable String id) {
+        return invoiceService.getInvoiceByReservation(id);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseDTO getInvoiceById(@PathVariable String id) {

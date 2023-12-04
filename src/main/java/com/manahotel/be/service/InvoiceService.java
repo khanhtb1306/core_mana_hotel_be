@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -60,13 +61,13 @@ public class InvoiceService {
             invoice.setTotal(invoiceDTO.getTotal());
 
             invoiceRepository.save(invoice);
-                for (ReservationDetailDTO dto: reservationDetailDTO) {
+                reservationDetailDTO.forEach(dto -> {
                     ReservationDetail reservationDetail = findReservationDetail(dto.getReservationDetailId());
                     InvoiceReservationDetail invoiceReservationDetail = new InvoiceReservationDetail();
                     invoiceReservationDetail.setReservationDetail(reservationDetail);
                     invoiceReservationDetail.setInvoice(invoice);
                     invoiceReservationDetailRepository.save(invoiceReservationDetail);
-                }
+                });
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
                 fundBookService.writeFundBook(invoice);
                 log.info("----- Create Reservation Invoice End -----");
@@ -90,9 +91,9 @@ public class InvoiceService {
 
             invoiceRepository.save(invoice);
 
-            for (OrderDetailDTO orderDetail : orderDetailDTOList) {
+            orderDetailDTOList.forEach(orderDetail -> {
                 orderDetailService.createOrderDetail(orderDetail, invoice.getInvoiceId(), Const.ORDER_ID);
-            }
+            });
             overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
             fundBookService.writeFundBook(invoice);
             log.info("----- Create Purchase Invoice End -----");
@@ -128,10 +129,37 @@ public class InvoiceService {
         return ResponseUtils.success(findInvoice(id), "Hiển thị chi tiết hóa đơn thành công");
     }
 
+    public ResponseDTO getInvoiceByReservation(String reservation_Id) {
+        log.info("----- Get Invoice By Reservation Start -----");
+        try {
+            List<Invoice> invoices = reservationDetailRepository
+                    .findReservationDetailByReservation_ReservationId(reservation_Id)
+                    .stream()
+                    .map(reservationDetail -> {
+                        InvoiceReservationDetail invoiceReservationDetails = invoiceReservationDetailRepository
+                                .findInvoiceReservationDetailByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                        return (invoiceReservationDetails != null) ? invoiceReservationDetails.getInvoice() : null;
+                    })
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .map(invoice -> findInvoice(invoice.getInvoiceId()))
+                    .collect(Collectors.toList());
+            log.info("----- Get Invoice By Reservation End -----");
+            return ResponseUtils.success(invoices, "Lấy hóa đơn theo " + reservation_Id + " thành công");
+        } catch (ResourceNotFoundException e) {
+            log.error("getInvoiceByReservation_isFail: " + e.getMessage());
+            return ResponseUtils.error("Lấy hóa đơn theo " + reservation_Id + " Thất bại. " + e.getMessage());
+        } catch (Exception e) {
+            log.error("getInvoiceByReservation_isFail: " + e.getMessage());
+            return ResponseUtils.error("Lấy hóa đơn theo " + reservation_Id + " Thất bại");
+        }
+    }
+
     private Invoice findInvoice(String id) {
         return invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id " + id));
     }
+
 
     private Customer findCustomer(String id) {
         return customerRepository.findById(id)
