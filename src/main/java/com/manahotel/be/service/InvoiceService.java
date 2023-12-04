@@ -46,15 +46,15 @@ public class InvoiceService {
     private OrderService orderService;
 
 
-    public ResponseDTO createReservationInvoice(ReservationDetailDTO reservationDetailDTO, InvoiceDTO invoiceDTO, boolean partial){
+    public ResponseDTO createReservationInvoice(List<ReservationDetailDTO> reservationDetailDTO, InvoiceDTO invoiceDTO, boolean partial){
         try{
             Invoice latestInvoice = invoiceRepository.findTopByOrderByInvoiceIdDesc();
             String latestId = (latestInvoice == null) ? null : latestInvoice.getInvoiceId();
             String nextId = IdGenerator.generateId(latestId, "HD");
 
-            Reservation reservation = findReservation(reservationDetailDTO.getReservationId());
+            Reservation reservation = findReservation(reservationDetailDTO.get(0).getReservationId());
             Customer customer = findCustomer(reservation.getCustomer().getCustomerId());
-            ReservationDetail reservationDetail = findReservationDetail(reservationDetailDTO.getReservationDetailId());
+
 
             Invoice invoice = new Invoice();
             invoice.setInvoiceId(nextId);
@@ -68,10 +68,13 @@ public class InvoiceService {
             invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
             invoiceRepository.save(invoice);
             if(partial){
-                InvoiceReservationDetail invoiceReservationDetail = new InvoiceReservationDetail();
-                invoiceReservationDetail.setReservationDetail(reservationDetail);
-                invoiceReservationDetail.setInvoice(invoice);
-                invoiceReservationDetailRepository.save(invoiceReservationDetail);
+                for (ReservationDetailDTO dto: reservationDetailDTO) {
+                    ReservationDetail reservationDetail = findReservationDetail(dto.getReservationDetailId());
+                    InvoiceReservationDetail invoiceReservationDetail = new InvoiceReservationDetail();
+                    invoiceReservationDetail.setReservationDetail(reservationDetail);
+                    invoiceReservationDetail.setInvoice(invoice);
+                    invoiceReservationDetailRepository.save(invoiceReservationDetail);
+                }
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
                 return ResponseUtils.success("Tạo hóa đơn đặt phòng một phần thành công");
             }else {
