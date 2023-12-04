@@ -162,7 +162,7 @@ public class ImportGoodsService {
 
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId("TT" + importGoods.getImportGoodsId());
-            fundBook.setOrderId(importGoods.getImportGoodsId());
+//            fundBook.setInvoice(importGoods.getImportGoodsId());
             fundBook.setTime(new Timestamp(System.currentTimeMillis()));
             fundBook.setType(Status.EXPENSE);
             fundBook.setPaidMethod(null);

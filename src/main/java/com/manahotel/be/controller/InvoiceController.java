@@ -24,11 +24,11 @@ public class InvoiceController {
         return invoiceService.getInvoiceById(id);
     }
 
-    @PostMapping
+    @PostMapping("/reservation")
     public ResponseDTO createReservationInvoice(InvoiceRequest request) {
         return invoiceService.createReservationInvoice(request.getReservationDetailDTO(), request.getInvoiceDTO(), request.isPartial());
     }
-    @PostMapping
+    @PostMapping("/purchase")
     public ResponseDTO createPurchaseInvoice(InvoicePurchaseRequest request) {
         return invoiceService.createPurchaseInvoice(request.getInvoiceDTO(), request.getOrderDetailDTOList());
     }
