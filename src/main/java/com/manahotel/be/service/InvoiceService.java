@@ -132,12 +132,8 @@ public class InvoiceService {
         invoice.setStaff(UserUtils.getUser());
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
-        if(!invoice.getPaidMethod().equals(Status.TRANSFER)) {
-            invoice.setStatus(Status.COMPLETE);
-        }
-        invoice.setStatus(Status.UNCONFIRMED);
+        invoice.setStatus(invoice.getPaidMethod().equals(Status.CASH) ? Status.COMPLETE : Status.UNCONFIRMED);
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-
         invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : invoice.getDiscount());
         invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
         invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
