@@ -19,7 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Service
 public class ControlPolicyService {
@@ -32,10 +36,28 @@ public class ControlPolicyService {
     @Autowired
     private PolicyDetailRepository policyDetailRepository;
 
-
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
 
+    public ResponseDTO getControlPolicyByReservation(String reservationId){
+        try {
+            log.info("----- get Control Policy By Reservation Start------");
+            List<ReservationDetail> reservationDetails = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
+            Map<String, Object> controlPoliciesInfo = new HashMap<>();
+            List<Object> listControlPolicyByReservation = new ArrayList<>();
+            for (ReservationDetail rD : reservationDetails) {
+                List<ControlPolicy> controlPolicies = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(rD.getReservationDetailId());
+                controlPoliciesInfo.put("reservationDetail", rD);
+                controlPoliciesInfo.put("controlPolicies", controlPolicies);
+                listControlPolicyByReservation.add(controlPolicies);
+            }
+            log.info("----- get Control Policy By Reservation End------");
+            return ResponseUtils.success(listControlPolicyByReservation, "getControlPolicyByReservation_isSuccessfully");
+        }catch (Exception e){
+            log.error("getControlPolicyByReservation_isFail" + e.getMessage());
+            return ResponseUtils.success("getControlPolicyByReservation_isFail");
+        }
+    }
     public ResponseDTO getControlPolicyByReservationDetail(long reservationDetailId, String policyName){
         log.info("----- get Control Policy By Reservation Detail Start------");
         try{

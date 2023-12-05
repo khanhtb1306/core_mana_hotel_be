@@ -67,14 +67,33 @@ public class InvoiceService {
                     invoiceReservationDetail.setReservationDetail(reservationDetail);
                     invoiceReservationDetail.setInvoice(invoice);
                     invoiceReservationDetailRepository.save(invoiceReservationDetail);
+                    //Update Status
+                    reservationDetail.setStatus(Status.DONE);
+                    reservationDetailRepository.save(reservationDetail);
                 });
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
+                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
                 fundBookService.writeFundBook(invoice);
                 log.info("----- Create Reservation Invoice End -----");
-                return ResponseUtils.success("Tạo hóa thành công");
+                return ResponseUtils.success(invoice.getInvoiceId(),"Tạo hóa đơn thành công");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("Tạo hóa đơn thất bại");
+        }
+    }
+
+    public ResponseDTO updateReservationInvoice(InvoiceDTO invoiceDTO){
+        log.info("----- Update Reservation Invoice Start -----");
+        try{
+            Invoice invoice =  findInvoice(invoiceDTO.getInvoiceId());
+            invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
+            invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
+            invoice.setStatus(invoiceDTO.getStatus() != null ? invoiceDTO.getStatus() : invoice.getStatus());
+            invoiceRepository.save(invoice);
+            log.info("----- Update Reservation Invoice End -----");
+            return ResponseUtils.success(invoice.getInvoiceId(),"Cập nhật hóa đơn thành công");
+        }catch (Exception e){
+            log.error("updateReservationInvoice_isFail");
+            return ResponseUtils.success("Cập nhật hóa đơn thất bại");
         }
     }
 
@@ -112,13 +131,17 @@ public class InvoiceService {
 
         invoice.setStaff(UserUtils.getUser());
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        invoice.setStatus(Status.COMPLETE);
+        invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
+        if(!invoice.getPaidMethod().equals(Status.TRANSFER)) {
+            invoice.setStatus(Status.COMPLETE);
+        }
+        invoice.setStatus(Status.UNCONFIRMED);
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : invoice.getDiscount());
         invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
-        invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
         invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
+        invoice.setPriceOther(invoiceDTO.getPriceOther() != null ? invoiceDTO.getPriceOther() : invoice.getPriceOther());
     }
 
     public ResponseDTO getAllInvoices() {

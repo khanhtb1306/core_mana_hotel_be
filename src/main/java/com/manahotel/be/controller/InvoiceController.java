@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.InvoiceDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.InvoicePurchaseRequest;
 import com.manahotel.be.model.dto.request.InvoiceRequest;
@@ -33,6 +34,12 @@ public class InvoiceController {
     public ResponseDTO createReservationInvoice(InvoiceRequest request) {
         return invoiceService.createReservationInvoice(request.getReservationDetailDTO(), request.getInvoiceDTO());
     }
+
+    @PutMapping("/reservation")
+    public ResponseDTO updateReservationInvoice(InvoiceDTO invoiceDTO) {
+        return invoiceService.updateReservationInvoice(invoiceDTO);
+    }
+
     @PostMapping("/purchase")
     public ResponseDTO createPurchaseInvoice(InvoicePurchaseRequest request) {
         return invoiceService.createPurchaseInvoice(request.getInvoiceDTO(), request.getOrderDetailDTOList());

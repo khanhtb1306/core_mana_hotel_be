@@ -7,9 +7,12 @@ import java.sql.Timestamp;
 
 @Data
 public class InvoiceDTO {
+    private String invoiceId;
     private Float total;
     private Float discount;
     private String note;
     private String paidMethod;
     private String transactionCode;
+    private String status;
+    private Float priceOther;
 }
