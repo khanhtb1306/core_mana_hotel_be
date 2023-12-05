@@ -67,6 +67,9 @@ public class InvoiceService {
                     invoiceReservationDetail.setReservationDetail(reservationDetail);
                     invoiceReservationDetail.setInvoice(invoice);
                     invoiceReservationDetailRepository.save(invoiceReservationDetail);
+                    //Update Status
+                    reservationDetail.setStatus(Status.DONE);
+                    reservationDetailRepository.save(reservationDetail);
                 });
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
                 fundBookService.writeFundBook(invoice);
