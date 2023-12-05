@@ -50,5 +50,5 @@ public class Invoice {
     private String transactionCode;
 
     @Column(name = "price_other")
-    private float priceOther;
+    private Float priceOther;
 }
