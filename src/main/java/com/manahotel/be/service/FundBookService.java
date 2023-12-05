@@ -69,9 +69,9 @@ public class FundBookService {
             fundBook.setTime(new Timestamp(System.currentTimeMillis()));
             fundBook.setType(Status.INCOME);
             fundBook.setPaidMethod(invoice.getPaidMethod());
-            fundBook.setValue(invoice.getTotal() - invoice.getDiscount());
+            fundBook.setValue(invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther());
             fundBook.setPrepaid(0F);
-            fundBook.setPaid(invoice.getTotal() - invoice.getDiscount());
+            fundBook.setPaid(invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther());
             fundBook.setPayerReceiver("Khách Hàng");
             fundBook.setStaff(UserUtils.getUser().getStaffName());
             fundBook.setNote("Thu tiền khách trả");

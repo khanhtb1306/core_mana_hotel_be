@@ -36,7 +36,7 @@ public class Status {
     public static final String DISCARD = "DISCARD"; // For reservation only
     public static final String DONE = "DONE"; // For reservation only
 
-    // Order
+    // Order vs incovice
     public static final String UNCONFIRMED = "UNCONFIRMED";
 
     public static final String CONFIRMED = "CONFIRMED";
@@ -51,7 +51,7 @@ public class Status {
 
     // Payment Method
     public static final String CASH = "CASH";
-    public static final String CARD = "CARD";
+//    public static final String CARD = "CARD";
     public static final String TRANSFER = "TRANSFER";
 
     // Income and Expense

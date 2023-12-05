@@ -48,4 +48,7 @@ public class Invoice {
 
     @Column(name = "transaction_code", length = 50)
     private String transactionCode;
+
+    @Column(name = "price_other")
+    private float priceOther;
 }

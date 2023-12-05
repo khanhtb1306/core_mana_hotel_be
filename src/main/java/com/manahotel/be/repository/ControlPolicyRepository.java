@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ControlPolicyRepository extends JpaRepository<ControlPolicy, Long> {
 
-    @Query("SELECT cp FROM ControlPolicy cp WHERE cp.reservationDetail.reservationDetailId = ?1 AND cp.policy.policyId = ?2")
+    @Query("SELECT cp FROM ControlPolicy cp WHERE cp.reservationDetail.reservationDetailId = ?1 AND cp.policy.policyId = ?2 AND cp.status <> false ")
     ControlPolicy findByReservationDetailIdAndPolicyId(Long reservationDetailId, String policyId);
 }

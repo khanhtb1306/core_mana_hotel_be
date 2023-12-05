@@ -5,20 +5,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 @Repository
 public interface ReportRoomCapacityRepository extends JpaRepository<ReportRoomCapacity, Long> {
     @Query("SELECT r FROM ReportRoomCapacity r WHERE MONTH(r.createDate) = ?1 AND YEAR(r.createDate) = ?2")
     List<ReportRoomCapacity> findAllInCurrentMonth(Integer month, Integer year);
 
-//    List<ReportRoomCapacity> findAllInLastMonth();
+    @Query("SELECT r FROM ReportRoomCapacity r WHERE DATE(r.createDate) = CURRENT_DATE")
+    ReportRoomCapacity findTodayReportRoomCapacity();
 
     @Query("SELECT YEAR(r.createDate) as reportYear, MONTH(r.createDate) as reportMonth, AVG(r.roomCapacityValue) as averageRoomCapacity " +
             "FROM ReportRoomCapacity r " +
             "WHERE YEAR(r.createDate) = ?1 " +
             "GROUP BY YEAR(r.createDate), MONTH(r.createDate)")
     List<Object[]> findAverageRoomCapacityByYear(Integer selectedYear);
-
 
     @Query("SELECT YEAR(r.createDate) as reportYear, AVG(r.roomCapacityValue) as averageRoomCapacity " +
             "FROM ReportRoomCapacity r " +

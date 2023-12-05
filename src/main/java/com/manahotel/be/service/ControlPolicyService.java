@@ -36,6 +36,9 @@ public class ControlPolicyService {
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
 
+    public ResponseDTO getControlPolicyByReservationDetail(long reservationId){
+        return ResponseUtils.success("getControlPolicy_isSuccessfully");
+    }
     public ResponseDTO getControlPolicyByReservationDetail(long reservationDetailId, String policyName){
         log.info("----- get Control Policy By Reservation Detail Start------");
         try{

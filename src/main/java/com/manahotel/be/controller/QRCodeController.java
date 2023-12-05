@@ -37,13 +37,14 @@ public class QRCodeController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<QRCodeResponse> generateQRCode(String reservationId, Long bankAccountId, Float amount, String template) {
+    public ResponseEntity<QRCodeResponse> generateQRCode(String message, Long bankAccountId, Float amount, String template, boolean retry) {
         BankAccount bankAccount = service.findBankAccount(bankAccountId);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-        String transactionCode =  reservationId.isEmpty() ? null : "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + reservationId;
-
+        String transactionCode = message;
+        if(!retry){
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            transactionCode =  message.isEmpty() ? null : "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + message;
+        }
         QRCodeRequest qrCodeRequest = new QRCodeRequest();
         qrCodeRequest.setAccountNo(bankAccount.getBankAccountNumber());
         qrCodeRequest.setAccountName(bankAccount.getBankAccountName());
