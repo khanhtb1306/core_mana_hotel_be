@@ -23,6 +23,10 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
     List<ReservationDetail> findReservationDetailByReservation_ReservationId(String reservationId);
 
     @Query("SELECT rd FROM ReservationDetail rd " +
+            "WHERE rd.room.roomId = ?1 AND (rd.status = 'BOOKING' OR rd.status = 'CHECK_IN')")
+    List<ReservationDetail> findBookingAndCheckInDetailsByRoomId(String roomId);
+
+    @Query("SELECT rd FROM ReservationDetail rd " +
             "WHERE rd.room.roomId = ?1  AND rd.status <> 'BOOKING'" +
             "AND rd.reservationDetailStatus = 1 " +
             "AND ((rd.status = 'CHECK_IN') OR (rd.status = 'CHECK_OUT' AND DATE(rd.checkOutActual) = CURRENT_DATE))")

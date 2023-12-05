@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @Table(name = "invoice", indexes = {
-        @Index(name = "pk_i_c_idx", columnList = "customer_id")
+        @Index(name = "pk_i_c_idx", columnList = "customer_id"),
+        @Index(name = "pk_i_stf", columnList = "staff_id")
 })
 @Entity
 @Data
@@ -23,8 +24,9 @@ public class Invoice {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Column(name = "created_by_id")
-    private Long createdById;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "staff_id", nullable = false)
+    private Staff staff;
 
     @Column(name = "total")
     private Float total;

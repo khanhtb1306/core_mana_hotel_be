@@ -110,7 +110,7 @@ public class InvoiceService {
         String nextId = IdGenerator.generateId(latestId, "HD");
         invoice.setInvoiceId(nextId);
 
-        invoice.setCreatedById(UserUtils.getUser().getStaffId());
+        invoice.setStaff(UserUtils.getUser());
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         invoice.setStatus(Status.COMPLETE);
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -122,10 +122,35 @@ public class InvoiceService {
     }
 
     public ResponseDTO getAllInvoices() {
-        return ResponseUtils.success(invoiceRepository.findAll(), "Hiển thị danh sách hóa đơn thành công");
+        List<Invoice> invoice = invoiceRepository.findAllByOrderByInvoiceIdDesc();
+        return ResponseUtils.success(invoice, "Hiển thị danh sách hóa đơn thành công");
     }
 
     public ResponseDTO getInvoiceById(String id) {
+        try{
+            Map<String, Object> invoiceInfo = new HashMap<>();
+            Invoice invoice = findInvoice(id);
+            List<Object> reservationDetails = new ArrayList<>();
+            List<InvoiceReservationDetail> invoiceReservationDetails = invoiceReservationDetailRepository
+                    .findInvoiceReservationDetailByInvoice_InvoiceId(invoice.getInvoiceId());
+            for(InvoiceReservationDetail ird: invoiceReservationDetails){
+                Map<String, Object> reservationDetailWithOrder = new HashMap<>();
+                //lấy reservationDetail
+                ReservationDetail reservationDetail = findReservationDetail(ird.getReservationDetail().getReservationDetailId());
+                //lấy order
+                Object order = orderService.getOrderByReservationDetailId(reservationDetail.getReservationDetailId()).getResult();
+
+                reservationDetailWithOrder.put("reservationDetail", reservationDetail);
+                reservationDetailWithOrder.put("ListOrder", order);
+
+                reservationDetails.add(reservationDetailWithOrder);
+            }
+            invoiceInfo.put("Invoice", invoice);
+            invoiceInfo.put("ListReservationOfInvoice", reservationDetails);
+        }catch (Exception e){
+            log.error("getInvoiceById_isFail" + e.getMessage());
+        }
+
         return ResponseUtils.success(findInvoice(id), "Hiển thị chi tiết hóa đơn thành công");
     }
 
@@ -146,9 +171,6 @@ public class InvoiceService {
                     .collect(Collectors.toList());
             log.info("----- Get Invoice By Reservation End -----");
             return ResponseUtils.success(invoices, "Lấy hóa đơn theo " + reservation_Id + " thành công");
-        } catch (ResourceNotFoundException e) {
-            log.error("getInvoiceByReservation_isFail: " + e.getMessage());
-            return ResponseUtils.error("Lấy hóa đơn theo " + reservation_Id + " Thất bại. " + e.getMessage());
         } catch (Exception e) {
             log.error("getInvoiceByReservation_isFail: " + e.getMessage());
             return ResponseUtils.error("Lấy hóa đơn theo " + reservation_Id + " Thất bại");
@@ -159,6 +181,7 @@ public class InvoiceService {
         return invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id " + id));
     }
+
 
     private Customer findCustomer(String id) {
         return customerRepository.findById(id)

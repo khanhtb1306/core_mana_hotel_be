@@ -6,9 +6,11 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.FloorDTO;
 import com.manahotel.be.model.dto.RoomDTO;
 import com.manahotel.be.model.entity.Floor;
+import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.FloorRepository;
+import com.manahotel.be.repository.ReservationDetailRepository;
 import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class RoomService {
 
     @Autowired
     private RoomClassService roomClassService;
+
+    @Autowired
+    private ReservationDetailRepository reservationDetailRepository;
 
     //Get All List Room
     public List<Room> getAllRoom() {
@@ -112,6 +117,11 @@ public class RoomService {
             if (room.getStatus() == Status.DELETE) {
                 log.info("Phòng đã bị xóa");
                 return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
+            }
+            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
+            if(reservationDetail != null){
+                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể xóa");
+                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể xóa", HttpStatus.OK);
             }
             room.setStatus(Status.DELETE);
             roomRepository.save(room);

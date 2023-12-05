@@ -101,8 +101,7 @@ public class PolicyService {
                     if (!policyDetailDTOList.stream()
                             .anyMatch(dto -> dto.getPolicyDetailId() != null
                                     && dto.getPolicyDetailId().equals(dbPolicyDetail.getPolicyDetailId()))) {
-                        dbPolicyDetail.setStatus(Status.DELETE);
-                        policyDetailRepository.save(dbPolicyDetail);
+                        policyDetailRepository.delete(dbPolicyDetail);
                         log.info("Delete policy detail success" + dbPolicyDetail.getPolicyDetailId());
                     }
                 }
