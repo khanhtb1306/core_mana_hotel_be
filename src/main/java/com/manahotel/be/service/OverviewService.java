@@ -393,7 +393,7 @@ public class OverviewService {
         log.info("----- Check Revenue Daily Start ------");
         try{
            Timestamp logTime = new Timestamp(System.currentTimeMillis());
-           Float totalIncome = fundBookRepository.getAllExpenseByDay(logTime);
+           Float totalIncome = fundBookRepository.getAllIncomeByDay(logTime);
 
            ReportRevenue reportRevenue = new ReportRevenue();
            reportRevenue.setCreatedDate(logTime);
