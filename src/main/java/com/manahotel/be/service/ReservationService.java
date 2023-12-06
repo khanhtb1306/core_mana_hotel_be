@@ -264,14 +264,4 @@ public class ReservationService {
         return repository6.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Price List not found with id " + id));
     }
-
-    private Staff findStaff(Long id) {
-        return repository10.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
-    }
-
-    private FundBook findFundBook(String id) {
-        return fundBookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Fund Book not found with id " + id));
-    }
 }

@@ -8,14 +8,13 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.FundBookDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.*;
-import com.manahotel.be.repository.FundBookRepository;
-import com.manahotel.be.repository.InvoiceRepository;
+import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -26,6 +25,15 @@ public class FundBookService {
 
     @Autowired
     private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private ReservationDetailRepository reservationDetailRepository;
+
+    @Autowired
+    private InvoiceReservationDetailRepository invoiceReservationDetailRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     public ResponseDTO getAll() {
         return ResponseUtils.success(repository.findAll(), "Hiển thị danh sách sổ quỹ thành công");
@@ -116,9 +124,31 @@ public class FundBookService {
         }
     }
 
-    public void getFundBookByReservation(String reservationId){
-       FundBook fundBook =  findFundBook("TT" + reservationId);
-
+    public ResponseDTO getFundBookByReservation(String reservationId) {
+        log.info("----- Get Fund Book By Reservation Start -----");
+        try {
+            List<FundBook> combinedFundBookList = new ArrayList<>();
+            List<FundBook> fundBookList = repository.findByFundBookIdContaining(reservationId);
+            combinedFundBookList.addAll(fundBookList);
+            List<ReservationDetail> reservationDetailList = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
+            for (ReservationDetail rd : reservationDetailList) {
+                InvoiceReservationDetail invoiceReservationDetailList = invoiceReservationDetailRepository.findInvoiceReservationDetailByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
+                List<FundBook> fundBookList2 = repository.findByFundBookIdContaining(invoiceReservationDetailList.getInvoice().getInvoiceId());
+                combinedFundBookList.addAll(fundBookList2);
+                List<Order> orderList = orderRepository.findOrderByReservationDetailAndStatus(rd, Status.PAID);
+                for (Order order : orderList) {
+                    List<FundBook> fundBookList3 = repository.findByFundBookIdContaining(order.getOrderId());
+                    combinedFundBookList.addAll(fundBookList3);
+                }
+            }
+            Collections.sort(combinedFundBookList, Comparator.comparing(FundBook::getTime));
+            log.error("getFundBookByReservation_Successfully");
+            log.info("----- Get Fund Book By Reservation End -----");
+            return ResponseUtils.success(combinedFundBookList, "getFundBookByReservation_successfully");
+        }catch (Exception e){
+            log.error("getFundBookByReservation_isFail");
+            return ResponseUtils.success("getFundBookByReservation_isFail");
+        }
     }
 
     private FundBook findFundBook(String id) {

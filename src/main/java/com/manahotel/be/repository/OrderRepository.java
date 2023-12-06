@@ -17,6 +17,8 @@ public interface OrderRepository extends JpaRepository<Order,String> {
 
     List<Order> findOrderByReservationDetail(ReservationDetail reservationDetail);
 
+    List<Order> findOrderByReservationDetailAndStatus(ReservationDetail reservationDetail, String Status);
+
     @Query("SELECT o FROM Order o " +
             "LEFT JOIN OrderDetail od on o.orderId = od.order.orderId " +
             "WHERE o.reservationDetail.reservationDetailId = 0 " +
