@@ -31,7 +31,7 @@ public interface RoomClassRepository extends JpaRepository<RoomCategory, String>
             "LEFT JOIN ReservationDetail rd ON r2.roomId = rd.room.roomId " +
             "LEFT JOIN Reservation re ON re.reservationId = rd.reservation.reservationId " +
             "WHERE (re.status NOT IN ('PENDING', 'DISCARD') " +
-            "AND rd.status NOT IN ('CHECK_OUT') " +
+            "AND rd.status NOT IN ('CHECK_OUT', 'DONE') " +
             "AND rd.reservationDetailStatus = 1 " +
             "AND (rd.checkInActual < ?2 OR (rd.checkInActual IS NULL AND rd.checkInEstimate < ?2)) " +
             "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate > ?1))) " +

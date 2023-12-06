@@ -40,7 +40,7 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "LEFT JOIN Reservation r on r.reservationId = rd.reservation.reservationId " +
             "WHERE rd.room.status = 1 " +
             "AND r.status NOT IN ('PENDING', 'DISCARD') " +
-            "AND rd.status NOT IN ('CHECK_OUT') " +
+            "AND rd.status NOT IN ('CHECK_OUT', 'DONE') " +
             "AND (rd.checkInActual < ?2 OR (rd.checkInActual IS NULL AND rd.checkInEstimate < ?2)) " +
             "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate > ?1)) " +
             "AND rd.reservationDetailStatus = 1 " +
@@ -58,4 +58,11 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "WHERE rd.status = 'CHECK_IN' AND " +
             " rd = ?1")
     boolean existInReservationDetail(ReservationDetail reservationDetail);
+
+    @Query("SELECT rd FROM ReservationDetail rd WHERE rd.status IN ('BOOKING', 'CHECK_IN') " +
+            "AND rd.reservationDetailStatus = 1 " +
+            "AND ((rd.status = 'BOOKING' AND rd.checkInEstimate <= ?1 AND rd.checkOutEstimate >= ?1) " +
+            "OR (rd.status = 'CHECK_IN' AND rd.checkInActual <= ?1 AND rd.checkOutEstimate >= ?1)) " +
+            "ORDER BY rd.status DESC")
+    List<ReservationDetail> getReservationDetailByBookingAndCheckIn(Timestamp date);
 }
