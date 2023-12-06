@@ -55,6 +55,9 @@ public class ReservationService {
     @Autowired
     private FundBookService fundBookService;
 
+    @Autowired
+    private FundBookRepository fundBookRepository;
+
 
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate, String reservationId) {
         List<Object> list = new ArrayList<>();
@@ -233,8 +236,17 @@ public class ReservationService {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
         }
         if(reservation.getTotalDeposit() != null){
-            // Tạo phiếu thu khi khách hàng chuyển tiền cọc, đang thiếu cách truyền phương thức thanh toán.
-            fundBookService.writeFundBook(reservation.getReservationId(), Const.INVOICE_ID, "", reservation.getTotalDeposit());
+            List<FundBook> fundBooks = fundBookRepository.findByFundBookIdContaining(reservation.getReservationId());
+            String fundBookId;
+            if(fundBooks == null){
+                fundBookId = "TT" + reservation.getReservationId();
+            }else {
+                fundBookId = "TT" + reservation.getReservationId() + "-" + fundBooks.size()+1;
+            }
+            fundBookService.writeFundBook(fundBookId,
+                    reservationDTO.getPaidMethod() != null ? reservationDTO.getPaidMethod() : "",
+                    reservation.getTotalDeposit(),
+                    reservationDTO.getTransactionCode() != null ?reservationDTO.getTransactionCode() : "");
         }
     }
 
@@ -256,5 +268,10 @@ public class ReservationService {
     private Staff findStaff(Long id) {
         return repository10.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
+    }
+
+    private FundBook findFundBook(String id) {
+        return fundBookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Fund Book not found with id " + id));
     }
 }

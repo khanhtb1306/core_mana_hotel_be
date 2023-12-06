@@ -73,7 +73,7 @@ public class InvoiceService {
                 });
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
                 if(invoice.getPaidMethod().equals(Status.CASH)){
-                    fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()));
+                    fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
                 }
                 log.info("----- Create Reservation Invoice End -----");
                 return ResponseUtils.success(invoice.getInvoiceId(),"Tạo hóa đơn thành công");
@@ -92,7 +92,7 @@ public class InvoiceService {
             invoice.setStatus(invoiceDTO.getStatus() != null ? invoiceDTO.getStatus() : invoice.getStatus());
             invoiceRepository.save(invoice);
             if(invoice.getPaidMethod().equals(Status.TRANSFER)) {
-                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()));
+                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
             }
             log.info("----- Update Reservation Invoice End -----");
             return ResponseUtils.success(invoice.getInvoiceId(),"Cập nhật hóa đơn thành công");
@@ -120,7 +120,7 @@ public class InvoiceService {
             });
             overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
             if(invoice.getPaidMethod().equals(Status.CASH)){
-                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()));
+                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
             }
             log.info("----- Create Purchase Invoice End -----");
             return ResponseUtils.error("Tạo hóa đơn thành công");

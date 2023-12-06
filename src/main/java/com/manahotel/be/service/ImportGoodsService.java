@@ -159,16 +159,12 @@ public class ImportGoodsService {
             Staff staff = findStaff(userId);
 
             overviewService.writeRecentActivity(staff.getUsername(), "tạo phiếu nhập hàng", importGoods.getPrice(), new Timestamp(System.currentTimeMillis()));
-
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId("TT" + importGoods.getImportGoodsId());
-//            fundBook.setInvoice(importGoods.getImportGoodsId());
             fundBook.setTime(new Timestamp(System.currentTimeMillis()));
             fundBook.setType(Status.EXPENSE);
             fundBook.setPaidMethod(null);
             fundBook.setValue(importGoods.getPrice());
-            fundBook.setPrepaid(0F);
-            fundBook.setPaid(importGoods.getPrice());
             fundBook.setPayerReceiver(importGoods.getSupplier());
             fundBook.setStaff(staff.getStaffName());
             fundBook.setNote("Chi tiền trả nhà cung cấp");

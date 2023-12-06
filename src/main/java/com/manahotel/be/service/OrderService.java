@@ -124,7 +124,7 @@ public class OrderService {
             log.info("------- Add Order Start -------");
             Order latestOrder = orderRepository.findTopByOrderByOrderIdDesc();
             String latestId = (latestOrder == null) ? null : latestOrder.getOrderId();
-            String nextId = IdGenerator.generateId(latestId, "HD");
+            String nextId = IdGenerator.generateId(latestId, "DH");
             Order order = new Order();
             order.setOrderId(nextId);
 
@@ -195,7 +195,7 @@ public class OrderService {
             order.setStatus(status);
             orderRepository.save(order);
             if(order.getStatus().equals(Status.PAID)){
-                fundBookService.writeFundBook(orderId, Const.INVOICE_ID, "", order.getTotalPay());
+                fundBookService.writeFundBook(orderId, "", order.getTotalPay(), "");
             }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");

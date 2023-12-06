@@ -64,7 +64,7 @@ public class FundBookService {
         }
     }
 
-    public void writeFundBook(String fundBookId, String invoiceId, String paidMethod, Float value){
+    public void writeFundBook(String fundBookId, String paidMethod, Float value, String transactionCode){
         log.info("----- Write Fund Book Start  -----");
         try{
             FundBook fundBook = findFundBook("TT" + fundBookId);
@@ -73,16 +73,14 @@ public class FundBookService {
             }else {
                 fundBook = new FundBook();
                 fundBook.setFundBookId("TT" + fundBookId);
-                fundBook.setInvoice(findInvoice(invoiceId));
                 fundBook.setTime(new Timestamp(System.currentTimeMillis()));
                 fundBook.setType(Status.INCOME);
                 fundBook.setValue(value);
-                fundBook.setPrepaid(0F);
-                fundBook.setPaid(value);
                 fundBook.setPayerReceiver("Khách Hàng");
                 fundBook.setStaff(UserUtils.getUser().getStaffName());
                 fundBook.setNote("Thu tiền khách trả");
                 fundBook.setStatus(Status.COMPLETE);
+                fundBook.setTransactionCode(transactionCode);
             }
             repository.save(fundBook);
             log.info("writeFundBook_isSuccess");
@@ -116,6 +114,11 @@ public class FundBookService {
             log.info("----- Create fund book failed -----\n" + e.getMessage());
             return ResponseUtils.error("Cập nhật phiếu thất bại");
         }
+    }
+
+    public void getFundBookByReservation(String reservationId){
+       FundBook fundBook =  findFundBook("TT" + reservationId);
+
     }
 
     private FundBook findFundBook(String id) {
