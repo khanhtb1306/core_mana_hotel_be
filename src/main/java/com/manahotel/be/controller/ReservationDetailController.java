@@ -10,6 +10,8 @@ import com.manahotel.be.service.ReservationDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+
 @RestController
 @RequestMapping("/reservation-detail")
 public class ReservationDetailController {
@@ -58,5 +60,10 @@ public class ReservationDetailController {
     @DeleteMapping("/reservation-detail-customer/{id}")
     public ResponseDTO deleteRDCustomer(@PathVariable Long id, boolean isAdult) {
         return service2.deleteRDCustomer(id, isAdult);
+    }
+
+    @GetMapping("/get-by-booking-and-check-in")
+    public ResponseDTO getReservationDetailByBookingAndCheckIn(Timestamp date) {
+        return service.getReservationDetailByBookingAndCheckIn(date);
     }
 }
