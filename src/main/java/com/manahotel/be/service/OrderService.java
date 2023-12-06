@@ -44,6 +44,9 @@ public class OrderService {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @Autowired
+    private FundBookService fundBookService;
+
     public ResponseDTO getOrderByReservationDetailId(Long reservationDetailId){
         log.info("------- Get Order Start -------");
         List<Object> result = new ArrayList<>();
@@ -191,6 +194,9 @@ public class OrderService {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
             order.setStatus(status);
             orderRepository.save(order);
+            if(order.getStatus().equals(Status.PAID)){
+                fundBookService.writeFundBook(orderId, Const.INVOICE_ID, "", order.getTotalPay());
+            }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");
         }catch (Exception e){

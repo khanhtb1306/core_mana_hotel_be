@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
@@ -50,6 +51,9 @@ public class ReservationService {
 
     @Autowired
     private StaffRepository repository10;
+
+    @Autowired
+    private FundBookService fundBookService;
 
 
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate, String reservationId) {
@@ -227,6 +231,10 @@ public class ReservationService {
         }
         if(reservation.getStatus().equals(Status.DISCARD)) {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
+        }
+        if(reservation.getTotalDeposit() != null){
+            // Tạo phiếu thu khi khách hàng chuyển tiền cọc, đang thiếu cách truyền phương thức thanh toán.
+            fundBookService.writeFundBook(reservation.getReservationId(), Const.INVOICE_ID, "", reservation.getTotalDeposit());
         }
     }
 
