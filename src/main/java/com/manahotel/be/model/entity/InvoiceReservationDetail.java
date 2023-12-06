@@ -13,6 +13,7 @@ import lombok.*;
 @Data
 public class InvoiceReservationDetail {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoice_reservation_detail_id")
     private Long invoiceReservationDetailId;
 

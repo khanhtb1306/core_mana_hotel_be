@@ -132,12 +132,8 @@ public class InvoiceService {
         invoice.setStaff(UserUtils.getUser());
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
-        if(!invoice.getPaidMethod().equals(Status.TRANSFER)) {
-            invoice.setStatus(Status.COMPLETE);
-        }
-        invoice.setStatus(Status.UNCONFIRMED);
+        invoice.setStatus(invoice.getPaidMethod().equals(Status.CASH) ? Status.COMPLETE : Status.UNCONFIRMED);
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-
         invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : invoice.getDiscount());
         invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
         invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
@@ -150,8 +146,8 @@ public class InvoiceService {
     }
 
     public ResponseDTO getInvoiceById(String id) {
+        Map<String, Object> invoiceInfo = new HashMap<>();
         try{
-            Map<String, Object> invoiceInfo = new HashMap<>();
             Invoice invoice = findInvoice(id);
             List<Object> reservationDetails = new ArrayList<>();
             List<InvoiceReservationDetail> invoiceReservationDetails = invoiceReservationDetailRepository
@@ -173,8 +169,7 @@ public class InvoiceService {
         }catch (Exception e){
             log.error("getInvoiceById_isFail" + e.getMessage());
         }
-
-        return ResponseUtils.success(findInvoice(id), "Hiển thị chi tiết hóa đơn thành công");
+        return ResponseUtils.success(invoiceInfo, "Hiển thị chi tiết hóa đơn thành công");
     }
 
     public ResponseDTO getInvoiceByReservation(String reservation_Id) {
