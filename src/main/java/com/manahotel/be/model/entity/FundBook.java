@@ -17,10 +17,6 @@ public class FundBook {
     @Column(name = "fund_book_id", nullable = false, length = 50)
     private String fundBookId;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "invoice_id", nullable = false)
-    private Invoice invoice;
-
     @Column(name = "time")
     private Timestamp time;
 
@@ -33,12 +29,6 @@ public class FundBook {
     @Column(name = "value")
     private Float value;
 
-    @Column(name = "prepaid")
-    private Float prepaid;
-
-    @Column(name = "paid")
-    private Float paid;
-
     @Column(name = "payer_receiver", length = 250)
     private String payerReceiver;
 
@@ -50,4 +40,7 @@ public class FundBook {
 
     @Column(name = "status", length = 50)
     private String status;
+
+    @Column(name = "transaction_code", length = 50)
+    private String transactionCode;
 }

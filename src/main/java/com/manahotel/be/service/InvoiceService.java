@@ -72,7 +72,9 @@ public class InvoiceService {
                     reservationDetailRepository.save(reservationDetail);
                 });
                 overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
-                fundBookService.writeFundBook(invoice);
+                if(invoice.getPaidMethod().equals(Status.CASH)){
+                    fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
+                }
                 log.info("----- Create Reservation Invoice End -----");
                 return ResponseUtils.success(invoice.getInvoiceId(),"Tạo hóa đơn thành công");
         }catch (Exception e){
@@ -89,6 +91,9 @@ public class InvoiceService {
             invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
             invoice.setStatus(invoiceDTO.getStatus() != null ? invoiceDTO.getStatus() : invoice.getStatus());
             invoiceRepository.save(invoice);
+            if(invoice.getPaidMethod().equals(Status.TRANSFER)) {
+                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
+            }
             log.info("----- Update Reservation Invoice End -----");
             return ResponseUtils.success(invoice.getInvoiceId(),"Cập nhật hóa đơn thành công");
         }catch (Exception e){
@@ -114,7 +119,9 @@ public class InvoiceService {
                 orderDetailService.createOrderDetail(orderDetail, invoice.getInvoiceId(), Const.ORDER_ID);
             });
             overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
-            fundBookService.writeFundBook(invoice);
+            if(invoice.getPaidMethod().equals(Status.CASH)){
+                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
+            }
             log.info("----- Create Purchase Invoice End -----");
             return ResponseUtils.error("Tạo hóa đơn thành công");
         }catch (Exception e){
@@ -134,10 +141,10 @@ public class InvoiceService {
         invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
         invoice.setStatus(invoice.getPaidMethod().equals(Status.CASH) ? Status.COMPLETE : Status.UNCONFIRMED);
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : invoice.getDiscount());
+        invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : 0);
         invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
         invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
-        invoice.setPriceOther(invoiceDTO.getPriceOther() != null ? invoiceDTO.getPriceOther() : invoice.getPriceOther());
+        invoice.setPriceOther(invoiceDTO.getPriceOther() != null ? invoiceDTO.getPriceOther() : 0);
     }
 
     public ResponseDTO getAllInvoices() {

@@ -44,6 +44,9 @@ public class OrderService {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @Autowired
+    private FundBookService fundBookService;
+
     public ResponseDTO getOrderByReservationDetailId(Long reservationDetailId){
         log.info("------- Get Order Start -------");
         List<Object> result = new ArrayList<>();
@@ -121,7 +124,7 @@ public class OrderService {
             log.info("------- Add Order Start -------");
             Order latestOrder = orderRepository.findTopByOrderByOrderIdDesc();
             String latestId = (latestOrder == null) ? null : latestOrder.getOrderId();
-            String nextId = IdGenerator.generateId(latestId, "HD");
+            String nextId = IdGenerator.generateId(latestId, "DH");
             Order order = new Order();
             order.setOrderId(nextId);
 
@@ -191,6 +194,9 @@ public class OrderService {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
             order.setStatus(status);
             orderRepository.save(order);
+            if(order.getStatus().equals(Status.PAID)){
+                fundBookService.writeFundBook(orderId, "", order.getTotalPay(), "");
+            }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");
         }catch (Exception e){

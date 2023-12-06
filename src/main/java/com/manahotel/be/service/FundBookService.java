@@ -9,6 +9,7 @@ import com.manahotel.be.model.dto.FundBookDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.FundBookRepository;
+import com.manahotel.be.repository.InvoiceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class FundBookService {
 
     @Autowired
     private FundBookRepository repository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
     public ResponseDTO getAll() {
         return ResponseUtils.success(repository.findAll(), "Hiển thị danh sách sổ quỹ thành công");
@@ -60,22 +64,24 @@ public class FundBookService {
         }
     }
 
-    public void writeFundBook(Invoice invoice){
+    public void writeFundBook(String fundBookId, String paidMethod, Float value, String transactionCode){
         log.info("----- Write Fund Book Start  -----");
         try{
-            FundBook fundBook = new FundBook();
-            fundBook.setFundBookId("TT" + invoice.getInvoiceId());
-            fundBook.setInvoice(invoice);
-            fundBook.setTime(new Timestamp(System.currentTimeMillis()));
-            fundBook.setType(Status.INCOME);
-            fundBook.setPaidMethod(invoice.getPaidMethod());
-            fundBook.setValue(invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther());
-            fundBook.setPrepaid(0F);
-            fundBook.setPaid(invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther());
-            fundBook.setPayerReceiver("Khách Hàng");
-            fundBook.setStaff(UserUtils.getUser().getStaffName());
-            fundBook.setNote("Thu tiền khách trả");
-            fundBook.setStatus(Status.COMPLETE);
+            FundBook fundBook = findFundBook("TT" + fundBookId);
+            if(fundBook != null){
+                fundBook.setPaidMethod(paidMethod);
+            }else {
+                fundBook = new FundBook();
+                fundBook.setFundBookId("TT" + fundBookId);
+                fundBook.setTime(new Timestamp(System.currentTimeMillis()));
+                fundBook.setType(Status.INCOME);
+                fundBook.setValue(value);
+                fundBook.setPayerReceiver("Khách Hàng");
+                fundBook.setStaff(UserUtils.getUser().getStaffName());
+                fundBook.setNote("Thu tiền khách trả");
+                fundBook.setStatus(Status.COMPLETE);
+                fundBook.setTransactionCode(transactionCode);
+            }
             repository.save(fundBook);
             log.info("writeFundBook_isSuccess");
         }catch (Exception e){
@@ -110,8 +116,18 @@ public class FundBookService {
         }
     }
 
+    public void getFundBookByReservation(String reservationId){
+       FundBook fundBook =  findFundBook("TT" + reservationId);
+
+    }
+
     private FundBook findFundBook(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Fund Book not found with id " + id));
+    }
+
+    private Invoice findInvoice(String id) {
+        return invoiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id " + id));
     }
 }

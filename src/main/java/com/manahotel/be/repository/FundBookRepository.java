@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public interface FundBookRepository extends JpaRepository<FundBook, String> {
@@ -20,4 +21,7 @@ public interface FundBookRepository extends JpaRepository<FundBook, String> {
             "WHERE fb.status = 'COMPLETE' AND fb.type IN ('INCOME', 'OTHER_INCOME') " +
             "AND DATE(time) = DATE(?1)", nativeQuery = true)
     Float getAllIncomeByDay(Timestamp date);
+
+    List<FundBook> findByFundBookIdContaining(String keyword);
+
 }

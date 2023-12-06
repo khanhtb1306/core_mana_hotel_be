@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
@@ -50,6 +51,12 @@ public class ReservationService {
 
     @Autowired
     private StaffRepository repository10;
+
+    @Autowired
+    private FundBookService fundBookService;
+
+    @Autowired
+    private FundBookRepository fundBookRepository;
 
 
     public ResponseDTO getAllEmptyRoomByReservation(Timestamp startDate, Timestamp endDate, String reservationId) {
@@ -228,6 +235,19 @@ public class ReservationService {
         if(reservation.getStatus().equals(Status.DISCARD)) {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
         }
+        if(reservation.getTotalDeposit() != null){
+            List<FundBook> fundBooks = fundBookRepository.findByFundBookIdContaining(reservation.getReservationId());
+            String fundBookId;
+            if(fundBooks == null){
+                fundBookId = "TT" + reservation.getReservationId();
+            }else {
+                fundBookId = "TT" + reservation.getReservationId() + "-" + fundBooks.size()+1;
+            }
+            fundBookService.writeFundBook(fundBookId,
+                    reservationDTO.getPaidMethod() != null ? reservationDTO.getPaidMethod() : "",
+                    reservation.getTotalDeposit(),
+                    reservationDTO.getTransactionCode() != null ?reservationDTO.getTransactionCode() : "");
+        }
     }
 
     private Reservation findReservation(String id) {
@@ -248,5 +268,10 @@ public class ReservationService {
     private Staff findStaff(Long id) {
         return repository10.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
+    }
+
+    private FundBook findFundBook(String id) {
+        return fundBookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Fund Book not found with id " + id));
     }
 }

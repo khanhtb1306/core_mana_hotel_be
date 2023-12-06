@@ -34,7 +34,7 @@ public class OrderController {
         return orderService.updateOrder(id,orderRequest.getOrderDetailDTOList());
     }
     @PutMapping("/updateStatus/{id}")
-    public ResponseDTO updateStatusOrder(@PathVariable String id,String status){
+    public ResponseDTO updateStatusOrder(@PathVariable String id, String status){
         return orderService.updateStatusOrder(id,status);
     }
     @DeleteMapping("/{id}")
