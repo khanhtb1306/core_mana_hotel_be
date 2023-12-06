@@ -24,4 +24,23 @@ public interface FundBookRepository extends JpaRepository<FundBook, String> {
 
     List<FundBook> findByFundBookIdContaining(String keyword);
 
+    @Query(value = "SELECT SUM(value) FROM fund_book fb " +
+            "WHERE fb.status = 'COMPLETE' AND fb.type IN ('EXPENSE', 'OTHER_EXPENSE') " +
+            "AND MONTH(time) = ?1", nativeQuery = true)
+    Float getAllExpenseByMonth(Integer month);
+
+    @Query(value = "SELECT SUM(value) FROM fund_book fb " +
+            "WHERE fb.status = 'COMPLETE' AND fb.type IN ('INCOME', 'OTHER_INCOME') " +
+            "AND MONTH(time) = ?1", nativeQuery = true)
+    Float getAllIncomeByMonth(Integer month);
+
+    @Query(value = "SELECT SUM(value) FROM fund_book fb " +
+            "WHERE fb.status = 'COMPLETE' AND fb.type IN ('EXPENSE', 'OTHER_EXPENSE') " +
+            "AND YEAR(time) = ?1", nativeQuery = true)
+    Float getAllExpenseByYear(Integer year);
+
+    @Query(value = "SELECT SUM(value) FROM fund_book fb " +
+            "WHERE fb.status = 'COMPLETE' AND fb.type IN ('INCOME', 'OTHER_INCOME') " +
+            "AND YEAR(time) = ?1", nativeQuery = true)
+    Float getAllIncomeByYear(Integer year);
 }

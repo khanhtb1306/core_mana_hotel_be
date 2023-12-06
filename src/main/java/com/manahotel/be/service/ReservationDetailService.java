@@ -8,14 +8,18 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.exception.RoomInUseException;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.*;
-import com.manahotel.be.repository.*;
+import com.manahotel.be.model.entity.Reservation;
+import com.manahotel.be.model.entity.ReservationDetail;
+import com.manahotel.be.model.entity.Room;
+import com.manahotel.be.repository.ReservationDetailRepository;
+import com.manahotel.be.repository.ReservationRepository;
+import com.manahotel.be.repository.RoomRepository;
+import com.manahotel.be.repository.TimeUseRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -158,6 +162,7 @@ public class ReservationDetailService {
 
                 checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
 
+                room.setConditionStatus(Status.UNCLEAN);
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }

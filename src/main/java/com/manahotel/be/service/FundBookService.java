@@ -7,6 +7,7 @@ import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.FundBookDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.FundBookResponse;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -148,6 +149,30 @@ public class FundBookService {
         }catch (Exception e){
             log.error("getFundBookByReservation_isFail");
             return ResponseUtils.success("getFundBookByReservation_isFail");
+        }
+    }
+
+    public ResponseDTO getFundBookSummary(Integer time, boolean isMonth) {
+        try {
+            log.info("----- Start get summary -----");
+            Float previousIncome = isMonth ? repository.getAllIncomeByMonth(time - 1) : repository.getAllIncomeByYear(time - 1);
+            Float previousExpense = isMonth ? repository.getAllExpenseByMonth(time - 1) : repository.getAllExpenseByYear(time - 1);
+
+            Float income = isMonth ? repository.getAllIncomeByMonth(time) : repository.getAllIncomeByYear(time);
+            Float expense = isMonth ? repository.getAllExpenseByMonth(time) : repository.getAllExpenseByYear(time);
+
+            FundBookResponse response = new FundBookResponse();
+            response.setOpeningBalance(previousIncome - previousExpense);
+            response.setAllIncome(income);
+            response.setAllExpense(expense);
+            response.setFundBalance(response.getOpeningBalance() + response.getAllIncome() - response.getAllExpense());
+            log.info("----- End get summary -----");
+
+            return ResponseUtils.success(response, isMonth ? "Hiển thị thông số theo tháng thành công" : "Hiển thị thông số theo năm thành công");
+        }
+        catch (Exception e) {
+            log.info("----- Get summary failed -----\n" + e.getMessage());
+            return ResponseUtils.error("Hiển thị thông số thất bại");
         }
     }
 
