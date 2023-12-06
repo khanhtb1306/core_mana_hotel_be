@@ -146,8 +146,8 @@ public class InvoiceService {
     }
 
     public ResponseDTO getInvoiceById(String id) {
+        Map<String, Object> invoiceInfo = new HashMap<>();
         try{
-            Map<String, Object> invoiceInfo = new HashMap<>();
             Invoice invoice = findInvoice(id);
             List<Object> reservationDetails = new ArrayList<>();
             List<InvoiceReservationDetail> invoiceReservationDetails = invoiceReservationDetailRepository
@@ -169,8 +169,7 @@ public class InvoiceService {
         }catch (Exception e){
             log.error("getInvoiceById_isFail" + e.getMessage());
         }
-
-        return ResponseUtils.success(findInvoice(id), "Hiển thị chi tiết hóa đơn thành công");
+        return ResponseUtils.success(invoiceInfo, "Hiển thị chi tiết hóa đơn thành công");
     }
 
     public ResponseDTO getInvoiceByReservation(String reservation_Id) {
