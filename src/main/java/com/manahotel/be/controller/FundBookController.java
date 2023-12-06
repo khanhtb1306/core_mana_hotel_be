@@ -27,4 +27,9 @@ public class FundBookController {
     public ResponseDTO updateFundBook(@PathVariable String id, FundBookDTO fundBookDTO) {
         return service.updateFundBook(id, fundBookDTO);
     }
+
+    @GetMapping("/summary")
+    public ResponseDTO getFundBookSummary(Integer time, boolean isMonth) {
+        return service.getFundBookSummary(time, isMonth);
+    }
 }
