@@ -199,7 +199,6 @@ DROP TABLE IF EXISTS `fund_book`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `fund_book` (
   `fund_book_id` varchar(50) NOT NULL,
-  `invoice_id` varchar(50) NOT NULL,
   `time` timestamp NULL DEFAULT NULL,
   `type` varchar(250) DEFAULT NULL,
   `paid_method` varchar(50) DEFAULT NULL,
@@ -210,9 +209,8 @@ CREATE TABLE `fund_book` (
   `staff` bigint DEFAULT NULL,
   `note` varchar(350) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`fund_book_id`),
-  KEY `pk_fb_i_idx` (`invoice_id`),
-  CONSTRAINT `pk_fb_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`)
+  `transaction_code` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`fund_book_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -455,7 +453,7 @@ DROP TABLE IF EXISTS `invoice_reservation_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoice_reservation_detail` (
-  `invoice_reservation_detail_id` bigint NOT NULL,
+  `invoice_reservation_detail_id` bigint NOT NULL AUTO_INCREMENT,
   `invoice_id` varchar(50) NOT NULL,
   `reservation_detail_id` bigint NOT NULL,
   PRIMARY KEY (`invoice_reservation_detail_id`),
@@ -1042,4 +1040,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-05 23:05:04
+-- Dump completed on 2023-12-06 21:44:26
