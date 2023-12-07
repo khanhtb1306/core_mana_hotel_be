@@ -199,8 +199,8 @@ public class RoomService {
 
             Floor floor = getFloorById((long) id);
 
-            floor.setFloorName(dto.getFloorName());
-            floor.setStatus(dto.getStatus());
+            floor.setFloorName(dto.getFloorName() != null ? dto.getFloorName() : floor.getFloorName());
+            floor.setStatus(dto.getStatus() != null ? dto.getStatus() : floor.getStatus());
             floor.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
             floorRepository.save(floor);
             log.info("------- Update Floor End -------");

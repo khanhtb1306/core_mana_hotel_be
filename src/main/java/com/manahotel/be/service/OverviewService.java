@@ -47,6 +47,9 @@ public class OverviewService {
     @Autowired
     private FundBookRepository fundBookRepository;
 
+    @Autowired
+    private RoomClassRepository roomClassRepository;
+
         public ResponseDTO getReportRoomCapacityByMonth(String dateString) {
             log.info("Get Report Room Capacity By Month Start");
             try {
@@ -565,5 +568,12 @@ public class OverviewService {
             log.error("getReportRevenueByManyYears_isFail");
             return ResponseUtils.error( "Hiển thị doanh thu theo nhiều năm thất bại");
         }
+    }
+
+    public void calculateTopRoomClass(){
+            List<RoomCategory>  roomCategory = roomClassRepository.findByStatusNot(Status.DELETE);
+            for (RoomCategory roomClass: roomCategory){
+                roomRepository.findByRoomCategory(roomClass);
+            }
     }
 }
