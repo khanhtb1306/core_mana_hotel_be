@@ -14,8 +14,8 @@ public class FundBookController {
     private FundBookService service;
 
     @GetMapping
-    public ResponseDTO getAll() {
-        return service.getAll();
+    public ResponseDTO getAll(String time, boolean isMonth) {
+        return service.getAll(time, isMonth);
     }
 
     @PostMapping
