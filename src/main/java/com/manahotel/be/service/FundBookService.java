@@ -38,8 +38,11 @@ public class FundBookService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public ResponseDTO getAll() {
-        return ResponseUtils.success(repository.findAll(), "Hiển thị danh sách sổ quỹ thành công");
+    public ResponseDTO getAll(String time, boolean isMonth) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate date = LocalDate.parse(time, formatter);
+
+        return ResponseUtils.success(isMonth ? repository.getAllFundBookByMonth(date.getMonthValue(), date.getYear()) : repository.getAllFundBookByYear(date.getYear()), "Hiển thị danh sách sổ quỹ thành công");
     }
 
     public ResponseDTO createFundBook(FundBookDTO fundBookDTO) {
