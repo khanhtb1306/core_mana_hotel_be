@@ -48,8 +48,8 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
 
     @Query(value = "SELECT rd FROM ReservationDetail rd " +
             "WHERE rd.reservationDetailStatus = 1 " +
-            "AND (rd.checkInActual <= ?1 OR (rd.checkInActual IS NULL AND rd.checkInEstimate <= ?1)) " +
-            "AND (rd.checkOutActual >= ?2 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate >= ?2)) " +
+            "AND (rd.checkInActual < ?2 OR (rd.checkInActual IS NULL AND rd.checkInEstimate < ?2)) " +
+            "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate > ?1)) " +
             "AND rd.room.status = 1")
     List<ReservationDetail> findByDate(Timestamp start, Timestamp end);
 
