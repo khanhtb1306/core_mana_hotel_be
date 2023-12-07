@@ -31,5 +31,5 @@ public class ReportTopRoomClass {
     private Boolean status;
 
     @Column(name = "create_date")
-    private Timestamp CreateDate;
+    private Timestamp createDate;
 }
