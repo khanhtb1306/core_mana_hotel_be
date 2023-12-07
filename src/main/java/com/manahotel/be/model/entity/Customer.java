@@ -56,4 +56,10 @@ public class Customer {
     @Column(name = "point")
     private Float point;
 
+    @Column(name = "is_customer")
+    private Boolean isCustomer;
+
+    @Column(name = "status", length = 45)
+    private String status;
+
 }
