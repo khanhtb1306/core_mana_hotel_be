@@ -34,8 +34,6 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "AND ((rd.status = 'CHECK_IN') OR (rd.status = 'CHECK_OUT' AND DATE(rd.checkOutActual) = CURRENT_DATE))")
     List<ReservationDetail> checkRoomCapacityDaily(String roomId);
 
-
-
     @Query(value = "SELECT rd FROM ReservationDetail rd " +
             "LEFT JOIN Reservation r on r.reservationId = rd.reservation.reservationId " +
             "WHERE rd.room.status = 1 " +
@@ -47,6 +45,13 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "AND rd.room = ?3 " +
             "AND (?4 IS NULL OR rd.reservationDetailId <> ?4)")
     List<ReservationDetail> checkBooking(Timestamp startDate, Timestamp endDate, Room room, Long reservationDetailId);
+
+    @Query(value = "SELECT rd FROM ReservationDetail rd " +
+            "WHERE rd.reservationDetailStatus = 1 " +
+            "AND (rd.checkInActual <= ?1 OR (rd.checkInActual IS NULL AND rd.checkInEstimate <= ?1)) " +
+            "AND (rd.checkOutActual >= ?2 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate >= ?2)) " +
+            "AND rd.room.status = 1")
+    List<ReservationDetail> findByDate(Timestamp start, Timestamp end);
 
     @Query(value = "UPDATE reservation_detail SET reservation_detail_status = 6 WHERE reservation_id = ?1", nativeQuery = true)
     @Modifying

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -152,14 +154,17 @@ public class FundBookService {
         }
     }
 
-    public ResponseDTO getFundBookSummary(Integer time, boolean isMonth) {
+    public ResponseDTO getFundBookSummary(String time, boolean isMonth) {
         try {
             log.info("----- Start get summary -----");
-            Float previousIncome = isMonth ? repository.getAllIncomeByMonth(time - 1) : repository.getAllIncomeByYear(time - 1);
-            Float previousExpense = isMonth ? repository.getAllExpenseByMonth(time - 1) : repository.getAllExpenseByYear(time - 1);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate date = LocalDate.parse(time, formatter);
 
-            Float income = isMonth ? repository.getAllIncomeByMonth(time) : repository.getAllIncomeByYear(time);
-            Float expense = isMonth ? repository.getAllExpenseByMonth(time) : repository.getAllExpenseByYear(time);
+            Float previousIncome = isMonth ? repository.getAllIncomeByMonth(date.getMonthValue() - 1, date.getYear()) : repository.getAllIncomeByYear(date.getYear() - 1);
+            Float previousExpense = isMonth ? repository.getAllExpenseByMonth(date.getMonthValue() - 1, date.getYear()) : repository.getAllExpenseByYear(date.getYear() - 1);
+
+            Float income = isMonth ? repository.getAllIncomeByMonth(date.getMonthValue(), date.getYear()) : repository.getAllIncomeByYear(date.getYear());
+            Float expense = isMonth ? repository.getAllExpenseByMonth(date.getMonthValue(), date.getYear()) : repository.getAllExpenseByYear(date.getYear());
 
             FundBookResponse response = new FundBookResponse();
             response.setOpeningBalance(previousIncome - previousExpense);

@@ -29,7 +29,7 @@ public class FundBookController {
     }
 
     @GetMapping("/summary")
-    public ResponseDTO getFundBookSummary(Integer time, boolean isMonth) {
+    public ResponseDTO getFundBookSummary(String time, boolean isMonth) {
         return service.getFundBookSummary(time, isMonth);
     }
 }
