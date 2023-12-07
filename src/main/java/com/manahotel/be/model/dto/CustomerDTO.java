@@ -1,5 +1,7 @@
 package com.manahotel.be.model.dto;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +20,6 @@ public class CustomerDTO {
     private String taxCode;
     private boolean gender;
     private MultipartFile image;
+    private boolean isCustomer;
+    private String status;
 }

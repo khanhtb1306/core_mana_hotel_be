@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.model.dto.CustomerDTO;
 import com.manahotel.be.model.dto.CustomerGroupDTO;
@@ -51,6 +52,7 @@ public class CustomerService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+        customer.setStatus(Status.ACTIVE);
         customer.setEmail(customerDTO.getEmail() != null ? customerDTO.getEmail() : customer.getEmail());
         customer.setAddress(customerDTO.getAddress() != null ? customerDTO.getAddress() : customer.getAddress());
         customer.setIdentity(customerDTO.getIdentity() != null ? customerDTO.getIdentity() : customer.getIdentity());
@@ -58,7 +60,7 @@ public class CustomerService {
         customer.setTaxCode(customerDTO.getTaxCode() != null ? customerDTO.getTaxCode() : customer.getTaxCode());
         customer.setGender(customerDTO.isGender());
         customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : customer.getImage());
-
+        customer.setIsCustomer(customerDTO.isCustomer());
     }
 
     public ResponseEntity<Map<String, String>> create(CustomerDTO customerDTO) throws IOException {
@@ -76,11 +78,11 @@ public class CustomerService {
                 response.put("message", "Ngày sinh nhỏ hơn ngày hiện tại!");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            if (customerRepository.findByIdentity(customerDTO.getIdentity()) != null) {
-                Map<String, String> response = new HashMap<>();
-                response.put("message", "Số chứng minh thư đã tồn tại!");
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+//            if (customerRepository.findByIdentity(customerDTO.getIdentity()) != null) {
+//                Map<String, String> response = new HashMap<>();
+//                response.put("message", "Số chứng minh thư đã tồn tại!");
+//                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//            }
 
             commonMapping(c, customerDTO);
 
@@ -148,8 +150,9 @@ public class CustomerService {
             log.info("Can't delete customer");
             return new ResponseEntity<>("khách hàng có id là " + customerId + " không tồn tại!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        customerRepository.deleteById(customerId);
-
+        Customer c = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("khách hàng có id là " + customerId + " không tồn tại!"));
+        c.setStatus(Status.NO_ACTIVE);
+        customerRepository.save(c);
         log.info("----- Delete Customer End -----");
         return new ResponseEntity<>("Xóa thông tin khách hàng thành công ", HttpStatus.OK);
     }

@@ -71,8 +71,8 @@ public class InvoiceService {
                     reservationDetail.setStatus(Status.DONE);
                     reservationDetailRepository.save(reservationDetail);
                 });
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
                 if(invoice.getPaidMethod().equals(Status.CASH)){
+                    overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
                     fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
                 }
                 log.info("----- Create Reservation Invoice End -----");
@@ -92,6 +92,7 @@ public class InvoiceService {
             invoice.setStatus(invoiceDTO.getStatus() != null ? invoiceDTO.getStatus() : invoice.getStatus());
             invoiceRepository.save(invoice);
             if(invoice.getPaidMethod().equals(Status.TRANSFER)) {
+                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
                 fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
             }
             log.info("----- Update Reservation Invoice End -----");
@@ -118,8 +119,8 @@ public class InvoiceService {
             orderDetailDTOList.forEach(orderDetail -> {
                 orderDetailService.createOrderDetail(orderDetail, invoice.getInvoiceId(), Const.ORDER_ID);
             });
-            overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
             if(invoice.getPaidMethod().equals(Status.CASH)){
+                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
                 fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
             }
             log.info("----- Create Purchase Invoice End -----");

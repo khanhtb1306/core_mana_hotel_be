@@ -107,9 +107,15 @@ public class RoomClassService {
         roomClass.setNumMaxOfAdults(dto.getNumMaxOfAdults() != null ? dto.getNumMaxOfAdults() : roomClass.getNumMaxOfAdults());
         roomClass.setNumMaxOfChildren(dto.getNumMaxOfChildren() != null ? dto.getNumMaxOfChildren() : roomClass.getNumMaxOfChildren());
         roomClass.setRoomArea(dto.getRoomArea() != null ? dto.getRoomArea() : roomClass.getRoomArea());
-        roomClass.setStatus(dto.getStatus() != null ? dto.getStatus() : roomClass.getStatus());
         roomClass.setDescription(dto.getDescription() != null ? dto.getDescription() : roomClass.getDescription());
         roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+        if(!roomClass.getStatus().equals(dto.getStatus())){
+            List<Room> room = roomRepository.findByRoomCategory(roomClass);
+            for (Room r: room){
+                r.setStatus(dto.getStatus());
+            }
+            roomClass.setStatus(dto.getStatus() != null ? dto.getStatus() : roomClass.getStatus());
+        }
     }
 
     public ResponseEntity<String> createRoomClass(RoomCategoryDTO dto) {
@@ -122,10 +128,10 @@ public class RoomClassService {
             RoomCategory roomClass = new RoomCategory();
             roomClass.setRoomCategoryId(nextId);
             roomClass.setStatus(Status.ACTIVATE);
+            roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
             commonMapping(roomClass, dto);
 
-            roomClass.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             roomClassRepository.save(roomClass);
             log.info("------- Add Room Class End -------");
             return new ResponseEntity<>("Thêm hạng phòng thành công", HttpStatus.OK);
@@ -140,10 +146,9 @@ public class RoomClassService {
         try {
 
             RoomCategory roomClass = getRoomCategoryById(id);
+            roomClass.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             commonMapping(roomClass, dto);
-
-            roomClass.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             roomClassRepository.save(roomClass);
 

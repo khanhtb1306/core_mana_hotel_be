@@ -11,7 +11,6 @@ import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.entity.Reservation;
 import com.manahotel.be.model.entity.ReservationDetail;
 import com.manahotel.be.model.entity.Room;
-import com.manahotel.be.model.entity.TimeUse;
 import com.manahotel.be.repository.ReservationDetailRepository;
 import com.manahotel.be.repository.ReservationRepository;
 import com.manahotel.be.repository.RoomRepository;
@@ -164,7 +163,6 @@ public class ReservationDetailService {
 
                 checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
 
-                room.setConditionStatus(Status.UNCLEAN);
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }
