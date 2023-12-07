@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,6 +48,15 @@ public class OverviewService {
 
     @Autowired
     private RoomClassRepository roomClassRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ControlPolicyRepository controlPolicyRepository;
+
+    @Autowired
+    private ReportTopRoomClassRepository reportTopRoomClassRepository;
 
         public ResponseDTO getReportRoomCapacityByMonth(String dateString) {
             log.info("Get Report Room Capacity By Month Start");
@@ -570,8 +578,46 @@ public class OverviewService {
         }
     }
 
-//    public void calculateTopRoomClass(Room room){
-//        RoomCategory  roomCategory = roomClassRepository(room.getRoomCategory().getRoomCategoryId() ,Status.DELETE);
-//
-//    }
+    public void writeTopRoomClass(String roomId, ReservationDetail reservationDetail){
+        log.info("----- Write Top Room Class Start ------");
+        try {
+            Timestamp logTime = new Timestamp(System.currentTimeMillis());
+            RoomCategory  roomCategory = roomClassRepository.findByRoomCategoryIdAndStatusNot(roomId, Status.DELETE);
+
+            List<Order> orders = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                float totalOrder = 0;
+                for (Order order: orders){
+                    if(order.getStatus().equals(Status.PAID)){
+                       totalOrder += order.getTotalPay();
+                    }
+                }
+            List<ControlPolicy> controlPolicies = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                float totalPolicy = 0;
+                for (ControlPolicy cp: controlPolicies){
+                    totalPolicy += cp.getValue();
+                }
+            Float result = reservationDetail.getPrice() + totalPolicy + totalOrder;
+
+            LocalDate currentDate = LocalDate.now();
+            Timestamp startDateTime = Timestamp.valueOf(currentDate.atStartOfDay().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)));
+            Timestamp endDateTime = Timestamp.valueOf(currentDate.atTime(LocalTime.MAX).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)));
+            ReportTopRoomClass reportTopRoomClass = reportTopRoomClassRepository.findByRoomClassIdAndCreateDateBetween(roomCategory.getRoomCategoryId(), startDateTime, endDateTime);
+
+                if (reportTopRoomClass != null) {
+                    reportTopRoomClass.setRevenue(reportTopRoomClass.getRevenue() + result);
+                    reportTopRoomClass.setNumberOfRental(reportTopRoomClass.getNumberOfRental() + 1L);
+                    reportTopRoomClass.setCreateDate(logTime);
+                } else {
+                    reportTopRoomClass = new ReportTopRoomClass();
+                    reportTopRoomClass.setRoomClassId(roomCategory.getRoomCategoryId());
+                    reportTopRoomClass.setRevenue(result);
+                    reportTopRoomClass.setNumberOfRental(1L);
+                    reportTopRoomClass.setCreateDate(logTime);
+                    reportTopRoomClassRepository.save(reportTopRoomClass);
+                }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        log.info("----- Write Top Room Class End ------");
+    }
 }

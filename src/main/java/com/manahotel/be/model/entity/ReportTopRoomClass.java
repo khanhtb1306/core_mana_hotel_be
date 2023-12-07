@@ -1,12 +1,11 @@
 package com.manahotel.be.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -15,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "report_top_room_class")
 public class ReportTopRoomClass {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_top_room_class_id")
     private Long reportTopRoomClassId;
 
@@ -29,4 +29,7 @@ public class ReportTopRoomClass {
 
     @Column(name = "status")
     private Boolean status;
+
+    @Column(name = "create_date")
+    private Timestamp CreateDate;
 }

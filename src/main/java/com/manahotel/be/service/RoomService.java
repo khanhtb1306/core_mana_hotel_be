@@ -50,6 +50,7 @@ public class RoomService {
         room.setNote(dto.getNote() != null ? dto.getNote() : room.getNote());
         room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
         room.setStatus(dto.getStatus() != null ? dto.getStatus(): room.getStatus());
+        room.setConditionStatus(dto.getConditionStatus() != null ? dto.getConditionStatus() : room.getConditionStatus());
     }
 
     public ResponseEntity<String> createRoom(RoomDTO dto) {

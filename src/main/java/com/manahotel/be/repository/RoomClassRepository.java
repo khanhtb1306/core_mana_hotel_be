@@ -13,7 +13,7 @@ public interface RoomClassRepository extends JpaRepository<RoomCategory, String>
 
     RoomCategory findTopByOrderByRoomCategoryIdDesc();
 
-//    RoomCategory findByRoomCategoryIdStatusNot(String roomCategoryId, Long status);
+    RoomCategory findByRoomCategoryIdAndStatusNot(String roomCategoryId, Long status);
 
     @Query("SELECT rc, COUNT(r) FROM RoomCategory rc " +
             "LEFT JOIN Room r ON rc.roomCategoryId = r.roomCategory.roomCategoryId " +
