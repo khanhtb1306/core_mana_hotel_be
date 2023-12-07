@@ -188,6 +188,10 @@ public class ReservationDetailService {
         return ResponseUtils.success(repository.getReservationDetailByBookingAndCheckIn(date), "Hiển thị thành công danh sách đặt phòng và sử dụng phòng theo ngày");
     }
 
+    public ResponseDTO getReservationDetailByDate(Timestamp start, Timestamp end) {
+        return ResponseUtils.success(repository.findByDate(start, end), "Hiển thị danh sách thành công");
+    }
+
     private ReservationDetail findReservationDetail(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation Detail not found with id " + id));

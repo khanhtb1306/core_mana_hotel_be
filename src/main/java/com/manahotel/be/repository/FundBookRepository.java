@@ -43,4 +43,12 @@ public interface FundBookRepository extends JpaRepository<FundBook, String> {
             "WHERE fb.status = 'COMPLETE' AND fb.type IN ('INCOME', 'OTHER_INCOME') " +
             "AND YEAR(time) = ?1", nativeQuery = true)
     Float getAllIncomeByYear(Integer year);
+
+    @Query("SELECT fb from FundBook fb " +
+            "WHERE MONTH(time) = ?1 AND YEAR(time) = ?2")
+    List<FundBook> getAllFundBookByMonth(Integer month, Integer year);
+
+    @Query("SELECT fb from FundBook fb " +
+            "WHERE YEAR(time) = ?1")
+    List<FundBook> getAllFundBookByYear(Integer year);
 }
