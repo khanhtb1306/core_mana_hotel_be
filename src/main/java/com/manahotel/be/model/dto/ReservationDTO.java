@@ -13,8 +13,6 @@ public class ReservationDTO {
     private String status;
     private Float totalDeposit;
     private Float totalPrice;
-    private String paidMethod;
-    private String transactionCode;
     private Timestamp durationStart;
     private Timestamp durationEnd;
     private String note;
