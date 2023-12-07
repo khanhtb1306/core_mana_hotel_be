@@ -570,10 +570,8 @@ public class OverviewService {
         }
     }
 
-    public void calculateTopRoomClass(){
-            List<RoomCategory>  roomCategory = roomClassRepository.findByStatusNot(Status.DELETE);
-            for (RoomCategory roomClass: roomCategory){
-                roomRepository.findByRoomCategory(roomClass);
-            }
-    }
+//    public void calculateTopRoomClass(Room room){
+//        RoomCategory  roomCategory = roomClassRepository(room.getRoomCategory().getRoomCategoryId() ,Status.DELETE);
+//
+//    }
 }
