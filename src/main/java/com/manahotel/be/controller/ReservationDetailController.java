@@ -66,4 +66,9 @@ public class ReservationDetailController {
     public ResponseDTO getReservationDetailByBookingAndCheckIn(Timestamp date) {
         return service.getReservationDetailByBookingAndCheckIn(date);
     }
+
+    @GetMapping("/get-by-date")
+    public ResponseDTO getReservationDetailByDate(Timestamp start, Timestamp end) {
+        return service.getReservationDetailByDate(start, end);
+    }
 }

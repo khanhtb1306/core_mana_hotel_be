@@ -34,8 +34,6 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "AND ((rd.status = 'CHECK_IN') OR (rd.status = 'CHECK_OUT' AND DATE(rd.checkOutActual) = CURRENT_DATE))")
     List<ReservationDetail> checkRoomCapacityDaily(String roomId);
 
-
-
     @Query(value = "SELECT rd FROM ReservationDetail rd " +
             "LEFT JOIN Reservation r on r.reservationId = rd.reservation.reservationId " +
             "WHERE rd.room.status = 1 " +
