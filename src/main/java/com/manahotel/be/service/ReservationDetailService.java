@@ -178,10 +178,10 @@ public class ReservationDetailService {
         repository2.save(reservation);
     }
 
-    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, String roomId) {
+    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, String roomId, Long reservationDetailId) {
         try {
             log.info("----- Start check duplicate booking -----");
-            checkDuplicateBooking(start, end, findRoom(roomId), null);
+            checkDuplicateBooking(start, end, findRoom(roomId), reservationDetailId);
             log.info("----- End check duplicate booking -----");
 
             return ResponseUtils.success("Không có lịch bị trùng với phòng " + findRoom(roomId).getRoomName());

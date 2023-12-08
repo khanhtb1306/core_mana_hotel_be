@@ -68,7 +68,7 @@ public class ReservationDetailController {
     }
 
     @GetMapping("/check-duplicate-booking")
-    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, String roomId) {
-        return service.checkDuplicateBooking(start, end, roomId);
+    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, String roomId, Long reservationDetailId) {
+        return service.checkDuplicateBooking(start, end, roomId, reservationDetailId);
     }
 }
