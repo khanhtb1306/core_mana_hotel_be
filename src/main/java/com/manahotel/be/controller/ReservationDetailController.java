@@ -1,6 +1,5 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.ReservationDetailCustomerDTO;
 import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.ChangeRoomRequest;

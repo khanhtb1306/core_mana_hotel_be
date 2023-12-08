@@ -9,8 +9,8 @@ public class RoomDTO {
     private String roomCategoryId;
     private Long floorId;
     private Long status;
-    private Long bookingStatus;
-    private Long conditionStatus;
+    private String bookingStatus;
+    private String conditionStatus;
     private MultipartFile image;
     private String note;
 }

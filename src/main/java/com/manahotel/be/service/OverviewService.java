@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,6 +48,15 @@ public class OverviewService {
 
     @Autowired
     private RoomClassRepository roomClassRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ControlPolicyRepository controlPolicyRepository;
+
+    @Autowired
+    private ReportTopRoomClassRepository reportTopRoomClassRepository;
 
         public ResponseDTO getReportRoomCapacityByMonth(String dateString) {
             log.info("Get Report Room Capacity By Month Start");
@@ -570,10 +578,86 @@ public class OverviewService {
         }
     }
 
-    public void calculateTopRoomClass(){
-            List<RoomCategory>  roomCategory = roomClassRepository.findByStatusNot(Status.DELETE);
-            for (RoomCategory roomClass: roomCategory){
-                roomRepository.findByRoomCategory(roomClass);
+    public void writeTopRoomClass(String roomId, ReservationDetail reservationDetail){
+        log.info("----- Write Top Room Class Start ------");
+        try {
+            Timestamp logTime = new Timestamp(System.currentTimeMillis());
+            RoomCategory  roomCategory = roomClassRepository.findByRoomCategoryIdAndStatusNot(roomId, Status.DELETE);
+
+            List<Order> orders = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                float totalOrder = 0;
+                for (Order order: orders){
+                    if(order.getStatus().equals(Status.PAID)){
+                       totalOrder += order.getTotalPay();
+                    }
+                }
+            List<ControlPolicy> controlPolicies = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
+                float totalPolicy = 0;
+                for (ControlPolicy cp: controlPolicies){
+                    totalPolicy += cp.getValue();
+                }
+            Float result = reservationDetail.getPrice() + totalPolicy + totalOrder;
+
+            ReportTopRoomClass reportTopRoomClass = reportTopRoomClassRepository.findByRoomClassIdAndCreateDate(roomCategory.getRoomCategoryId(), logTime);
+
+                if (reportTopRoomClass != null) {
+                    reportTopRoomClass.setRevenue(reportTopRoomClass.getRevenue() + result);
+                    reportTopRoomClass.setNumberOfRental(reportTopRoomClass.getNumberOfRental() + 1L);
+                    reportTopRoomClass.setUpdateDate(logTime);
+                } else {
+                    reportTopRoomClass = new ReportTopRoomClass();
+                    reportTopRoomClass.setRoomClassId(roomCategory.getRoomCategoryId());
+                    reportTopRoomClass.setRevenue(result);
+                    reportTopRoomClass.setNumberOfRental(1L);
+                    reportTopRoomClass.setCreateDate(logTime);
+                    reportTopRoomClassRepository.save(reportTopRoomClass);
+                }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        log.info("----- Write Top Room Class End ------");
+    }
+
+    public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isMonth, boolean isTotalRevenues) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate date = LocalDate.parse(datestring, formatter);
+
+            List<Object[]> reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByMonth(isMonth ? date.getMonthValue() : null, date.getYear());
+            Map<String, Double> resultMap = new HashMap<>();
+
+            for (Object[] rt : reportTopRoomClass) {
+                String roomClassId = String.valueOf(rt[0]);
+                String roomCategoryName = getRoomCategoryById(roomClassId).getRoomCategoryName();
+                Long totalNumberOfRental = (Long) rt[1];
+                Double totalRevenue = (Double) rt[2];
+
+                resultMap.put(roomCategoryName, isTotalRevenues ? totalRevenue : (double) totalNumberOfRental);
             }
+            Map<String, Double> sortedMap = resultMap.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("label", new ArrayList<>(sortedMap.keySet()));
+            result.put("data", new ArrayList<>(sortedMap.values()));
+
+            return ResponseUtils.success(result, "getTopRoomClassByMonth_is_successfully");
+        } catch (Exception e) {
+            log.error("getTopRoomClassByMonth_failed" + e.getMessage());
+            return ResponseUtils.error("getTopRoomClassByMonth_failed");
+        }
+    }
+
+
+
+
+
+    public RoomCategory getRoomCategoryById(String id) {
+        return roomClassRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Room Class not found with id " + id));
     }
 }

@@ -79,7 +79,22 @@ public class RoomClassService {
         return ResponseUtils.success(result, "Hiển thị danh sách phòng theo danh sách hạng phòng thành công");
     }
 
-    public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
+    public ResponseDTO findActiveRoomCategoriesWithActiveRooms() {
+        List<RoomCategory> roomCategories = roomClassRepository.findActiveRoomCategoriesWithActiveRooms();
+        List<Object> result = new ArrayList<>();
+
+        for (RoomCategory roomCategory : roomCategories) {
+            List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
+            Map<String, Object> roomInfo = new HashMap<>();
+            roomInfo.put("roomCategory", roomCategory);
+            roomInfo.put("ListRoom", rooms.toArray());
+            result.add(roomInfo);
+        }
+        return ResponseUtils.success(result, "is_successfully");
+    }
+
+
+        public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
         List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
         List<Map<String, Object>> result = new ArrayList<>();
 

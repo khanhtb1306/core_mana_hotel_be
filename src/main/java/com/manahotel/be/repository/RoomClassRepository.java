@@ -13,7 +13,12 @@ public interface RoomClassRepository extends JpaRepository<RoomCategory, String>
 
     RoomCategory findTopByOrderByRoomCategoryIdDesc();
 
-    List<RoomCategory> findByStatusNot(Long status);
+    RoomCategory findByRoomCategoryIdAndStatusNot(String roomCategoryId, Long status);
+    @Query(value = "SELECT rc " +
+            "FROM RoomCategory rc " +
+            "WHERE rc.status = 1 " +
+            "AND EXISTS (SELECT 1 FROM Room r WHERE r.roomCategory.roomCategoryId = rc.roomCategoryId AND r.status = 1)")
+    List<RoomCategory> findActiveRoomCategoriesWithActiveRooms();
 
     @Query("SELECT rc, COUNT(r) FROM RoomCategory rc " +
             "LEFT JOIN Room r ON rc.roomCategoryId = r.roomCategory.roomCategoryId " +

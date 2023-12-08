@@ -70,6 +70,7 @@ public class InvoiceService {
                     //Update Status
                     reservationDetail.setStatus(Status.DONE);
                     reservationDetailRepository.save(reservationDetail);
+                    overviewService.writeTopRoomClass(reservationDetail.getRoom().getRoomId(), reservationDetail);
                 });
                 if(invoice.getPaidMethod().equals(Status.CASH)){
                     overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
