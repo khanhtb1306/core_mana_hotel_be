@@ -71,4 +71,8 @@ public class OverviewController {
     public ResponseDTO getReportRevenueByManyYears(Integer startYear) {
         return overviewService.getReportRevenueByManyYears(startYear);
     }
+    @GetMapping("/get_top_room_class_by_month_or_year")
+    public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isMonth, boolean isTotalRevenues) {
+        return overviewService.getTopRoomClassByMonth(datestring, isMonth, isTotalRevenues);
+    }
 }

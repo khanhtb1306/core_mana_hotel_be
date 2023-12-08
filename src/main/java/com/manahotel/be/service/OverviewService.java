@@ -619,31 +619,38 @@ public class OverviewService {
     }
 
     public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isMonth, boolean isTotalRevenues) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate date = LocalDate.parse(datestring, formatter);
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate date = LocalDate.parse(datestring, formatter);
 
-        List<Object[]> reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByMonth(isMonth ? date.getMonthValue() : null, date.getYear());
-        Map<String, Float> resultMap = new HashMap<>();
+            List<Object[]> reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByMonth(isMonth ? date.getMonthValue() : null, date.getYear());
+            Map<String, Double> resultMap = new HashMap<>();
 
-        for (Object[] rt : reportTopRoomClass) {
-            String roomClassId = String.valueOf(rt[0]);
-            String roomCategoryName = getRoomCategoryById(roomClassId).getRoomCategoryName();
-            Float totalNumberOfRental = (Float) rt[1];
-            Float totalRevenue = (Float) rt[2];
+            for (Object[] rt : reportTopRoomClass) {
+                String roomClassId = String.valueOf(rt[0]);
+                String roomCategoryName = getRoomCategoryById(roomClassId).getRoomCategoryName();
+                Long totalNumberOfRental = (Long) rt[1];
+                Double totalRevenue = (Double) rt[2];
 
-            resultMap.put(roomCategoryName, isTotalRevenues ? totalRevenue : totalNumberOfRental);
+                resultMap.put(roomCategoryName, isTotalRevenues ? totalRevenue : (double) totalNumberOfRental);
+            }
+            Map<String, Double> sortedMap = resultMap.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("label", new ArrayList<>(sortedMap.keySet()));
+            result.put("data", new ArrayList<>(sortedMap.values()));
+
+            return ResponseUtils.success(result, "getTopRoomClassByMonth_is_successfully");
+        } catch (Exception e) {
+            log.error("getTopRoomClassByMonth_failed" + e.getMessage());
+            return ResponseUtils.error("getTopRoomClassByMonth_failed");
         }
-        Map<String, Float> sortedMap = resultMap.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("label", new ArrayList<>(sortedMap.keySet()));
-        result.put("data", new ArrayList<>(sortedMap.values()));
-
-        return ResponseUtils.success(result, "getTopRoomClassByMonth_is_successfully");
     }
+
+
 
 
 
