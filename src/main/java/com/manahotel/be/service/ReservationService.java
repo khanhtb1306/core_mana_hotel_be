@@ -246,7 +246,7 @@ public class ReservationService {
             fundBookService.writeFundBook(fundBookId,
                     reservationDTO.getPaidMethod() != null ? reservationDTO.getPaidMethod() : "",
                     reservation.getTotalDeposit(),
-                    reservationDTO.getTransactionCode() != null ?reservationDTO.getTransactionCode() : "");
+                    reservationDTO.getTransactionCode() != null ? reservationDTO.getTransactionCode() : "");
         }
     }
 

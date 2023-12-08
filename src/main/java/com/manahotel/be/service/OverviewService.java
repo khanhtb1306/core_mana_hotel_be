@@ -618,26 +618,34 @@ public class OverviewService {
         log.info("----- Write Top Room Class End ------");
     }
 
-    public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isCheck){
+    public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isMonth, boolean isTotalRevenues) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(datestring, formatter);
 
-        List<Object[]>  reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByMonth(date.getMonthValue(), date.getYear());
-        List<String> roomClassIds = new ArrayList<>();
-        List<Float> totalNumberOfRentals = new ArrayList<>();
-        List<Float> totalRevenues = new ArrayList<>();
-        for (Object[] rt: reportTopRoomClass){
+        List<Object[]> reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByMonth(isMonth ? date.getMonthValue() : null, date.getYear());
+        Map<String, Float> resultMap = new HashMap<>();
+
+        for (Object[] rt : reportTopRoomClass) {
             String roomClassId = String.valueOf(rt[0]);
-            roomClassIds.add(getRoomCategoryById(roomClassId).getRoomCategoryName());
-            totalNumberOfRentals.add((Float) rt[1]);
-            totalRevenues.add((Float) rt[2]);
+            String roomCategoryName = getRoomCategoryById(roomClassId).getRoomCategoryName();
+            Float totalNumberOfRental = (Float) rt[1];
+            Float totalRevenue = (Float) rt[2];
+
+            resultMap.put(roomCategoryName, isTotalRevenues ? totalRevenue : totalNumberOfRental);
         }
+        Map<String, Float> sortedMap = resultMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
         Map<String, Object> result = new HashMap<>();
-        result.put("label", roomClassIds);
-        result.put("data", totalNumberOfRentals);
-        result.put("data1", totalRevenues);
-        return ResponseUtils.success(result,  "getTopRoomClassByMonth_is_successfully");
+        result.put("label", new ArrayList<>(sortedMap.keySet()));
+        result.put("data", new ArrayList<>(sortedMap.values()));
+
+        return ResponseUtils.success(result, "getTopRoomClassByMonth_is_successfully");
     }
+
+
 
     public RoomCategory getRoomCategoryById(String id) {
         return roomClassRepository.findById(id)

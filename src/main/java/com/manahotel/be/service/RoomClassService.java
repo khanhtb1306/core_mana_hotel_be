@@ -81,6 +81,15 @@ public class RoomClassService {
 
     public ResponseDTO findActiveRoomCategoriesWithActiveRooms() {
         List<RoomCategory> roomCategories = roomClassRepository.findActiveRoomCategoriesWithActiveRooms();
+        List<Object> result = new ArrayList<>();
+
+        for (RoomCategory roomCategory : roomCategories) {
+            List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
+            Map<String, Object> roomInfo = new HashMap<>();
+            roomInfo.put("roomCategory", roomCategory);
+            roomInfo.put("ListRoom", rooms.toArray());
+            result.add(roomInfo);
+        }
         return ResponseUtils.success(roomCategories, "is_successfully");
     }
 
