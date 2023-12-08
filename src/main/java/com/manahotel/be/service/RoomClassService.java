@@ -79,7 +79,13 @@ public class RoomClassService {
         return ResponseUtils.success(result, "Hiển thị danh sách phòng theo danh sách hạng phòng thành công");
     }
 
-    public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
+    public ResponseDTO findActiveRoomCategoriesWithActiveRooms() {
+        List<RoomCategory> roomCategories = roomClassRepository.findActiveRoomCategoriesWithActiveRooms();
+        return ResponseUtils.success(roomCategories, "is_successfully");
+    }
+
+
+        public List<Map<String, Object>> getAllRoomClassWithRoomCount() {
         List<Object[]> roomCategories = roomClassRepository.findRoomCategoriesWithRoomCount();
         List<Map<String, Object>> result = new ArrayList<>();
 

@@ -38,9 +38,6 @@ public class ReservationDetailService {
     @Autowired
     private ReservationDetailCustomerService service;
 
-    @Autowired
-    private TimeUseRepository timeUseRepository;
-
     public ResponseDTO getListCustomersByReservationDetailId(Long id) {
         return service.getListCustomersByReservationDetailId(id);
     }

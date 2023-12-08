@@ -598,15 +598,12 @@ public class OverviewService {
                 }
             Float result = reservationDetail.getPrice() + totalPolicy + totalOrder;
 
-            LocalDate currentDate = LocalDate.now();
-            Timestamp startDateTime = Timestamp.valueOf(currentDate.atStartOfDay().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)));
-            Timestamp endDateTime = Timestamp.valueOf(currentDate.atTime(LocalTime.MAX).with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)));
-            ReportTopRoomClass reportTopRoomClass = reportTopRoomClassRepository.findByRoomClassIdAndCreateDateBetween(roomCategory.getRoomCategoryId(), startDateTime, endDateTime);
+            ReportTopRoomClass reportTopRoomClass = reportTopRoomClassRepository.findByRoomClassIdAndCreateDate(roomCategory.getRoomCategoryId(), logTime);
 
                 if (reportTopRoomClass != null) {
                     reportTopRoomClass.setRevenue(reportTopRoomClass.getRevenue() + result);
                     reportTopRoomClass.setNumberOfRental(reportTopRoomClass.getNumberOfRental() + 1L);
-                    reportTopRoomClass.setCreateDate(logTime);
+                    reportTopRoomClass.setUpdateDate(logTime);
                 } else {
                     reportTopRoomClass = new ReportTopRoomClass();
                     reportTopRoomClass.setRoomClassId(roomCategory.getRoomCategoryId());
@@ -619,5 +616,33 @@ public class OverviewService {
             log.error(e.getMessage());
         }
         log.info("----- Write Top Room Class End ------");
+    }
+
+    public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isCheck){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate date = LocalDate.parse(datestring, formatter);
+
+        List<Object[]>  reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByMonth(date.getMonthValue(), date.getYear());
+        List<String> roomClassIds = new ArrayList<>();
+        List<Float> totalNumberOfRentals = new ArrayList<>();
+        List<Float> totalRevenues = new ArrayList<>();
+        for (Object[] rt: reportTopRoomClass){
+            String roomClassId = String.valueOf(rt[0]);
+            roomClassIds.add(getRoomCategoryById(roomClassId).getRoomCategoryName());
+            totalNumberOfRentals.add((Float) rt[1]);
+            totalRevenues.add((Float) rt[2]);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("label", roomClassIds);
+        result.put("data", totalNumberOfRentals);
+        result.put("data1", totalRevenues);
+        return ResponseUtils.success(result,  "getTopRoomClassByMonth_is_successfully");
+    }
+
+    public RoomCategory getRoomCategoryById(String id) {
+        return roomClassRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Room Class not found with id " + id));
     }
 }

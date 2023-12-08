@@ -6,6 +6,7 @@ import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.service.ControlPolicyService;
 import com.manahotel.be.service.FundBookService;
 import com.manahotel.be.service.ReservationService;
+import com.manahotel.be.service.RoomClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class ReservationController {
 
     @Autowired
     private FundBookService fundBookService;
+
+    @Autowired
+    private RoomClassService roomClassService;
 
     @GetMapping
     public ResponseDTO getAllReservations() {
@@ -86,5 +90,10 @@ public class ReservationController {
     @GetMapping("/get_fund_book_by_reservation")
     public ResponseDTO getFundBookByReservation(String reservationId) {
         return fundBookService.getFundBookByReservation(reservationId);
+    }
+
+    @GetMapping("/get_active_room_class_with_active_rooms")
+    public ResponseDTO findActiveRoomCategoriesWithActiveRooms() {
+        return roomClassService.findActiveRoomCategoriesWithActiveRooms();
     }
 }
