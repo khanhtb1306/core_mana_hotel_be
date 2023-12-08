@@ -158,6 +158,7 @@ public class ReservationDetailService {
 
                 checkDuplicateBooking(reservationDetail.getCheckInActual(), reservationDetail.getCheckOutActual(), reservationDetail.getRoom(), reservationDetail.getReservationDetailId());
 
+                room.setConditionStatus(Status.UNCLEAN);
                 room.setBookingStatus(Status.ROOM_EMPTY);
             }
         }

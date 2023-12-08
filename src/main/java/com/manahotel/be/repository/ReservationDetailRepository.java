@@ -48,9 +48,16 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
 
     @Query(value = "SELECT rd FROM ReservationDetail rd " +
             "WHERE rd.reservationDetailStatus = 1 " +
-            "AND (rd.checkInActual < ?2 OR (rd.checkInActual IS NULL AND rd.checkInEstimate < ?2)) " +
-            "AND (rd.checkOutActual > ?1 OR (rd.checkOutActual IS NULL AND rd.checkOutEstimate > ?1)) " +
-            "AND rd.room.status = 1")
+            "AND rd.room.status = 1 " +
+            "AND " +
+            "(((rd.status = 'BOOKING') AND (rd.checkInEstimate BETWEEN ?1 AND ?2) " +
+            "AND (rd.checkOutEstimate BETWEEN ?1 AND ?2)) " +
+            "OR " +
+            "((rd.status = 'CHECK_IN') AND (rd.checkInActual BETWEEN ?1 AND ?2) " +
+            "AND (rd.checkOutEstimate BETWEEN ?1 AND ?2)) " +
+            "OR " +
+            "((rd.status IN ('CHECK_OUT', 'DONE')) and (rd.checkInActual BETWEEN ?1 AND ?2) " +
+            "AND (rd.checkOutEstimate BETWEEN ?1 AND ?2)))")
     List<ReservationDetail> findByDate(Timestamp start, Timestamp end);
 
     @Query(value = "UPDATE reservation_detail SET reservation_detail_status = 6 WHERE reservation_id = ?1", nativeQuery = true)
