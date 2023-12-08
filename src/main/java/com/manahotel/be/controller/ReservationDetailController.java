@@ -5,6 +5,7 @@ import com.manahotel.be.model.dto.ReservationDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.ChangeRoomRequest;
 import com.manahotel.be.model.dto.request.ReservationDetailCustomerRequest;
+import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.service.ReservationDetailCustomerService;
 import com.manahotel.be.service.ReservationDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,13 +63,13 @@ public class ReservationDetailController {
         return service2.deleteRDCustomer(id, isAdult);
     }
 
-    @GetMapping("/get-by-booking-and-check-in")
-    public ResponseDTO getReservationDetailByBookingAndCheckIn(Timestamp date) {
-        return service.getReservationDetailByBookingAndCheckIn(date);
-    }
-
     @GetMapping("/get-by-date")
     public ResponseDTO getReservationDetailByDate(Timestamp start, Timestamp end) {
         return service.getReservationDetailByDate(start, end);
+    }
+
+    @GetMapping("/check-duplicate-booking")
+    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, Room room) {
+        return service.checkDuplicateBooking(start, end, room);
     }
 }

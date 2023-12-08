@@ -1,7 +1,6 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.common.util.DateUtil;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -38,9 +36,6 @@ public class ReservationDetailService {
 
     @Autowired
     private ReservationDetailCustomerService service;
-
-    @Autowired
-    private TimeUseRepository timeUseRepository;
 
     public ResponseDTO getListCustomersByReservationDetailId(Long id) {
         return service.getListCustomersByReservationDetailId(id);
@@ -182,8 +177,18 @@ public class ReservationDetailService {
         repository2.save(reservation);
     }
 
-    public ResponseDTO getReservationDetailByBookingAndCheckIn(Timestamp date) {
-        return ResponseUtils.success(repository.getReservationDetailByBookingAndCheckIn(date), "Hiển thị thành công danh sách đặt phòng và sử dụng phòng theo ngày");
+    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, Room room) {
+        try {
+            log.info("----- Start check duplicate booking -----");
+            checkDuplicateBooking(start, end, room, null);
+            log.info("----- End check duplicate booking -----");
+
+            return ResponseUtils.success("Không có lịch bị trùng với phòng " + room.getRoomName());
+        }
+        catch (Exception e) {
+            log.info("----- Check duplicate booking failed -----\n" + e.getMessage());
+            return ResponseUtils.error("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+        }
     }
 
     public ResponseDTO getReservationDetailByDate(Timestamp start, Timestamp end) {
