@@ -90,7 +90,7 @@ public class RoomClassService {
             roomInfo.put("ListRoom", rooms.toArray());
             result.add(roomInfo);
         }
-        return ResponseUtils.success(roomCategories, "is_successfully");
+        return ResponseUtils.success(result, "is_successfully");
     }
 
 
