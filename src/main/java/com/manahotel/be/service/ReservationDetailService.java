@@ -178,17 +178,17 @@ public class ReservationDetailService {
         repository2.save(reservation);
     }
 
-    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, Room room) {
+    public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, String roomId) {
         try {
             log.info("----- Start check duplicate booking -----");
-            checkDuplicateBooking(start, end, room, null);
+            checkDuplicateBooking(start, end, findRoom(roomId), null);
             log.info("----- End check duplicate booking -----");
 
-            return ResponseUtils.success("Không có lịch bị trùng với phòng " + room.getRoomName());
+            return ResponseUtils.success("Không có lịch bị trùng với phòng " + findRoom(roomId).getRoomName());
         }
         catch (Exception e) {
             log.info("----- Check duplicate booking failed -----\n" + e.getMessage());
-            return ResponseUtils.error("Lịch phòng " + room.getRoomName() + " đang trùng với các lịch khác");
+            return ResponseUtils.error("Lịch phòng " + findRoom(roomId).getRoomName() + " đang trùng với các lịch khác");
         }
     }
 
