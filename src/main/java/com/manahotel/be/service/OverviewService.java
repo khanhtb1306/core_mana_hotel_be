@@ -650,6 +650,40 @@ public class OverviewService {
         }
     }
 
+    public ResponseDTO getTopRoomClassByQuarter(String yearString, int quarter, boolean isTotalRevenues) {
+        try {
+            int year = Integer.parseInt(yearString);
+            int startMonth = (quarter - 1) * 3 + 1;
+            int endMonth = quarter * 3;
+
+            List<Object[]> reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByCustomQuarter(year, startMonth, endMonth);
+            Map<String, Double> resultMap = new HashMap<>();
+
+            for (Object[] rt : reportTopRoomClass) {
+                String roomClassId = String.valueOf(rt[0]);
+                String roomCategoryName = getRoomCategoryById(roomClassId).getRoomCategoryName();
+                Long totalNumberOfRental = (Long) rt[1];
+                Double totalRevenue = (Double) rt[2];
+
+                resultMap.put(roomCategoryName, isTotalRevenues ? totalRevenue : (double) totalNumberOfRental);
+            }
+
+            Map<String, Double> sortedMap = resultMap.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("label", new ArrayList<>(sortedMap.keySet()));
+            result.put("data", new ArrayList<>(sortedMap.values()));
+
+            return ResponseUtils.success(result, "getTopRoomClassByQuarter_is_successfully");
+        } catch (Exception e) {
+            log.error("getTopRoomClassByQuarter_failed" + e.getMessage());
+            return ResponseUtils.error("getTopRoomClassByQuarter_failed");
+        }
+    }
+
     public RoomCategory getRoomCategoryById(String id) {
         return roomClassRepository.findById(id)
                 .orElseThrow(() ->

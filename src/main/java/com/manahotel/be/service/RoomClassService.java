@@ -84,7 +84,7 @@ public class RoomClassService {
         List<Object> result = new ArrayList<>();
 
         for (RoomCategory roomCategory : roomCategories) {
-            List<Room> rooms = roomRepository.findByRoomCategory(roomCategory);
+            List<Room> rooms = roomRepository.findByRoomCategoryAndStatus(roomCategory, Status.ACTIVATE);
             Map<String, Object> roomInfo = new HashMap<>();
             roomInfo.put("roomCategory", roomCategory);
             roomInfo.put("ListRoom", rooms.toArray());

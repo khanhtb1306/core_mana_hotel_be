@@ -75,4 +75,8 @@ public class OverviewController {
     public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isMonth, boolean isTotalRevenues) {
         return overviewService.getTopRoomClassByMonth(datestring, isMonth, isTotalRevenues);
     }
+    @GetMapping("/get_top_room_class_by_quarter")
+    public ResponseDTO getTopRoomClassByQuarter(String datestring, Integer quarter, boolean isTotalRevenues) {
+        return overviewService.getTopRoomClassByQuarter(datestring, quarter, isTotalRevenues);
+    }
 }

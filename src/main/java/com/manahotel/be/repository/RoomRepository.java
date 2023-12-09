@@ -16,6 +16,8 @@ public interface RoomRepository extends JpaRepository<Room, String> {
 
     List<Room> findByRoomCategory(RoomCategory roomCategory);
 
+    List<Room> findByRoomCategoryAndStatus(RoomCategory roomCategory, Long status);
+
     List<Room> findByStatusNot(Long status);
 
     List<Room> findByStatus(Long status);
