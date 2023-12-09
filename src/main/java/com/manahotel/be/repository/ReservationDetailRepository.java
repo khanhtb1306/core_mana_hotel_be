@@ -53,6 +53,8 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "(((rd.status = 'BOOKING') AND ((rd.checkInEstimate BETWEEN ?1 AND ?2) " +
             "OR (rd.checkOutEstimate BETWEEN ?1 AND ?2))) " +
             "OR " +
+            "(rd.status = 'CHECK_IN') " +
+            "OR " +
             "((rd.status IN ('CHECK_OUT', 'DONE')) AND ((rd.checkInActual BETWEEN ?1 AND ?2) " +
             "OR (rd.checkOutActual BETWEEN ?1 AND ?2))))")
     List<ReservationDetail> findByDate(Timestamp start, Timestamp end);
