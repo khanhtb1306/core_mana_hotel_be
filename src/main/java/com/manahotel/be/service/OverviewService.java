@@ -650,11 +650,13 @@ public class OverviewService {
         }
     }
 
-    public ResponseDTO getTopRoomClassByQuarter(String yearString, int quarter, boolean isTotalRevenues) {
+    public ResponseDTO getTopRoomClassByQuarter(Integer year, String quarter, boolean isTotalRevenues) {
+            log.info(year.toString());
+            log.info(quarter.toString());
         try {
-            int year = Integer.parseInt(yearString);
-            int startMonth = (quarter - 1) * 3 + 1;
-            int endMonth = quarter * 3;
+            int quarterValue = Integer.parseInt(quarter);
+            int startMonth = (quarterValue - 1) * 3 + 1;
+            int endMonth = quarterValue * 3;
 
             List<Object[]> reportTopRoomClass = reportTopRoomClassRepository.getTotalRentalAndRevenueByCustomQuarter(year, startMonth, endMonth);
             Map<String, Double> resultMap = new HashMap<>();
@@ -678,11 +680,15 @@ public class OverviewService {
             result.put("data", new ArrayList<>(sortedMap.values()));
 
             return ResponseUtils.success(result, "getTopRoomClassByQuarter_is_successfully");
+        } catch (NumberFormatException e) {
+            log.error("getTopRoomClassByQuarter_failed: Error parsing integer - " + e.getMessage());
+            return ResponseUtils.error("getTopRoomClassByQuarter_failed: Error parsing integer");
         } catch (Exception e) {
-            log.error("getTopRoomClassByQuarter_failed" + e.getMessage());
+            log.error("getTopRoomClassByQuarter_failed: " + e.getMessage());
             return ResponseUtils.error("getTopRoomClassByQuarter_failed");
         }
     }
+
 
     public RoomCategory getRoomCategoryById(String id) {
         return roomClassRepository.findById(id)

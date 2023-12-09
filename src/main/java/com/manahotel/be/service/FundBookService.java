@@ -139,8 +139,10 @@ public class FundBookService {
             List<ReservationDetail> reservationDetailList = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
             for (ReservationDetail rd : reservationDetailList) {
                 InvoiceReservationDetail invoiceReservationDetailList = invoiceReservationDetailRepository.findInvoiceReservationDetailByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
-                List<FundBook> fundBookList2 = repository.findByFundBookIdContaining(invoiceReservationDetailList.getInvoice().getInvoiceId());
-                combinedFundBookList.addAll(fundBookList2);
+                if(invoiceReservationDetailList != null){
+                    List<FundBook> fundBookList2 = repository.findByFundBookIdContaining(invoiceReservationDetailList.getInvoice().getInvoiceId());
+                    combinedFundBookList.addAll(fundBookList2);
+                }
                 List<Order> orderList = orderRepository.findOrderByReservationDetailAndStatus(rd, Status.PAID);
                 for (Order order : orderList) {
                     List<FundBook> fundBookList3 = repository.findByFundBookIdContaining(order.getOrderId());

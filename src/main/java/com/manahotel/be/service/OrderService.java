@@ -187,7 +187,7 @@ public class OrderService {
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
     }
-    public ResponseDTO updateStatusOrder(String orderId, String status){
+    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod, String transactionCode){
 
         log.info("------- Update Status Order End -------");
         try {
@@ -195,7 +195,7 @@ public class OrderService {
             order.setStatus(status);
             orderRepository.save(order);
             if(order.getStatus().equals(Status.PAID)){
-                fundBookService.writeFundBook(orderId, "", order.getTotalPay(), "");
+                fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), transactionCode);
             }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");
