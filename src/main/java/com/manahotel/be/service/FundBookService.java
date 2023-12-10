@@ -36,6 +36,9 @@ public class FundBookService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private OverviewService overviewService;
+
     public ResponseDTO getAll(String time, boolean isMonth) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(time, formatter);
@@ -67,7 +70,7 @@ public class FundBookService {
 
             repository.save(fundBook);
             log.info("----- End create fund book -----");
-
+            overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), fundBook.getType().equals(Status.INCOME) ? "tạo phiếu thu" : "tạo phiếu chi", fundBook.getValue(), new Timestamp(System.currentTimeMillis()));
             return ResponseUtils.success("Tạo phiếu thành công");
         }
         catch (Exception e) {

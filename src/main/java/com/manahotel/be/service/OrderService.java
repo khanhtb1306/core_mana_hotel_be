@@ -4,6 +4,7 @@ import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.model.dto.OrderDTO;
 import com.manahotel.be.model.dto.OrderDetailDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
@@ -48,6 +49,9 @@ public class OrderService {
 
     @Autowired
     private FundBookService fundBookService;
+
+    @Autowired
+    private OverviewService overviewService;
 
     public ResponseDTO getOrderByReservationDetailId(Long reservationDetailId){
         log.info("------- Get Order Start -------");
@@ -201,6 +205,7 @@ public class OrderService {
             orderRepository.save(order);
             if(order.getStatus().equals(Status.PAID)){
                 fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), order.getTransactionCode());
+                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", order.getTotalPay(), new Timestamp(System.currentTimeMillis()));
             }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");

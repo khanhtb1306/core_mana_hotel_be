@@ -51,12 +51,14 @@ class OrderServiceTest {
     @Mock
     private FundBookService fundBookService;
 
+    @Mock OverviewService overviewService;
+
     private OrderService underTest;
 
 
     @BeforeEach
     void setUp() {
-        underTest = new OrderService(orderRepository, reservationDetailRepository, staffRepository,orderDetailRepository, orderDetailService, fundBookService);
+        underTest = new OrderService(orderRepository, reservationDetailRepository, staffRepository,orderDetailRepository, orderDetailService, fundBookService, overviewService);
     }
 
     @Test
