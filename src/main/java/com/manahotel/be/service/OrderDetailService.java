@@ -49,8 +49,10 @@ public class OrderDetailService {
             orderDetail.setGoodsUnit(goodsUnit);
             orderDetail.setInvoice(invoice);
             commonMapping(orderDetail, orderDetailDTO);
-            goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
-            goodsRepository.save(goods);
+            if(goods.isGoodsCategory()) {
+                goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
+                goodsRepository.save(goods);
+            }
             orderDetailRepository.save(orderDetail);
             log.info("------- Add OrderDetail End -------");
         } catch (Exception e) {
