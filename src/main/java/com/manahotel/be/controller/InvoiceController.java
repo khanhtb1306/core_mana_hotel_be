@@ -35,11 +35,6 @@ public class InvoiceController {
         return invoiceService.createReservationInvoice(request.getReservationDetailDTO(), request.getInvoiceDTO());
     }
 
-    @PutMapping("/reservation")
-    public ResponseDTO updateReservationInvoice(InvoiceDTO invoiceDTO) {
-        return invoiceService.updateReservationInvoice(invoiceDTO);
-    }
-
     @PostMapping("/purchase")
     public ResponseDTO createPurchaseInvoice(InvoicePurchaseRequest request) {
         return invoiceService.createPurchaseInvoice(request.getInvoiceDTO(), request.getOrderDetailDTOList());

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -25,9 +26,6 @@ public class FundBookService {
 
     @Autowired
     private FundBookRepository repository;
-
-    @Autowired
-    private InvoiceRepository invoiceRepository;
 
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
@@ -78,6 +76,34 @@ public class FundBookService {
         }
     }
 
+    public ResponseDTO getFundBookByStaff(){
+        List<FundBook> fundBookList = repository.findTop10ByStaffOrderByTimeDesc(UserUtils.getUser().getStaffName());
+        return ResponseUtils.success(fundBookList,"getFundBookByStaff_isSuccessfully");
+    }
+
+    public ResponseDTO createFundBookDeposit(String reservationId, Float money, String paidMethod) {
+        log.info("----- Start Fund Book Deposit -----");
+        try {
+            List<FundBook> fundBooks = repository.findByFundBookIdContaining(reservationId);
+            String fundBookId = "TT" + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
+
+            String transactionCode = "";
+            if (Status.TRANSFER.equals(paidMethod)) {
+                String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Timestamp(System.currentTimeMillis()));
+                transactionCode = "MGD" + timestamp + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
+            }
+            writeFundBook(fundBookId, paidMethod, money, transactionCode);
+
+            log.info("----- End Fund Book Deposit -----");
+            return ResponseUtils.success("createFundBookDeposit_isSuccess");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseUtils.success("createFundBookDeposit_isFail");
+        }
+    }
+
+
+
     public void writeFundBook(String fundBookId, String paidMethod, Float value, String transactionCode){
         log.info("----- Write Fund Book Start  -----");
         try{
@@ -93,7 +119,7 @@ public class FundBookService {
                 fundBook.setPayerReceiver("Khách Hàng");
                 fundBook.setStaff(UserUtils.getUser().getStaffName());
                 fundBook.setNote("Thu tiền khách trả");
-                fundBook.setStatus(Status.COMPLETE);
+                fundBook.setStatus(paidMethod.equals(Status.CASH) ? Status.COMPLETE : Status.UNCONFIRMED);
                 fundBook.setTransactionCode(transactionCode);
             }
             repository.save(fundBook);
@@ -103,7 +129,6 @@ public class FundBookService {
         }
         log.info("----- Write Fund Book Start  -----");
     }
-
 
     public ResponseDTO updateFundBook(String id, FundBookDTO fundBookDTO) {
         try {
@@ -189,10 +214,5 @@ public class FundBookService {
     private FundBook findFundBook(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Fund Book not found with id " + id));
-    }
-
-    private Invoice findInvoice(String id) {
-        return invoiceRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id " + id));
     }
 }

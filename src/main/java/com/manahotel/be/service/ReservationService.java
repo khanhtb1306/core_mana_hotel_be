@@ -222,8 +222,6 @@ public class ReservationService {
         reservation.setPriceList(priceList);
 
         reservation.setStatus((reservationDTO.getStatus() != null) ? reservationDTO.getStatus() : reservation.getStatus());
-        reservation.setTotalDeposit((reservationDTO.getTotalDeposit() != null) ? reservationDTO.getTotalDeposit() : reservation.getTotalDeposit());
-        reservation.setTotalPrice((reservationDTO.getTotalPrice() != null) ? reservationDTO.getTotalPrice() : reservation.getTotalPrice());
         reservation.setNote((reservationDTO.getNote() != null) ? reservationDTO.getNote() : reservation.getNote());
 
         if(reservation.getStatus().equals(Status.CHECK_IN)) {
@@ -234,19 +232,6 @@ public class ReservationService {
         }
         if(reservation.getStatus().equals(Status.DISCARD)) {
             repository2.deleteReservationDetailByReservationId(reservation.getReservationId());
-        }
-        if(reservation.getTotalDeposit() != null){
-            List<FundBook> fundBooks = fundBookRepository.findByFundBookIdContaining(reservation.getReservationId());
-            String fundBookId;
-            if(fundBooks == null){
-                fundBookId = "TT" + reservation.getReservationId();
-            }else {
-                fundBookId = "TT" + reservation.getReservationId() + "-" + fundBooks.size()+1;
-            }
-            fundBookService.writeFundBook(fundBookId,
-                    reservationDTO.getPaidMethod() != null ? reservationDTO.getPaidMethod() : "",
-                    reservation.getTotalDeposit(),
-                    reservationDTO.getTransactionCode() != null ?reservationDTO.getTransactionCode() : "");
         }
     }
 

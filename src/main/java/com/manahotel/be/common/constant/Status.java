@@ -36,7 +36,7 @@ public class Status {
     public static final String DISCARD = "DISCARD"; // For reservation only
     public static final String DONE = "DONE";
 
-    // Order vs incovice
+    // Order vs Funbook
     public static final String UNCONFIRMED = "UNCONFIRMED";
 
     public static final String CONFIRMED = "CONFIRMED";

@@ -12,7 +12,6 @@ public class InvoiceDTO {
     private Float discount;
     private String note;
     private String paidMethod;
-    private String transactionCode;
     private String status;
     private Float priceOther;
     private String customerId;

@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,6 +137,9 @@ public class OrderService {
             order.setTotalPay(totalPay(orderDetailDTOList));
             order.setCreatedDate(Instant.now());
             order.setStatus(Status.UNCONFIRMED);
+            String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Timestamp(System.currentTimeMillis()));
+            String transactionCode  = "MGD" + timestamp + order.getOrderId();
+            order.setTransactionCode(transactionCode);
             orderRepository.save(order);
 
             for (OrderDetailDTO orderDetail : orderDetailDTOList) {
@@ -187,7 +192,7 @@ public class OrderService {
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
     }
-    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod, String transactionCode){
+    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod){
 
         log.info("------- Update Status Order End -------");
         try {
@@ -195,7 +200,7 @@ public class OrderService {
             order.setStatus(status);
             orderRepository.save(order);
             if(order.getStatus().equals(Status.PAID)){
-                fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), transactionCode);
+                fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), order.getTransactionCode());
             }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");

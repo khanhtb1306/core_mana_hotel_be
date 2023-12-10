@@ -37,12 +37,6 @@ public class Reservation {
     @Column(name = "status", length = 50)
     private String status;
 
-    @Column(name = "total_deposit")
-    private Float totalDeposit;
-
-    @Column(name = "total_price")
-    private Float totalPrice;
-
     @Column(name = "duration_start")
     private Timestamp durationStart;
 

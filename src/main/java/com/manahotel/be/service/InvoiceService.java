@@ -73,35 +73,12 @@ public class InvoiceService {
                     reservationDetailRepository.save(reservationDetail);
                     overviewService.writeTopRoomClass(reservationDetail.getRoom().getRoomId(), reservationDetail);
                 });
-                if(invoice.getPaidMethod().equals(Status.CASH)){
-                    overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
-                    fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
-                }
-                log.info("----- Create Reservation Invoice End -----");
+            writeLogFundBookAndRecentActivity(invoiceDTO, invoice);
+            log.info("----- Create Reservation Invoice End -----");
                 return ResponseUtils.success(invoice.getInvoiceId(),"Tạo hóa đơn thành công");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("Tạo hóa đơn thất bại");
-        }
-    }
-
-    public ResponseDTO updateReservationInvoice(InvoiceDTO invoiceDTO){
-        log.info("----- Update Reservation Invoice Start -----");
-        try{
-            Invoice invoice =  findInvoice(invoiceDTO.getInvoiceId());
-            invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
-            invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
-            invoice.setStatus(invoiceDTO.getStatus() != null ? invoiceDTO.getStatus() : invoice.getStatus());
-            invoiceRepository.save(invoice);
-            if(invoice.getPaidMethod().equals(Status.TRANSFER)) {
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
-                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
-            }
-            log.info("----- Update Reservation Invoice End -----");
-            return ResponseUtils.success(invoice.getInvoiceId(),"Cập nhật hóa đơn thành công");
-        }catch (Exception e){
-            log.error("updateReservationInvoice_isFail");
-            return ResponseUtils.success("Cập nhật hóa đơn thất bại");
         }
     }
 
@@ -111,9 +88,9 @@ public class InvoiceService {
             Customer customer = findCustomer(invoiceDTO.getCustomerId() != null ? invoiceDTO.getCustomerId() : Const.CUSTOMER_ID);
 
             Invoice invoice = new Invoice();
+            invoice.setCustomer(customer);
             commonMapping(invoiceDTO, invoice);
 
-            invoice.setCustomer(customer);
             invoice.setTotal(orderService.totalPay(orderDetailDTOList));
 
             invoiceRepository.save(invoice);
@@ -121,16 +98,27 @@ public class InvoiceService {
             orderDetailDTOList.forEach(orderDetail -> {
                 orderDetailService.createOrderDetail(orderDetail, invoice.getInvoiceId(), Const.ORDER_ID);
             });
-            if(invoice.getPaidMethod().equals(Status.CASH)){
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal(), new Timestamp(System.currentTimeMillis()));
-                fundBookService.writeFundBook(invoice.getInvoiceId(), invoice.getPaidMethod(), (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), invoice.getTransactionCode());
-            }
+            writeLogFundBookAndRecentActivity(invoiceDTO, invoice);
             log.info("----- Create Purchase Invoice End -----");
             return ResponseUtils.error("Tạo hóa đơn thành công");
         }catch (Exception e){
             log.error("create Purchase Invoice IsFail");
             return ResponseUtils.error("Tạo hóa đơn thất bại");
         }
+    }
+
+    private void writeLogFundBookAndRecentActivity(InvoiceDTO invoiceDTO, Invoice invoice) {
+        String transactionCode = "";
+        String paidMethod = "";
+        if(invoiceDTO.getPaidMethod().equals(Status.CASH)){
+            paidMethod = Status.CASH;
+        }else {
+            paidMethod = Status.TRANSFER;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            transactionCode  = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + invoice.getInvoiceId();
+        }
+        fundBookService.writeFundBook(invoice.getInvoiceId(), paidMethod, (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), transactionCode);
+        overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
     }
 
     private void commonMapping(InvoiceDTO invoiceDTO, Invoice invoice) {
@@ -141,16 +129,11 @@ public class InvoiceService {
 
         invoice.setStaff(UserUtils.getUser());
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        invoice.setPaidMethod(invoiceDTO.getPaidMethod() != null ? invoiceDTO.getPaidMethod() : invoice.getPaidMethod());
-        invoice.setStatus(invoice.getPaidMethod().equals(Status.CASH) ? Status.COMPLETE : Status.UNCONFIRMED);
+        invoice.setStatus(Status.COMPLETE);
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : 0);
         invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
         invoice.setPriceOther(invoiceDTO.getPriceOther() != null ? invoiceDTO.getPriceOther() : 0);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String transactionCode = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + invoice.getInvoiceId();
-        invoice.setTransactionCode(transactionCode);
     }
 
     public ResponseDTO getAllInvoices() {
