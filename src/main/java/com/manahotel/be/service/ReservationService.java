@@ -100,8 +100,8 @@ public class ReservationService {
         return ResponseUtils.success(list, "Hiển thị phòng trống lịch đặt thành công");
     }
 
-    public ResponseDTO getAllReservationWithRooms() {
-        List<Object[]> listReservations = repository.findReservationsWithRooms();
+    public ResponseDTO getAllReservationWithRooms(Timestamp start, Timestamp end) {
+        List<Object[]> listReservations = repository.findReservationsWithRooms(start, end);
 
         List<Map<String, Object>> result = new ArrayList<>();
 

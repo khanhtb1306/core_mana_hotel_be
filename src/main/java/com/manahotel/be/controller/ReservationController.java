@@ -30,8 +30,8 @@ public class ReservationController {
     private RoomClassService roomClassService;
 
     @GetMapping
-    public ResponseDTO getAllReservations() {
-        return service.getAllReservationWithRooms();
+    public ResponseDTO getAllReservations(Timestamp start, Timestamp end) {
+        return service.getAllReservationWithRooms(start, end);
     }
 
     @GetMapping("/list-empty-rooms")

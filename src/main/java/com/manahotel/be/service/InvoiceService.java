@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,8 +146,11 @@ public class InvoiceService {
         invoice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         invoice.setDiscount(invoiceDTO.getDiscount() != null ? invoiceDTO.getDiscount() : 0);
         invoice.setNote(invoiceDTO.getNote() != null ? invoiceDTO.getNote() : invoice.getNote());
-        invoice.setTransactionCode(invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : invoice.getTransactionCode());
         invoice.setPriceOther(invoiceDTO.getPriceOther() != null ? invoiceDTO.getPriceOther() : 0);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String transactionCode = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + invoice.getInvoiceId();
+        invoice.setTransactionCode(transactionCode);
     }
 
     public ResponseDTO getAllInvoices() {

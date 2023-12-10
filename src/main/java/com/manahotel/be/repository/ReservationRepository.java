@@ -13,8 +13,9 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
 
     @Query("SELECT r FROM Reservation r " +
-            "LEFT JOIN ReservationDetail rd ON r.reservationId = rd.reservation.reservationId")
-    List<Object[]> findReservationsWithRooms();
+            "LEFT JOIN ReservationDetail rd ON r.reservationId = rd.reservation.reservationId " +
+            "WHERE (r.durationStart BETWEEN ?1 AND ?2) OR (r.durationEnd BETWEEN ?1 and ?2)")
+    List<Object[]> findReservationsWithRooms(Timestamp start, Timestamp end);
 
     Reservation findTopByOrderByReservationIdDesc();
 
@@ -33,6 +34,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
 
     @Query("SELECT COUNT(rd) > 0 " +
             "FROM ReservationDetail rd " +
-            "WHERE rd.room = ?1 AND rd.reservation.reservationId = ?2")
+            "WHERE rd.room = ?1 AND rd.reservation.reservationId = ?2 AND rd.reservationDetailStatus = 1")
     boolean existsInReservation(Room room, String reservationId);
 }
