@@ -68,11 +68,13 @@ public class OrderDetailService {
             if(orderDetails.isEmpty()) {
                 log.info("Can't Delete OrderDetails");
             }
-            for (OrderDetail orderDetail : orderDetails) {
-                Goods goods = goodsRepository.findById(orderDetail.getGoods().getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
-                goods.setInventory(goods.getInventory() + orderDetail.getQuantity());
-                goodsRepository.save(goods);
-            }
+                for (OrderDetail orderDetail : orderDetails) {
+                    Goods goods = goodsRepository.findById(orderDetail.getGoods().getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
+                    if(goods.isGoodsCategory()){
+                        goods.setInventory(goods.getInventory() + orderDetail.getQuantity());
+                        goodsRepository.save(goods);
+                    }
+                }
             orderDetailRepository.deleteAll(orderDetails);
             log.info("------- Delete OrderDetails End -------");
         } catch (IllegalStateException ei) {
