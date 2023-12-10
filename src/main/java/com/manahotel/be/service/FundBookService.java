@@ -110,12 +110,15 @@ public class FundBookService {
     public void writeFundBook(String fundBookId, String paidMethod, Float value, String transactionCode){
         log.info("----- Write Fund Book Start  -----");
         try{
-            FundBook fundBook = findFundBook("TT" + fundBookId);
+            FundBook fundBook = repository.findFundBookByFundBookId(fundBookId);
+            if(!fundBookId.contains("TT")){
+                fundBook = repository.findFundBookByFundBookId("TT" + fundBookId);
+            }
             if(fundBook != null){
                 fundBook.setPaidMethod(paidMethod);
             }else {
                 fundBook = new FundBook();
-                fundBook.setFundBookId("TT" + fundBookId);
+                fundBook.setFundBookId(fundBookId.contains("TT") ? fundBookId : ("TT" + fundBookId));
                 fundBook.setTime(new Timestamp(System.currentTimeMillis()));
                 fundBook.setType(Status.INCOME);
                 fundBook.setValue(value);
