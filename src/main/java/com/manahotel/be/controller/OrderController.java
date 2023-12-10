@@ -2,7 +2,6 @@ package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.OrderRequest;
-import com.manahotel.be.service.InvoicePrinterService;
 import com.manahotel.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -15,8 +14,7 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private InvoicePrinterService invoicePrinterService;
+
     @GetMapping("/reservation/{id}")
     public ResponseDTO getOrderByReservationId(@PathVariable Long id){
         return orderService.getOrderByReservationDetailId(id);
@@ -41,12 +39,7 @@ public class OrderController {
     public ResponseDTO deleteOrder(@PathVariable String id) {
         return orderService.deleteOrder(id);
     }
-
-    @GetMapping("/print/{id}")
-    public ResponseEntity<ByteArrayResource> printBill(@PathVariable String id) {
-        return invoicePrinterService.WriteInvoice(id.replace("\n", ""));
-    }
-
+    
     @GetMapping("/get-all-retail-payment")
     public ResponseDTO getAllRetailPayment() {
         return orderService.getAllRetailPayment();

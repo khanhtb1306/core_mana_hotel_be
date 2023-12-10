@@ -64,7 +64,7 @@ public class OrderDetailService {
     public void deleteOrderDetails(String orderId) {
         try {
             log.info("------- Delete OrderDetails Start -------");
-            List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_OrderId(orderId);
+            List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailByOrder_OrderId(orderId);
             if(orderDetails.isEmpty()) {
                 log.info("Can't Delete OrderDetails");
             }

@@ -64,7 +64,7 @@ public class OrderService {
                 order.setReservationDetail(null);
                 orderInfo.put("order", order);
 
-                List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
+                List<OrderDetail> orderDetailList = orderDetailRepository.findOrderDetailByOrder_OrderId(order.getOrderId());
                 List<Map<String, Object>> inforList = new ArrayList<>();
                 for(OrderDetail orderDetail: orderDetailList){
                     Map<String, Object> orderInfo1 = new HashMap<>();
@@ -98,7 +98,7 @@ public class OrderService {
                         order.setReservationDetail(null);
                         orderInfo.put("order", order);
 
-                        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
+                        List<OrderDetail> orderDetailList = orderDetailRepository.findOrderDetailByOrder_OrderId(order.getOrderId());
                         List<Map<String, Object>> listOrderDetail = new ArrayList<>();
                         for (OrderDetail orderDetail : orderDetailList) {
                             Map<String, Object> orderInfo1 = new HashMap<>();
@@ -244,7 +244,7 @@ public class OrderService {
         List<Map<String, Object>> result = new ArrayList<>();
         for(Object[] order : listOrders) {
             Order o = (Order) order[0];
-            List<OrderDetail> listOrderDetails = orderDetailRepository.findOrderDetailByOrder(o);
+            List<OrderDetail> listOrderDetails = orderDetailRepository.findOrderDetailByOrder_OrderId(o.getOrderId());
             Map<String, Object> orderInfo = new HashMap<>();
             orderInfo.put("order", o);
             orderInfo.put("listOrderDetails", listOrderDetails);

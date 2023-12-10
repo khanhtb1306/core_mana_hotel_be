@@ -63,7 +63,7 @@ class OrderDetailServiceTest {
         orderDetail2.setGoods(goods);
         orderDetail2.setQuantity(3L);
 
-        Mockito.when(orderDetailRepository.findByOrder_OrderId(orderId))
+        Mockito.when(orderDetailRepository.findOrderDetailByOrder_OrderId(orderId))
                 .thenReturn(Arrays.asList(orderDetail1, orderDetail2));
 
         Mockito.when(goodsRepository.findById(goodsId))
@@ -87,7 +87,7 @@ class OrderDetailServiceTest {
         orderDetail1.setQuantity(2L);
         orderDetail1.setGoods(goods);
 
-        Mockito.when(orderDetailRepository.findByOrder_OrderId(orderId))
+        Mockito.when(orderDetailRepository.findOrderDetailByOrder_OrderId(orderId))
                 .thenReturn(Arrays.asList(orderDetail1));
         Mockito.when(goodsRepository.findById(goodsId))
                 .thenReturn(Optional.empty());

@@ -140,7 +140,7 @@ public class ReservationService {
 
                 List<Map<String , Object>> listOrdersWithOrderDetails = new ArrayList<>();
                 for(Order order : listOrders) {
-                    List<OrderDetail> listOrderDetails = repository8.findOrderDetailByOrder(order);
+                    List<OrderDetail> listOrderDetails = repository8.findOrderDetailByOrder_OrderId(order.getOrderId());
 
                     Map<String, Object> listOrderDetailsInfo = new HashMap<>();
                     listOrderDetailsInfo.put("order", order);
