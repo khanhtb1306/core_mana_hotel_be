@@ -90,7 +90,7 @@ public class FundBookService {
             List<FundBook> fundBooks = repository.findByFundBookIdContaining(reservationId);
             String fundBookId = "TT" + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
 
-            String transactionCode = "";
+            String transactionCode = paidMethod;
             if (Status.TRANSFER.equals(paidMethod)) {
                 String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Timestamp(System.currentTimeMillis()));
                 transactionCode = "MGD" + timestamp + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
