@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface FundBookRepository extends JpaRepository<FundBook, String> {
     FundBook findTopByFundBookIdContainingOrderByFundBookIdDesc(String fundBookId);
-    List<FundBook> findTop10ByStaffOrderByTimeDesc(String staff);
+    List<FundBook> findTop10ByStaffAndStatusOrderByTimeDesc(String staff, String status);
 
     @Query(value = "SELECT SUM(value) FROM fund_book fb " +
             "WHERE fb.status = 'COMPLETE' AND fb.type IN ('EXPENSE', 'OTHER_EXPENSE') " +

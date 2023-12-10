@@ -80,7 +80,7 @@ public class FundBookService {
     }
 
     public ResponseDTO getFundBookByStaff(){
-        List<FundBook> fundBookList = repository.findTop10ByStaffOrderByTimeDesc(UserUtils.getUser().getStaffName());
+        List<FundBook> fundBookList = repository.findTop10ByStaffAndStatusOrderByTimeDesc(UserUtils.getUser().getStaffName(), Status.UNCONFIRMED);
         return ResponseUtils.success(fundBookList,"getFundBookByStaff_isSuccessfully");
     }
 
