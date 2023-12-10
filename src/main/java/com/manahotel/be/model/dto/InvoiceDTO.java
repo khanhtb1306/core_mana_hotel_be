@@ -15,4 +15,5 @@ public class InvoiceDTO {
     private String transactionCode;
     private String status;
     private Float priceOther;
+    private String customerId;
 }

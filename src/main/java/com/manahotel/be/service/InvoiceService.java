@@ -107,7 +107,7 @@ public class InvoiceService {
     public ResponseDTO createPurchaseInvoice(InvoiceDTO invoiceDTO, List<OrderDetailDTO> orderDetailDTOList){
         log.info("----- Create Purchase Invoice Start -----");
         try{
-            Customer customer = findCustomer(Const.CUSTOMER_ID);
+            Customer customer = findCustomer(invoiceDTO.getCustomerId() != null ? invoiceDTO.getCustomerId() : Const.CUSTOMER_ID);
 
             Invoice invoice = new Invoice();
             commonMapping(invoiceDTO, invoice);
