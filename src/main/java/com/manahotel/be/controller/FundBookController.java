@@ -35,7 +35,6 @@ public class FundBookController {
     public ResponseDTO createFundBookDeposit(String reservationId, Float money, String paidMethod) {
         return service.createFundBookDeposit(reservationId, money, paidMethod);
     }
-
     @GetMapping("/summary")
     public ResponseDTO getFundBookSummary(String time, boolean isMonth) {
         return service.getFundBookSummary(time, isMonth);
