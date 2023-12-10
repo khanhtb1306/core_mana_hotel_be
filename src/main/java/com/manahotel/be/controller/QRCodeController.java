@@ -3,6 +3,7 @@ package com.manahotel.be.controller;
 import com.manahotel.be.model.dto.BankAccountDTO;
 import com.manahotel.be.model.dto.ResponseDTO;
 import com.manahotel.be.model.dto.request.QRCodeRequest;
+import com.manahotel.be.model.dto.request.RequestQrCode;
 import com.manahotel.be.model.dto.response.QRCodeResponse;
 import com.manahotel.be.model.entity.BankAccount;
 import com.manahotel.be.service.BankAccountService;
@@ -37,10 +38,10 @@ public class QRCodeController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<QRCodeResponse> generateQRCode(String message, Long bankAccountId, Float amount, String template) {
-        BankAccount bankAccount = service.findBankAccount(bankAccountId);
+    public ResponseEntity<QRCodeResponse> generateQRCode(RequestQrCode requestQrCode) {
+        BankAccount bankAccount = service.findBankAccount(requestQrCode.getBankAccountId());
 
-        String transactionCode = message != null ? message : null;
+        String transactionCode = requestQrCode.getTemplate() != null ? requestQrCode.getMessage() : null;
 //        if(!retry){
 //            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 //            transactionCode =  message.isEmpty() ? null : "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + message;
@@ -49,10 +50,10 @@ public class QRCodeController {
         qrCodeRequest.setAccountNo(bankAccount.getBankAccountNumber());
         qrCodeRequest.setAccountName(bankAccount.getBankAccountName());
         qrCodeRequest.setAcqId(bankAccount.getBankId());
-        qrCodeRequest.setAmount(Math.round(amount));
+        qrCodeRequest.setAmount(Math.round(requestQrCode.getAmount()));
         qrCodeRequest.setAddInfo(transactionCode);
         qrCodeRequest.setFormat("text");
-        qrCodeRequest.setTemplate(template);
+        qrCodeRequest.setTemplate(requestQrCode.getTemplate());
 
         RestTemplate restTemplate = new RestTemplate();
 
