@@ -149,7 +149,7 @@ public class PolicyService {
                 } else if(dto.getStatus() != null && dto.getStatus() == Status.DEACTIVATE) {
                     pd.setStatus(Status.DEACTIVATE);
                 }else {
-                    pd.setStatus(pd.getStatus());
+                    pd.setStatus(dto.getStatus());
                 }
                 commonMapping(pd, dto);
                 policyDetailRepository.save(pd);
