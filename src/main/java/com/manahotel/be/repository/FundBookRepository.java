@@ -26,7 +26,7 @@ public interface FundBookRepository extends JpaRepository<FundBook, String> {
             "AND DATE(time) = DATE(?1)", nativeQuery = true)
     Float getAllIncomeByDay(Timestamp date);
 
-    List<FundBook> findByFundBookIdContainingOrderByTimeDesc(String keyword);
+    List<FundBook> findByFundBookIdContaining(String keyword);
 
     @Query(value = "SELECT COALESCE(SUM(value), 0) FROM fund_book fb " +
             "WHERE fb.status = 'COMPLETE' AND fb.type IN ('EXPENSE', 'OTHER_EXPENSE') " +

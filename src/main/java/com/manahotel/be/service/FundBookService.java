@@ -95,13 +95,13 @@ public class FundBookService {
     public ResponseDTO createFundBookDeposit(String reservationId, Float money, String paidMethod) {
         log.info("----- Start Fund Book Deposit -----");
         try {
-            List<FundBook> fundBooks = repository.findByFundBookIdContainingOrderByTimeDesc(reservationId);
+            List<FundBook> fundBooks = repository.findByFundBookIdContaining(reservationId);
             String fundBookId = "TT" + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
 
             String transactionCode = "";
             if (Status.TRANSFER.equals(paidMethod)) {
                 String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Timestamp(System.currentTimeMillis()));
-                transactionCode = "MGD" + timestamp +  reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
+                transactionCode = "MGD" + timestamp + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
             }
             writeFundBook(fundBookId, paidMethod, money, transactionCode);
 
@@ -112,6 +112,7 @@ public class FundBookService {
             return ResponseUtils.success("createFundBookDeposit_isFail");
         }
     }
+
 
 
     public void writeFundBook(String fundBookId, String paidMethod, Float value, String transactionCode){
@@ -178,19 +179,18 @@ public class FundBookService {
         log.info("----- Get Fund Book By Reservation Start -----");
         try {
             List<FundBook> combinedFundBookList = new ArrayList<>();
-            List<FundBook> fundBookList = repository.findByFundBookIdContainingOrderByTimeDesc(reservationId);
+            List<FundBook> fundBookList = repository.findByFundBookIdContaining(reservationId);
             combinedFundBookList.addAll(fundBookList);
             List<ReservationDetail> reservationDetailList = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
-            List<FundBook> fundBookList2 = new ArrayList<>();
             for (ReservationDetail rd : reservationDetailList) {
                 InvoiceReservationDetail invoiceReservationDetailList = invoiceReservationDetailRepository.findInvoiceReservationDetailByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
                 if(invoiceReservationDetailList != null){
-                    fundBookList2 = repository.findByFundBookIdContainingOrderByTimeDesc(invoiceReservationDetailList.getInvoice().getInvoiceId());
+                    List<FundBook> fundBookList2 = repository.findByFundBookIdContaining(invoiceReservationDetailList.getInvoice().getInvoiceId());
                     combinedFundBookList.addAll(fundBookList2);
                 }
                 List<Order> orderList = orderRepository.findOrderByReservationDetailAndStatus(rd, Status.PAID);
                 for (Order order : orderList) {
-                    List<FundBook> fundBookList3 = repository.findByFundBookIdContainingOrderByTimeDesc(order.getOrderId());
+                    List<FundBook> fundBookList3 = repository.findByFundBookIdContaining(order.getOrderId());
                     combinedFundBookList.addAll(fundBookList3);
                 }
             }
@@ -203,57 +203,6 @@ public class FundBookService {
             return ResponseUtils.success("getFundBookByReservation_isFail");
         }
     }
-
-
-//    public void calculatePrePaid(String reservationId, float totalInvoice, boolean isCheck){
-//        List<FundBook> fundBookListByReservation = repository.findByFundBookIdContainingOrderByTimeDesc(reservationId);
-//
-//        float totalPrePaid = 0;
-//        for(FundBook fb: fundBookListByReservation){
-//                totalPrePaid += fb.getValue();
-//        }
-//        for(FundBook fb: fundBookListByReservation){
-//            if(totalInvoice < totalPrePaid){
-//                fb.setStatus(Status.COMPLETE);
-//                totalPrePaid = totalPrePaid - totalInvoice;
-//            }else {
-//                fb.setStatus(Status.PREPAID);
-//                break;
-//            }
-//        }
-//
-//        if(isCheck){
-//        List<ReservationDetail> reservationDetailList = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
-//        List<FundBook> fundBookListInvoice = new ArrayList<>();
-//        for (ReservationDetail rd : reservationDetailList) {
-//            InvoiceReservationDetail invoiceReservationDetailList = invoiceReservationDetailRepository.findInvoiceReservationDetailByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
-//            if(invoiceReservationDetailList != null){
-//                fundBookListInvoice = repository.findByFundBookIdContainingOrderByTimeDesc(invoiceReservationDetailList.getInvoice().getInvoiceId());
-//            }
-//        }
-//            float totalForInvoice = 0;
-//            float totalPrePaid2 = 0;
-//            float totalPrePaidByCONFIRMED = 0;
-//
-//            for(FundBook fb: fundBookListInvoice){
-//                totalForInvoice += fb.getValue();
-//            }
-//            for (FundBook fb: fundBookListByReservation){
-//                if(!fb.getStatus().equals(Status.COMPLETE)){
-//                    totalPrePaid2 += fb.getValue();
-//                }
-//                if(fb.getStatus().equals(Status.CONFIRMED)){
-//                    totalPrePaidByCONFIRMED += fb.getValue();
-//                }
-//            }
-//            float result = 0;
-//            if(totalPrePaid2 > totalForInvoice){
-//                result = totalPrePaid2 - totalForInvoice - totalPrePaidByCONFIRMED;
-//            }
-//        }
-//
-//    }
-
 
     public ResponseDTO getFundBookSummary(String time, boolean isMonth) {
         try {
