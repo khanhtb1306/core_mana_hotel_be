@@ -121,6 +121,7 @@ public class FundBookService {
                 fundBook.setFundBookId(fundBookId.contains("TT") ? fundBookId : ("TT" + fundBookId));
                 fundBook.setTime(new Timestamp(System.currentTimeMillis()));
                 fundBook.setType(Status.INCOME);
+                fundBook.setPaidMethod(paidMethod);
                 fundBook.setValue(value);
                 fundBook.setPayerReceiver("Khách Hàng");
                 fundBook.setStaff(UserUtils.getUser().getStaffName());
