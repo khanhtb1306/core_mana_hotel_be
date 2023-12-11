@@ -51,7 +51,6 @@ public class Status {
 
     // Payment Method
     public static final String CASH = "CASH";
-//    public static final String CARD = "CARD";
     public static final String TRANSFER = "TRANSFER";
 
     // Income and Expense
@@ -63,4 +62,6 @@ public class Status {
     // Status FundBook and Invoice
     public static final String COMPLETE = "COMPLETE";
     public static final String ABORT = "ABORT";
+
+    public static final String PREPAID = "PREPAID";
 }
