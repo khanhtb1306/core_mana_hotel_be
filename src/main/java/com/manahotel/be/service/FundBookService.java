@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +27,9 @@ public class FundBookService {
 
     @Autowired
     private FundBookRepository repository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
@@ -55,16 +59,20 @@ public class FundBookService {
 
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId(nextId);
-
-            Timestamp time = Optional.ofNullable(fundBookDTO.getTime())
-                    .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
-            fundBook.setTime(time);
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date parsedDate = dateFormat.parse(fundBookDTO.getTime());
+                Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
+                fundBook.setTime(dobTimestamp);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
 
             fundBook.setType(fundBookDTO.getType());
-            fundBook.setPaidMethod(Status.CASH);
+            fundBook.setPaidMethod(fundBookDTO.getPaidMethod());
             fundBook.setValue(fundBookDTO.getValue());
             fundBook.setPayerReceiver(fundBookDTO.getPayerReceiver());
-            fundBook.setStaff(fundBookDTO.getStaff());
+            fundBook.setStaff(UserUtils.getUser().getStaffName());
             fundBook.setNote(fundBookDTO.getNote());
             fundBook.setStatus(Status.COMPLETE);
 
@@ -142,15 +150,20 @@ public class FundBookService {
             log.info("----- Start update fund book -----");
             FundBook fundBook = findFundBook(id);
 
-            Timestamp time = Optional.ofNullable(fundBookDTO.getTime() != null ? fundBookDTO.getTime() : fundBook.getTime())
-                    .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
-            fundBook.setTime(time);
-
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date parsedDate = dateFormat.parse(fundBookDTO.getTime());
+                Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
+                fundBook.setTime(dobTimestamp);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            fundBook.setValue(fundBookDTO.getValue() != null ?fundBookDTO.getValue() : fundBook.getValue());
             fundBook.setStaff(fundBookDTO.getStaff() != null ? fundBookDTO.getStaff() : fundBook.getStaff());
             fundBook.setPaidMethod(fundBookDTO.getPaidMethod() != null ? fundBookDTO.getPaidMethod() : fundBook.getPaidMethod());
             fundBook.setNote(fundBookDTO.getNote() != null ? fundBookDTO.getNote() : fundBook.getNote());
             fundBook.setStatus(fundBookDTO.getStatus() != null ? fundBookDTO.getStatus() : fundBook.getStatus());
-
+            fundBook.setPayerReceiver(fundBookDTO.getPayerReceiver() != null ? fundBookDTO.getPayerReceiver() : fundBook.getPayerReceiver());
             repository.save(fundBook);
             log.info("----- End create fund book -----");
 
@@ -221,5 +234,20 @@ public class FundBookService {
     private FundBook findFundBook(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Fund Book not found with id " + id));
+    }
+    public ResponseDTO getFundBookById(String fundBookId) {
+        log.info("----- Get FundBook Start------");
+        try {
+            FundBook fundBook = findFundBook(fundBookId);
+            log.info("----- Get FundBook End ------");
+            return ResponseUtils.success(fundBook, "Lấy thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Lấy thất bại");
+        }
+    }
+    private Invoice findInvoice(String id) {
+        return invoiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found with id " + id));
     }
 }

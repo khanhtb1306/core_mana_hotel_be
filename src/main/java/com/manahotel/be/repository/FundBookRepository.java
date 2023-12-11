@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface FundBookRepository extends JpaRepository<FundBook, String> {
     FundBook findTopByFundBookIdContainingOrderByFundBookIdDesc(String fundBookId);
+
     List<FundBook> findTop10ByStaffAndStatusOrderByTimeDesc(String staff, String status);
 
     FundBook findFundBookByFundBookId(String fundBookId);

@@ -27,6 +27,10 @@ public class FundBookController {
     public ResponseDTO updateFundBook(@PathVariable String id, FundBookDTO fundBookDTO) {
         return service.updateFundBook(id, fundBookDTO);
     }
+    @GetMapping("/{id}")
+    public ResponseDTO getFundBookById(@PathVariable String id) {
+        return service.getFundBookById(id);
+    }
     @GetMapping("/by_staff_name")
     public ResponseDTO getFundBookByStaff() {
         return service.getFundBookByStaff();
