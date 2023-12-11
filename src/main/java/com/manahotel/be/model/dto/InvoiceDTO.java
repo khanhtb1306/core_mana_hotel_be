@@ -7,7 +7,7 @@ public class InvoiceDTO {
     private String invoiceId;
     private Float total;
     private Float discount;
-    private Float PrePail;
+    private Float prePail;
     private String note;
     private String paidMethod;
     private String status;
