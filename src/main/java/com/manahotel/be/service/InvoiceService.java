@@ -117,7 +117,7 @@ public class InvoiceService {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             transactionCode  = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + invoice.getInvoiceId();
         }
-        fundBookService.writeFundBook(invoice.getInvoiceId(), paidMethod, (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()), transactionCode);
+        fundBookService.writeFundBook(invoice.getInvoiceId(), paidMethod, (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()) - (invoiceDTO.getPrePail() != null ? invoiceDTO.getPrePail() : 0), transactionCode);
         overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
     }
 
