@@ -83,6 +83,8 @@ public class ReservationDetailService {
             Room oldRoom = reservationDetail.getRoom();
             Room newRoom = (reservationDetailDTO.getRoomId() != null) ? findRoom(reservationDetailDTO.getRoomId()) : reservationDetail.getRoom();
 
+            reservationDetail.setChangeClassRoom(reservationDetailDTO.getChangeClassRoom() != null ? reservationDetailDTO.getChangeClassRoom() : reservationDetail.getChangeClassRoom());
+
             if (reservationDetail.getStatus().equals(Status.CHECK_IN)) {
                 if (newRoom.getBookingStatus().equals(Status.ROOM_USING) && !repository.existInReservationDetail(reservationDetail)) {
                     throw new RoomInUseException("Phòng " + newRoom.getRoomName() + " đang được sử dụng, không thể nhận phòng");

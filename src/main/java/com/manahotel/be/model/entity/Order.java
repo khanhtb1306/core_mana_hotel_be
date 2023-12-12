@@ -38,8 +38,4 @@ public class Order {
 
     @Column(name = "created_date")
     private Instant createdDate;
-
-    @Column(name = "transaction_code")
-    private String transactionCode;
-
 }

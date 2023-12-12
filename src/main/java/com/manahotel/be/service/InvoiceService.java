@@ -108,17 +108,15 @@ public class InvoiceService {
     }
 
     private void writeLogFundBookAndRecentActivity(InvoiceDTO invoiceDTO, Invoice invoice) {
-        String transactionCode = "";
-        String paidMethod = "";
-        if(invoiceDTO.getPaidMethod().equals(Status.CASH)){
-            paidMethod = Status.CASH;
-        }else {
-            paidMethod = Status.TRANSFER;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            transactionCode  = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + invoice.getInvoiceId();
-        }
-        fundBookService.writeFundBook(invoice.getInvoiceId(), paidMethod, (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()) - (invoiceDTO.getPrePail() != null ? invoiceDTO.getPrePail() : 0), transactionCode);
-        overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(), new Timestamp(System.currentTimeMillis()));
+        fundBookService.writeFundBook(
+                invoice.getInvoiceId(),
+                invoiceDTO.getPaidMethod(),
+                (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()) - (invoiceDTO.getPrePail() != null ? invoiceDTO.getPrePail() : 0),
+                invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : "");
+        overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(),
+                "tạo hóa đơn",
+                invoice.getTotal() + invoice.getPriceOther() - invoice.getDiscount(),
+                new Timestamp(System.currentTimeMillis()));
     }
 
     private void commonMapping(InvoiceDTO invoiceDTO, Invoice invoice) {

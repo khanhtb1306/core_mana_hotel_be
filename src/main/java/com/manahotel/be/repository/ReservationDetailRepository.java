@@ -69,11 +69,4 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
             "WHERE rd.status = 'CHECK_IN' AND " +
             " rd = ?1")
     boolean existInReservationDetail(ReservationDetail reservationDetail);
-
-    @Query("SELECT rd FROM ReservationDetail rd WHERE rd.status IN ('BOOKING', 'CHECK_IN') " +
-            "AND rd.reservationDetailStatus = 1 " +
-            "AND ((rd.status = 'BOOKING' AND rd.checkInEstimate <= ?1 AND rd.checkOutEstimate >= ?1) " +
-            "OR (rd.status = 'CHECK_IN' AND rd.checkInActual <= ?1 AND rd.checkOutEstimate >= ?1)) " +
-            "ORDER BY rd.status DESC")
-    List<ReservationDetail> getReservationDetailByBookingAndCheckIn(Timestamp date);
 }
