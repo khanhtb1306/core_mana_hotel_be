@@ -92,18 +92,12 @@ public class FundBookService {
         return ResponseUtils.success(fundBookList,"getFundBookByStaff_isSuccessfully");
     }
 
-    public ResponseDTO createFundBookDeposit(String reservationId, Float money, String paidMethod) {
+    public ResponseDTO createFundBookDeposit(String reservationId, Float money, String paidMethod, String transactionCode) {
         log.info("----- Start Fund Book Deposit -----");
         try {
             List<FundBook> fundBooks = repository.findByFundBookIdContaining(reservationId);
             String fundBookId = "TT" + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
-
-            String transactionCode = "";
-            if (Status.TRANSFER.equals(paidMethod)) {
-                String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Timestamp(System.currentTimeMillis()));
-                transactionCode = "MGD" + timestamp + reservationId + "-" + (fundBooks == null ? 1 : fundBooks.size() + 1);
-            }
-            writeFundBook(fundBookId, paidMethod, money, transactionCode);
+            writeFundBook(fundBookId, paidMethod, money, transactionCode != null ? transactionCode : "");
 
             log.info("----- End Fund Book Deposit -----");
             return ResponseUtils.success("createFundBookDeposit_isSuccess");
