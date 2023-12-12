@@ -134,7 +134,7 @@ public class FundBookService {
                 fundBook.setPayerReceiver("Khách Hàng");
                 fundBook.setStaff(UserUtils.getUser().getStaffName());
                 fundBook.setNote("Thu tiền khách trả");
-                fundBook.setStatus(paidMethod.equals(Status.CASH) ? Status.COMPLETE : Status.UNCONFIRMED);
+                fundBook.setStatus(Status.COMPLETE);
                 fundBook.setTransactionCode(transactionCode);
             }
             repository.save(fundBook);
