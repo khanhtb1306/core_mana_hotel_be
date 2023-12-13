@@ -125,10 +125,12 @@ public class InvoiceService {
     }
 
     private void writeLogFundBookAndRecentActivity(InvoiceDTO invoiceDTO, Invoice invoice) {
+        Float total = invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther();
+        Float deposit = invoiceDTO.getPrePail() != null ? invoiceDTO.getPrePail() : 0;
         fundBookService.writeFundBook(
                 invoice.getInvoiceId(),
                 invoiceDTO.getPaidMethod(),
-                (invoice.getTotal() - invoice.getDiscount() + invoice.getPriceOther()) - (invoiceDTO.getPrePail() != null ? invoiceDTO.getPrePail() : 0),
+                total >= deposit ? total - deposit: - total,
                 invoiceDTO.getTransactionCode() != null ? invoiceDTO.getTransactionCode() : "");
         overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(),
                 "tạo hóa đơn",
