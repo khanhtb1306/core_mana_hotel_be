@@ -14,4 +14,5 @@ public class InvoiceDTO {
     private Float priceOther;
     private String customerId;
     private String transactionCode;
+    private Long usePoint;
 }

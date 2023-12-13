@@ -54,7 +54,9 @@ public class InvoiceService {
         try{
             Reservation reservation = findReservation(reservationDetailDTO.get(0).getReservationId());
             Customer customer = findCustomer(reservation.getCustomer().getCustomerId());
-
+            if(invoiceDTO.getUsePoint() != null && invoiceDTO.getUsePoint() > 0 && customer.getPoint() > 0){
+                customer.setPoint(customer.getPoint() - invoiceDTO.getUsePoint());
+            }
             Invoice invoice = new Invoice();
             commonMapping(invoiceDTO, invoice);
 
