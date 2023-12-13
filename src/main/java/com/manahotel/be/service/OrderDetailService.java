@@ -1,6 +1,6 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.model.dto.OrderDetailDTO;
+import com.manahotel.be.model.dto.response.OrderDetailDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
 import lombok.AllArgsConstructor;

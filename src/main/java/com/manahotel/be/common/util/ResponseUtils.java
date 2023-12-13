@@ -1,6 +1,6 @@
 package com.manahotel.be.common.util;
 
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 
 public class ResponseUtils {
 

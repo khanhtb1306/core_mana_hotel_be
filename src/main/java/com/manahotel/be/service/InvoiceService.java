@@ -7,7 +7,10 @@ import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.*;
+import com.manahotel.be.model.dto.response.InvoiceDTO;
+import com.manahotel.be.model.dto.response.OrderDetailDTO;
+import com.manahotel.be.model.dto.response.ReservationDetailDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -200,6 +202,7 @@ public class InvoiceService {
                     .distinct()
                     .map(invoice -> findInvoice(invoice.getInvoiceId()))
                     .collect(Collectors.toList());
+                    Collections.reverse(invoices);
             log.info("----- Get Invoice By Reservation End -----");
             return ResponseUtils.success(invoices, "Lấy hóa đơn theo " + reservation_Id + " thành công");
         } catch (Exception e) {

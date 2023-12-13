@@ -1,6 +1,6 @@
 package com.manahotel.be.model.dto.request;
 
-import com.manahotel.be.model.dto.ReservationDetailCustomerDTO;
+import com.manahotel.be.model.dto.response.ReservationDetailCustomerDTO;
 import lombok.Data;
 
 @Data

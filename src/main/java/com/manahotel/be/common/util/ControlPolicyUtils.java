@@ -1,6 +1,6 @@
 package com.manahotel.be.common.util;
 
-import com.manahotel.be.model.dto.CustomerDTO;
+import com.manahotel.be.model.dto.response.CustomerDTO;
 import com.manahotel.be.model.entity.PolicyDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

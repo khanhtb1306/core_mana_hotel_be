@@ -1,19 +1,16 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.model.dto.PriceListDTO;
-import com.manahotel.be.model.dto.PriceListDetailDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.PriceListDTO;
+import com.manahotel.be.model.dto.response.PriceListDetailDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.PriceList;
 import com.manahotel.be.model.entity.PriceListDetail;
 import com.manahotel.be.repository.PriceListDetailRepository;
 import com.manahotel.be.repository.PriceListRepository;
 import com.manahotel.be.repository.RoomClassRepository;
-import com.manahotel.be.service.PriceListService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;

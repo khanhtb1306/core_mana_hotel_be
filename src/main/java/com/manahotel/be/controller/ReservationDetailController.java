@@ -1,10 +1,9 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.ReservationDetailDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ReservationDetailDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.dto.request.ChangeRoomRequest;
 import com.manahotel.be.model.dto.request.ReservationDetailCustomerRequest;
-import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.service.ReservationDetailCustomerService;
 import com.manahotel.be.service.ReservationDetailService;
 import org.springframework.beans.factory.annotation.Autowired;

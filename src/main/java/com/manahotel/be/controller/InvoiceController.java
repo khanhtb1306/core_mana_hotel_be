@@ -1,7 +1,6 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.InvoiceDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.dto.request.InvoicePurchaseRequest;
 import com.manahotel.be.model.dto.request.InvoiceRequest;
 import com.manahotel.be.service.InvoiceService;

@@ -1,7 +1,7 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.model.dto.RoomCategoryDTO;
+import com.manahotel.be.model.dto.response.RoomCategoryDTO;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
@@ -14,10 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

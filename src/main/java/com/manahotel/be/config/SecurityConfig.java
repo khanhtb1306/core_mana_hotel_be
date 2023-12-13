@@ -1,6 +1,6 @@
 package com.manahotel.be.config;
 
-import com.manahotel.be.security.JwtAuthenticationFilter;
+import com.manahotel.be.config.security.JwtAuthenticationFilter;
 import com.manahotel.be.service.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

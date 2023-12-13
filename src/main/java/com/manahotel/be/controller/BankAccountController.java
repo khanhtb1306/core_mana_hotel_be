@@ -1,24 +1,13 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.BankAccountDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.dto.request.QRCodeRequest;
-import com.manahotel.be.model.dto.request.RequestQrCode;
-import com.manahotel.be.model.dto.response.QRCodeResponse;
-import com.manahotel.be.model.entity.BankAccount;
+import com.manahotel.be.model.dto.response.BankAccountDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.service.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/qr-code")

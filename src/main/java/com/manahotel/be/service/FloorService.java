@@ -2,7 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.FloorRepository;
 import com.manahotel.be.repository.ReservationDetailCustomerRepository;

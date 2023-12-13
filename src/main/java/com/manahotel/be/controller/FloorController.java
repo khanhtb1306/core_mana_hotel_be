@@ -1,7 +1,7 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.FloorDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.FloorDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.service.FloorService;
 import com.manahotel.be.service.RoomService;

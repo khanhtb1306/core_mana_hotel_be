@@ -1,8 +1,8 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.model.dto.FloorDTO;
-import com.manahotel.be.model.dto.RoomDTO;
+import com.manahotel.be.model.dto.response.FloorDTO;
+import com.manahotel.be.model.dto.response.RoomDTO;
 import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;

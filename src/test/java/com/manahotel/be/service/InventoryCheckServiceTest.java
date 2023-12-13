@@ -1,7 +1,7 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.model.dto.InventoryCheckDTO;
-import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
+import com.manahotel.be.model.dto.response.InventoryCheckDTO;
+import com.manahotel.be.model.dto.response.InventoryCheckDetailDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.model.entity.InventoryCheck;

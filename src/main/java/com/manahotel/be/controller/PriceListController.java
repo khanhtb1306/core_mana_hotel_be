@@ -1,16 +1,12 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.common.util.ResponseUtils;
-import com.manahotel.be.model.dto.PriceListDTO;
-import com.manahotel.be.model.dto.PriceListDetailDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.dto.request.PriceListRequest;
 import com.manahotel.be.service.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

@@ -1,13 +1,12 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.ReservationDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ReservationDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.manahotel.be.model.dto.request;
 
-import com.manahotel.be.model.dto.ImportGoodsDTO;
-import com.manahotel.be.model.dto.ImportGoodsDetailDTO;
+import com.manahotel.be.model.dto.response.ImportGoodsDTO;
+import com.manahotel.be.model.dto.response.ImportGoodsDetailDTO;
 import lombok.Data;
 
 import java.util.List;

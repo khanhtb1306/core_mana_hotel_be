@@ -1,13 +1,8 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.Status;
-import com.manahotel.be.model.dto.CustomerDTO;
-import com.manahotel.be.model.dto.FloorDTO;
+import com.manahotel.be.model.dto.response.CustomerDTO;
 import com.manahotel.be.model.entity.Customer;
-import com.manahotel.be.model.entity.Floor;
 import com.manahotel.be.repository.CustomerRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +11,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.repository.Repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

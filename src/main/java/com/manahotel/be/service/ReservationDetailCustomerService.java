@@ -2,8 +2,8 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.ReservationDetailCustomerDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.ReservationDetailCustomerDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.Reservation;
 import com.manahotel.be.model.entity.ReservationDetail;

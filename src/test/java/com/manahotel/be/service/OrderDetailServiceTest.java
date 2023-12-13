@@ -1,21 +1,14 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.model.dto.OrderDetailDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.Goods;
-import com.manahotel.be.model.entity.Order;
 import com.manahotel.be.model.entity.OrderDetail;
 import com.manahotel.be.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Arrays;

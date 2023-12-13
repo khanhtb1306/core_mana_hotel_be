@@ -1,13 +1,12 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.config.security.AuthenticationResponse;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.Staff;
-import com.manahotel.be.security.*;
-import com.manahotel.be.security.request.PasswordReset;
-import com.manahotel.be.security.request.PasswordResetRequest;
-import com.manahotel.be.security.RegistrationCompleteEventListener;
-import com.manahotel.be.security.request.AuthenticationRequest;
-import com.manahotel.be.security.request.RegisterRequest;
+import com.manahotel.be.model.dto.request.PasswordReset;
+import com.manahotel.be.model.dto.request.PasswordResetRequest;
+import com.manahotel.be.model.dto.request.AuthenticationRequest;
+import com.manahotel.be.model.dto.request.RegisterRequest;
 import com.manahotel.be.service.AuthenticationService;
 import com.manahotel.be.service.StaffService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;

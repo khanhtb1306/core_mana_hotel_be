@@ -1,19 +1,16 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.util.ResponseUtils;
-import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.config.security.AuthenticationResponse;
+import com.manahotel.be.config.security.RegistrationCompleteEventListener;
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.StaffRepository;
-import com.manahotel.be.security.*;
-import com.manahotel.be.security.request.AuthenticationRequest;
-import com.manahotel.be.security.request.PasswordResetRequest;
-import com.manahotel.be.security.request.RegisterRequest;
+import com.manahotel.be.model.dto.request.AuthenticationRequest;
+import com.manahotel.be.model.dto.request.PasswordResetRequest;
+import com.manahotel.be.model.dto.request.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 
 import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
-import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
 
 @Slf4j
 @Service

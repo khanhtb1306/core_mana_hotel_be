@@ -1,7 +1,7 @@
 package com.manahotel.be.model.dto.request;
 
-import com.manahotel.be.model.dto.InventoryCheckDTO;
-import com.manahotel.be.model.dto.InventoryCheckDetailDTO;
+import com.manahotel.be.model.dto.response.InventoryCheckDTO;
+import com.manahotel.be.model.dto.response.InventoryCheckDetailDTO;
 import lombok.Data;
 
 import java.util.List;

@@ -5,8 +5,8 @@ import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.FundBookDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.FundBookDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.dto.response.FundBookResponse;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
@@ -181,6 +181,31 @@ public class FundBookService {
                 }
             }
             Collections.sort(combinedFundBookList, Comparator.comparing(FundBook::getTime).reversed());
+
+//            boolean checkAdd = true;
+//            boolean checkCount = false;
+//            float total = 0;
+//            float tạmứng = 0;
+//            List<Object> listtamung = new ArrayList<>();
+//            for (FundBook list: fundBookList){
+//
+//                total += list.getValue();
+//                if(list.getValue() >= 0 && checkAdd){
+//                    listtamung.add(list);// chuển thành tạm ứng
+//                }
+//
+//                if(list.getValue() < 0){
+//                    checkAdd = false;
+//                    total += list.getValue();
+//                    listtamung.add(list);// chuển thành tạm ứng
+//                }
+//                if(list.getValue() >= 0 && checkAdd){
+//                    listtamung.add(list);// chuyển thành  tạm ứng
+//                    tạmứng = total;
+//                    total = 0;
+//                    checkAdd = true;
+//                }
+//            }
             log.error("getFundBookByReservation_Successfully");
             log.info("----- Get Fund Book By Reservation End -----");
             return ResponseUtils.success(combinedFundBookList, "getFundBookByReservation_successfully");

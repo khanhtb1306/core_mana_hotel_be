@@ -1,23 +1,17 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.dto.StaffDTO;
-import com.manahotel.be.model.entity.CustomerGroup;
+import com.manahotel.be.model.dto.response.ResponseDTO;
+import com.manahotel.be.model.dto.response.StaffDTO;
 import com.manahotel.be.model.entity.Department;
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.DepartmentRepository;
 import com.manahotel.be.repository.StaffRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +20,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
 
 import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
-import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
 
 @Slf4j
 @RequiredArgsConstructor

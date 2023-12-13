@@ -1,8 +1,8 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.CustomerDTO;
-import com.manahotel.be.model.dto.ReservationDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.CustomerDTO;
+import com.manahotel.be.model.dto.response.ReservationDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.service.ControlPolicyService;
 import com.manahotel.be.service.FundBookService;
 import com.manahotel.be.service.ReservationService;

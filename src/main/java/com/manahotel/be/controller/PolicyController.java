@@ -1,8 +1,7 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.PolicyDetailDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.dto.TimeUseDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
+import com.manahotel.be.model.dto.response.TimeUseDTO;
 import com.manahotel.be.model.dto.request.PolicyDetailRequest;
 import com.manahotel.be.model.dto.request.RequestPolicyDetailOnlyOne;
 import com.manahotel.be.service.PolicyService;

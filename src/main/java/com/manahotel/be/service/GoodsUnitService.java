@@ -1,7 +1,7 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.GoodsUnitDTO;
+import com.manahotel.be.model.dto.response.GoodsUnitDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.repository.GoodsRepository;

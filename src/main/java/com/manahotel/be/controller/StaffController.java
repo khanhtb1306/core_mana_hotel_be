@@ -1,10 +1,8 @@
 package com.manahotel.be.controller;
 
-import com.manahotel.be.model.dto.DepartmentDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.dto.StaffDTO;
-import com.manahotel.be.model.entity.Department;
-import com.manahotel.be.service.AuthenticationService;
+import com.manahotel.be.model.dto.response.DepartmentDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
+import com.manahotel.be.model.dto.response.StaffDTO;
 import com.manahotel.be.service.DepartmentService;
 import com.manahotel.be.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;

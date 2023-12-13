@@ -1,15 +1,11 @@
 package com.manahotel.be.service;
 
-import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.DepartmentDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
-import com.manahotel.be.model.dto.StaffDTO;
-import com.manahotel.be.model.entity.CustomerGroup;
+import com.manahotel.be.model.dto.response.DepartmentDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.Department;
-import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.DepartmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,8 +2,8 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
-import com.manahotel.be.model.dto.BankAccountDTO;
-import com.manahotel.be.model.dto.ResponseDTO;
+import com.manahotel.be.model.dto.response.BankAccountDTO;
+import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.BankAccount;
 import com.manahotel.be.repository.BankAccountRepository;
 import lombok.extern.slf4j.Slf4j;
