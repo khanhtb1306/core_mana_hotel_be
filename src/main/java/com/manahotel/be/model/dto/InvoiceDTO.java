@@ -15,4 +15,5 @@ public class InvoiceDTO {
     private String customerId;
     private String transactionCode;
     private Long usePoint;
+    private Float totalReservationLate;
 }

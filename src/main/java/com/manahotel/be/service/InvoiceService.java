@@ -1,6 +1,7 @@
 package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Const;
+import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
@@ -49,13 +50,27 @@ public class InvoiceService {
     @Autowired
     private FundBookService fundBookService;
 
+    @Autowired
+    private PolicyRepository policyRepository;
+
+    @Autowired
+    private PolicyDetailRepository policyDetailRepository;
+
     public ResponseDTO createReservationInvoice(List<ReservationDetailDTO> reservationDetailDTO, InvoiceDTO invoiceDTO){
         log.info("----- Create Reservation Invoice Start -----");
         try{
             Reservation reservation = findReservation(reservationDetailDTO.get(0).getReservationId());
             Customer customer = findCustomer(reservation.getCustomer().getCustomerId());
+
             if(invoiceDTO.getUsePoint() != null && invoiceDTO.getUsePoint() > 0 && customer.getPoint() > 0){
                 customer.setPoint(customer.getPoint() - invoiceDTO.getUsePoint());
+            }
+            if(invoiceDTO.getTotalReservationLate() != null) {
+                List<PolicyDetail> policyDetail = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(
+                        policyRepository.getPolicyByPolicyName(PolicyCont.SETUP_POINT_SYSTEM).getPolicyId());
+                if (policyDetail.get(0).getLimitValue() >= invoiceDTO.getTotalReservationLate()) {
+                    customer.setPoint(customer.getPoint() + invoiceDTO.getTotalReservationLate() % policyDetail.get(0).getLimitValue());
+                }
             }
             Invoice invoice = new Invoice();
             commonMapping(invoiceDTO, invoice);
