@@ -180,7 +180,7 @@ public class FundBookService {
                     combinedFundBookList.addAll(fundBookList3);
                 }
             }
-            Collections.sort(combinedFundBookList, Comparator.comparing(FundBook::getTime));
+            Collections.sort(combinedFundBookList, Comparator.comparing(FundBook::getTime).reversed());
             log.error("getFundBookByReservation_Successfully");
             log.info("----- Get Fund Book By Reservation End -----");
             return ResponseUtils.success(combinedFundBookList, "getFundBookByReservation_successfully");
