@@ -1,4 +1,4 @@
-package com.manahotel.be.config;
+package com.manahotel.be.config.security.jwtFilter;
 
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.StaffRepository;

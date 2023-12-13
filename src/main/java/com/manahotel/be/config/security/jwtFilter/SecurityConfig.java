@@ -1,4 +1,4 @@
-package com.manahotel.be.config;
+package com.manahotel.be.config.security.jwtFilter;
 
 import com.manahotel.be.config.security.JwtAuthenticationFilter;
 import com.manahotel.be.service.LogoutService;
