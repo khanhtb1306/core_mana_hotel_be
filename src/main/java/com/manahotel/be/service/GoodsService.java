@@ -3,6 +3,7 @@ package com.manahotel.be.service;
 import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
+import com.manahotel.be.common.util.UserUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.response.GoodsDTO;
 import com.manahotel.be.model.dto.response.GoodsUnitDTO;
@@ -84,6 +85,8 @@ public class GoodsService {
     public ResponseEntity<Map<String, String>> createGoods(GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Add Goods Start -----");
+            Long userId = UserUtils.getUser().getStaffId();
+
             Goods latestGoods = goodsRepository.findTopByOrderByGoodsIdDesc();
             String latestId = (latestGoods == null) ? null : latestGoods.getGoodsId();
             String nextId = IdGenerator.generateId(latestId, "SP");
@@ -95,6 +98,7 @@ public class GoodsService {
             commonMapping(goods, dto);
 
             goods.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            goods.setCreatedById(userId);
 
             goodsRepository.save(goods);
             log.info("----- Add Goods End -----");
@@ -126,12 +130,15 @@ public class GoodsService {
     public ResponseEntity<String> updateGoods(String id, GoodsDTO dto, GoodsUnitDTO dto2) {
         try {
             log.info("----- Update Goods Start -----");
+            Long userId = UserUtils.getUser().getStaffId();
+
             Goods goods = findGoodsById(id);
 
             commonMapping(goods, dto);
 
             goods.setStatus(dto.getStatus() != null ? dto.getStatus() : goods.getStatus());
             goods.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+            goods.setUpdatedById(userId);
 
             goodsRepository.save(goods);
             log.info("----- Update Goods End -----");

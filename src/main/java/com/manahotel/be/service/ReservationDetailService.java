@@ -170,6 +170,7 @@ public class ReservationDetailService {
 
         repository3.save(room);
 
+        reservationDetail.setChangeRoomClass(reservationDetailDTO.getChangeRoomClass() != null ? reservationDetailDTO.getChangeRoomClass() : reservationDetail.getChangeRoomClass());
         reservationDetail.setPrice((reservationDetailDTO.getPrice() != null) ? reservationDetailDTO.getPrice() : reservationDetail.getPrice());
 
         repository.save(reservationDetail);

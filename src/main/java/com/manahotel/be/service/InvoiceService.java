@@ -58,6 +58,9 @@ public class InvoiceService {
     @Autowired
     private PolicyDetailRepository policyDetailRepository;
 
+    @Autowired
+    private ControlPolicyRepository controlPolicyRepository;
+
     public ResponseDTO createReservationInvoice(List<ReservationDetailDTO> reservationDetailDTO, InvoiceDTO invoiceDTO){
         log.info("----- Create Reservation Invoice Start -----");
         try{
@@ -174,7 +177,11 @@ public class InvoiceService {
                 //lấy order
                 Object order = orderService.getOrderByReservationDetailId(reservationDetail.getReservationDetailId()).getResult();
 
+                //lấy Control policy
+                List<ControlPolicy> controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(ird.getInvoiceReservationDetailId());
+
                 reservationDetailWithOrder.put("reservationDetail", reservationDetail);
+                reservationDetailWithOrder.put("ListControlPolicy", controlPolicy);
                 reservationDetailWithOrder.put("ListOrder", order);
 
                 reservationDetails.add(reservationDetailWithOrder);
@@ -200,11 +207,15 @@ public class InvoiceService {
                     })
                     .filter(Objects::nonNull)
                     .distinct()
-                    .map(invoice -> findInvoice(invoice.getInvoiceId()))
                     .collect(Collectors.toList());
-                    Collections.reverse(invoices);
+
+            // Retrieve details for all invoices at once
+            List<Object> invoiceDetails = invoices.stream()
+                    .map(invoice -> getInvoiceById(invoice.getInvoiceId()).getResult())
+                    .collect(Collectors.toList());
+
             log.info("----- Get Invoice By Reservation End -----");
-            return ResponseUtils.success(invoices, "Lấy hóa đơn theo " + reservation_Id + " thành công");
+            return ResponseUtils.success(invoiceDetails, "Lấy hóa đơn theo " + reservation_Id + " thành công");
         } catch (Exception e) {
             log.error("getInvoiceByReservation_isFail: " + e.getMessage());
             return ResponseUtils.error("Lấy hóa đơn theo " + reservation_Id + " Thất bại");

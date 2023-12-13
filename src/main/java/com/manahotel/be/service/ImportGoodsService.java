@@ -100,6 +100,10 @@ public class ImportGoodsService {
         }
     }
 
+    public ResponseDTO findListImportGoodsDetailByImportGoodsId(String id) {
+        return ResponseUtils.success(repository2.findImportGoodsDetailByImportGoods(findImportGoods(id)), "Hiển thị chi tiết theo mã nhập hàng thành công");
+    }
+
     private void commonMapping(ImportGoods importGoods, ImportGoodsDTO importGoodsDTO, List<ImportGoodsDetailDTO> listDetailDTO) {
         importGoods.setStatus(importGoodsDTO.getStatus() != null ? importGoodsDTO.getStatus() : importGoods.getStatus());
 

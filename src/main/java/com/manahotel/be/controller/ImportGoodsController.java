@@ -32,4 +32,9 @@ public class ImportGoodsController {
     public ResponseDTO cancelImportGoods(@PathVariable String id) {
         return service.cancelImportGoods(id);
     }
+
+    @GetMapping("/details/{id}")
+    public ResponseDTO findListImportGoodsDetailByImportGoodsId(@PathVariable String id) {
+        return service.findListImportGoodsDetailByImportGoodsId(id);
+    }
 }
