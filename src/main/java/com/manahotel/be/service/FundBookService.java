@@ -112,14 +112,7 @@ public class FundBookService {
     public void writeFundBook(String fundBookId, String paidMethod, Float value, String transactionCode){
         log.info("----- Write Fund Book Start  -----");
         try{
-            FundBook fundBook = repository.findFundBookByFundBookId(fundBookId);
-            if(!fundBookId.contains("TT")){
-                fundBook = repository.findFundBookByFundBookId("TT" + fundBookId);
-            }
-            if(fundBook != null){
-                fundBook.setPaidMethod(paidMethod);
-            }else {
-                fundBook = new FundBook();
+                FundBook fundBook = new FundBook();
                 fundBook.setFundBookId(fundBookId.contains("TT") ? fundBookId : ("TT" + fundBookId));
                 fundBook.setTime(new Timestamp(System.currentTimeMillis()));
                 fundBook.setType(Status.INCOME);
@@ -130,9 +123,8 @@ public class FundBookService {
                 fundBook.setNote("Thu tiền khách trả");
                 fundBook.setStatus(Status.COMPLETE);
                 fundBook.setTransactionCode(transactionCode);
-            }
-            repository.save(fundBook);
-            log.info("writeFundBook_isSuccess");
+                repository.save(fundBook);
+                log.info("writeFundBook_isSuccess");
         }catch (Exception e){
             log.error("writeFundBook_isFail");
         }
