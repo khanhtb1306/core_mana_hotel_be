@@ -190,7 +190,7 @@ public class PolicyService {
         policyDetail.setTypeValue(dto.getTypeValue() != null ? dto.getTypeValue() : policyDetail.getTypeValue());
         policyDetail.setPolicyValue(dto.getPolicyValue() != null ? dto.getPolicyValue() : policyDetail.getPolicyValue());
         policyDetail.setNote(dto.getNote() != null ? dto.getNote() : policyDetail.getNote());
-        policyDetail.setAutoAddToInvoice(dto.getAutoAddToInvoice());
+        policyDetail.setAutoAddToInvoice(dto.getAutoAddToInvoice() != null ? dto.getAutoAddToInvoice() : policyDetail.getAutoAddToInvoice());
     }
 
     private void commonMapping(TimeUse timeUse, TimeUseDTO dto) {
