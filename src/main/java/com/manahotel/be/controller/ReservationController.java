@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.request.ChildrenSurchargeRequest;
 import com.manahotel.be.model.dto.response.CustomerDTO;
 import com.manahotel.be.model.dto.response.ReservationDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
@@ -75,8 +76,8 @@ public class ReservationController {
     }
 
     @GetMapping("/calculate_additional_children_surcharge")
-    public ResponseDTO calculateAdditionalChildrenSurcharge(long reservationDetailId, String roomCategoryId, float roomPrice, List<CustomerDTO> customerDTOS, long timeUse, boolean status) {
-        return controlPolicyService.calculateAdditionalChildrenSurcharge(reservationDetailId, roomCategoryId, roomPrice, customerDTOS, timeUse, status);
+    public ResponseDTO calculateAdditionalChildrenSurcharge(ChildrenSurchargeRequest request) {
+        return controlPolicyService.calculateAdditionalChildrenSurcharge(request.getReservationDetailId(), request.getRoomCategoryId(), request.getRoomPrice(), request.getCustomerDTOS(), request.getTimeUse(), request.isStatus());
     }
 
     @GetMapping("/get_control_policy_by_reservation_detail")
