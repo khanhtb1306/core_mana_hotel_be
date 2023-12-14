@@ -168,49 +168,28 @@ public class FundBookService {
             List<FundBook> fundBookList = repository.findByFundBookIdContaining(reservationId);
             combinedFundBookList.addAll(fundBookList);
             List<ReservationDetail> reservationDetailList = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
+            List<String> invoiceIdList = new ArrayList<>();
             for (ReservationDetail rd : reservationDetailList) {
                 InvoiceReservationDetail invoiceReservationDetailList = invoiceReservationDetailRepository.findInvoiceReservationDetailByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
-                if(invoiceReservationDetailList != null){
-                    List<FundBook> fundBookList2 = repository.findByFundBookIdContaining(invoiceReservationDetailList.getInvoice().getInvoiceId());
-                    combinedFundBookList.addAll(fundBookList2);
-                }
+                invoiceIdList.add(invoiceReservationDetailList.getInvoice().getInvoiceId());
                 List<Order> orderList = orderRepository.findOrderByReservationDetailAndStatus(rd, Status.PAID);
                 for (Order order : orderList) {
                     List<FundBook> fundBookList3 = repository.findByFundBookIdContaining(order.getOrderId());
                     combinedFundBookList.addAll(fundBookList3);
                 }
             }
+            Set<String> uniqueInvoiceIds = new HashSet<>(invoiceIdList);
+            List<String> distinctInvoiceIds = new ArrayList<>(uniqueInvoiceIds);
+            for(String invoiceId: distinctInvoiceIds){
+                List<FundBook> fundBookList2 = repository.findByFundBookIdContaining(invoiceId);
+                combinedFundBookList.addAll(fundBookList2);
+            }
             Collections.sort(combinedFundBookList, Comparator.comparing(FundBook::getTime).reversed());
-
-//            boolean checkAdd = true;
-//            boolean checkCount = false;
-//            float total = 0;
-//            float tạmứng = 0;
-//            List<Object> listtamung = new ArrayList<>();
-//            for (FundBook list: fundBookList){
-//
-//                total += list.getValue();
-//                if(list.getValue() >= 0 && checkAdd){
-//                    listtamung.add(list);// chuển thành tạm ứng
-//                }
-//
-//                if(list.getValue() < 0){
-//                    checkAdd = false;
-//                    total += list.getValue();
-//                    listtamung.add(list);// chuển thành tạm ứng
-//                }
-//                if(list.getValue() >= 0 && checkAdd){
-//                    listtamung.add(list);// chuyển thành  tạm ứng
-//                    tạmứng = total;
-//                    total = 0;
-//                    checkAdd = true;
-//                }
-//            }
             log.error("getFundBookByReservation_Successfully");
             log.info("----- Get Fund Book By Reservation End -----");
             return ResponseUtils.success(combinedFundBookList, "getFundBookByReservation_successfully");
         }catch (Exception e){
-            log.error("getFundBookByReservation_isFail");
+            log.error("getFundBookByReservation_isFail" + e.getMessage());
             return ResponseUtils.success("getFundBookByReservation_isFail");
         }
     }
