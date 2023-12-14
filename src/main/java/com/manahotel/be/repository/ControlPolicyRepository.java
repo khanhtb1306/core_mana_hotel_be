@@ -12,6 +12,6 @@ public interface ControlPolicyRepository extends JpaRepository<ControlPolicy, Lo
     @Query("SELECT cp FROM ControlPolicy cp WHERE cp.reservationDetail.reservationDetailId = ?1 AND cp.policy.policyId = ?2 AND cp.status <> false")
     ControlPolicy findByReservationDetailIdAndPolicyId(Long reservationDetailId, String policyId);
 
-    @Query("SELECT cp FROM ControlPolicy cp WHERE cp.reservationDetail.reservationDetailId = ?1 AND cp.status <> false")
+    @Query("SELECT cp FROM ControlPolicy cp WHERE cp.reservationDetail.reservationDetailId = ?1 AND cp.status = true ")
     List<ControlPolicy> findControlPolicyByReservationDetail_ReservationDetailId(Long reservationDetailId);
 }
