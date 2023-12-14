@@ -148,7 +148,7 @@ public class ControlPolicyService {
     public void addControlPolicy(Long reservationDetailId, String policyName, String typeValue, float surcharge, String discrepancy, String note, boolean status){
         log.info("----- Add or Update Info To Control Policy Start------");
         try {
-            ControlPolicy controlPolicy = controlPolicyRepository.findByReservationDetailIdAndPolicyId(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
+            ControlPolicy controlPolicy = controlPolicyRepository.findByReservationDetailIdAndPolicyIdUpdate(reservationDetailId, policyRepository.getPolicyByPolicyName(policyName).getPolicyId());
             if(controlPolicy != null){
                 controlPolicy.setValue(surcharge);
                 controlPolicy.setDiscrepancy(discrepancy);
