@@ -178,7 +178,7 @@ public class InvoiceService {
                 Object order = orderService.getOrderByReservationDetailId(reservationDetail.getReservationDetailId()).getResult();
 
                 //lấy Control policy
-                List<ControlPolicy> controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(ird.getInvoiceReservationDetailId());
+                List<ControlPolicy> controlPolicy = controlPolicyRepository.findControlPolicyByReservationDetail_ReservationDetailId(ird.getReservationDetail().getReservationDetailId());
 
                 reservationDetailWithOrder.put("reservationDetail", reservationDetail);
                 reservationDetailWithOrder.put("ListControlPolicy", controlPolicy);
