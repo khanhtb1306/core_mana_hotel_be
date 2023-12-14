@@ -75,7 +75,7 @@ public class ReservationController {
         return controlPolicyService.calculateAdditionalAdultSurcharge(reservationDetailId, roomCategoryId, totalAdult, roomPrice, timeUse, status);
     }
 
-    @GetMapping("/calculate_additional_children_surcharge")
+    @PostMapping("/calculate_additional_children_surcharge")
     public ResponseDTO calculateAdditionalChildrenSurcharge(ChildrenSurchargeRequest request) {
         return controlPolicyService.calculateAdditionalChildrenSurcharge(request.getReservationDetailId(), request.getRoomCategoryId(), request.getRoomPrice(), request.getCustomerDTOS(), request.getTimeUse(), request.isStatus());
     }
