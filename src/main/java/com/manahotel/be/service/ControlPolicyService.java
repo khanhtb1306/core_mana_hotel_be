@@ -75,12 +75,12 @@ public class ControlPolicyService {
         log.info("----- Calculate Late Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.LATER_OVERTIME_SURCHARGE, roomCategoryId);
+            float surcharge = 0;
             if(policyDetails.isEmpty()) {
-                throw new NoLateSurchargePolicyException("Chính sách phụ thu trả muộn của hạng phòng " + roomCategoryId + "không tồn tại");
+                surcharge = ControlPolicyUtils.calculateLateSurcharge(lateTime, roomPrice, policyDetails);
+                addControlPolicy(reservationDetailId, PolicyCont.LATER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu trả muộn", status);
             }
-            float surcharge = ControlPolicyUtils.calculateLateSurcharge(lateTime, roomPrice, policyDetails);
 
-            addControlPolicy(reservationDetailId, PolicyCont.LATER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu trả muộn", status);
             log.info("----- Calculate Late Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu trả muộn thành công");
         }catch (Exception e){
@@ -91,14 +91,13 @@ public class ControlPolicyService {
 
     public ResponseDTO calculateEarlySurcharge(long reservationDetailId ,String roomCategoryId, long lateTime, float roomPrice, boolean status) {
         log.info("----- Calculate Early Surcharge Start------");
-        try{
+        try {
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.EARLIER_OVERTIME_SURCHARGE, roomCategoryId);
-            if(policyDetails.isEmpty()) {
-                throw new NoEarlySurchargePolicyException("Chính sách phụ thu nhận sớm của hạng phòng " + roomCategoryId + "không tồn tại");
+            float surcharge = 0;
+            if (!policyDetails.isEmpty()) {
+                surcharge = ControlPolicyUtils.calculateEarlySurcharge(lateTime, roomPrice, policyDetails);
+                addControlPolicy(reservationDetailId, PolicyCont.EARLIER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu nhận sớm", status);
             }
-            float surcharge = ControlPolicyUtils.calculateEarlySurcharge(lateTime, roomPrice, policyDetails);
-            addControlPolicy(reservationDetailId, PolicyCont.EARLIER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu nhận sớm", status);
-
             log.info("----- Calculate Early Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu nhận sớm thành công");
         }catch (Exception e){
@@ -111,12 +110,11 @@ public class ControlPolicyService {
         log.info("----- Calculate Additional Adult Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.ADDITIONAL_ADULT_SURCHARGE, roomCategoryId);
-            if(policyDetails.isEmpty()) {
-                throw new NoLateSurchargePolicyException("Chính sách phụ thu thêm người của hạng phòng " + roomCategoryId + "không tồn tại");
+            float surcharge = 0;
+            if(!policyDetails.isEmpty()) {
+                surcharge = ControlPolicyUtils.calculateAdditionalAdultSurcharge(totalAdult, roomPrice, timeUse, policyDetails);
+                addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_ADULT_SURCHARGE, "VND", surcharge, String.valueOf(totalAdult), "Phụ thu quá nguười lớn", status);
             }
-            float surcharge = ControlPolicyUtils.calculateAdditionalAdultSurcharge(totalAdult, roomPrice, timeUse, policyDetails);
-            addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_ADULT_SURCHARGE, "VND", surcharge, String.valueOf(totalAdult), "Phụ thu quá nguười lớn", status);
-
             log.info("----- Calculate Additional Adult Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu quá người lớn thành công");
         }catch (Exception e){
@@ -128,11 +126,11 @@ public class ControlPolicyService {
         log.info("----- Calculate Additional Children Surcharge Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.ADDITIONAL_CHILDREN_SURCHARGE, roomCategoryId);
-            if(policyDetails.isEmpty()) {
-                throw new NoLateSurchargePolicyException("Chính sách trẻ em của hạng phòng " + roomCategoryId + "không tồn tại");
+            float surcharge = 0;
+            if(!policyDetails.isEmpty()) {
+                surcharge = ControlPolicyUtils.calculateAdditionalChildrenSurcharge(policyDetails,customerDTOS, roomPrice, timeUse);
+                addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_CHILDREN_SURCHARGE, "VND", surcharge, String.valueOf(customerDTOS.size()), "Phụ thu trẻ em", status);
             }
-            float surcharge = ControlPolicyUtils.calculateAdditionalChildrenSurcharge(policyDetails,customerDTOS, roomPrice, timeUse);
-            addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_CHILDREN_SURCHARGE, "VND", surcharge, String.valueOf(customerDTOS.size()), "Phụ thu trẻ em", status);
 
             log.info("----- Calculate Additional Children Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu trẻ em thành công");
