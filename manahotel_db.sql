@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: manahotel_db
 -- ------------------------------------------------------
--- Server version	8.1.0
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,11 +23,11 @@ DROP TABLE IF EXISTS `bank_account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bank_account` (
-  `bank_account_id` bigint NOT NULL AUTO_INCREMENT,
-  `bank_account_number` varchar(50) DEFAULT NULL,
-  `bank_account_name` varchar(50) DEFAULT NULL,
-  `bank_id` int DEFAULT NULL,
-  PRIMARY KEY (`bank_account_id`)
+                                `bank_account_id` bigint NOT NULL AUTO_INCREMENT,
+                                `bank_account_number` varchar(50) DEFAULT NULL,
+                                `bank_account_name` varchar(50) DEFAULT NULL,
+                                `bank_id` int DEFAULT NULL,
+                                PRIMARY KEY (`bank_account_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -49,19 +49,19 @@ DROP TABLE IF EXISTS `control_policy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `control_policy` (
-  `control_policy_id` bigint NOT NULL AUTO_INCREMENT,
-  `reservation_detail_id` bigint NOT NULL,
-  `policy_id` varchar(50) NOT NULL,
-  `type_value` varchar(250) DEFAULT NULL,
-  `value` float DEFAULT NULL,
-  `discrepancy` varchar(250) DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`control_policy_id`),
-  KEY `pk_cp_rd_idx` (`reservation_detail_id`),
-  KEY `pk_cp_pd_idx` (`policy_id`),
-  CONSTRAINT `pk_cp_p` FOREIGN KEY (`policy_id`) REFERENCES `policy` (`policy_id`),
-  CONSTRAINT `pk_cp_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
+                                  `control_policy_id` bigint NOT NULL AUTO_INCREMENT,
+                                  `reservation_detail_id` bigint NOT NULL,
+                                  `policy_id` varchar(50) NOT NULL,
+                                  `type_value` varchar(250) DEFAULT NULL,
+                                  `value` float DEFAULT NULL,
+                                  `discrepancy` varchar(250) DEFAULT NULL,
+                                  `note` varchar(350) DEFAULT NULL,
+                                  `status` bit(1) DEFAULT NULL,
+                                  PRIMARY KEY (`control_policy_id`),
+                                  KEY `pk_cp_rd_idx` (`reservation_detail_id`),
+                                  KEY `pk_cp_pd_idx` (`policy_id`),
+                                  CONSTRAINT `pk_cp_p` FOREIGN KEY (`policy_id`) REFERENCES `policy` (`policy_id`),
+                                  CONSTRAINT `pk_cp_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -82,24 +82,24 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
-  `customer_id` varchar(50) NOT NULL,
-  `customer_name` varchar(250) DEFAULT NULL,
-  `customer_group_id` varchar(250) NOT NULL,
-  `phone_number` varchar(50) DEFAULT NULL,
-  `dob` timestamp NULL DEFAULT NULL,
-  `email` varchar(350) DEFAULT NULL,
-  `address` varchar(350) DEFAULT NULL,
-  `identity` varchar(350) DEFAULT NULL,
-  `nationality` varchar(350) DEFAULT NULL,
-  `tax_code` varchar(350) DEFAULT NULL,
-  `gender` bit(1) DEFAULT NULL,
-  `image` longblob,
-  `point` float DEFAULT NULL,
-  `is_customer` bit(1) DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`customer_id`),
-  KEY `pk_c_cg_idx` (`customer_group_id`),
-  CONSTRAINT `pk_c_cg` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`customer_group_id`)
+                            `customer_id` varchar(50) NOT NULL,
+                            `customer_name` varchar(250) DEFAULT NULL,
+                            `customer_group_id` varchar(250) NOT NULL,
+                            `phone_number` varchar(50) DEFAULT NULL,
+                            `dob` timestamp NULL DEFAULT NULL,
+                            `email` varchar(350) DEFAULT NULL,
+                            `address` varchar(350) DEFAULT NULL,
+                            `identity` varchar(350) DEFAULT NULL,
+                            `nationality` varchar(350) DEFAULT NULL,
+                            `tax_code` varchar(350) DEFAULT NULL,
+                            `gender` bit(1) DEFAULT NULL,
+                            `image` longblob,
+                            `point` float DEFAULT NULL,
+                            `is_customer` bit(1) DEFAULT NULL,
+                            `status` varchar(45) DEFAULT NULL,
+                            PRIMARY KEY (`customer_id`),
+                            KEY `pk_c_cg_idx` (`customer_group_id`),
+                            CONSTRAINT `pk_c_cg` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`customer_group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -121,11 +121,11 @@ DROP TABLE IF EXISTS `customer_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer_group` (
-  `customer_group_id` varchar(45) NOT NULL,
-  `customer_group_name` varchar(45) DEFAULT NULL,
-  `discount` float DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`customer_group_id`)
+                                  `customer_group_id` varchar(45) NOT NULL,
+                                  `customer_group_name` varchar(45) DEFAULT NULL,
+                                  `discount` float DEFAULT NULL,
+                                  `status` varchar(45) DEFAULT NULL,
+                                  PRIMARY KEY (`customer_group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -147,10 +147,10 @@ DROP TABLE IF EXISTS `department`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `department` (
-  `department_id` varchar(50) NOT NULL,
-  `department_name` varchar(45) DEFAULT NULL,
-  `status` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`department_id`)
+                              `department_id` varchar(50) NOT NULL,
+                              `department_name` varchar(45) DEFAULT NULL,
+                              `status` varchar(45) DEFAULT NULL,
+                              PRIMARY KEY (`department_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -172,14 +172,14 @@ DROP TABLE IF EXISTS `floor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `floor` (
-  `floor_id` int NOT NULL AUTO_INCREMENT,
-  `floor_name` varchar(250) DEFAULT NULL,
-  `status` int DEFAULT NULL,
-  `created_by_id` int DEFAULT NULL,
-  `updated_by_id` int DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `updated_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`floor_id`)
+                         `floor_id` int NOT NULL AUTO_INCREMENT,
+                         `floor_name` varchar(250) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
+                         `created_by_id` int DEFAULT NULL,
+                         `updated_by_id` int DEFAULT NULL,
+                         `created_date` timestamp NULL DEFAULT NULL,
+                         `updated_date` timestamp NULL DEFAULT NULL,
+                         PRIMARY KEY (`floor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -201,17 +201,17 @@ DROP TABLE IF EXISTS `fund_book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `fund_book` (
-  `fund_book_id` varchar(50) NOT NULL,
-  `time` timestamp NULL DEFAULT NULL,
-  `type` varchar(250) DEFAULT NULL,
-  `paid_method` varchar(50) DEFAULT NULL,
-  `value` float DEFAULT NULL,
-  `payer_receiver` varchar(250) DEFAULT NULL,
-  `staff` varchar(50) DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `transaction_code` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`fund_book_id`)
+                             `fund_book_id` varchar(50) NOT NULL,
+                             `time` timestamp NULL DEFAULT NULL,
+                             `type` varchar(250) DEFAULT NULL,
+                             `paid_method` varchar(50) DEFAULT NULL,
+                             `value` float DEFAULT NULL,
+                             `payer_receiver` varchar(250) DEFAULT NULL,
+                             `staff` varchar(50) DEFAULT NULL,
+                             `note` varchar(350) DEFAULT NULL,
+                             `status` varchar(50) DEFAULT NULL,
+                             `transaction_code` varchar(50) DEFAULT NULL,
+                             PRIMARY KEY (`fund_book_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -232,21 +232,21 @@ DROP TABLE IF EXISTS `goods`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `goods` (
-  `goods_id` varchar(50) NOT NULL,
-  `goods_name` varchar(250) DEFAULT NULL,
-  `goods_category` bit(1) DEFAULT NULL,
-  `status` int DEFAULT NULL,
-  `inventory` bigint DEFAULT NULL,
-  `min_inventory` bigint DEFAULT NULL,
-  `max_inventory` bigint DEFAULT NULL,
-  `note` varchar(250) DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `image` longblob,
-  `created_by_id` bigint DEFAULT NULL,
-  `updated_by_id` bigint DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `updated_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`goods_id`)
+                         `goods_id` varchar(50) NOT NULL,
+                         `goods_name` varchar(250) DEFAULT NULL,
+                         `goods_category` bit(1) DEFAULT NULL,
+                         `status` int DEFAULT NULL,
+                         `inventory` bigint DEFAULT NULL,
+                         `min_inventory` bigint DEFAULT NULL,
+                         `max_inventory` bigint DEFAULT NULL,
+                         `note` varchar(250) DEFAULT NULL,
+                         `description` varchar(500) DEFAULT NULL,
+                         `image` longblob,
+                         `created_by_id` bigint DEFAULT NULL,
+                         `updated_by_id` bigint DEFAULT NULL,
+                         `created_date` timestamp NULL DEFAULT NULL,
+                         `updated_date` timestamp NULL DEFAULT NULL,
+                         PRIMARY KEY (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -268,15 +268,15 @@ DROP TABLE IF EXISTS `goods_unit`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `goods_unit` (
-  `goods_unit_id` int NOT NULL AUTO_INCREMENT,
-  `goods_unit_name` varchar(250) DEFAULT NULL,
-  `goods_id` varchar(50) NOT NULL,
-  `cost` float DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `is_default` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`goods_unit_id`),
-  KEY `pk_gu_g_idx` (`goods_id`),
-  CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
+                              `goods_unit_id` int NOT NULL AUTO_INCREMENT,
+                              `goods_unit_name` varchar(250) DEFAULT NULL,
+                              `goods_id` varchar(50) NOT NULL,
+                              `cost` float DEFAULT NULL,
+                              `price` float DEFAULT NULL,
+                              `is_default` bit(1) DEFAULT NULL,
+                              PRIMARY KEY (`goods_unit_id`),
+                              KEY `pk_gu_g_idx` (`goods_id`),
+                              CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -298,14 +298,14 @@ DROP TABLE IF EXISTS `import_goods`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `import_goods` (
-  `import_goods_id` varchar(50) NOT NULL,
-  `time_import` timestamp NULL DEFAULT NULL,
-  `supplier` varchar(250) DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `paid` float DEFAULT NULL,
-  `status` bigint DEFAULT NULL,
-  `created_by_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`import_goods_id`)
+                                `import_goods_id` varchar(50) NOT NULL,
+                                `time_import` timestamp NULL DEFAULT NULL,
+                                `supplier` varchar(250) DEFAULT NULL,
+                                `price` float DEFAULT NULL,
+                                `paid` float DEFAULT NULL,
+                                `status` bigint DEFAULT NULL,
+                                `created_by_id` bigint DEFAULT NULL,
+                                PRIMARY KEY (`import_goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -326,17 +326,20 @@ DROP TABLE IF EXISTS `import_goods_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `import_goods_detail` (
-  `import_goods_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `import_goods_id` varchar(50) NOT NULL,
-  `goods_id` varchar(50) NOT NULL,
-  `amount` bigint DEFAULT NULL,
-  `cost` float DEFAULT NULL,
-  `total` float DEFAULT NULL,
-  PRIMARY KEY (`import_goods_detail_id`),
-  KEY `pk_igd_g_idx` (`goods_id`),
-  KEY `pk_igd_ig_idx` (`import_goods_id`),
-  CONSTRAINT `pk_igd_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
-  CONSTRAINT `pk_igd_ig` FOREIGN KEY (`import_goods_id`) REFERENCES `import_goods` (`import_goods_id`)
+                                       `import_goods_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                       `import_goods_id` varchar(50) NOT NULL,
+                                       `goods_id` varchar(50) NOT NULL,
+                                       `goods_unit_id` int NOT NULL,
+                                       `amount` bigint DEFAULT NULL,
+                                       `cost` float DEFAULT NULL,
+                                       `total` float DEFAULT NULL,
+                                       PRIMARY KEY (`import_goods_detail_id`),
+                                       KEY `pk_igd_g_idx` (`goods_id`),
+                                       KEY `pk_igd_ig_idx` (`import_goods_id`),
+                                       KEY `pk_igd_gu_idx` (`goods_unit_id`),
+                                       CONSTRAINT `pk_igd_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
+                                       CONSTRAINT `pk_igd_gu` FOREIGN KEY (`goods_unit_id`) REFERENCES `goods_unit` (`goods_unit_id`),
+                                       CONSTRAINT `pk_igd_ig` FOREIGN KEY (`import_goods_id`) REFERENCES `import_goods` (`import_goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -357,13 +360,13 @@ DROP TABLE IF EXISTS `inventory_check`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inventory_check` (
-  `inventory_check_id` varchar(50) NOT NULL,
-  `time_balance` timestamp NULL DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  `status` bigint DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `created_by_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`inventory_check_id`)
+                                   `inventory_check_id` varchar(50) NOT NULL,
+                                   `time_balance` timestamp NULL DEFAULT NULL,
+                                   `note` varchar(350) DEFAULT NULL,
+                                   `status` bigint DEFAULT NULL,
+                                   `created_date` timestamp NULL DEFAULT NULL,
+                                   `created_by_id` bigint DEFAULT NULL,
+                                   PRIMARY KEY (`inventory_check_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -384,19 +387,19 @@ DROP TABLE IF EXISTS `inventory_check_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inventory_check_detail` (
-  `inventory_check_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `inventory_check_id` varchar(50) NOT NULL,
-  `goods_id` varchar(45) NOT NULL,
-  `actual_inventory` bigint DEFAULT NULL,
-  `quantity_discrepancy` bigint DEFAULT NULL,
-  `value_discrepancy` float DEFAULT NULL,
-  `inventory` bigint DEFAULT NULL,
-  `cost` float DEFAULT NULL,
-  PRIMARY KEY (`inventory_check_detail_id`),
-  KEY `pk_icd_g_idx` (`goods_id`),
-  KEY `pk_icd_ic_idx` (`inventory_check_id`),
-  CONSTRAINT `pk_icd_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
-  CONSTRAINT `pk_icd_ic` FOREIGN KEY (`inventory_check_id`) REFERENCES `inventory_check` (`inventory_check_id`)
+                                          `inventory_check_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                          `inventory_check_id` varchar(50) NOT NULL,
+                                          `goods_id` varchar(45) NOT NULL,
+                                          `actual_inventory` bigint DEFAULT NULL,
+                                          `quantity_discrepancy` bigint DEFAULT NULL,
+                                          `value_discrepancy` float DEFAULT NULL,
+                                          `inventory` bigint DEFAULT NULL,
+                                          `cost` float DEFAULT NULL,
+                                          PRIMARY KEY (`inventory_check_detail_id`),
+                                          KEY `pk_icd_g_idx` (`goods_id`),
+                                          KEY `pk_icd_ic_idx` (`inventory_check_id`),
+                                          CONSTRAINT `pk_icd_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
+                                          CONSTRAINT `pk_icd_ic` FOREIGN KEY (`inventory_check_id`) REFERENCES `inventory_check` (`inventory_check_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -417,20 +420,20 @@ DROP TABLE IF EXISTS `invoice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoice` (
-  `invoice_id` varchar(50) NOT NULL,
-  `customer_id` varchar(50) NOT NULL,
-  `staff_id` bigint NOT NULL,
-  `total` float DEFAULT NULL,
-  `discount` float DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `note` varchar(250) DEFAULT NULL,
-  `price_other` float DEFAULT NULL,
-  PRIMARY KEY (`invoice_id`),
-  KEY `pk_i_c_idx` (`customer_id`),
-  KEY `ok_i_stf_idx` (`staff_id`),
-  CONSTRAINT `pk_i_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
-  CONSTRAINT `pk_i_stf` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
+                           `invoice_id` varchar(50) NOT NULL,
+                           `customer_id` varchar(50) NOT NULL,
+                           `staff_id` bigint NOT NULL,
+                           `total` float DEFAULT NULL,
+                           `discount` float DEFAULT NULL,
+                           `created_date` timestamp NULL DEFAULT NULL,
+                           `status` varchar(50) DEFAULT NULL,
+                           `note` varchar(250) DEFAULT NULL,
+                           `price_other` float DEFAULT NULL,
+                           PRIMARY KEY (`invoice_id`),
+                           KEY `pk_i_c_idx` (`customer_id`),
+                           KEY `ok_i_stf_idx` (`staff_id`),
+                           CONSTRAINT `pk_i_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+                           CONSTRAINT `pk_i_stf` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -452,14 +455,14 @@ DROP TABLE IF EXISTS `invoice_reservation_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoice_reservation_detail` (
-  `invoice_reservation_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `invoice_id` varchar(50) NOT NULL,
-  `reservation_detail_id` bigint NOT NULL,
-  PRIMARY KEY (`invoice_reservation_detail_id`),
-  KEY `pk_ird_i_idx` (`invoice_id`),
-  KEY `pk_ird_rd_idx` (`reservation_detail_id`),
-  CONSTRAINT `pk_ird_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
-  CONSTRAINT `pk_ird_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
+                                              `invoice_reservation_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                              `invoice_id` varchar(50) NOT NULL,
+                                              `reservation_detail_id` bigint NOT NULL,
+                                              PRIMARY KEY (`invoice_reservation_detail_id`),
+                                              KEY `pk_ird_i_idx` (`invoice_id`),
+                                              KEY `pk_ird_rd_idx` (`reservation_detail_id`),
+                                              CONSTRAINT `pk_ird_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
+                                              CONSTRAINT `pk_ird_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -480,15 +483,15 @@ DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order` (
-  `order_id` varchar(50) NOT NULL,
-  `reservation_detail_id` bigint NOT NULL,
-  `total_pay` float DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `created_by_id` bigint DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`order_id`),
-  KEY `pk_o_rd_idx` (`reservation_detail_id`),
-  CONSTRAINT `pk_o_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
+                         `order_id` varchar(50) NOT NULL,
+                         `reservation_detail_id` bigint NOT NULL,
+                         `total_pay` float DEFAULT NULL,
+                         `status` varchar(50) DEFAULT NULL,
+                         `created_by_id` bigint DEFAULT NULL,
+                         `created_date` timestamp NULL DEFAULT NULL,
+                         PRIMARY KEY (`order_id`),
+                         KEY `pk_o_rd_idx` (`reservation_detail_id`),
+                         CONSTRAINT `pk_o_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -510,22 +513,22 @@ DROP TABLE IF EXISTS `order_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_detail` (
-  `order_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `order_id` varchar(50) NOT NULL,
-  `goods_id` varchar(50) NOT NULL,
-  `goods_unit_id` int NOT NULL,
-  `invoice_id` varchar(50) NOT NULL,
-  `quantity` bigint DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  PRIMARY KEY (`order_detail_id`),
-  KEY `pk_od_o_idx` (`order_id`) /*!80000 INVISIBLE */,
-  KEY `pk_od_g_idx` (`goods_id`) /*!80000 INVISIBLE */,
-  KEY `pk_od_gu_idx` (`goods_unit_id`),
-  KEY `pk_od_i_idx` (`invoice_id`),
-  CONSTRAINT `pk_od_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
-  CONSTRAINT `pk_od_gu` FOREIGN KEY (`goods_unit_id`) REFERENCES `goods_unit` (`goods_unit_id`),
-  CONSTRAINT `pk_od_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
-  CONSTRAINT `pk_od_o` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`)
+                                `order_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                `order_id` varchar(50) NOT NULL,
+                                `goods_id` varchar(50) NOT NULL,
+                                `goods_unit_id` int NOT NULL,
+                                `invoice_id` varchar(50) NOT NULL,
+                                `quantity` bigint DEFAULT NULL,
+                                `price` float DEFAULT NULL,
+                                PRIMARY KEY (`order_detail_id`),
+                                KEY `pk_od_o_idx` (`order_id`) /*!80000 INVISIBLE */,
+                                KEY `pk_od_g_idx` (`goods_id`) /*!80000 INVISIBLE */,
+                                KEY `pk_od_gu_idx` (`goods_unit_id`),
+                                KEY `pk_od_i_idx` (`invoice_id`),
+                                CONSTRAINT `pk_od_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
+                                CONSTRAINT `pk_od_gu` FOREIGN KEY (`goods_unit_id`) REFERENCES `goods_unit` (`goods_unit_id`),
+                                CONSTRAINT `pk_od_i` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
+                                CONSTRAINT `pk_od_o` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -546,13 +549,13 @@ DROP TABLE IF EXISTS `policy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `policy` (
-  `policy_id` varchar(50) NOT NULL,
-  `policy_name` varchar(250) DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  `start_time` timestamp NULL DEFAULT NULL,
-  `end_time` timestamp NULL DEFAULT NULL,
-  `status` int DEFAULT NULL,
-  PRIMARY KEY (`policy_id`)
+                          `policy_id` varchar(50) NOT NULL,
+                          `policy_name` varchar(250) DEFAULT NULL,
+                          `note` varchar(350) DEFAULT NULL,
+                          `start_time` timestamp NULL DEFAULT NULL,
+                          `end_time` timestamp NULL DEFAULT NULL,
+                          `status` int DEFAULT NULL,
+                          PRIMARY KEY (`policy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -574,27 +577,27 @@ DROP TABLE IF EXISTS `policy_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `policy_detail` (
-  `policy_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `policy_id` varchar(50) NOT NULL,
-  `room_category_id` varchar(50) NOT NULL,
-  `customer_group_id` varchar(250) NOT NULL,
-  `type` varchar(250) DEFAULT NULL,
-  `unit` varchar(250) DEFAULT NULL,
-  `limit_value` bigint DEFAULT NULL,
-  `type_value` varchar(250) DEFAULT NULL,
-  `other` varchar(250) DEFAULT NULL,
-  `requirement` varchar(250) DEFAULT NULL,
-  `policy_value` float DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  `auto_add_to_invoice` bit(1) DEFAULT NULL,
-  `status` int DEFAULT NULL,
-  PRIMARY KEY (`policy_detail_id`),
-  KEY `pk_pd_rc_idx` (`room_category_id`),
-  KEY `pk_pd_p_idx` (`policy_id`),
-  KEY `pk_pd_cg_idx` (`customer_group_id`),
-  CONSTRAINT `pk_pd_cg` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`customer_group_id`),
-  CONSTRAINT `pk_pd_p` FOREIGN KEY (`policy_id`) REFERENCES `policy` (`policy_id`),
-  CONSTRAINT `pk_pd_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
+                                 `policy_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                 `policy_id` varchar(50) NOT NULL,
+                                 `room_category_id` varchar(50) NOT NULL,
+                                 `customer_group_id` varchar(250) NOT NULL,
+                                 `type` varchar(250) DEFAULT NULL,
+                                 `unit` varchar(250) DEFAULT NULL,
+                                 `limit_value` bigint DEFAULT NULL,
+                                 `type_value` varchar(250) DEFAULT NULL,
+                                 `other` varchar(250) DEFAULT NULL,
+                                 `requirement` varchar(250) DEFAULT NULL,
+                                 `policy_value` float DEFAULT NULL,
+                                 `note` varchar(350) DEFAULT NULL,
+                                 `auto_add_to_invoice` bit(1) DEFAULT NULL,
+                                 `status` int DEFAULT NULL,
+                                 PRIMARY KEY (`policy_detail_id`),
+                                 KEY `pk_pd_rc_idx` (`room_category_id`),
+                                 KEY `pk_pd_p_idx` (`policy_id`),
+                                 KEY `pk_pd_cg_idx` (`customer_group_id`),
+                                 CONSTRAINT `pk_pd_cg` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`customer_group_id`),
+                                 CONSTRAINT `pk_pd_p` FOREIGN KEY (`policy_id`) REFERENCES `policy` (`policy_id`),
+                                 CONSTRAINT `pk_pd_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -616,13 +619,13 @@ DROP TABLE IF EXISTS `price_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `price_list` (
-  `price_list_id` varchar(50) NOT NULL,
-  `price_list_name` varchar(255) DEFAULT NULL,
-  `effective_time_start` timestamp NULL DEFAULT NULL,
-  `effective_time_end` timestamp NULL DEFAULT NULL,
-  `status` bigint DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  PRIMARY KEY (`price_list_id`)
+                              `price_list_id` varchar(50) NOT NULL,
+                              `price_list_name` varchar(255) DEFAULT NULL,
+                              `effective_time_start` timestamp NULL DEFAULT NULL,
+                              `effective_time_end` timestamp NULL DEFAULT NULL,
+                              `status` bigint DEFAULT NULL,
+                              `note` varchar(350) DEFAULT NULL,
+                              PRIMARY KEY (`price_list_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -644,19 +647,19 @@ DROP TABLE IF EXISTS `price_list_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `price_list_detail` (
-  `price_list_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `price_list_id` varchar(50) NOT NULL,
-  `room_category_id` varchar(50) NOT NULL,
-  `price_by_day` float DEFAULT NULL,
-  `price_by_night` float DEFAULT NULL,
-  `price_by_hour` float DEFAULT NULL,
-  `time_apply` timestamp NULL DEFAULT NULL,
-  `day_of_week` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`price_list_detail_id`),
-  KEY `pk_pld_pl_idx` (`price_list_id`),
-  KEY `pk_pld_rc_idx` (`room_category_id`),
-  CONSTRAINT `pk_pld_pl` FOREIGN KEY (`price_list_id`) REFERENCES `price_list` (`price_list_id`),
-  CONSTRAINT `pk_pld_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
+                                     `price_list_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                     `price_list_id` varchar(50) NOT NULL,
+                                     `room_category_id` varchar(50) NOT NULL,
+                                     `price_by_day` float DEFAULT NULL,
+                                     `price_by_night` float DEFAULT NULL,
+                                     `price_by_hour` float DEFAULT NULL,
+                                     `time_apply` timestamp NULL DEFAULT NULL,
+                                     `day_of_week` varchar(255) DEFAULT NULL,
+                                     PRIMARY KEY (`price_list_detail_id`),
+                                     KEY `pk_pld_pl_idx` (`price_list_id`),
+                                     KEY `pk_pld_rc_idx` (`room_category_id`),
+                                     CONSTRAINT `pk_pld_pl` FOREIGN KEY (`price_list_id`) REFERENCES `price_list` (`price_list_id`),
+                                     CONSTRAINT `pk_pld_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -677,12 +680,12 @@ DROP TABLE IF EXISTS `recent_activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `recent_activity` (
-  `recent_activity_id` int NOT NULL AUTO_INCREMENT,
-  `staff_name` varchar(45) DEFAULT NULL,
-  `action` varchar(45) DEFAULT NULL,
-  `value` float DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`recent_activity_id`)
+                                   `recent_activity_id` int NOT NULL AUTO_INCREMENT,
+                                   `staff_name` varchar(45) DEFAULT NULL,
+                                   `action` varchar(45) DEFAULT NULL,
+                                   `value` float DEFAULT NULL,
+                                   `create_time` timestamp NULL DEFAULT NULL,
+                                   PRIMARY KEY (`recent_activity_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -704,10 +707,10 @@ DROP TABLE IF EXISTS `report_revenue`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `report_revenue` (
-  `report_revenue_id` bigint NOT NULL AUTO_INCREMENT,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `revenue_value` float DEFAULT NULL,
-  PRIMARY KEY (`report_revenue_id`)
+                                  `report_revenue_id` bigint NOT NULL AUTO_INCREMENT,
+                                  `created_date` timestamp NULL DEFAULT NULL,
+                                  `revenue_value` float DEFAULT NULL,
+                                  PRIMARY KEY (`report_revenue_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -729,10 +732,10 @@ DROP TABLE IF EXISTS `report_room_capacity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `report_room_capacity` (
-  `report_room_capacity_id` int NOT NULL AUTO_INCREMENT,
-  `create_date` timestamp NULL DEFAULT NULL,
-  `room_capacity_value` float DEFAULT NULL,
-  PRIMARY KEY (`report_room_capacity_id`)
+                                        `report_room_capacity_id` int NOT NULL AUTO_INCREMENT,
+                                        `create_date` timestamp NULL DEFAULT NULL,
+                                        `room_capacity_value` float DEFAULT NULL,
+                                        PRIMARY KEY (`report_room_capacity_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -754,14 +757,14 @@ DROP TABLE IF EXISTS `report_top_room_class`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `report_top_room_class` (
-  `report_top_room_class_id` bigint NOT NULL AUTO_INCREMENT,
-  `room_class_id` varchar(45) DEFAULT NULL,
-  `revenue` float DEFAULT NULL,
-  `number_of_rental` bigint DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `create_date` timestamp NULL DEFAULT NULL,
-  `update_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`report_top_room_class_id`)
+                                         `report_top_room_class_id` bigint NOT NULL AUTO_INCREMENT,
+                                         `room_class_id` varchar(45) DEFAULT NULL,
+                                         `revenue` float DEFAULT NULL,
+                                         `number_of_rental` bigint DEFAULT NULL,
+                                         `status` bit(1) DEFAULT NULL,
+                                         `create_date` timestamp NULL DEFAULT NULL,
+                                         `update_date` timestamp NULL DEFAULT NULL,
+                                         PRIMARY KEY (`report_top_room_class_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -783,24 +786,24 @@ DROP TABLE IF EXISTS `reservation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reservation` (
-  `reservation_id` varchar(50) NOT NULL,
-  `customer_id` varchar(50) NOT NULL,
-  `price_list_id` varchar(50) NOT NULL,
-  `total_adults` bigint DEFAULT NULL,
-  `total_children` bigint DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `duration_start` timestamp NULL DEFAULT NULL,
-  `duration_end` timestamp NULL DEFAULT NULL,
-  `note` varchar(350) DEFAULT NULL,
-  `staff_check_in` bigint DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `created_by_id` bigint DEFAULT NULL,
-  `staff_check_out` bigint DEFAULT NULL,
-  PRIMARY KEY (`reservation_id`),
-  KEY `pk_r_c_idx` (`customer_id`),
-  KEY `pk_r_pl_idx` (`price_list_id`),
-  CONSTRAINT `pk_r_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
-  CONSTRAINT `pk_r_pl` FOREIGN KEY (`price_list_id`) REFERENCES `price_list` (`price_list_id`)
+                               `reservation_id` varchar(50) NOT NULL,
+                               `customer_id` varchar(50) NOT NULL,
+                               `price_list_id` varchar(50) NOT NULL,
+                               `total_adults` bigint DEFAULT NULL,
+                               `total_children` bigint DEFAULT NULL,
+                               `status` varchar(50) DEFAULT NULL,
+                               `duration_start` timestamp NULL DEFAULT NULL,
+                               `duration_end` timestamp NULL DEFAULT NULL,
+                               `note` varchar(350) DEFAULT NULL,
+                               `staff_check_in` bigint DEFAULT NULL,
+                               `created_date` timestamp NULL DEFAULT NULL,
+                               `created_by_id` bigint DEFAULT NULL,
+                               `staff_check_out` bigint DEFAULT NULL,
+                               PRIMARY KEY (`reservation_id`),
+                               KEY `pk_r_c_idx` (`customer_id`),
+                               KEY `pk_r_pl_idx` (`price_list_id`),
+                               CONSTRAINT `pk_r_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+                               CONSTRAINT `pk_r_pl` FOREIGN KEY (`price_list_id`) REFERENCES `price_list` (`price_list_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -822,23 +825,22 @@ DROP TABLE IF EXISTS `reservation_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reservation_detail` (
-  `reservation_detail_id` bigint NOT NULL AUTO_INCREMENT,
-  `reservation_id` varchar(50) NOT NULL,
-  `room_id` varchar(50) NOT NULL,
-  `check_in_estimate` timestamp NULL DEFAULT NULL,
-  `check_out_estimate` timestamp NULL DEFAULT NULL,
-  `check_in_actual` timestamp NULL DEFAULT NULL,
-  `check_out_actual` timestamp NULL DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `reservation_type` varchar(50) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `reservation_detail_status` bigint DEFAULT NULL,
-  `change_room_class` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`reservation_detail_id`),
-  KEY `pk_rd_r_idx` (`room_id`),
-  KEY `pk__idx` (`reservation_id`),
-  CONSTRAINT `fk_rd_r` FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`reservation_id`),
-  CONSTRAINT `pk_rd_r` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`)
+                                      `reservation_detail_id` bigint NOT NULL AUTO_INCREMENT,
+                                      `reservation_id` varchar(50) NOT NULL,
+                                      `room_id` varchar(50) NOT NULL,
+                                      `check_in_estimate` timestamp NULL DEFAULT NULL,
+                                      `check_out_estimate` timestamp NULL DEFAULT NULL,
+                                      `check_in_actual` timestamp NULL DEFAULT NULL,
+                                      `check_out_actual` timestamp NULL DEFAULT NULL,
+                                      `price` float DEFAULT NULL,
+                                      `reservation_type` varchar(50) DEFAULT NULL,
+                                      `status` varchar(50) DEFAULT NULL,
+                                      `reservation_detail_status` bigint DEFAULT NULL,
+                                      PRIMARY KEY (`reservation_detail_id`),
+                                      KEY `pk_rd_r_idx` (`room_id`),
+                                      KEY `pk__idx` (`reservation_id`),
+                                      CONSTRAINT `fk_rd_r` FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`reservation_id`),
+                                      CONSTRAINT `pk_rd_r` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -848,7 +850,7 @@ CREATE TABLE `reservation_detail` (
 
 LOCK TABLES `reservation_detail` WRITE;
 /*!40000 ALTER TABLE `reservation_detail` DISABLE KEYS */;
-INSERT INTO `reservation_detail` VALUES (0,'DP000000','P000000',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `reservation_detail` VALUES (0,'DP000000','P000000',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `reservation_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -860,14 +862,14 @@ DROP TABLE IF EXISTS `reservation_detail_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reservation_detail_customer` (
-  `reservation_detail_customer_id` bigint NOT NULL AUTO_INCREMENT,
-  `reservation_detail_id` bigint NOT NULL,
-  `customer_id` varchar(50) NOT NULL,
-  PRIMARY KEY (`reservation_detail_customer_id`),
-  KEY `pk_rdr_rd_idx` (`reservation_detail_id`),
-  KEY `pk_rdr_c_idx` (`customer_id`),
-  CONSTRAINT `pk_rdr_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
-  CONSTRAINT `pk_rdr_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
+                                               `reservation_detail_customer_id` bigint NOT NULL AUTO_INCREMENT,
+                                               `reservation_detail_id` bigint NOT NULL,
+                                               `customer_id` varchar(50) NOT NULL,
+                                               PRIMARY KEY (`reservation_detail_customer_id`),
+                                               KEY `pk_rdr_rd_idx` (`reservation_detail_id`),
+                                               KEY `pk_rdr_c_idx` (`customer_id`),
+                                               CONSTRAINT `pk_rdr_c` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+                                               CONSTRAINT `pk_rdr_rd` FOREIGN KEY (`reservation_detail_id`) REFERENCES `reservation_detail` (`reservation_detail_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -888,24 +890,24 @@ DROP TABLE IF EXISTS `room`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `room` (
-  `room_id` varchar(50) NOT NULL,
-  `room_name` varchar(250) DEFAULT NULL,
-  `room_category_id` varchar(50) NOT NULL,
-  `floor_id` int NOT NULL,
-  `status` int DEFAULT NULL,
-  `booking_status` varchar(100) DEFAULT NULL,
-  `condition_status` varchar(100) DEFAULT NULL,
-  `image` longblob,
-  `note` varchar(250) DEFAULT NULL,
-  `created_by_id` int DEFAULT NULL,
-  `updated_by_id` int DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `updated_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`room_id`),
-  KEY `pk_r_rc_idx` (`room_category_id`),
-  KEY `pk_r_f_idx` (`floor_id`),
-  CONSTRAINT `pk_r_f` FOREIGN KEY (`floor_id`) REFERENCES `floor` (`floor_id`),
-  CONSTRAINT `pk_r_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
+                        `room_id` varchar(50) NOT NULL,
+                        `room_name` varchar(250) DEFAULT NULL,
+                        `room_category_id` varchar(50) NOT NULL,
+                        `floor_id` int NOT NULL,
+                        `status` int DEFAULT NULL,
+                        `booking_status` varchar(100) DEFAULT NULL,
+                        `condition_status` varchar(100) DEFAULT NULL,
+                        `image` longblob,
+                        `note` varchar(250) DEFAULT NULL,
+                        `created_by_id` int DEFAULT NULL,
+                        `updated_by_id` int DEFAULT NULL,
+                        `created_date` timestamp NULL DEFAULT NULL,
+                        `updated_date` timestamp NULL DEFAULT NULL,
+                        PRIMARY KEY (`room_id`),
+                        KEY `pk_r_rc_idx` (`room_category_id`),
+                        KEY `pk_r_f_idx` (`floor_id`),
+                        CONSTRAINT `pk_r_f` FOREIGN KEY (`floor_id`) REFERENCES `floor` (`floor_id`),
+                        CONSTRAINT `pk_r_rc` FOREIGN KEY (`room_category_id`) REFERENCES `room_category` (`room_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -927,24 +929,24 @@ DROP TABLE IF EXISTS `room_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `room_category` (
-  `room_category_id` varchar(50) NOT NULL,
-  `room_category_name` varchar(250) DEFAULT NULL,
-  `price_by_day` float DEFAULT NULL,
-  `price_by_night` float DEFAULT NULL,
-  `price_by_hour` float DEFAULT NULL,
-  `num_of_adults` bigint DEFAULT NULL,
-  `num_of_children` bigint DEFAULT NULL,
-  `num_max_of_adults` bigint DEFAULT NULL,
-  `num_max_of_children` bigint DEFAULT NULL,
-  `room_area` float DEFAULT NULL,
-  `status` int DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `image` longblob,
-  `created_by_id` bigint DEFAULT NULL,
-  `updated_by_id` bigint DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `updated_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`room_category_id`)
+                                 `room_category_id` varchar(50) NOT NULL,
+                                 `room_category_name` varchar(250) DEFAULT NULL,
+                                 `price_by_day` float DEFAULT NULL,
+                                 `price_by_night` float DEFAULT NULL,
+                                 `price_by_hour` float DEFAULT NULL,
+                                 `num_of_adults` bigint DEFAULT NULL,
+                                 `num_of_children` bigint DEFAULT NULL,
+                                 `num_max_of_adults` bigint DEFAULT NULL,
+                                 `num_max_of_children` bigint DEFAULT NULL,
+                                 `room_area` float DEFAULT NULL,
+                                 `status` int DEFAULT NULL,
+                                 `description` varchar(500) DEFAULT NULL,
+                                 `image` longblob,
+                                 `created_by_id` bigint DEFAULT NULL,
+                                 `updated_by_id` bigint DEFAULT NULL,
+                                 `created_date` timestamp NULL DEFAULT NULL,
+                                 `updated_date` timestamp NULL DEFAULT NULL,
+                                 PRIMARY KEY (`room_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -966,28 +968,28 @@ DROP TABLE IF EXISTS `staff`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `staff` (
-  `staff_id` bigint NOT NULL AUTO_INCREMENT,
-  `staff_name` varchar(250) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(150) DEFAULT NULL,
-  `role` varchar(250) DEFAULT NULL,
-  `status` varchar(250) DEFAULT NULL,
-  `dob` timestamp NULL DEFAULT NULL,
-  `address` varchar(350) DEFAULT NULL,
-  `email` varchar(350) DEFAULT NULL,
-  `gender` bit(1) DEFAULT NULL,
-  `identity` varchar(350) DEFAULT NULL,
-  `tax_code` varchar(350) DEFAULT NULL,
-  `phone_number` varchar(50) DEFAULT NULL,
-  `image` longblob,
-  `created_by_id` bigint DEFAULT NULL,
-  `updated_by_id` bigint DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT NULL,
-  `updated_date` timestamp NULL DEFAULT NULL,
-  `department_id` varchar(50) NOT NULL,
-  PRIMARY KEY (`staff_id`),
-  KEY `pk_s_d_idx` (`department_id`),
-  CONSTRAINT `pk_c_d` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
+                         `staff_id` bigint NOT NULL AUTO_INCREMENT,
+                         `staff_name` varchar(250) DEFAULT NULL,
+                         `username` varchar(50) DEFAULT NULL,
+                         `password` varchar(150) DEFAULT NULL,
+                         `role` varchar(250) DEFAULT NULL,
+                         `status` varchar(250) DEFAULT NULL,
+                         `dob` timestamp NULL DEFAULT NULL,
+                         `address` varchar(350) DEFAULT NULL,
+                         `email` varchar(350) DEFAULT NULL,
+                         `gender` bit(1) DEFAULT NULL,
+                         `identity` varchar(350) DEFAULT NULL,
+                         `tax_code` varchar(350) DEFAULT NULL,
+                         `phone_number` varchar(50) DEFAULT NULL,
+                         `image` longblob,
+                         `created_by_id` bigint DEFAULT NULL,
+                         `updated_by_id` bigint DEFAULT NULL,
+                         `created_date` timestamp NULL DEFAULT NULL,
+                         `updated_date` timestamp NULL DEFAULT NULL,
+                         `department_id` varchar(50) NOT NULL,
+                         PRIMARY KEY (`staff_id`),
+                         KEY `pk_s_d_idx` (`department_id`),
+                         CONSTRAINT `pk_c_d` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1009,15 +1011,15 @@ DROP TABLE IF EXISTS `time_use`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `time_use` (
-  `time_use_id` bigint NOT NULL AUTO_INCREMENT,
-  `end_time_night` time DEFAULT NULL,
-  `start_time_day` time DEFAULT NULL,
-  `end_time_day` time DEFAULT NULL,
-  `start_time_night` time DEFAULT NULL,
-  `time_bonus_day_type` varchar(255) DEFAULT NULL,
-  `time_bonus_hour` bigint DEFAULT NULL,
-  `time_bonus_day` bigint DEFAULT NULL,
-  PRIMARY KEY (`time_use_id`)
+                            `time_use_id` bigint NOT NULL AUTO_INCREMENT,
+                            `end_time_night` time DEFAULT NULL,
+                            `start_time_day` time DEFAULT NULL,
+                            `end_time_day` time DEFAULT NULL,
+                            `start_time_night` time DEFAULT NULL,
+                            `time_bonus_day_type` varchar(255) DEFAULT NULL,
+                            `time_bonus_hour` bigint DEFAULT NULL,
+                            `time_bonus_day` bigint DEFAULT NULL,
+                            PRIMARY KEY (`time_use_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1039,13 +1041,13 @@ DROP TABLE IF EXISTS `token`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `token` (
-  `token_id` bigint NOT NULL AUTO_INCREMENT,
-  `token` varchar(200) DEFAULT NULL,
-  `staff_id` bigint NOT NULL,
-  `expiration_time` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`token_id`),
-  KEY `fk_prt_s_idx` (`staff_id`),
-  CONSTRAINT `fk_prt_s` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
+                         `token_id` bigint NOT NULL AUTO_INCREMENT,
+                         `token` varchar(200) DEFAULT NULL,
+                         `staff_id` bigint NOT NULL,
+                         `expiration_time` timestamp NULL DEFAULT NULL,
+                         PRIMARY KEY (`token_id`),
+                         KEY `fk_prt_s_idx` (`staff_id`),
+                         CONSTRAINT `fk_prt_s` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=576 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1067,4 +1069,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-14 15:47:01
+-- Dump completed on 2023-12-14 23:29:05

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 @Slf4j
 @Component
@@ -66,16 +68,21 @@ public class ControlPolicyUtils {
         float result = 0;
         float TotalSurcharge = 0;
         try{
+            Collections.sort(policyDetails, Comparator.comparing(PolicyDetail::getLimitValue).reversed());
             for (CustomerDTO dto : customerDTOS) {
                 LocalDateTime dobDateTime = LocalDateTime.parse(dto.getDob(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 int age = Period.between(
                         dobDateTime.atZone(ZoneId.systemDefault()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                         LocalDate.now()).getYears();
                 float surcharge = 0;
+                float tmp = 0;
                 for(PolicyDetail policyDetail : policyDetails) {
-                    if(policyDetail.getLimitValue() <= age){
+                    if(age < 6){
+                        surcharge =0;
+                    }else if(age > 5 && tmp <= age  && age < policyDetail.getLimitValue()){
                         surcharge = (policyDetail.getPolicyValue()/100)*priceRoom;
                     }
+                    tmp = policyDetail.getLimitValue();
                 }
                 TotalSurcharge += surcharge;
             }

@@ -29,9 +29,6 @@ public class ReservationDetail {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @Column(name = "change_room_class")
-    private String changeRoomClass;
-
     @Column(name = "check_in_estimate")
     private Timestamp checkInEstimate;
 

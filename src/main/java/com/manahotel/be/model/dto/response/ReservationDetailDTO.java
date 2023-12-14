@@ -16,5 +16,4 @@ public class ReservationDetailDTO {
     private Float price;
     private String reservationType;
     private String status;
-    private String changeRoomClass;
 }
