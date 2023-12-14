@@ -76,11 +76,10 @@ public class ControlPolicyService {
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.LATER_OVERTIME_SURCHARGE, roomCategoryId);
             float surcharge = 0;
-            if(policyDetails.isEmpty()) {
+            if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateLateSurcharge(lateTime, roomPrice, policyDetails);
                 addControlPolicy(reservationDetailId, PolicyCont.LATER_OVERTIME_SURCHARGE, "VND", surcharge, String.valueOf(lateTime), "Phụ thu trả muộn", status);
             }
-
             log.info("----- Calculate Late Surcharge End------");
             return ResponseUtils.success(surcharge, "Tính phụ thu trả muộn thành công");
         }catch (Exception e){
