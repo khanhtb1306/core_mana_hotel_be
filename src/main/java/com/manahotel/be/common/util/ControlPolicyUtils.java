@@ -49,8 +49,7 @@ public class ControlPolicyUtils {
             float surcharge = 0;
             for(PolicyDetail policyDetail : policyDetails) {
                 for(long i = totalAdult; i >= policyDetail.getLimitValue(); i--) {
-                    surcharge += (policyDetail.getPolicyValue()*priceRoom);
-
+                    surcharge += (policyDetail.getPolicyValue()*priceRoom/100);
                     if(i == policyDetail.getLimitValue()) {
                         totalAdult = i - 1;
                     }
