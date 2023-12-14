@@ -36,6 +36,9 @@ spring:
           auth: true
           starttls:
             enable: true
+  config:
+    link: http://localhost:3000
+    linkQr: https://api.vietqr.io
 
 
 

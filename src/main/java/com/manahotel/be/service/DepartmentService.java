@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.IdGenerator;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
@@ -39,11 +40,12 @@ public class DepartmentService {
             Department latestDepartment = repository.findTopByOrderByDepartmentIdDesc();
             String latestId = (latestDepartment == null) ? null : latestDepartment.getDepartmentId();
             String nextId = IdGenerator.generateId(latestId, "PB");
-            if (departmentDTO.getDepartmentId() != null) {
+            if (departmentDTO.getDepartmentId() != null ) {
                 department = getDepartmentById(departmentDTO.getDepartmentId());
             }
             else{
                 departmentDTO.setDepartmentId(nextId);
+                department.setStatus(Status.ACTIVE);
             }
             commonMapping(department, departmentDTO);
             repository.save(department);
@@ -59,7 +61,7 @@ public class DepartmentService {
     private void commonMapping(Department department, DepartmentDTO departmentDTO) {
         department.setDepartmentId(departmentDTO.getDepartmentId() != null ? departmentDTO.getDepartmentId() : department.getDepartmentId());
         department.setDepartmentName(departmentDTO.getDepartmentName() != null ? departmentDTO.getDepartmentName() : department.getDepartmentName());
-        department.setStatus(departmentDTO.getStatus() != null ? departmentDTO.getStatus() : department.getStatus());
+//        department.setStatus(departmentDTO.getStatus() != null ? departmentDTO.getStatus() : department.getStatus());
     }
 
 
@@ -78,5 +80,18 @@ public class DepartmentService {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with id " + id));
 
+    }
+    public ResponseDTO deleteDepartmentById(String id) {
+        log.info("----- Delete Department Start------");
+        try {
+            Department department = getDepartmentById(id);
+            department.setStatus(Status.NO_ACTIVE);
+            repository.save(department);
+            log.info("----- Delete Department End ------");
+            return ResponseUtils.success(id, "Xóa thành công");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseUtils.error("Xóa thất bại");
+        }
     }
 }

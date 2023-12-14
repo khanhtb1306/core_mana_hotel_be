@@ -69,5 +69,8 @@ public class StaffController {
     public ResponseDTO createAndUpdateDepartment(DepartmentDTO departmentDTO){
         return departmentService.createAndUpdateDepartment(departmentDTO);
     }
-
+    @DeleteMapping("/department/{id}")
+    public ResponseDTO deleteDepartment(@PathVariable String id) {
+        return departmentService.deleteDepartmentById(id);
+    }
 }

@@ -9,4 +9,6 @@ public class ImportGoodsDetailDTO {
     private Long amount;
     private Float cost;
     private Float total;
+    private Long goodsUnitId;
+    private Long amountUnit;
 }

@@ -12,11 +12,14 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: manahotelsystem@gmail.com
-    password: igscmsiixgzkzcjs
+    username: hotelsystem00@gmail.com
+    password: vsjpxutvricoknsg
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+  config:
+    link: https://manahotel-g41.web.app
+    linkQr: https://api.vietqr.io

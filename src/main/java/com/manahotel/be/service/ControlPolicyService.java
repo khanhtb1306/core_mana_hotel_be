@@ -112,7 +112,7 @@ public class ControlPolicyService {
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.ADDITIONAL_ADULT_SURCHARGE, roomCategoryId);
             if(policyDetails.isEmpty()) {
-                throw new NoLateSurchargePolicyException("Chính sách phụ thu trả muộn của hạng phòng " + roomCategoryId + "không tồn tại");
+                throw new NoLateSurchargePolicyException("Chính sách phụ thu thêm người của hạng phòng " + roomCategoryId + "không tồn tại");
             }
             float surcharge = ControlPolicyUtils.calculateAdditionalAdultSurcharge(totalAdult, roomPrice, timeUse, policyDetails);
             addControlPolicy(reservationDetailId, PolicyCont.ADDITIONAL_ADULT_SURCHARGE, "VND", surcharge, String.valueOf(totalAdult), "Phụ thu quá nguười lớn", status);

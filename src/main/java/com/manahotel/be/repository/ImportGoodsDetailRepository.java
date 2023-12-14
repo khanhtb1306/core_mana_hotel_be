@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ImportGoodsDetailRepository extends JpaRepository<ImportGoodsDetail, Long> {
     List<ImportGoodsDetail> findImportGoodsDetailByImportGoods(ImportGoods importGoods);
-
+    List<ImportGoodsDetail> findImportGoodsDetailByImportGoods_ImportGoodsId(String importGoods);
     @Query(value = "DELETE FROM import_goods_detail igd WHERE igd.import_goods_id = :id", nativeQuery = true)
     @Transactional
     @Modifying

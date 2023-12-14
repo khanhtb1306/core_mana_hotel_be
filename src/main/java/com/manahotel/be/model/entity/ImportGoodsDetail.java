@@ -34,4 +34,9 @@ public class ImportGoodsDetail {
 
     @Column(name = "total")
     private Float total;
+
+    @ManyToOne( optional = false)
+    @JoinColumn(name = "goods_unit_id", nullable = false)
+    private GoodsUnit goodsUnit;
+
 }

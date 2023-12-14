@@ -77,11 +77,20 @@ public class CustomerService {
                 response.put("message", "Ngày sinh nhỏ hơn ngày hiện tại!");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-//            if (customerRepository.findByIdentity(customerDTO.getIdentity()) != null) {
-//                Map<String, String> response = new HashMap<>();
-//                response.put("message", "Số chứng minh thư đã tồn tại!");
-//                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
+            if (!customerDTO.getIdentity().replace(" ", "").equals("")) {
+                if (!customerRepository.findByIdentity(customerDTO.getIdentity()).isEmpty()) {
+                    Map<String, String> response = new HashMap<>();
+                    response.put("message", "Số chứng minh thư đã tồn tại!");
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+            if (!customerDTO.getPhoneNumber().replace(" ", "").equals("")) {
+                if (!customerRepository.findByPhoneNumber(customerDTO.getPhoneNumber()).isEmpty()) {
+                    Map<String, String> response = new HashMap<>();
+                    response.put("message", "Số điện thoại đã tồn tại!");
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
 
             commonMapping(c, customerDTO);
 
@@ -122,6 +131,20 @@ public class CustomerService {
                 Map<String, String> response = new HashMap<>();
                 response.put("message", "Ngày sinh nhỏ hơn ngày hiện tại!");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            if (!customerDTO.getIdentity().replace(" ", "").equals("") && !customerDTO.getIdentity().equals(c.getIdentity())) {
+                if (!customerRepository.findByIdentity(customerDTO.getIdentity()).isEmpty()) {
+                    Map<String, String> response = new HashMap<>();
+                    response.put("message", "Số chứng minh thư đã tồn tại!");
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+            if (!customerDTO.getPhoneNumber().replace(" ", "").equals("")&& !customerDTO.getPhoneNumber().equals(c.getPhoneNumber())) {
+                if (!customerRepository.findByPhoneNumber(customerDTO.getPhoneNumber()).isEmpty()) {
+                    Map<String, String> response = new HashMap<>();
+                    response.put("message", "Số điện thoại đã tồn tại!");
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             }
             commonMapping(c, customerDTO);
 
