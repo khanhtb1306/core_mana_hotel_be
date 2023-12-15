@@ -59,15 +59,9 @@ public class FundBookService {
 
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId(nextId);
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Date parsedDate = dateFormat.parse(fundBookDTO.getTime());
-                Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
-                fundBook.setTime(dobTimestamp);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-
+            Timestamp timeImport = (Timestamp) Optional.ofNullable(fundBookDTO.getTime() != null ? fundBookDTO.getTime() : fundBook.getTime())
+                    .orElseGet(() -> new Timestamp(System.currentTimeMillis()));
+            fundBook.setTime(timeImport);
             fundBook.setType(fundBookDTO.getType());
             fundBook.setPaidMethod(fundBookDTO.getPaidMethod());
             fundBook.setValue(fundBookDTO.getValue());
@@ -136,14 +130,6 @@ public class FundBookService {
             log.info("----- Start update fund book -----");
             FundBook fundBook = findFundBook(id);
 
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Date parsedDate = dateFormat.parse(fundBookDTO.getTime());
-                Timestamp dobTimestamp = new Timestamp(parsedDate.getTime());
-                fundBook.setTime(dobTimestamp);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
             fundBook.setValue(fundBookDTO.getValue() != null ?fundBookDTO.getValue() : fundBook.getValue());
             fundBook.setStaff(fundBookDTO.getStaff() != null ? fundBookDTO.getStaff() : fundBook.getStaff());
             fundBook.setPaidMethod(fundBookDTO.getPaidMethod() != null ? fundBookDTO.getPaidMethod() : fundBook.getPaidMethod());
