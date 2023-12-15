@@ -171,7 +171,9 @@ public class FundBookService {
             List<String> invoiceIdList = new ArrayList<>();
             for (ReservationDetail rd : reservationDetailList) {
                 InvoiceReservationDetail invoiceReservationDetailList = invoiceReservationDetailRepository.findInvoiceReservationDetailByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
-                invoiceIdList.add(invoiceReservationDetailList.getInvoice().getInvoiceId());
+                if(invoiceReservationDetailList != null){
+                    invoiceIdList.add(invoiceReservationDetailList.getInvoice().getInvoiceId());
+                }
                 List<Order> orderList = orderRepository.findOrderByReservationDetailAndStatus(rd, Status.PAID);
                 for (Order order : orderList) {
                     List<FundBook> fundBookList3 = repository.findByFundBookIdContaining(order.getOrderId());
