@@ -25,10 +25,6 @@ public class PolicyDetail {
     @JoinColumn(name = "room_category_id", nullable = false)
     private RoomCategory roomCategory;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "customer_group_id", nullable = false)
-    private CustomerGroup customerGroup;
-
     @Column(name = "type", length = 250)
     private String type;
 
@@ -40,12 +36,6 @@ public class PolicyDetail {
 
     @Column(name = "type_value", length = 250)
     private String typeValue;
-
-    @Column(name = "other", length = 250)
-    private String other;
-
-    @Column(name = "requirement", length = 250)
-    private String requirement;
 
     @Column(name = "policy_value")
     private Float policyValue;

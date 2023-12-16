@@ -114,7 +114,6 @@ public class PolicyService {
 
                     if(dto.getType() != policyDetail.getType() || dto.getUnit() != policyDetail.getUnit() || dto.getLimitValue() != policyDetail.getLimitValue()
                             ||dto.getTypeValue() != policyDetail.getTypeValue() || dto.getPolicyValue() != policyDetail.getPolicyValue()
-                            ||dto.getRequirement() != policyDetail.getRequirement() || dto.getOther() != policyDetail.getOther()
                             ||dto.getNote() != policyDetail.getNote() || dto.getAutoAddToInvoice() != policyDetail.getAutoAddToInvoice())
                     {
                         commonMapping(policyDetail, dto);
@@ -181,11 +180,7 @@ public class PolicyService {
         policyDetail.setPolicy(policy);
         RoomCategory roomCategory = (dto.getRoomCategoryId() != null) ? findRoomCategory(dto.getRoomCategoryId()) : policyDetail.getRoomCategory();
         policyDetail.setRoomCategory(roomCategory);
-        CustomerGroup customerGroup = (dto.getCustomerGroupId() != null) ? findCustomerGroup(dto.getCustomerGroupId()) : policyDetail.getCustomerGroup();
-        policyDetail.setCustomerGroup(customerGroup);
         policyDetail.setLimitValue(dto.getLimitValue() != null ? dto.getLimitValue() : policyDetail.getLimitValue());
-        policyDetail.setRequirement(dto.getRequirement() != null ? dto.getRequirement() : policyDetail.getRequirement());
-        policyDetail.setOther(dto.getOther() != null ? dto.getOther() : policyDetail.getOther());
         policyDetail.setType(dto.getType() != null ? dto.getType() : policyDetail.getType());
         policyDetail.setTypeValue(dto.getTypeValue() != null ? dto.getTypeValue() : policyDetail.getTypeValue());
         policyDetail.setPolicyValue(dto.getPolicyValue() != null ? dto.getPolicyValue() : policyDetail.getPolicyValue());
