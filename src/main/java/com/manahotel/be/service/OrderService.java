@@ -192,16 +192,18 @@ public class OrderService {
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
     }
-    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod, String transactionCode){
+    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod, String transactionCode ){
 
         log.info("------- Update Status Order End -------");
         try {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
             order.setStatus(status);
             orderRepository.save(order);
-            if(order.getStatus().equals(Status.PAID)){
-                fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), transactionCode);
-                overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", order.getTotalPay(), new Timestamp(System.currentTimeMillis()));
+            if(paidMethod != null && transactionCode != null) {
+                if (order.getStatus().equals(Status.PAID)) {
+                    fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), transactionCode);
+                    overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", order.getTotalPay(), new Timestamp(System.currentTimeMillis()));
+                }
             }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");
