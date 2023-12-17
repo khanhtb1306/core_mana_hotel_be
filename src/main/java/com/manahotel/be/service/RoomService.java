@@ -11,6 +11,7 @@ import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.RoomCategory;
 import com.manahotel.be.repository.FloorRepository;
 import com.manahotel.be.repository.ReservationDetailRepository;
+import com.manahotel.be.repository.RoomClassRepository;
 import com.manahotel.be.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class RoomService {
     private FloorRepository floorRepository;
 
     @Autowired
-    private RoomClassService roomClassService;
+    private RoomClassRepository roomClassRepository;
 
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
@@ -64,7 +65,7 @@ public class RoomService {
 
             commonMapping(room, dto);
 
-            RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
+            RoomCategory roomCategory = getRoomCategoryById(dto.getRoomCategoryId());
             room.setRoomCategory(roomCategory);
 
             Floor floor = getFloorById(dto.getFloorId());
@@ -90,7 +91,7 @@ public class RoomService {
             Room room = getRoomById(id);
             commonMapping(room, dto);
             if (dto.getRoomCategoryId() != null) {
-                RoomCategory roomCategory = roomClassService.getRoomCategoryById(dto.getRoomCategoryId());
+                RoomCategory roomCategory = getRoomCategoryById(dto.getRoomCategoryId());
                 room.setRoomCategory(roomCategory);
             }
             if (dto.getFloorId() != null){
@@ -170,6 +171,13 @@ public class RoomService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Floor not found with id " + id));
+    }
+
+    public RoomCategory getRoomCategoryById(String id) {
+        return roomClassRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Room Class not found with id " + id));
     }
 
 
