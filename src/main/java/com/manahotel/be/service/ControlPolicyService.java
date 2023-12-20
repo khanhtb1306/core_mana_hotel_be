@@ -144,7 +144,7 @@ public class ControlPolicyService {
         }
     }
 
-    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId) {
+    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId, boolean checkFundBook) {
         log.info("----- Calculate Deposit Cancel Reservation Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.SETUP_DEPOSIT, Const.ROOM_CATEGORY_ID);
@@ -152,12 +152,14 @@ public class ControlPolicyService {
             if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
                 addControlPolicy(reservationDetailId, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
-                if(surcharge > 0){
-                    fundBookService.writeFundBookEXPENSE(
-                            findReservationDetail(reservationDetailId).getReservation().getReservationId(),
-                            Status.CASH,
-                            surcharge,
-                            "");
+                if(checkFundBook){
+                    if(surcharge > 0){
+                        fundBookService.writeFundBookEXPENSE(
+                                findReservationDetail(reservationDetailId).getReservation().getReservationId(),
+                                Status.CASH,
+                                surcharge,
+                                "");
+                    }
                 }
             }
             log.info("----- Calculate Deposit Cancel Reservation End------");

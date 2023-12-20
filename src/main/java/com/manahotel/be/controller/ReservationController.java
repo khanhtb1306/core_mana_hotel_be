@@ -81,8 +81,8 @@ public class ReservationController {
     }
 
     @PostMapping("/calculate_deposit_cancel_reservation")
-    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId) {
-        return controlPolicyService.calculateDepositCancelReservation(deposit, number, reservationDetailId);
+    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId, boolean checkFundBook) {
+        return controlPolicyService.calculateDepositCancelReservation(deposit, number, reservationDetailId, checkFundBook);
     }
 
     @GetMapping("/get_control_policy_by_reservation_detail")
