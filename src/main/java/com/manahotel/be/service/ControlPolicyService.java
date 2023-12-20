@@ -147,7 +147,7 @@ public class ControlPolicyService {
     public ResponseDTO calculateDepositCancelReservation(float deposit, float number, String reservationId, boolean checkFundBook) {
         log.info("----- Calculate Deposit Cancel Reservation Start------");
         try{
-            List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.SETUP_DEPOSIT, Const.ROOM_CATEGORY_ID);
+            List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.CHANGE_CANCEL_ROOM_SURCHARGE, Const.ROOM_CATEGORY_ID);
             float surcharge = 0;
             if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
