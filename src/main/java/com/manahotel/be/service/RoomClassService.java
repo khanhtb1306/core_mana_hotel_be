@@ -123,7 +123,7 @@ public class RoomClassService {
         roomClass.setNumMaxOfChildren(dto.getNumMaxOfChildren() != null ? dto.getNumMaxOfChildren() : roomClass.getNumMaxOfChildren());
         roomClass.setRoomArea(dto.getRoomArea() != null ? dto.getRoomArea() : roomClass.getRoomArea());
         roomClass.setDescription(dto.getDescription() != null ? dto.getDescription() : roomClass.getDescription());
-        roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : null);
+        roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : roomClass.getImage());
         if(!roomClass.getStatus().equals(dto.getStatus())){
             List<Room> room = roomRepository.findByRoomCategory(roomClass);
             for (Room r: room){
