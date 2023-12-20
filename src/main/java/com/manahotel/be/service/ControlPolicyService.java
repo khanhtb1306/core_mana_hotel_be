@@ -147,7 +147,7 @@ public class ControlPolicyService {
             float surcharge = 0;
             if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
-                addControlPolicy(, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
+                addControlPolicy(reservationDetailId, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
             }
 
             log.info("----- Calculate Deposit Cancel Reservation End------");
