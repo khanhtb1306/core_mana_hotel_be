@@ -118,18 +118,22 @@ public class ReservationDetailCustomerService {
         }
     }
 
-    public ResponseDTO checkCustomerIsVisitor(String reservationId){
-        List<Object> result = new ArrayList<>();
-        try{
+    public ResponseDTO checkCustomerIsVisitor(String reservationId) {
+        try {
             List<ReservationDetail> reservationList = repository2.findReservationDetailByReservation_ReservationId(reservationId);
-            for(ReservationDetail rd: reservationList){
-                List<ReservationDetailCustomer> rds= repository.findReservationDetailCustomerByReservationDetail(findReservationDetail(rd.getReservationDetailId()));
-                result.add(rds);
+            for (ReservationDetail rd : reservationList) {
+                List<ReservationDetailCustomer> rds = repository.findReservationDetailCustomerByReservationDetail_ReservationDetailId(rd.getReservationDetailId());
+                for (ReservationDetailCustomer rdc : rds) {
+                    Customer customer = repository3.findByCustomerId(rdc.getCustomer().getCustomerId());
+                    if (customer.getIsCustomer()) {
+                        return ResponseUtils.success(true, "checkCustomerIsVisitor_isSuccess");
+                    }
+                }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return ResponseUtils.success(!result.isEmpty() ? true : false, "checkCustomerIsVisitor_isSuccess");
+        return ResponseUtils.success(false, "checkCustomerIsVisitor_isSuccess");
     }
 
     private void commonMapping(ReservationDetailCustomer rdc, ReservationDetailCustomerDTO dto) {

@@ -15,6 +15,8 @@ public interface ReservationDetailCustomerRepository extends JpaRepository<Reser
 
     List<ReservationDetailCustomer> findReservationDetailCustomerByReservationDetail(ReservationDetail reservationDetail);
 
+    List<ReservationDetailCustomer> findReservationDetailCustomerByReservationDetail_ReservationDetailId(Long reservationId);
+
     @Query(value = "DELETE FROM reservation_detail_customer rdc WHERE rdc.reservation_detail_id = :id", nativeQuery = true)
     @Transactional
     @Modifying
