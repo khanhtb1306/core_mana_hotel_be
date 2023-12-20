@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 public class ReservationDetailCustomerService {
@@ -113,6 +116,20 @@ public class ReservationDetailCustomerService {
             log.info("----- Delete RDC failed -----\n" + e.getMessage());
             return ResponseUtils.error("Xóa thông tin khách hàng theo phòng thất bại");
         }
+    }
+
+    public ResponseDTO checkCustomerIsVisitor(String reservationId){
+        List<Object> result = new ArrayList<>();
+        try{
+            List<ReservationDetail> reservationList = repository2.findReservationDetailByReservation_ReservationId(reservationId);
+            for(ReservationDetail rd: reservationList){
+                List<ReservationDetailCustomer> rds= repository.findReservationDetailCustomerByReservationDetail(findReservationDetail(rd.getReservationDetailId()));
+                result.add(rds);
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return ResponseUtils.success(!result.isEmpty() ? true : false, "checkCustomerIsVisitor_isSuccess");
     }
 
     private void commonMapping(ReservationDetailCustomer rdc, ReservationDetailCustomerDTO dto) {
