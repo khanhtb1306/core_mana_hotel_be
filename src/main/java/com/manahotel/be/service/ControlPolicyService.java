@@ -144,7 +144,7 @@ public class ControlPolicyService {
         }
     }
 
-    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId, boolean checkFundBook) {
+    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, String reservationId, boolean checkFundBook) {
         log.info("----- Calculate Deposit Cancel Reservation Start------");
         try{
             List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.SETUP_DEPOSIT, Const.ROOM_CATEGORY_ID);
@@ -152,9 +152,7 @@ public class ControlPolicyService {
             if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
                 if(checkFundBook &&  surcharge > 0){
-                    addControlPolicy(reservationDetailId, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
-                    fundBookService.writeFundBookEXPENSE(
-                                findReservationDetail(reservationDetailId).getReservation().getReservationId(),
+                    fundBookService.writeFundBookEXPENSE(reservationId,
                                 Status.CASH,
                                 surcharge,
                                 "");
