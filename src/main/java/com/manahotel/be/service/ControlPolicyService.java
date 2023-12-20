@@ -152,14 +152,12 @@ public class ControlPolicyService {
             if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
                 addControlPolicy(reservationDetailId, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
-                if(checkFundBook){
-                    if(surcharge > 0){
+                if(checkFundBook &&  surcharge > 0){
                         fundBookService.writeFundBookEXPENSE(
                                 findReservationDetail(reservationDetailId).getReservation().getReservationId(),
                                 Status.CASH,
                                 surcharge,
                                 "");
-                    }
                 }
             }
             log.info("----- Calculate Deposit Cancel Reservation End------");
