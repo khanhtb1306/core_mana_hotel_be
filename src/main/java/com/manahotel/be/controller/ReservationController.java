@@ -80,6 +80,11 @@ public class ReservationController {
         return controlPolicyService.calculateAdditionalChildrenSurcharge(request.getReservationDetailId(), request.getRoomCategoryId(), request.getRoomPrice(), request.getCustomerDTOS(), request.getTimeUse(), request.isStatus());
     }
 
+    @PostMapping("/calculate_deposit_cancel_reservation")
+    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId) {
+        return controlPolicyService.calculateDepositCancelReservation(deposit, number, reservationDetailId);
+    }
+
     @GetMapping("/get_control_policy_by_reservation_detail")
     public ResponseDTO getControlPolicy(long reservationDetailId, String policyName) {
         return controlPolicyService.getControlPolicyByReservationDetail(reservationDetailId, policyName);

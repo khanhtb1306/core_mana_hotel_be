@@ -92,4 +92,19 @@ public class ControlPolicyUtils {
         }
         return result;
     }
+
+    public static float calculateDepositCancelReservation(float deposit, float number, List<PolicyDetail> policyDetails){
+        float result = 0;
+        try{
+            for (PolicyDetail pd : policyDetails){
+                if(pd.getLimitValue() <= number){
+                    result = deposit - (deposit * (pd.getPolicyValue()/100));
+                    break;
+                }
+            }
+        }catch (Exception e){
+            log.error("calculateDepositCancelReservation_isFail" + e.getMessage());
+        }
+        return result;
+    }
 }

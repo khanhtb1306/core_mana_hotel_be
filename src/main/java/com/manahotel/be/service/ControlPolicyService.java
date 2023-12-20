@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.PolicyCont;
 import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.ResponseUtils;
@@ -136,6 +137,24 @@ public class ControlPolicyService {
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("calculateAdditionalChildrenSurcharge_isFail");
+        }
+    }
+
+    public ResponseDTO calculateDepositCancelReservation(float deposit, float number, long reservationDetailId) {
+        log.info("----- Calculate Deposit Cancel Reservation Start------");
+        try{
+            List<PolicyDetail> policyDetails = policyDetailRepository.findPolicyDetailByPolicyNameAndRoomCategoryId(PolicyCont.SETUP_DEPOSIT, Const.ROOM_CATEGORY_ID);
+            float surcharge = 0;
+            if(!policyDetails.isEmpty()) {
+                surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
+                addControlPolicy(, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
+            }
+
+            log.info("----- Calculate Deposit Cancel Reservation End------");
+            return ResponseUtils.success(surcharge, "Tính tền dọc thành công");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseUtils.error("calculateDepositCancelReservation_isFail");
         }
     }
 

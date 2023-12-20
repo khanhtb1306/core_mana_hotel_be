@@ -8,5 +8,7 @@ public class Const {
     public static final String RESERVATION_ID = "DP000000";
     public static final String CUSTOMER_ID = "C000000";
 
+    public static final String ROOM_CATEGORY_ID = "HP000000";
+
 
 }
