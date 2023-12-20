@@ -227,8 +227,12 @@ public class RoomService {
         log.info("------- Delete Area Start -------");
         try {
             Floor floor = getFloorById((long) id);
-
-            floor.setStatus(Status.DELETE);
+            List<Room> rooms = roomRepository.findByFloor_FloorId((long) id);
+            if (rooms != null){
+                return new ResponseEntity<>("Không thể xóa khu vực vì khu vực tồn tại phòng", HttpStatus.BAD_REQUEST);
+            }else {
+                floor.setStatus(Status.DELETE);
+            }
             floorRepository.save(floor);
             log.info("------- DELETE Area End -------");
             return new ResponseEntity<>("Xóa khu vực thành công", HttpStatus.OK);
