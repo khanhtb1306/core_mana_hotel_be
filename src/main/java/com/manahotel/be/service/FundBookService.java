@@ -125,6 +125,28 @@ public class FundBookService {
         log.info("----- Write Fund Book Start  -----");
     }
 
+    public void writeFundBookEXPENSE(String fundBookId, String paidMethod, Float value, String transactionCode){
+        log.info("----- Write Fund Book EXPENSE Start  -----");
+        try{
+                FundBook fundBook = new FundBook();
+                fundBook.setFundBookId(fundBookId.contains("TT") ? fundBookId : ("TT" + fundBookId));
+                fundBook.setTime(new Timestamp(System.currentTimeMillis()));
+                fundBook.setType(Status.EXPENSE);
+                fundBook.setPaidMethod(paidMethod);
+                fundBook.setValue(value);
+                fundBook.setPayerReceiver("Khách Hàng");
+                fundBook.setStaff(UserUtils.getUser().getStaffName());
+                fundBook.setNote("Trả Tiền Cọc");
+                fundBook.setStatus(Status.COMPLETE);
+                fundBook.setTransactionCode(transactionCode);
+                repository.save(fundBook);
+                log.info("writeFundBook_isSuccess");
+        }catch (Exception e){
+            log.error("writeFundBook_isFail");
+        }
+        log.info("----- Write Fund Book Start  -----");
+    }
+
     public ResponseDTO updateFundBook(String id, FundBookDTO fundBookDTO) {
         try {
             log.info("----- Start update fund book -----");

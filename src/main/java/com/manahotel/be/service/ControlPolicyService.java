@@ -2,6 +2,7 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.common.constant.PolicyCont;
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.common.util.ControlPolicyUtils;
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.NoEarlySurchargePolicyException;
@@ -39,6 +40,9 @@ public class ControlPolicyService {
 
     @Autowired
     private ReservationDetailRepository reservationDetailRepository;
+
+    @Autowired
+    private FundBookService fundBookService;
 
     public ResponseDTO getControlPolicyByReservation(String reservationId){
         try {
@@ -148,8 +152,14 @@ public class ControlPolicyService {
             if(!policyDetails.isEmpty()) {
                 surcharge = ControlPolicyUtils.calculateDepositCancelReservation(deposit, number, policyDetails);
                 addControlPolicy(reservationDetailId, PolicyCont.SETUP_DEPOSIT, "VND", surcharge, "","Hủy Phòng Trả Cọc", true);
+                if(surcharge > 0){
+                    fundBookService.writeFundBookEXPENSE(
+                            findReservationDetail(reservationDetailId).getReservation().getReservationId(),
+                            Status.CASH,
+                            surcharge,
+                            "");
+                }
             }
-
             log.info("----- Calculate Deposit Cancel Reservation End------");
             return ResponseUtils.success(surcharge, "Tính tền dọc thành công");
         }catch (Exception e){
