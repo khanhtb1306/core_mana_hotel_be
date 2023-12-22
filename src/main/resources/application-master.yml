@@ -21,5 +21,6 @@ spring:
           starttls:
             enable: true
   config:
-    link: https://manahotel-g41.web.app:3000
+    link: http://manahotel.s3-website-ap-southeast-1.amazonaws.com
+#    link: http://localhost:3000
     linkQr: https://api.vietqr.io

@@ -41,6 +41,9 @@ public class InvoiceService {
     private CustomerRepository customerRepository;
 
     @Autowired
+    private FundBookRepository fundBookRepository;
+
+    @Autowired
     private OverviewService overviewService;
 
     @Autowired
@@ -159,8 +162,17 @@ public class InvoiceService {
     }
 
     public ResponseDTO getAllInvoices() {
-        List<Invoice> invoice = invoiceRepository.findAllByOrderByInvoiceIdDesc();
-        return ResponseUtils.success(invoice, "Hiển thị danh sách hóa đơn thành công");
+        List<Invoice> listInvoice = invoiceRepository.findAllByOrderByInvoiceIdDesc();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for(Invoice invoice : listInvoice) {
+            List<FundBook> fundBook = fundBookRepository.findByFundBookIdContaining(invoice.getInvoiceId());
+            Map<String, Object> invoiceInfo = new HashMap<>();
+            invoiceInfo.put("invoice", invoice);
+            invoiceInfo.put("fundBook", fundBook);
+            result.add(invoiceInfo);
+        }
+        return ResponseUtils.success(result, "Hiển thị danh sách hóa đơn thành công");
     }
 
     public ResponseDTO getInvoiceById(String id) {
