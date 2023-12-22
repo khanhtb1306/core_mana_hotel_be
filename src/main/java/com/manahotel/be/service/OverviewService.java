@@ -353,7 +353,7 @@ public class OverviewService {
                             }
                         } else {
                             long DurationCheckOutActual;
-                            if(rd.getCheckInActual().getTime() >= rd.getCheckOutEstimate().getTime()){
+                            if(rd.getCheckOutActual().getTime() >= rd.getCheckOutEstimate().getTime()){
                                 DurationCheckOutActual = ChronoUnit.MILLIS.between(
                                         rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
                                         rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
