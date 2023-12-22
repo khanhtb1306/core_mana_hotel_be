@@ -74,7 +74,7 @@ public class InvoiceService {
                 List<PolicyDetail> policyDetail = policyDetailRepository.getPolicyDetailByPolicyIdNotStatus6(
                         policyRepository.getPolicyByPolicyName(PolicyCont.SETUP_POINT_SYSTEM).getPolicyId());
                 if (policyDetail.get(0).getLimitValue() <= invoiceDTO.getTotalReservationLate()) {
-                    customer.setPoint(customer.getPoint() + invoiceDTO.getTotalReservationLate() / policyDetail.get(0).getLimitValue());
+                    customer.setPoint(customer.getPoint() + (int) (invoiceDTO.getTotalReservationLate() / policyDetail.get(0).getLimitValue()));
                 }
             }
             Invoice invoice = new Invoice();
