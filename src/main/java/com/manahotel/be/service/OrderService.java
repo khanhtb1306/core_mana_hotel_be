@@ -52,20 +52,19 @@ public class OrderService {
     @Autowired
     private OverviewService overviewService;
 
-    public ResponseDTO getOrderByReservationDetailId(Long reservationDetailId){
+    public ResponseDTO getOrderByReservationDetailId(Long reservationDetailId) {
         log.info("------- Get Order Start -------");
         List<Object> result = new ArrayList<>();
-        try{
+        try {
             List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetailId);
-            for (Order order : orderList)
-            {
+            for (Order order : orderList) {
                 Map<String, Object> orderInfo = new HashMap<>();
                 order.setReservationDetail(null);
                 orderInfo.put("order", order);
 
                 List<OrderDetail> orderDetailList = orderDetailRepository.findOrderDetailByOrder_OrderId(order.getOrderId());
                 List<Map<String, Object>> inforList = new ArrayList<>();
-                for(OrderDetail orderDetail: orderDetailList){
+                for (OrderDetail orderDetail : orderDetailList) {
                     Map<String, Object> orderInfo1 = new HashMap<>();
                     orderInfo1.put("OrderDetail", orderDetail);
                     inforList.add(orderInfo1);
@@ -75,9 +74,9 @@ public class OrderService {
                 result.add(orderInfo);
             }
             log.info("------- Get Order End -------");
-            return ResponseUtils.success(result,"Lấy hóa đơn thành công");
+            return ResponseUtils.success(result, "Lấy hóa đơn thành công");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Get Order", e.getMessage());
             return ResponseUtils.error("Lấy hóa đơn thất bại");
         }
@@ -90,7 +89,7 @@ public class OrderService {
             List<ReservationDetail> reservationDetails = reservationDetailRepository.findReservationDetailByReservation_ReservationId(reservationId);
             for (ReservationDetail reservationDetail : reservationDetails) {
                 List<Order> orderList = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
-                if (!orderList.isEmpty()){
+                if (!orderList.isEmpty()) {
                     List<Object> listOrderByReservationDetailId = new ArrayList<>();
                     for (Order order : orderList) {
                         Map<String, Object> orderInfo = new HashMap<>();
@@ -171,13 +170,13 @@ public class OrderService {
             orderRepository.save(order);
             log.info("------- Update Order End -------");
             return ResponseUtils.success("Cập nhật hóa đơn thành công");
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Update Order", e.getMessage());
             return ResponseUtils.error("Cập nhật hóa đơn thất bại");
         }
     }
 
-    public ResponseDTO deleteOrder(String orderId){
+    public ResponseDTO deleteOrder(String orderId) {
         log.info("------- Delete Order End -------");
 
         try {
@@ -187,19 +186,26 @@ public class OrderService {
             orderRepository.save(order);
             log.info("------- Delete Order End -------");
             return ResponseUtils.success("Xoá hóa đơn thành công");
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Delete Order", e.getMessage());
             return ResponseUtils.error("Xóa hóa đơn thất bại");
         }
     }
-    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod, String transactionCode ){
+
+    public ResponseDTO updateStatusOrder(String orderId, String status, String paidMethod, String transactionCode) {
 
         log.info("------- Update Status Order End -------");
         try {
             Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalStateException("order with id not exists"));
             order.setStatus(status);
             orderRepository.save(order);
-            if(paidMethod != null && transactionCode != null) {
+            if (order.getStatus().equals(Status.CONFIRMED)) {
+                List<OrderDetail> orderDetailList = orderDetailRepository.findOrderDetailByOrder_OrderId(order.getOrderId());
+                for (OrderDetail orderDetail : orderDetailList) {
+                    orderDetailService.updateOrderDetail(orderDetail);
+                }
+            }
+            if (paidMethod != null && transactionCode != null) {
                 if (order.getStatus().equals(Status.PAID)) {
                     fundBookService.writeFundBook(orderId, paidMethod, order.getTotalPay(), transactionCode);
                     overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), "tạo hóa đơn", order.getTotalPay(), new Timestamp(System.currentTimeMillis()));
@@ -207,7 +213,7 @@ public class OrderService {
             }
             log.info("------- Update Status Order End -------");
             return ResponseUtils.success("Cập nhật trạng thái hóa đơn thành công");
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Can't Update Status Order", e.getMessage());
             return ResponseUtils.error("Cập nhật trạng thái hóa đơn thất bại");
         }
@@ -240,7 +246,7 @@ public class OrderService {
         List<Object[]> listOrders = orderRepository.findAllRetailOrdersWithDetails();
 
         List<Map<String, Object>> result = new ArrayList<>();
-        for(Object[] order : listOrders) {
+        for (Object[] order : listOrders) {
             Order o = (Order) order[0];
             List<OrderDetail> listOrderDetails = orderDetailRepository.findOrderDetailByOrder_OrderId(o.getOrderId());
             Map<String, Object> orderInfo = new HashMap<>();

@@ -144,11 +144,11 @@ public class ImportGoodsService {
 
             list.add(importGoodsDetail);
             if (importGoods.getStatus().equals(Status.IMPORT)) {
-                if (importGoodsDTO.getImportGoodsId() != null) {
-                    for (ImportGoodsDetail detail : listOld) {
-                        goods.setInventory(goods.getInventory() - detail.getAmount() * importGoodsDetailDTO.getAmountUnit());
-                    }
-                }
+//                if (importGoodsDTO.getImportGoodsId() != null) {
+//                    for (ImportGoodsDetail detail : listOld) {
+//                        goods.setInventory(goods.getInventory() - detail.getAmount() * importGoodsDetailDTO.getAmountUnit());
+//                    }
+//                }
                 goods.setInventory(goods.getInventory() + importGoodsDetail.getAmount() * importGoodsDetailDTO.getAmountUnit());
                 goodsRepository.save(goods);
             }
@@ -179,7 +179,7 @@ public class ImportGoodsService {
             fundBook.setValue(importGoods.getPrice());
             fundBook.setPayerReceiver(importGoods.getSupplier());
             fundBook.setStaff(staff.getStaffName());
-            fundBook.setNote("Chi tiền trả nhà cung cấp");
+            fundBook.setNote("Tạo phiếu nhâp hàng");
             fundBook.setStatus(Status.COMPLETE);
             fundBookRepository.save(fundBook);
         }

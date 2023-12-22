@@ -121,7 +121,7 @@ public class InvoiceService {
             invoiceRepository.save(invoice);
 
             orderDetailDTOList.forEach(orderDetail -> {
-                orderDetailService.createOrderDetail(orderDetail, invoice.getInvoiceId(), Const.ORDER_ID);
+                orderDetailService.createOrderDetail(orderDetail, Const.ORDER_ID, invoice.getInvoiceId());
             });
             writeLogFundBookAndRecentActivity(invoiceDTO, invoice);
             log.info("----- Create Purchase Invoice End -----");

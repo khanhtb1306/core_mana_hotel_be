@@ -10,7 +10,7 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, String> {
     Customer findTopByOrderByCustomerIdDesc();
     List<Customer> findByIdentity(String identity);
-    List<Customer> findByPhoneNumber(String identity);
+    List<Customer> findByPhoneNumber(String phoneNumber);
 
     Customer findByCustomerId(String customerId);
 

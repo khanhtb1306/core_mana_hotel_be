@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Const;
 import com.manahotel.be.model.dto.response.OrderDetailDTO;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
@@ -49,9 +50,11 @@ public class OrderDetailService {
             orderDetail.setGoodsUnit(goodsUnit);
             orderDetail.setInvoice(invoice);
             commonMapping(orderDetail, orderDetailDTO);
-            if(goods.isGoodsCategory()) {
-                goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
-                goodsRepository.save(goods);
+            if(orderId.equals(Const.ORDER_ID)){
+                if(goods.isGoodsCategory()) {
+                    goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
+                    goodsRepository.save(goods);
+                }
             }
             orderDetailRepository.save(orderDetail);
             log.info("------- Add OrderDetail End -------");
@@ -59,7 +62,14 @@ public class OrderDetailService {
             log.info("Can't Add OrderDetail", e.getMessage());
         }
     }
-
+    public void updateOrderDetail(OrderDetail orderDetail)
+    {
+        Goods goods = goodsRepository.findById(orderDetail.getGoods().getGoodsId()).orElseThrow(() -> new IllegalStateException("Not found goods"));
+        if(goods.isGoodsCategory()) {
+            goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
+            goodsRepository.save(goods);
+        }
+    }
 
     public void deleteOrderDetails(String orderId) {
         try {

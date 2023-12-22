@@ -109,7 +109,7 @@ public class JwtService {
         validUserTokens.forEach(token -> {
             token.setExpirationTime(new Date(80,1,1));
         });
-        tokenRepository.saveAll(validUserTokens);
+        tokenRepository.deleteAll(validUserTokens);
     }
     public String validatePasswordResetToken(String theToken){
         Token passwordToken = tokenRepository.findByToken(theToken);

@@ -35,7 +35,7 @@ public class LogoutService implements LogoutHandler {
         if (storedToken != null) {
             Date date = new Date(0);
             storedToken.setExpirationTime(date);
-            tokenRepository.save(storedToken);
+            tokenRepository.delete(storedToken);
             SecurityContextHolder.clearContext();
             log.info("Logout successful");
         }

@@ -91,7 +91,7 @@ public class CustomerService {
                     return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
-
+            c.setPoint((float) 0);
             commonMapping(c, customerDTO);
 
             customerRepository.save(c);

@@ -12,6 +12,8 @@ import com.manahotel.be.repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +67,7 @@ public class StaffService {
                 return ResponseUtils.error("Email đã tồn tại");
 
             }
-            if(staffDTO.getUsername() != null)
+            if(!staffDTO.getUsername().replace(" ", "").equals(""))
             {
                 if (findByuserName(staffDTO.getUsername()) != null  && !staffDTO.getUsername().equals(staff.getUsername()))
                 {
@@ -78,12 +80,18 @@ public class StaffService {
                 log.info("----- Create And Update Staff End ------");
                 return ResponseUtils.error("Ngày sinh nhỏ hơn ngày hiện tại!");
             }
-            if (repository.findByIdentity(staffDTO.getIdentity()) != null) {
-               if(staff != null && !staff.getIdentity().equals(staffDTO.getIdentity()))
-               {
-                   log.info("----- Create And Update Staff End ------");
-                   return ResponseUtils.error("Số chứng minh thư đã tồn tại!");
-               }
+            if(!staffDTO.getIdentity().replace(" ", "").equals(""))
+            {
+                if (!repository.findByIdentity(staffDTO.getIdentity()).isEmpty() && !staffDTO.getIdentity().equals(staff.getIdentity())) {
+                    log.info("----- Create And Update Staff End ------");
+                    return ResponseUtils.error("Số chứng minh thư đã tồn tại!");
+                }
+            }
+            if (!staffDTO.getPhoneNumber().replace(" ", "").equals("")) {
+                if (!repository.findByPhoneNumber(staffDTO.getPhoneNumber()).isEmpty() && !staffDTO.getPhoneNumber().equals(staff.getPhoneNumber())) {
+                    log.info("----- Create And Update Staff End ------");
+                    return ResponseUtils.error("Số điện thoại đã tồn tại!");
+                }
             }
 
             commonMapping(staff, staffDTO);
@@ -126,10 +134,10 @@ public class StaffService {
             staff.setStatus(Status.NO_ACTIVE);
             repository.save(staff);
             log.info("----- Delete Staff End ------");
-            return ResponseUtils.success(staffId, "Xóa thành công");
+            return ResponseUtils.success(staffId, "Dừng hoạt động nhân viên thành công");
         } catch (Exception e) {
             log.info(e.getMessage());
-            return ResponseUtils.error("Xóa thất bại");
+            return ResponseUtils.error("Dừng hoạt động nhân viên thất bại");
         }
     }
 
@@ -146,10 +154,10 @@ public class StaffService {
                 result.put(responseDTO.getResult(), responseDTO.getDisplayMessage());
             }
             log.info("----- Delete List Staff End ------");
-            return ResponseUtils.success(result, "Xóa thành công");
+            return ResponseUtils.success(result, "Dừng hoạt động nhân viên thành công");
         } catch (Exception e) {
             log.info(e.getMessage());
-            return ResponseUtils.error("Xóa thất bại");
+            return ResponseUtils.error("Dừng hoạt động nhân viên thất bại");
         }
     }
 
