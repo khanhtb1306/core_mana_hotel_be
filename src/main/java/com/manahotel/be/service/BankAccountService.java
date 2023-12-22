@@ -2,13 +2,20 @@ package com.manahotel.be.service;
 
 import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
+import com.manahotel.be.model.dto.request.QRCodeRequest;
 import com.manahotel.be.model.dto.response.BankAccountDTO;
+import com.manahotel.be.model.dto.response.QRCodeResponse;
 import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.BankAccount;
 import com.manahotel.be.repository.BankAccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Slf4j
 @Service
@@ -42,5 +49,43 @@ public class BankAccountService {
     public BankAccount findBankAccount(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id " + id));
+    }
+
+    public ResponseEntity<QRCodeResponse> generateQRCode(String reservationId, Long bankAccountId, Float amount, String template) {
+        BankAccount bankAccount = findBankAccount(bankAccountId);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        String transactionCode = "MGD" + dateFormat.format(new Timestamp(System.currentTimeMillis())) + reservationId;
+
+        QRCodeRequest qrCodeRequest = new QRCodeRequest();
+        qrCodeRequest.setAccountNo(bankAccount.getBankAccountNumber());
+        qrCodeRequest.setAccountName(bankAccount.getBankAccountName());
+        qrCodeRequest.setAcqId(bankAccount.getBankId());
+        qrCodeRequest.setAmount(Math.round(amount));
+        qrCodeRequest.setAddInfo(transactionCode);
+        qrCodeRequest.setFormat("text");
+        qrCodeRequest.setTemplate(template);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<QRCodeRequest> entity = new HttpEntity<>(qrCodeRequest, headers);
+
+        ResponseEntity<QRCodeResponse> responseEntity = restTemplate.exchange(
+                "https://api.vietqr.io/v2/generate",
+                HttpMethod.POST,
+                entity,
+                QRCodeResponse.class
+        );
+
+        QRCodeResponse response = responseEntity.getBody();
+        if(response != null) {
+            response.setTransactionCode(transactionCode);
+        }
+
+        return responseEntity;
     }
 }
