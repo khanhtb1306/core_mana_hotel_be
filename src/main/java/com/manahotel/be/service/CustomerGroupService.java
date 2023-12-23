@@ -27,9 +27,7 @@ public class CustomerGroupService {
         log.info("----- Get All CustomerGroup Start------");
         try {
             List<CustomerGroup> customerGroups = customerGroupRepository.findAll();
-            if (!customerGroups.isEmpty()) {
-                customerGroups.remove(0);
-            }
+
             log.info("----- Get All CustomerGroup End ------");
             return ResponseUtils.success(customerGroups,"Lấy tất cả thành công");
         } catch (Exception e) {

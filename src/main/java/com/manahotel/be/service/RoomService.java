@@ -94,6 +94,11 @@ public class RoomService {
                 RoomCategory roomCategory = getRoomCategoryById(dto.getRoomCategoryId());
                 room.setRoomCategory(roomCategory);
             }
+            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
+            if(reservationDetail != null){
+                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể xóa");
+                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể xóa", HttpStatus.BAD_REQUEST);
+            }
             if (dto.getFloorId() != null){
                 Floor floor = getFloorById(dto.getFloorId());
                 room.setFloor(floor);

@@ -21,11 +21,15 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
     ReservationDetail findReservationDetailByReservationAndRoom(Reservation reservation, Room room);
 
     @Query("SELECT rd FROM ReservationDetail rd " +
+            "WHERE rd.room.roomId = ?1 AND rd.status IN ('CHECK_IN', 'BOOKING', 'CHECK_OUT')")
+    List<ReservationDetail> findDetailsByRoomIdAndStatus(String roomId);
+
+    @Query("SELECT rd FROM ReservationDetail rd " +
             "WHERE rd.reservation.reservationId = ?1 AND rd.reservationDetailStatus <> 6")
     List<ReservationDetail> findReservationDetailByReservation_ReservationId(String reservationId);
 
     @Query("SELECT rd FROM ReservationDetail rd " +
-            "WHERE rd.room.roomId = ?1 AND (rd.status = 'BOOKING' OR rd.status = 'CHECK_IN')")
+            "WHERE rd.room.roomId = ?1 AND (rd.status = 'BOOKING' OR rd.status = 'CHECK_IN' OR rd.status = 'CHECK_OUT')")
     List<ReservationDetail> findBookingAndCheckInDetailsByRoomId(String roomId);
 
     @Query("SELECT rd FROM ReservationDetail rd " +

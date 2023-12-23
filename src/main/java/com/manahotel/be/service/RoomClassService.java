@@ -124,13 +124,6 @@ public class RoomClassService {
         roomClass.setRoomArea(dto.getRoomArea() != null ? dto.getRoomArea() : roomClass.getRoomArea());
         roomClass.setDescription(dto.getDescription() != null ? dto.getDescription() : roomClass.getDescription());
         roomClass.setImage(dto.getImage() != null ? dto.getImage().getBytes() : roomClass.getImage());
-        if(!roomClass.getStatus().equals(dto.getStatus())){
-            List<Room> room = roomRepository.findByRoomCategory(roomClass);
-            for (Room r: room){
-                r.setStatus(dto.getStatus());
-            }
-            roomClass.setStatus(dto.getStatus() != null ? dto.getStatus() : roomClass.getStatus());
-        }
     }
 
     public ResponseEntity<String> createRoomClass(RoomCategoryDTO dto) {
@@ -164,6 +157,27 @@ public class RoomClassService {
             roomClass.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             commonMapping(roomClass, dto);
+            if(dto.getStatus() == (Status.DEACTIVATE)){
+                List<Room> rooms = roomRepository.findByRoomCategoryAndStatus(roomClass, Status.ACTIVATE);
+                int count = 0;
+                for (Room room : rooms){
+                    List<ReservationDetail> reservationDetails = reservationDetailRepository.findDetailsByRoomIdAndStatus(room.getRoomId());
+                    if(!reservationDetails.isEmpty()){
+                        count ++;
+                    }
+                }
+                if(count > 0){
+                    return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể Cập nhật", HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            if(!roomClass.getStatus().equals(dto.getStatus())){
+                List<Room> room = roomRepository.findByRoomCategory(roomClass);
+                for (Room r: room){
+                    r.setStatus(dto.getStatus());
+                }
+                roomClass.setStatus(dto.getStatus() != null ? dto.getStatus() : roomClass.getStatus());
+            }
 
             roomClassRepository.save(roomClass);
 
