@@ -197,18 +197,18 @@ public class ReservationDetailService {
                 String timePrice = date + ":" + ltp.getPrice();
                 result.append(timePrice).append(";");
             }
+
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
-            boolean isSaveRequired = false;
-            if (reservationDetail == null) {
-                reservationDetail = new ReservationDetail();
-                isSaveRequired = true;
-            } else if (!Objects.equals(reservationDetail.getPriceHistoryOverTime(), result.toString()) && reservationDetail != null) {
-                isSaveRequired = true;
-            }
-            if (isSaveRequired) {
+            if (!reservationDetail.getPriceHistoryOverTime().isEmpty()) {
+                if(reservationDetail.getPriceHistoryOverTime().equals(result.toString())){
+                    reservationDetail.setPriceHistoryOverTime(result.toString());
+                    repository.save(reservationDetail);
+                }
+            } else {
                 reservationDetail.setPriceHistoryOverTime(result.toString());
                 repository.save(reservationDetail);
             }
+
             log.info("----- Update Price History Over Time End -----");
             return ResponseUtils.success("priceHistoryOverTime_isSuccess");
         } catch (Exception e) {
