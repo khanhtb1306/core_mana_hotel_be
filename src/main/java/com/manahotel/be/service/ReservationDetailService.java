@@ -193,14 +193,13 @@ public class ReservationDetailService {
                 return ResponseUtils.error("priceHistoryOverTime_isFail");
             }
             StringBuilder result = new StringBuilder();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
             for (ListTimePrice ltp : timePrices) {
                 LocalDateTime dateTime = LocalDateTime.parse(ltp.getTime(), formatter);
-                String timePrice = dateTime + ":" + ltp.getPrice();
+                String timePrice = dateTime.format(formatter) + ":" + ltp.getPrice();
                 result.append(timePrice).append(";");
             }
-
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
             if (!reservationDetail.getPriceHistoryOverTime().isEmpty()) {
                 if(!reservationDetail.getPriceHistoryOverTime().equals(result.toString())){
