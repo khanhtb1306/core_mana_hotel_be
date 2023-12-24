@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -192,9 +193,11 @@ public class ReservationDetailService {
                 return ResponseUtils.error("priceHistoryOverTime_isFail");
             }
             StringBuilder result = new StringBuilder();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
             for (ListTimePrice ltp : timePrices) {
-                LocalDate date = LocalDate.parse(ltp.getTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-                String timePrice = date + ":" + ltp.getPrice();
+                LocalDateTime dateTime = LocalDateTime.parse(ltp.getTime(), formatter);
+                String timePrice = dateTime + ":" + ltp.getPrice();
                 result.append(timePrice).append(";");
             }
 
