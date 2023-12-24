@@ -200,7 +200,7 @@ public class ReservationDetailService {
 
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
             if (!reservationDetail.getPriceHistoryOverTime().isEmpty()) {
-                if(reservationDetail.getPriceHistoryOverTime().equals(result.toString())){
+                if(!reservationDetail.getPriceHistoryOverTime().equals(result.toString())){
                     reservationDetail.setPriceHistoryOverTime(result.toString());
                     repository.save(reservationDetail);
                 }
