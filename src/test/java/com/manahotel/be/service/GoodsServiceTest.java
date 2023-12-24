@@ -5,8 +5,10 @@ import com.manahotel.be.model.dto.response.GoodsDTO;
 import com.manahotel.be.model.dto.response.GoodsUnitDTO;
 import com.manahotel.be.model.entity.Goods;
 import com.manahotel.be.model.entity.GoodsUnit;
+import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.GoodsRepository;
 import com.manahotel.be.repository.GoodsUnitRepository;
+import com.manahotel.be.repository.StaffRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,12 +18,19 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GoodsServiceTest {
@@ -31,6 +40,9 @@ class GoodsServiceTest {
 
     @Mock
     private GoodsUnitRepository goodsUnitRepository;
+
+    @Mock
+    private StaffRepository staffRepository;
 
     @InjectMocks
     private GoodsService goodsService;
@@ -42,6 +54,19 @@ class GoodsServiceTest {
 
     @Test
     void createGoods() {
+        Staff mockStaff = new Staff();
+        mockStaff.setStaffId(123L);  // Set the staff ID as needed
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(mockStaff);
+
+        // Set up the SecurityContext to use the mock Authentication
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Set the SecurityContext to use the mocked SecurityContext
+        SecurityContextHolder.setContext(securityContext);
+
         // Arrange
         GoodsDTO goodsDTO = new GoodsDTO();
         goodsDTO.setGoodsName("Sữa chua");
@@ -67,6 +92,19 @@ class GoodsServiceTest {
 
     @Test
     void updateGoods() {
+        Staff mockStaff = new Staff();
+        mockStaff.setStaffId(123L);  // Set the staff ID as needed
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(mockStaff);
+
+        // Set up the SecurityContext to use the mock Authentication
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Set the SecurityContext to use the mocked SecurityContext
+        SecurityContextHolder.setContext(securityContext);
+
         // Arrange
         String id = "SP000001";
 

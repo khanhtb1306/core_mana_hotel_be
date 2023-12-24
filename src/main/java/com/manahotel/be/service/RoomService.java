@@ -94,11 +94,11 @@ public class RoomService {
                 RoomCategory roomCategory = getRoomCategoryById(dto.getRoomCategoryId());
                 room.setRoomCategory(roomCategory);
             }
-            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
-            if(reservationDetail != null){
-                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể xóa");
-                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể xóa", HttpStatus.BAD_REQUEST);
-            }
+//            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
+//            if(!reservationDetail.isEmpty()){
+//                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật");
+//                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật", HttpStatus.BAD_REQUEST);
+//            }
             if (dto.getFloorId() != null){
                 Floor floor = getFloorById(dto.getFloorId());
                 room.setFloor(floor);
@@ -126,7 +126,7 @@ public class RoomService {
                 return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
             }
             List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
-            if(reservationDetail != null){
+            if(!reservationDetail.isEmpty()){
                 log.info("Phòng đang được đặt hoặc đang được sử dụng không thể xóa");
                 return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể xóa", HttpStatus.OK);
             }
@@ -233,7 +233,7 @@ public class RoomService {
         try {
             Floor floor = getFloorById((long) id);
             List<Room> rooms = roomRepository.findByFloor_FloorId((long) id);
-            if (rooms != null){
+            if (!rooms.isEmpty()){
                 return new ResponseEntity<>("Không thể xóa khu vực vì khu vực tồn tại phòng", HttpStatus.BAD_REQUEST);
             }else {
                 floor.setStatus(Status.DELETE);

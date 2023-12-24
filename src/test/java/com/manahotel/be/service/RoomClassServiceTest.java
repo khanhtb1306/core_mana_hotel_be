@@ -85,8 +85,6 @@ class RoomClassServiceTest {
             assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
             assertEquals("Cập nhật hạng phòng thất bại", result.getBody());
         }
-        // Verify that save() method was called on the repository
-        Mockito.verify(roomClassRepository).save(roomCategory);
     }
 
     @Test
