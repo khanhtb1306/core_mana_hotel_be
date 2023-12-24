@@ -195,7 +195,7 @@ public class ReservationDetailService {
             StringBuilder result = new StringBuilder();
 
             for (ListTimePrice ltp : timePrices) {
-                String timePrice = ltp.getTime() + ":" + ltp.getPrice();
+                String timePrice = ltp.getTime() + "-" + ltp.getPrice();
                 result.append(timePrice).append(";");
             }
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
@@ -228,7 +228,7 @@ public class ReservationDetailService {
                 if (rd.getPriceHistoryOverTime() != null && !rd.getPriceHistoryOverTime().isEmpty()) {
                     String[] timePriceArray = rd.getPriceHistoryOverTime().split(";");
                     for (String tp : timePriceArray) {
-                        String[] parts = tp.split(":");
+                        String[] parts = tp.split("-");
                         if (parts.length == 2) {
                             LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd MM:HH:SS"));
                             float price = Float.parseFloat(parts[1]);
