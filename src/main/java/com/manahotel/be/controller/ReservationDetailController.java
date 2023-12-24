@@ -1,6 +1,7 @@
 package com.manahotel.be.controller;
 
 import com.manahotel.be.model.dto.request.ListTimePrice;
+import com.manahotel.be.model.dto.request.PriceHistoryOverTimeRequest;
 import com.manahotel.be.model.dto.response.ReservationDetailDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.dto.request.ChangeRoomRequest;
@@ -83,8 +84,8 @@ public class ReservationDetailController {
     }
 
     @PostMapping("/update_price_History_ver_time")
-    public ResponseDTO UpdatePriceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
-        return service.UpdatePriceHistoryOverTime(timePrices, reservationDetailId);
+    public ResponseDTO UpdatePriceHistoryOverTime(PriceHistoryOverTimeRequest request) {
+        return service.UpdatePriceHistoryOverTime(request.getTimePrices(), request.getReservationDetailId());
     }
 
 
