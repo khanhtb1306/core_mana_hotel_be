@@ -195,7 +195,7 @@ public class ReservationDetailService {
             StringBuilder result = new StringBuilder();
 
             for (ListTimePrice ltp : timePrices) {
-                String timePrice = timePrices + ":" + ltp.getPrice();
+                String timePrice = ltp.getTime() + ":" + ltp.getPrice();
                 result.append(timePrice).append(";");
             }
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
