@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -188,31 +185,40 @@ public class ReservationDetailService {
         repository2.save(reservation);
     }
 
-    public ResponseDTO UpdatePriceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
+    public ResponseDTO updatePriceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
+        log.info("----- Update Price History Over Time Start -----");
         try {
+            if (timePrices.isEmpty()) {
+                return ResponseUtils.error("priceHistoryOverTime_isFail");
+            }
             StringBuilder result = new StringBuilder();
             for (ListTimePrice ltp : timePrices) {
                 LocalDate date = LocalDate.parse(ltp.getTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
                 String timePrice = date + ":" + ltp.getPrice();
                 result.append(timePrice).append(";");
             }
-
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
-            if (reservationDetail != null) {
+            boolean isSaveRequired = false;
+            if (reservationDetail == null) {
                 reservationDetail = new ReservationDetail();
+                isSaveRequired = true;
+            } else if (!Objects.equals(reservationDetail.getPriceHistoryOverTime(), result.toString()) && reservationDetail != null) {
+                isSaveRequired = true;
             }
-            if (!reservationDetail.getPriceHistoryOverTime().equals(result.toString())) {
+            if (isSaveRequired) {
                 reservationDetail.setPriceHistoryOverTime(result.toString());
                 repository.save(reservationDetail);
             }
+            log.info("----- Update Price History Over Time End -----");
             return ResponseUtils.success("priceHistoryOverTime_isSuccess");
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseUtils.error("priceHistoryOverTime_isFail");
-
         }
     }
+
     public ResponseDTO GetPriceHistoryOverTime(String reservationId) {
+        log.info("----- Get Price History Over Time Start -----");
         try {
             List<ReservationDetail> reservationDetails = repository.findReservationDetailByReservation_ReservationId(reservationId);
             List<Object> listPriceHistoryOverTimeByReservation = new ArrayList<>();
@@ -235,6 +241,7 @@ public class ReservationDetailService {
                 mapInfo.put("PriceHistoryOverTime", rd);
                 listPriceHistoryOverTimeByReservation.add(mapInfo);
             }
+            log.info("----- Get Price History Over Time End -----");
             return ResponseUtils.success(listPriceHistoryOverTimeByReservation, "priceHistoryOverTime_isSuccess");
         }catch (Exception e){
             log.error(e.getMessage());

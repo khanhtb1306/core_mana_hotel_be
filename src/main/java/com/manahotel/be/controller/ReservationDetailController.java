@@ -85,7 +85,7 @@ public class ReservationDetailController {
 
     @PostMapping("/update_price_History_ver_time")
     public ResponseDTO UpdatePriceHistoryOverTime(PriceHistoryOverTimeRequest request) {
-        return service.UpdatePriceHistoryOverTime(request.getTimePrices(), request.getReservationDetailId());
+        return service.updatePriceHistoryOverTime(request.getTimePrices(), request.getReservationDetailId());
     }
 
 
