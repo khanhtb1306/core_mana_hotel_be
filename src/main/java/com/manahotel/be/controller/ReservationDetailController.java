@@ -77,9 +77,16 @@ public class ReservationDetailController {
     public ResponseDTO checkCustomerIsVisitor(String reservationId) {
         return service2.checkCustomerIsVisitor(reservationId);
     }
-
-    @PostMapping("/price_History_ver_time")
-    public ResponseDTO updateTimePriceDaily(List<ListTimePrice> timePrices, Long reservationDetailId) {
-        return service.priceHistoryOverTime(timePrices, reservationDetailId);
+    @GetMapping("/get_price_history_over_time")
+    public ResponseDTO GetPriceHistoryOverTime(String reservationId) {
+        return service.GetPriceHistoryOverTime(reservationId);
     }
+
+    @PostMapping("/update_price_History_ver_time")
+    public ResponseDTO UpdatePriceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
+        return service.UpdatePriceHistoryOverTime(timePrices, reservationDetailId);
+    }
+
+
+
 }

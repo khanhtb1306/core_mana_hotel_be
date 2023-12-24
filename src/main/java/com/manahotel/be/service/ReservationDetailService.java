@@ -23,7 +23,9 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -186,7 +188,7 @@ public class ReservationDetailService {
         repository2.save(reservation);
     }
 
-    public ResponseDTO priceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
+    public ResponseDTO UpdatePriceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
         try {
             StringBuilder result = new StringBuilder();
             for (ListTimePrice ltp : timePrices) {
@@ -203,21 +205,37 @@ public class ReservationDetailService {
                 reservationDetail.setPriceHistoryOverTime(result.toString());
                 repository.save(reservationDetail);
             }
+            return ResponseUtils.success("priceHistoryOverTime_isSuccess");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseUtils.error("priceHistoryOverTime_isFail");
 
-            List<ListTimePriceResponse> listTimePrices = new ArrayList<>();
-            String[] timePriceArray = reservationDetail.getPriceHistoryOverTime().split(";");
-            for (String tp : timePriceArray) {
-                String[] parts = tp.split(":");
-                if (parts.length == 2) {
-                    LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-                    float price = Float.parseFloat(parts[1]);
-                    ListTimePriceResponse listTimePrice = new ListTimePriceResponse();
-                    listTimePrice.setTime(date);
-                    listTimePrice.setPrice(price);
-                    listTimePrices.add(listTimePrice);
+        }
+    }
+    public ResponseDTO GetPriceHistoryOverTime(String reservationId) {
+        try {
+            List<ReservationDetail> reservationDetails = repository.findReservationDetailByReservation_ReservationId(reservationId);
+            List<Object> listPriceHistoryOverTimeByReservation = new ArrayList<>();
+            for(ReservationDetail rd: reservationDetails) {
+                List<ListTimePriceResponse> listTimePrices = new ArrayList<>();
+                String[] timePriceArray = rd.getPriceHistoryOverTime().split(";");
+                for (String tp : timePriceArray) {
+                    String[] parts = tp.split(":");
+                    if (parts.length == 2) {
+                        LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                        float price = Float.parseFloat(parts[1]);
+                        ListTimePriceResponse listTimePrice = new ListTimePriceResponse();
+                        listTimePrice.setTime(date);
+                        listTimePrice.setPrice(price);
+                        listTimePrices.add(listTimePrice);
+                    }
                 }
+                Map<String, Object> mapInfo = new HashMap<>();
+                mapInfo.put("ReservationDetail", rd);
+                mapInfo.put("PriceHistoryOverTime", rd);
+                listPriceHistoryOverTimeByReservation.add(mapInfo);
             }
-            return ResponseUtils.success(listTimePrices, "priceHistoryOverTime_isSuccess");
+            return ResponseUtils.success(listPriceHistoryOverTimeByReservation, "priceHistoryOverTime_isSuccess");
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseUtils.error("priceHistoryOverTime_isFail");
