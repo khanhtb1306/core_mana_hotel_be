@@ -199,7 +199,7 @@ public class ReservationDetailService {
                 result.append(timePrice).append(";");
             }
             ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
-            if (!reservationDetail.getPriceHistoryOverTime().isEmpty()) {
+            if (reservationDetail.getPriceHistoryOverTime() != null && !reservationDetail.getPriceHistoryOverTime().isEmpty()) {
                 if(!reservationDetail.getPriceHistoryOverTime().equals(result.toString())){
                     reservationDetail.setPriceHistoryOverTime(result.toString());
                     repository.save(reservationDetail);
@@ -225,12 +225,12 @@ public class ReservationDetailService {
             for(ReservationDetail rd: reservationDetails) {
                 List<ListTimePriceResponse> listTimePrices = new ArrayList<>();
                 Map<String, Object> mapInfo = new HashMap<>();
-                if(rd.getPriceHistoryOverTime() != null){
+                if (rd.getPriceHistoryOverTime() != null && !rd.getPriceHistoryOverTime().isEmpty()) {
                     String[] timePriceArray = rd.getPriceHistoryOverTime().split(";");
                     for (String tp : timePriceArray) {
                         String[] parts = tp.split(":");
                         if (parts.length == 2) {
-                            LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                            LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd MM:HH:SS"));
                             float price = Float.parseFloat(parts[1]);
                             ListTimePriceResponse listTimePrice = new ListTimePriceResponse();
                             listTimePrice.setTime(date);
@@ -239,8 +239,9 @@ public class ReservationDetailService {
                         }
                     }
                     mapInfo.put("ReservationDetail", rd);
-                    mapInfo.put("PriceHistoryOverTime", rd);
+                    mapInfo.put("PriceHistoryOverTime", listTimePrices);
                 }
+
                 listPriceHistoryOverTimeByReservation.add(mapInfo);
             }
             log.info("----- Get Price History Over Time End -----");
