@@ -230,7 +230,7 @@ public class ReservationDetailService {
                     for (String tp : timePriceArray) {
                         String[] parts = tp.split("-");
                         if (parts.length == 2) {
-                            LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd MM:HH:SS"));
+                            String date = parts[0];
                             float price = Float.parseFloat(parts[1]);
                             ListTimePriceResponse listTimePrice = new ListTimePriceResponse();
                             listTimePrice.setTime(date);

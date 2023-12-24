@@ -6,6 +6,6 @@ import java.time.LocalDate;
 
 @Data
 public class ListTimePriceResponse {
-        private LocalDate time;
+        private String time;
         private float price;
 }
