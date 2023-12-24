@@ -53,4 +53,6 @@ public class ReservationDetail {
     @Column(name = "reservation_detail_status")
     private Long reservationDetailStatus;
 
+    @Column(name = "price_history_over_time")
+    private String priceHistoryOverTime;
 }

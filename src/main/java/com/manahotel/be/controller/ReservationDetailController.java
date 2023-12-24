@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.request.ListTimePrice;
 import com.manahotel.be.model.dto.response.ReservationDetailDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.dto.request.ChangeRoomRequest;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservation-detail")
@@ -74,5 +76,10 @@ public class ReservationDetailController {
     @GetMapping("/check_customer_is_visitor")
     public ResponseDTO checkCustomerIsVisitor(String reservationId) {
         return service2.checkCustomerIsVisitor(reservationId);
+    }
+
+    @PostMapping("/price_History_ver_time")
+    public ResponseDTO updateTimePriceDaily(List<ListTimePrice> timePrices, Long reservationDetailId) {
+        return service.priceHistoryOverTime(timePrices, reservationDetailId);
     }
 }

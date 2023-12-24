@@ -5,6 +5,8 @@ import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.BookingConflictException;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.exception.RoomInUseException;
+import com.manahotel.be.model.dto.request.ListTimePrice;
+import com.manahotel.be.model.dto.response.ListTimePriceResponse;
 import com.manahotel.be.model.dto.response.ReservationDetailDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.Reservation;
@@ -18,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -179,6 +184,45 @@ public class ReservationDetailService {
         reservation.setDurationEnd(end);
 
         repository2.save(reservation);
+    }
+
+    public ResponseDTO priceHistoryOverTime(List<ListTimePrice> timePrices, Long reservationDetailId) {
+        try {
+            StringBuilder result = new StringBuilder();
+            for (ListTimePrice ltp : timePrices) {
+                LocalDate date = LocalDate.parse(ltp.getTime(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                String timePrice = date + ":" + ltp.getPrice();
+                result.append(timePrice).append(";");
+            }
+
+            ReservationDetail reservationDetail = findReservationDetail(reservationDetailId);
+            if (reservationDetail != null) {
+                reservationDetail = new ReservationDetail();
+            }
+            if (!reservationDetail.getPriceHistoryOverTime().equals(result.toString())) {
+                reservationDetail.setPriceHistoryOverTime(result.toString());
+                repository.save(reservationDetail);
+            }
+
+            List<ListTimePriceResponse> listTimePrices = new ArrayList<>();
+            String[] timePriceArray = reservationDetail.getPriceHistoryOverTime().split(";");
+            for (String tp : timePriceArray) {
+                String[] parts = tp.split(":");
+                if (parts.length == 2) {
+                    LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                    float price = Float.parseFloat(parts[1]);
+                    ListTimePriceResponse listTimePrice = new ListTimePriceResponse();
+                    listTimePrice.setTime(date);
+                    listTimePrice.setPrice(price);
+                    listTimePrices.add(listTimePrice);
+                }
+            }
+            return ResponseUtils.success(listTimePrices, "priceHistoryOverTime_isSuccess");
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseUtils.error("priceHistoryOverTime_isFail");
+
+        }
     }
 
     public ResponseDTO checkDuplicateBooking(Timestamp start, Timestamp end, String roomId, Long reservationDetailId) {
