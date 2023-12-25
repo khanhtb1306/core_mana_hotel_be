@@ -6,8 +6,10 @@ import com.manahotel.be.common.util.ResponseUtils;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.response.CustomerGroupDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
+import com.manahotel.be.model.entity.Customer;
 import com.manahotel.be.model.entity.CustomerGroup;
 import com.manahotel.be.repository.CustomerGroupRepository;
+import com.manahotel.be.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ public class CustomerGroupService {
     @Autowired
     private CustomerGroupRepository customerGroupRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
     public ResponseDTO getAll() {
         log.info("----- Get All CustomerGroup Start------");
         try {
@@ -65,8 +69,13 @@ public class CustomerGroupService {
         log.info("----- Delete CustomerGroup Start------");
         try {
             CustomerGroup customerGroup = getCustomerGroupById(customerGroupId);
-            customerGroup.setStatus(Status.NO_ACTIVE);
-            customerGroupRepository.save(customerGroup);
+            String status = Status.NO_ACTIVE;
+            List<Customer> customers = customerRepository.findByCustomerGroup_CustomerGroupIdAndStatusIsNot(customerGroupId,status);
+            if (!customers.isEmpty()){
+                return ResponseUtils.error("Không thể xóa nhóm khách hàng vì nhóm khách hàng tồn tại khách hàng");
+            }else {
+                customerGroup.setStatus(Status.NO_ACTIVE);
+            }            customerGroupRepository.save(customerGroup);
             log.info("----- Delete CustomerGroup End ------");
             return ResponseUtils.success("Xóa thành công");
         } catch (Exception e) {

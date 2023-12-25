@@ -7,9 +7,14 @@ import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.response.DepartmentDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.Department;
+import com.manahotel.be.model.entity.Room;
+import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.DepartmentRepository;
+import com.manahotel.be.repository.StaffRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +26,8 @@ public class DepartmentService {
     @Autowired
     DepartmentRepository repository;
 
+    @Autowired
+    StaffRepository staffRepository;
     public ResponseDTO getAll() {
         log.info("----- Get All Department Start------");
         try {
@@ -85,7 +92,13 @@ public class DepartmentService {
         log.info("----- Delete Department Start------");
         try {
             Department department = getDepartmentById(id);
-            department.setStatus(Status.NO_ACTIVE);
+            String status = Status.NO_ACTIVE;
+            List<Staff> staffs = staffRepository.findByDepartment_DepartmentIdAndStatusIsNot(id,status);
+            if (!staffs.isEmpty()){
+                return ResponseUtils.error("Không thể xóa phòng ban vì phòng ban tồn tại nhân viên");
+            }else {
+                department.setStatus(Status.NO_ACTIVE);
+            }
             repository.save(department);
             log.info("----- Delete Department End ------");
             return ResponseUtils.success(id, "Xóa thành công");

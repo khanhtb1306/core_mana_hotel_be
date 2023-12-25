@@ -12,6 +12,7 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     List<Customer> findByIdentity(String identity);
     List<Customer> findByPhoneNumber(String phoneNumber);
 
+    List<Customer> findByCustomerGroup_CustomerGroupIdAndStatusIsNot(String customerGroupId, String status);
     Customer findByCustomerId(String customerId);
 
 }
