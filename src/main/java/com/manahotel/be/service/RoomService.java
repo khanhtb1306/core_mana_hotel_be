@@ -94,11 +94,13 @@ public class RoomService {
                 RoomCategory roomCategory = getRoomCategoryById(dto.getRoomCategoryId());
                 room.setRoomCategory(roomCategory);
             }
-//            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
-//            if(!reservationDetail.isEmpty()){
-//                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật");
-//                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật", HttpStatus.BAD_REQUEST);
-//            }
+            if(room.getStatus().equals(Status.DEACTIVATE)) {
+                List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
+                if (!reservationDetail.isEmpty()) {
+                    log.info("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật");
+                    return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật", HttpStatus.BAD_REQUEST);
+                }
+            }
             if (dto.getFloorId() != null){
                 Floor floor = getFloorById(dto.getFloorId());
                 room.setFloor(floor);
