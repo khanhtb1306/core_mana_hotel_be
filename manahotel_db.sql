@@ -221,6 +221,7 @@ CREATE TABLE `fund_book` (
 
 LOCK TABLES `fund_book` WRITE;
 /*!40000 ALTER TABLE `fund_book` DISABLE KEYS */;
+INSERT INTO `fund_book` VALUES ('TTPN000001','2023-12-25 14:50:52','EXPENSE',NULL,4356000,'Công Ty Hoàng Long','Quản Lý','Tạo phiếu nhâp hàng','COMPLETE',NULL);
 /*!40000 ALTER TABLE `fund_book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +257,7 @@ CREATE TABLE `goods` (
 
 LOCK TABLES `goods` WRITE;
 /*!40000 ALTER TABLE `goods` DISABLE KEYS */;
-INSERT INTO `goods` VALUES ('SP000001','Nước ngọt có gas Sprite vị chanh 320mln',_binary '',1,240,100,100000,'Non nước ngọt Sprite','Non Sprite thể tích 150ml',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:00:09'),('SP000002','Nước ngọt Coca Cola Light 330ml',_binary '',1,240,100,100000,'Non nước ngọt Coca Cola','Non Coca Cola thể tích 150ml',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:01:37'),('SP000003','Khô Bò Xé Sợi Tẩm Vị Cay 300gr',_binary '',1,98,100,100000,'Thịt bò khô','Thịt bò khô 10 miếng',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:01:28'),('SP000004','Thuê xe máy',_binary '\0',1,NULL,NULL,NULL,'Xe máy','Xe máy đầy xăng',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:02:11'),('SP000005','Thuê ô tô',_binary '\0',1,NULL,NULL,NULL,'Ô tô','Ô tô điện',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:02:32'),('SP000006','Massage',_binary '\0',6,NULL,NULL,NULL,'Mát xa','Mát xa cực phê',NULL,NULL,NULL,'2023-10-17 05:00:00','2023-10-17 05:00:00'),('SP000007','MÌ HẢO HẢO TÔM CHUA CAY  75g',_binary '',1,300,100,100000,'Mỳ tôm','Mỳ hảo hán',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:04:00'),('SP000008','Bia Huda 330ml',_binary '',1,240,100,100000,'Bia','Đậm tình miền Trung',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:04:51'),('SP000009','Bánh Snack O\'Star vị Tảo Biển 36g',_binary '',1,300,100,100000,'Bim bim','Anh muốn Lays em',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:06:40'),('SP000010','Cắt tóc',_binary '\0',6,NULL,NULL,NULL,'Cắt tóc','Tommy Xiaomi',NULL,NULL,NULL,'2023-10-17 05:00:00','2023-10-17 05:00:00');
+INSERT INTO `goods` VALUES ('SP000001','Nước ngọt có gas Sprite vị chanh 320mln',_binary '',1,30,100,100000,'Non nước ngọt Sprite','Non Sprite thể tích 150ml',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:37:38'),('SP000002','Nước ngọt Coca Cola Light 330ml',_binary '',1,30,100,100000,'Non nước ngọt Coca Cola','Non Coca Cola thể tích 150ml',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:37:50'),('SP000003','Khô Bò Xé Sợi Tẩm Vị Cay 300gr',_binary '',1,50,100,100000,'Thịt bò khô','Thịt bò khô 10 miếng',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:38:06'),('SP000004','Thuê xe máy',_binary '\0',1,NULL,NULL,NULL,'Xe máy','Xe máy đầy xăng',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:38:20'),('SP000005','Thuê ô tô',_binary '\0',1,NULL,NULL,NULL,'Ô tô','Ô tô điện',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:38:37'),('SP000006','Massage',_binary '\0',6,NULL,NULL,NULL,'Mát xa','Mát xa cực phê',NULL,NULL,NULL,'2023-10-17 05:00:00','2023-10-17 05:00:00'),('SP000007','MÌ HẢO HẢO TÔM CHUA CAY  75g',_binary '',1,150,100,100000,'Mỳ tôm','Mỳ hảo hán',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:38:51'),('SP000008','Bia Huda 330ml',_binary '',1,120,100,100000,'Bia','Đậm tình miền Trung',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 14:39:01'),('SP000009','Bánh Snack O\'Star vị Tảo Biển 36g',_binary '',1,350,100,100000,'Bim bim','Anh muốn Lays em',NULL,NULL,0,'2023-10-17 05:00:00','2023-12-25 08:06:40'),('SP000010','Cắt tóc',_binary '\0',6,NULL,NULL,NULL,'Cắt tóc','Tommy Xiaomi',NULL,NULL,NULL,'2023-10-17 05:00:00','2023-10-17 05:00:00');
 /*!40000 ALTER TABLE `goods` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -277,7 +278,7 @@ CREATE TABLE `goods_unit` (
   PRIMARY KEY (`goods_unit_id`),
   KEY `pk_gu_g_idx` (`goods_id`),
   CONSTRAINT `pk_gu_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,7 +287,7 @@ CREATE TABLE `goods_unit` (
 
 LOCK TABLES `goods_unit` WRITE;
 /*!40000 ALTER TABLE `goods_unit` DISABLE KEYS */;
-INSERT INTO `goods_unit` VALUES (1,'Lon','SP000001',7200,15000,_binary ''),(2,'Lon','SP000002',7500,15000,_binary ''),(3,'Gói','SP000003',35000,50000,_binary ''),(4,'Ngày','SP000004',0,150000,_binary ''),(5,'Ngày','SP000005',0,800000,_binary ''),(6,'Lần','SP000006',0,750,_binary ''),(7,'Gói','SP000007',3500,10000,_binary ''),(8,'Lon','SP000008',12000,20000,_binary ''),(9,'Gói','SP000009',4000,10000,_binary ''),(10,'Lần','SP000010',0,1200,_binary ''),(17,'Lốc','SP000001',43200,72000,_binary '\0'),(19,'Dây','SP000003',350000,450000,_binary '\0'),(20,'Lốc','SP000002',45000,72000,_binary '\0'),(21,'Thùng','SP000007',105000,150000,_binary '\0'),(22,'Thùng','SP000008',288000,350000,_binary '\0'),(23,'Bịch','SP000009',40000,80000,_binary '\0');
+INSERT INTO `goods_unit` VALUES (1,'Lon','SP000001',7200,15000,_binary ''),(2,'Lon','SP000002',7500,15000,_binary ''),(3,'Gói','SP000003',35000,50000,_binary ''),(4,'Ngày','SP000004',0,150000,_binary ''),(5,'Ngày','SP000005',0,800000,_binary ''),(6,'Lần','SP000006',0,750,_binary ''),(7,'Gói','SP000007',3500,10000,_binary ''),(8,'Lon','SP000008',12000,20000,_binary ''),(9,'Gói','SP000009',4000,10000,_binary ''),(10,'Lần','SP000010',0,1200,_binary ''),(23,'Bịch','SP000009',40000,80000,_binary '\0'),(24,'Lốc','SP000001',43200,72000,_binary '\0'),(25,'Lốc','SP000002',45000,72000,_binary '\0'),(26,'Dây','SP000003',350000,450000,_binary '\0'),(27,'Thùng','SP000007',105000,150000,_binary '\0'),(28,'Thùng','SP000008',288000,350000,_binary '\0');
 /*!40000 ALTER TABLE `goods_unit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -315,6 +316,7 @@ CREATE TABLE `import_goods` (
 
 LOCK TABLES `import_goods` WRITE;
 /*!40000 ALTER TABLE `import_goods` DISABLE KEYS */;
+INSERT INTO `import_goods` VALUES ('PN000001','2023-12-24 17:00:00','Công Ty Hoàng Long',4356000,4356000,7,0);
 /*!40000 ALTER TABLE `import_goods` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -340,7 +342,7 @@ CREATE TABLE `import_goods_detail` (
   CONSTRAINT `pk_igd_g` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`),
   CONSTRAINT `pk_igd_gu` FOREIGN KEY (`goods_unit_id`) REFERENCES `goods_unit` (`goods_unit_id`),
   CONSTRAINT `pk_igd_ig` FOREIGN KEY (`import_goods_id`) REFERENCES `import_goods` (`import_goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -349,6 +351,7 @@ CREATE TABLE `import_goods_detail` (
 
 LOCK TABLES `import_goods_detail` WRITE;
 /*!40000 ALTER TABLE `import_goods_detail` DISABLE KEYS */;
+INSERT INTO `import_goods_detail` VALUES (8,'PN000001','SP000002',5,45000,225000,25),(9,'PN000001','SP000001',5,43200,216000,24),(10,'PN000001','SP000008',5,288000,1440000,28),(11,'PN000001','SP000009',5,40000,200000,23),(12,'PN000001','SP000003',5,350000,1750000,26),(13,'PN000001','SP000007',5,105000,525000,27);
 /*!40000 ALTER TABLE `import_goods_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -681,7 +684,7 @@ CREATE TABLE `recent_activity` (
   `value` float DEFAULT NULL,
   `create_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`recent_activity_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -690,6 +693,7 @@ CREATE TABLE `recent_activity` (
 
 LOCK TABLES `recent_activity` WRITE;
 /*!40000 ALTER TABLE `recent_activity` DISABLE KEYS */;
+INSERT INTO `recent_activity` VALUES (31,'admin','tạo phiếu nhập hàng',4356000,'2023-12-25 14:50:52');
 /*!40000 ALTER TABLE `recent_activity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -705,7 +709,7 @@ CREATE TABLE `report_revenue` (
   `created_date` timestamp NULL DEFAULT NULL,
   `revenue_value` float DEFAULT NULL,
   PRIMARY KEY (`report_revenue_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=271 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=277 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -714,7 +718,7 @@ CREATE TABLE `report_revenue` (
 
 LOCK TABLES `report_revenue` WRITE;
 /*!40000 ALTER TABLE `report_revenue` DISABLE KEYS */;
-INSERT INTO `report_revenue` VALUES (263,'2023-12-25 07:18:28',0),(264,'2023-12-25 07:18:28',0),(265,'2023-12-25 07:33:42',0),(266,'2023-12-25 07:33:42',0),(267,'2023-12-25 09:01:46',0),(268,'2023-12-25 09:01:46',0),(269,'2023-12-25 13:39:17',1050000),(270,'2023-12-25 13:39:17',1050000);
+INSERT INTO `report_revenue` VALUES (263,'2023-12-25 07:18:28',0),(264,'2023-12-25 07:18:28',0),(265,'2023-12-25 07:33:42',0),(266,'2023-12-25 07:33:42',0),(267,'2023-12-25 09:01:46',0),(268,'2023-12-25 09:01:46',0),(269,'2023-12-25 13:39:17',1050000),(270,'2023-12-25 13:39:17',1050000),(271,'2023-12-25 14:25:07',0),(272,'2023-12-25 14:25:07',0),(273,'2023-12-25 14:31:24',0),(274,'2023-12-25 14:31:24',0),(275,'2023-12-25 14:35:39',0),(276,'2023-12-25 14:35:39',0);
 /*!40000 ALTER TABLE `report_revenue` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -730,7 +734,7 @@ CREATE TABLE `report_room_capacity` (
   `create_date` timestamp NULL DEFAULT NULL,
   `room_capacity_value` float DEFAULT NULL,
   PRIMARY KEY (`report_room_capacity_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -739,6 +743,7 @@ CREATE TABLE `report_room_capacity` (
 
 LOCK TABLES `report_room_capacity` WRITE;
 /*!40000 ALTER TABLE `report_room_capacity` DISABLE KEYS */;
+INSERT INTO `report_room_capacity` VALUES (83,'2023-12-25 14:35:39',0);
 /*!40000 ALTER TABLE `report_room_capacity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -949,7 +954,7 @@ CREATE TABLE `room_category` (
 
 LOCK TABLES `room_category` WRITE;
 /*!40000 ALTER TABLE `room_category` DISABLE KEYS */;
-INSERT INTO `room_category` VALUES ('HP000000','Sảnh',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('HP000001','Phòng cơ bản',500000,400000,100000,2,1,3,1,20,1,'Phòng cơ bản',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 07:43:25'),('HP000002','Phòng hạng trung',700000,500000,150000,2,1,3,2,30,1,'Phòng hạng trung',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 07:44:14'),('HP000003','Phòng 2 giường đơn',500000,300000,150000,2,1,2,1,18,1,'Phòng đơn',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 07:46:17'),('HP000004','Phòng gia đình',1200000,800000,200000,6,2,8,3,40,1,'Phòng gia đình',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 07:48:21'),('HP000005','Phòng VIP',1000000,700000,300000,2,1,3,2,30,1,'Phòng VIP',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 07:49:31');
+INSERT INTO `room_category` VALUES ('HP000000','Sảnh',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('HP000001','Phòng cơ bản',500000,400000,100000,2,1,3,1,20,1,'Phòng cơ bản',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 14:39:49'),('HP000002','Phòng hạng trung',700000,500000,150000,2,1,3,2,30,1,'Phòng hạng trung',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 07:44:14'),('HP000003','Phòng 2 giường đơn',500000,300000,150000,2,1,2,1,20,1,'Phòng đơn',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 14:41:01'),('HP000004','Phòng gia đình',1200000,800000,200000,6,2,8,3,40,1,'Phòng gia đình',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 14:40:42'),('HP000005','Phòng VIP',1000000,700000,300000,2,1,3,2,30,1,'Phòng VIP',NULL,NULL,NULL,'2023-10-15 17:00:00','2023-12-25 14:40:34');
 /*!40000 ALTER TABLE `room_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -983,7 +988,7 @@ CREATE TABLE `staff` (
   PRIMARY KEY (`staff_id`),
   KEY `pk_s_d_idx` (`department_id`),
   CONSTRAINT `pk_c_d` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -992,7 +997,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (0,'Quản Lý','admin','$2a$10$Z/GE11unhNydjntS/VUD6uG267P0qv9p3jl0L8tu.xf7hp/DAe9Ui','ROLE_MANAGER','ACTIVE','2000-11-29 17:00:00','VĂN LÂM HOTEL','manahotelsystem@gmail.com',_binary '','0992828828222222','null','087987872722','',NULL,NULL,NULL,NULL,'PB000000'),(40,'Trịnh Bảo Khánh','khanh','$2a$10$y9BA/wfYijVhoE0P8XndyegSCLmXTMeASUX8UUCZ.r48cJSvEavV.','ROLE_RECEPTIONIST','ACTIVE','2001-12-24 17:00:00','Ha Noi','khanhtb@gmail.com',_binary '','001301033006','null','0987798506','',NULL,NULL,NULL,NULL,'PB000000'),(41,'Cù Thị Hà Thu','thu','$2a$10$c6wG4oNQd58xWi6fSJRjgOh0.9q.hoI00CTasWaau7o0woNOKI9rW','ROLE_RECEPTIONIST','ACTIVE','2001-12-24 17:00:00','Ha Noi','cuthihathu2892001@gmail.com',_binary '\0','001301033067','null','0987798590','',NULL,NULL,NULL,NULL,'PB000001');
+INSERT INTO `staff` VALUES (0,'Quản Lý','admin','$2a$10$Z/GE11unhNydjntS/VUD6uG267P0qv9p3jl0L8tu.xf7hp/DAe9Ui','ROLE_MANAGER','ACTIVE','2000-11-29 17:00:00','VĂN LÂM HOTEL','manahotelsystem@gmail.com',_binary '','0992828828222222','null','087987872722',NULL,NULL,NULL,NULL,NULL,'PB000000'),(42,'Trịnh Bảo Khánh','khanhtb1306','$2a$10$23j28i6BTsmlOiwPCsSfwOTnjOSKepzLYM2PauN0SYmBr6EiCDgDu','ROLE_RECEPTIONIST','ACTIVE','2001-06-12 17:00:00','Hoa Lac','trinhbaokhanh1306@gmail.com',_binary '','038201003037','null','0898637030',NULL,NULL,NULL,NULL,NULL,'PB000001');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1041,7 +1046,7 @@ CREATE TABLE `token` (
   PRIMARY KEY (`token_id`),
   KEY `fk_prt_s_idx` (`staff_id`),
   CONSTRAINT `fk_prt_s` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=590 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=595 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1050,7 +1055,7 @@ CREATE TABLE `token` (
 
 LOCK TABLES `token` WRITE;
 /*!40000 ALTER TABLE `token` DISABLE KEYS */;
-INSERT INTO `token` VALUES (587,'9bc7722b-fea6-466c-b7a2-eb14354605b8',40,'2023-12-25 08:25:06'),(588,'fc27bfef-09c3-4309-ac24-3421108c28d0',41,'2023-12-25 08:25:40'),(589,'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9NQU5BR0VSIiwic3RhZmZfaWQiOjAsInN1YiI6ImFkbWluIiwiaWF0IjoxNzAzNTExNTU2LCJleHAiOjE3MDM1OTc5NTZ9.RxzqDzZlHWq6QjFpDnONbT2Pv50QwnUoTdyKsl40YTQ',0,'2023-12-25 13:44:17');
+INSERT INTO `token` VALUES (593,'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9SRUNFUFRJT05JU1QiLCJzdGFmZl9pZCI6NDIsInN1YiI6ImtoYW5odGIxMzA2IiwiaWF0IjoxNzAzNTE0ODgwLCJleHAiOjE3MDM2MDEyODB9.TKlLfmsnWNlNJenB3569nK9LSsQD944SCH4ETzg5g1A',42,'2023-12-25 14:39:41'),(594,'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9NQU5BR0VSIiwic3RhZmZfaWQiOjAsInN1YiI6ImFkbWluIiwiaWF0IjoxNzAzNTE0OTM4LCJleHAiOjE3MDM2MDEzMzh9.mSiBM_0oSuToHJywctnuHVWd0MYLE3rw6h5wdzpRyms',0,'2023-12-25 14:40:39');
 /*!40000 ALTER TABLE `token` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1063,4 +1068,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-25 21:19:20
+-- Dump completed on 2023-12-25 21:56:46
