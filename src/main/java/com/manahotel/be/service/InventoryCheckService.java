@@ -10,6 +10,7 @@ import com.manahotel.be.model.dto.response.InventoryCheckDetailDTO;
 import com.manahotel.be.model.dto.response.InventoryCheckResponse;
 import com.manahotel.be.model.entity.*;
 import com.manahotel.be.repository.*;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.*;
 
 @Slf4j
 @Service
+@Data
 public class InventoryCheckService {
 
     @Autowired

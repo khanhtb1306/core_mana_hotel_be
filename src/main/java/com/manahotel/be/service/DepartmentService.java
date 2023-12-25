@@ -11,6 +11,7 @@ import com.manahotel.be.model.entity.Room;
 import com.manahotel.be.model.entity.Staff;
 import com.manahotel.be.repository.DepartmentRepository;
 import com.manahotel.be.repository.StaffRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Slf4j
+@AllArgsConstructor
 @Service
 public class DepartmentService {
 

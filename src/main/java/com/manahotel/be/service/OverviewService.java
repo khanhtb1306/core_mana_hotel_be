@@ -294,6 +294,7 @@ public class OverviewService {
         }
         log.info("Write Recent Activity End");
     }
+//    @Scheduled(initialDelay = 0, fixedDelay = 100000)
     @Scheduled(cron = "59 58 23 * * ?")
     public void checkRoomCapacityDailyEndDate() {
         checkRoomCapacityDaily();
@@ -322,6 +323,7 @@ public class OverviewService {
                     long timestamp = 0;
 
                     LocalDate checkInDate = rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate checkOutDate = rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     if (rd.getStatus().equals(Status.CHECK_IN)) {
                         if (!checkInDate.equals(today)) {
@@ -339,13 +341,18 @@ public class OverviewService {
                             }
                             timestamp = currentTime - DurationCheckIn;
                         }
-                    } else if (rd.getStatus().equals(Status.CHECK_OUT)) {
-
+                    } else if (rd.getStatus().equals(Status.CHECK_OUT) || rd.getStatus().equals(Status.DONE)) {
                         if (!checkInDate.equals(today)) {
                             if(rd.getCheckOutEstimate().getTime() >= rd.getCheckInActual().getTime()) {
-                                timestamp = ChronoUnit.MILLIS.between(
-                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                                if (checkOutDate.equals(today)) {
+                                    timestamp = ChronoUnit.MILLIS.between(
+                                            rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                            rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                                }else {
+                                    timestamp = ChronoUnit.MILLIS.between(
+                                            logTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                            rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                                }
                             }else {
                                 timestamp = ChronoUnit.MILLIS.between(
                                         rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
@@ -354,25 +361,31 @@ public class OverviewService {
                         } else {
                             long DurationCheckOutActual;
                             if(rd.getCheckOutActual().getTime() >= rd.getCheckOutEstimate().getTime()){
-                                DurationCheckOutActual = ChronoUnit.MILLIS.between(
-                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                                    DurationCheckOutActual = ChronoUnit.MILLIS.between(
+                                            rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                            rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
                             }else {
-                                DurationCheckOutActual = ChronoUnit.MILLIS.between(
-                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                        rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                                if (checkOutDate.equals(today)) {
+                                    DurationCheckOutActual = ChronoUnit.MILLIS.between(
+                                            rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                            rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                                }else {
+                                    DurationCheckOutActual = ChronoUnit.MILLIS.between(
+                                            logTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
+                                            rd.getCheckOutEstimate().toInstant().atZone(ZoneId.systemDefault()));
+                                }
                             }
-                            long DurationCheckInEstimate;
-                            if(rd.getCheckInEstimate().getTime() >= rd.getCheckInActual().getTime()){
-                                DurationCheckInEstimate = ChronoUnit.MILLIS.between(
+                            long DurationCheckInActual;
+                            if(rd.getCheckInEstimate().getTime() <= rd.getCheckInActual().getTime()){
+                                DurationCheckInActual = ChronoUnit.MILLIS.between(
                                         rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
                                         rd.getCheckInEstimate().toInstant().atZone(ZoneId.systemDefault()));
                             }else {
-                                DurationCheckInEstimate = ChronoUnit.MILLIS.between(
+                                DurationCheckInActual = ChronoUnit.MILLIS.between(
                                         rd.getCheckInActual().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(),
-                                        rd.getCheckOutActual().toInstant().atZone(ZoneId.systemDefault()));
+                                        rd.getCheckInActual().toInstant().atZone(ZoneId.systemDefault()));
                             }
-                            timestamp = DurationCheckOutActual - DurationCheckInEstimate;
+                            timestamp = DurationCheckOutActual - DurationCheckInActual;
                         }
                     }
                     totalTimestamp += timestamp;
@@ -404,7 +417,7 @@ public class OverviewService {
            Timestamp logTime = new Timestamp(System.currentTimeMillis());
            Float totalIncome = fundBookRepository.getAllIncomeByDay(logTime);
 
-           ReportRevenue reportRevenue = new ReportRevenue();
+           ReportRevenue reportRevenue = reportRevenueRepository.findByDate(logTime) != null ? reportRevenueRepository.findByDate(logTime) : new ReportRevenue();
            reportRevenue.setCreatedDate(logTime);
            reportRevenue.setRevenueValue(totalIncome != null ? totalIncome : 0);
 
@@ -580,7 +593,8 @@ public class OverviewService {
         log.info("----- Write Top Room Class Start ------");
         try {
             Timestamp logTime = new Timestamp(System.currentTimeMillis());
-            RoomCategory  roomCategory = roomClassRepository.findByRoomCategoryIdAndStatusNot(roomId, Status.DELETE);
+            Room room = roomRepository.findByRoomId(roomId);
+            RoomCategory  roomCategory = roomClassRepository.findByRoomCategoryIdAndStatusNot(room.getRoomCategory().getRoomCategoryId(), Status.DELETE);
 
             List<Order> orders = orderRepository.findByReservationDetail_ReservationDetailId(reservationDetail.getReservationDetailId());
                 float totalOrder = 0;
@@ -617,6 +631,10 @@ public class OverviewService {
     }
 
     public ResponseDTO getTopRoomClassByMonth(String datestring, boolean isMonth, boolean isTotalRevenues) {
+        log.info("----- Get Top Room Class By Month Start ------");
+        log.info(datestring);
+        log.info(String.valueOf(isMonth));
+        log.info(String.valueOf(isTotalRevenues));
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
             LocalDate date = LocalDate.parse(datestring, formatter);
@@ -640,7 +658,8 @@ public class OverviewService {
             Map<String, Object> result = new HashMap<>();
             result.put("label", new ArrayList<>(sortedMap.keySet()));
             result.put("data", new ArrayList<>(sortedMap.values()));
-
+            log.info(result.toString());
+            log.info("----- Get Top Room Class By Month End ------");
             return ResponseUtils.success(result, "getTopRoomClassByMonth_is_successfully");
         } catch (Exception e) {
             log.error("getTopRoomClassByMonth_failed" + e.getMessage());
@@ -649,8 +668,10 @@ public class OverviewService {
     }
 
     public ResponseDTO getTopRoomClassByQuarter(Integer year, String quarter, boolean isTotalRevenues) {
-            log.info(year.toString());
-            log.info(quarter.toString());
+        log.info("----- Get Top Room Class By Quarter Start ------");
+        log.info(year.toString());
+        log.info(quarter.toString());
+        log.info(String.valueOf(isTotalRevenues));
         try {
             int quarterValue = Integer.parseInt(quarter);
             int startMonth = (quarterValue - 1) * 3 + 1;
@@ -676,7 +697,8 @@ public class OverviewService {
             Map<String, Object> result = new HashMap<>();
             result.put("label", new ArrayList<>(sortedMap.keySet()));
             result.put("data", new ArrayList<>(sortedMap.values()));
-
+            log.info(result.toString());
+            log.info("----- Get Top Room Class By Quarter Start ------");
             return ResponseUtils.success(result, "getTopRoomClassByQuarter_is_successfully");
         } catch (NumberFormatException e) {
             log.error("getTopRoomClassByQuarter_failed: Error parsing integer - " + e.getMessage());

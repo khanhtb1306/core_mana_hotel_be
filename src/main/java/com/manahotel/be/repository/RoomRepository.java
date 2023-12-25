@@ -25,6 +25,7 @@ public interface RoomRepository extends JpaRepository<Room, String> {
     List<Room> findByStatus(Long status);
 
     List<Room> findByFloor(Floor floor);
+    Room findByRoomId(String roomId);
 
     @Query(value = "SELECT r " +
             "FROM Room r " +

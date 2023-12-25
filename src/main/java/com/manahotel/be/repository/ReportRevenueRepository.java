@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,7 @@ public interface ReportRevenueRepository extends JpaRepository<ReportRevenue, Lo
     @Query("SELECT rr FROM ReportRevenue rr WHERE YEAR(rr.createdDate) BETWEEN ?1 AND YEAR(CURRENT_DATE) " +
             "ORDER BY rr.createdDate ASC")
     List<ReportRevenue> findAllByYearRange(Integer year);
+
+    @Query("SELECT rr FROM ReportRevenue rr WHERE DATE(rr.createdDate) = DATE(?1)")
+    ReportRevenue findByDate(Timestamp date);
 }

@@ -6,15 +6,18 @@ import com.manahotel.be.model.dto.response.CustomerGroupDTO;
 import com.manahotel.be.model.dto.response.ResponseDTO;
 import com.manahotel.be.model.entity.CustomerGroup;
 import com.manahotel.be.repository.CustomerGroupRepository;
+import com.manahotel.be.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -52,14 +55,22 @@ class CustomerGroupServiceTest {
         customerGroup.setCustomerGroupName("Group 1");
         customerGroup.setStatus(Status.NO_ACTIVE);
 
-        // Mock repository behavior
+        // Mock repository behavior for customerGroupRepository
         when(customerGroupRepository.findById(customerGroupId)).thenReturn(Optional.of(customerGroup));
         when(customerGroupRepository.save(any(CustomerGroup.class))).thenReturn(customerGroup);
+
+        // Mock repository behavior for customerRepository
+        CustomerRepository customerRepository = mock(CustomerRepository.class);
+        when(customerRepository.findByCustomerGroup_CustomerGroupIdAndStatusIsNot(eq(customerGroupId), anyString()))
+                .thenReturn(Collections.emptyList()); // Assuming you want to mock an empty list for the test
+
+        // Create an instance of the service and set the mocked repository
+        CustomerGroupService customerGroupService = new CustomerGroupService(customerGroupRepository, customerRepository);
 
         // Call the service method
         ResponseDTO responseDTO = customerGroupService.deleteCustomerGroup(customerGroupId);
 
         // Verify the results
-        assertEquals(ResponseUtils.success("Xóa thành công"), responseDTO);
+        assertEquals("Xóa thành công", responseDTO.getDisplayMessage());
     }
 }
