@@ -157,19 +157,19 @@ public class RoomClassService {
             roomClass.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 
             commonMapping(roomClass, dto);
-            if(dto.getStatus() == (Status.DEACTIVATE)){
-                List<Room> rooms = roomRepository.findByRoomCategoryAndStatus(roomClass, Status.ACTIVATE);
-                int count = 0;
-                for (Room room : rooms){
-                    List<ReservationDetail> reservationDetails = reservationDetailRepository.findDetailsByRoomIdAndStatus(room.getRoomId());
-                    if(!reservationDetails.isEmpty()){
-                        count ++;
-                    }
-                }
-                if(count > 0){
-                    return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể Cập nhật", HttpStatus.BAD_REQUEST);
-                }
-            }
+//            if(dto.getStatus() == (Status.DEACTIVATE)){
+//                List<Room> rooms = roomRepository.findByRoomCategoryAndStatus(roomClass, Status.ACTIVATE);
+//                int count = 0;
+//                for (Room room : rooms){
+//                    List<ReservationDetail> reservationDetails = reservationDetailRepository.findDetailsByRoomIdAndStatus(room.getRoomId());
+//                    if(!reservationDetails.isEmpty()){
+//                        count ++;
+//                    }
+//                }
+//                if(count > 0){
+//                    return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể Cập nhật", HttpStatus.BAD_REQUEST);
+//                }
+//            }
 
             if(!roomClass.getStatus().equals(dto.getStatus())){
                 List<Room> room = roomRepository.findByRoomCategory(roomClass);

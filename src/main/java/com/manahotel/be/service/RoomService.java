@@ -94,13 +94,13 @@ public class RoomService {
                 RoomCategory roomCategory = getRoomCategoryById(dto.getRoomCategoryId());
                 room.setRoomCategory(roomCategory);
             }
-            if(room.getStatus().equals(Status.DEACTIVATE)) {
-                List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
-                if (!reservationDetail.isEmpty()) {
-                    log.info("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật");
-                    return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật", HttpStatus.BAD_REQUEST);
-                }
-            }
+//            if(room.getStatus().equals(Status.DEACTIVATE)) {
+//                List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
+//                if (!reservationDetail.isEmpty()) {
+//                    log.info("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật");
+//                    return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể cập nhật", HttpStatus.BAD_REQUEST);
+//                }
+//            }
             if (dto.getFloorId() != null){
                 Floor floor = getFloorById(dto.getFloorId());
                 room.setFloor(floor);
@@ -127,11 +127,11 @@ public class RoomService {
                 log.info("Phòng đã bị xóa");
                 return new ResponseEntity<>("Phòng đã bị xóa", HttpStatus.NOT_FOUND);
             }
-            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
-            if(!reservationDetail.isEmpty()){
-                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể xóa");
-                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể xóa", HttpStatus.OK);
-            }
+//            List<ReservationDetail> reservationDetail = reservationDetailRepository.findBookingAndCheckInDetailsByRoomId(id);
+//            if(!reservationDetail.isEmpty()){
+//                log.info("Phòng đang được đặt hoặc đang được sử dụng không thể xóa");
+//                return new ResponseEntity<>("Phòng đang được đặt hoặc đang được sử dụng không thể xóa", HttpStatus.OK);
+//            }
             room.setStatus(Status.DELETE);
             roomRepository.save(room);
             log.info("Room deleted successfully");
