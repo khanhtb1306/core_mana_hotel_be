@@ -3,10 +3,6 @@ spring:
     time-zone: Asia/Ho_Chi_Minh
   main:
     banner-mode: off
-  security:
-    user:
-      name: admin
-      password: admin
   datasource:
     # MySQL config test
     type: com.zaxxer.hikari.HikariDataSource
@@ -25,8 +21,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: hotelsystem00@gmail.com
-    password: vsjpxutvricoknsg
+    username: manahotelsystem@gmail.com
+    password: lqhtuhkkraozjpcc
     # đổi sang email dưới này nhé
 #    username: manahotelsystem@gmail.com
 #    password: Manahotelsystem123

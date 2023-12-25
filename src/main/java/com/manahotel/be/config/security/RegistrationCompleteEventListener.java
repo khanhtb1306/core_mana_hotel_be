@@ -29,7 +29,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
                 "<p>Vui lòng nhấp vào liên kết bên dưới để hoàn thành hành động.</p>" +
                 "<p>Tên đăng nhập: "+ staff.getUsername()+"</p>"+
                 "<p>Mật khẩu: "+ password+"</p>"+
-//                "<a href=\"" + url + "\">Đặt lại mật khẩu</a>" +
+                "<a href=\"" + url + "\">Đăng nhập hệ thống!</a>" +
                 "<p>Vào thông tin nhân viên để đổi mật khẩu</p>"+
                 "<p> Dịch vụ cổng đăng ký người dùng";
 

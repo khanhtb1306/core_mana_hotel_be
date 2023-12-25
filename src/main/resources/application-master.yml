@@ -12,8 +12,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: hotelsystem00@gmail.com
-    password: vsjpxutvricoknsg
+    username: manahotelsystem@gmail.com
+    password: lqhtuhkkraozjpcc
     properties:
       mail:
         smtp:
@@ -22,5 +22,4 @@ spring:
             enable: true
   config:
     link: http://manahotel.s3-website-ap-southeast-1.amazonaws.com
-#    link: http://localhost:3000
     linkQr: https://api.vietqr.io

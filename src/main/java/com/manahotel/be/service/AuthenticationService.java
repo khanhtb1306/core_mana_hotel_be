@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,8 @@ import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
 public class AuthenticationService {
     private final RegistrationCompleteEventListener eventListener;
 
+    @Value("${spring.config.link}")
+    private String link;
     @Autowired
     private final StaffRepository staffRepository;
     private final JwtService jwtService;
@@ -82,13 +85,13 @@ public class AuthenticationService {
     }
 
     public String applicationUrl(HttpServletRequest request) {
-        return "http://localhost:3000";
+        return link;
     }
 
     public String passwordResetEmailLink(Staff staff, String applicationUrl, String passwordResetToken, PasswordResetRequest passwordResetRequest) throws UnsupportedEncodingException, MessagingException, jakarta.mail.MessagingException {
         String url = "";
         if (passwordResetRequest.getType() == 1) {
-            url = applicationUrl + "/resetPassword?" + passwordResetToken;
+            url = applicationUrl + "/login";
 
             String password = generateRandomPassword(6);
             staff.setPassword(staffService.passwordCoder(password));
