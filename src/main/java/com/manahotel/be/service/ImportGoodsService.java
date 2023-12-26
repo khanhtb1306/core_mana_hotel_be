@@ -170,7 +170,7 @@ public class ImportGoodsService {
             Long userId = UserUtils.getUser().getStaffId();
             Staff staff = findStaff(userId);
 
-            overviewService.writeRecentActivity(staff.getUsername(), "tạo phiếu nhập hàng", importGoods.getPrice(), new Timestamp(System.currentTimeMillis()));
+            overviewService.writeRecentActivity(staff.getStaffName(), "tạo phiếu nhập hàng", importGoods.getPrice(), new Timestamp(System.currentTimeMillis()));
             FundBook fundBook = new FundBook();
             fundBook.setFundBookId("TT" + importGoods.getImportGoodsId());
             fundBook.setTime(new Timestamp(System.currentTimeMillis()));

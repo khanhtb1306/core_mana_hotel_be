@@ -115,7 +115,7 @@ public class InventoryCheckService {
             Long userId = UserUtils.getUser().getStaffId();
             Staff staff = findStaff(userId);
 
-            overviewService.writeRecentActivity(staff.getUsername(), "thực hiện kiểm kho", 0, new Timestamp(System.currentTimeMillis()));
+            overviewService.writeRecentActivity(staff.getStaffName(), "thực hiện kiểm kho", 0, new Timestamp(System.currentTimeMillis()));
         }
     }
 
