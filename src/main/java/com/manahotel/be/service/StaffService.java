@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.manahotel.be.common.constant.Role.ROLE_MANAGER;
+import static com.manahotel.be.common.constant.Role.ROLE_RECEPTIONIST;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -115,16 +116,27 @@ public class StaffService {
         }
     }
     public ResponseDTO adminStaff(Long staffId) {
-        log.info("----- Admin Staff Start------");
+
         try {
             Staff staff = getStaffById(staffId);
-            staff.setRole(ROLE_MANAGER);
+            if( staff.getRole().equals(ROLE_MANAGER))
+            {
+                log.info("----- Receptionist Staff Start------");
+                staff.setRole(ROLE_RECEPTIONIST);
+                repository.save(staff);
+                log.info("----- Receptionist Staff End ------");
+                return ResponseUtils.success(staffId, "Chuyển lễ tân thành công");
+            }
+            else{
+                log.info("----- Admin Staff Start------");
+                staff.setRole(ROLE_MANAGER);
+            }
             repository.save(staff);
             log.info("----- Admin Staff End ------");
             return ResponseUtils.success(staffId, "Chuyển admin thành công");
         } catch (Exception e) {
             log.info(e.getMessage());
-            return ResponseUtils.error("Chuyển admin thất bại");
+            return ResponseUtils.error("Chuyển thất bại");
         }
     }
     public ResponseDTO deleteStaff(Long staffId) {
