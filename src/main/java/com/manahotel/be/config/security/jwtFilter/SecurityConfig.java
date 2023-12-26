@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .requestMatchers("/inventory-check/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/room-class").hasAnyAuthority("ROLE_MANAGER", "ROLE_RECEPTIONIST")
                 .requestMatchers("/room-class/**").hasAnyAuthority("ROLE_MANAGER")
+                .requestMatchers("/room/{id}").hasAnyAuthority("ROLE_MANAGER", "ROLE_RECEPTIONIST")
                 .requestMatchers("/room/**").hasAnyAuthority("ROLE_MANAGER")
                 .requestMatchers("/price-list/{id}").hasAnyAuthority("ROLE_MANAGER", "ROLE_RECEPTIONIST")
                 .requestMatchers("/price-list").hasAnyAuthority("ROLE_MANAGER", "ROLE_RECEPTIONIST")
