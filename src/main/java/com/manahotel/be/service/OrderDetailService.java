@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,6 +32,8 @@ public class OrderDetailService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OverviewService overviewService;
 
     private void commonMapping(OrderDetail orderDetail, OrderDetailDTO orderDetailDTO) throws IOException {
         orderDetail.setQuantity(orderDetailDTO.getQuantity() != null ? orderDetailDTO.getQuantity() : orderDetail.getQuantity());
@@ -54,6 +57,9 @@ public class OrderDetailService {
                 if(goods.isGoodsCategory()) {
                     goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
                     goodsRepository.save(goods);
+                    if(goods.getInventory()<= goods.getMinInventory()){
+                        overviewService.writeRecentActivity(goods.getGoodsName(), "sắp hết hàng", 0, new Timestamp(System.currentTimeMillis()));
+                    }
                 }
             }
             orderDetailRepository.save(orderDetail);
