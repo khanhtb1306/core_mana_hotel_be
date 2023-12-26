@@ -99,6 +99,7 @@ public class GoodsUnitService {
             return new ResponseEntity<>("Lưu đơn vị thành công", HttpStatus.OK);
         }
         catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>("Lưu đơn vị thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

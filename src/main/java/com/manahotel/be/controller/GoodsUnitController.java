@@ -1,5 +1,6 @@
 package com.manahotel.be.controller;
 
+import com.manahotel.be.model.dto.request.GoodsUnitRequest;
 import com.manahotel.be.model.dto.response.GoodsUnitDTO;
 import com.manahotel.be.model.entity.GoodsUnit;
 import com.manahotel.be.service.GoodsUnitService;
@@ -37,7 +38,7 @@ public class GoodsUnitController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateGoodsUnitByList(List<GoodsUnitDTO> goodsUnitDTOs) {
-        return service.updateGoodsUnitByList(goodsUnitDTOs);
+    public ResponseEntity<String> updateGoodsUnitByList(GoodsUnitRequest request) {
+        return service.updateGoodsUnitByList(request.getGoodsUnitDTOs());
     }
 }
