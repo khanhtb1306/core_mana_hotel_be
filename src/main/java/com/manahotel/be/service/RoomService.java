@@ -49,7 +49,7 @@ public class RoomService {
     private void commonMapping(Room room, RoomDTO dto) throws IOException {
         room.setRoomName(dto.getRoomName() != null ? dto.getRoomName() : room.getRoomName());
         room.setNote(dto.getNote() != null ? dto.getNote() : room.getNote());
-        room.setImage(!dto.getImage().isEmpty() ? dto.getImage().getBytes() : room.getImage());
+        room.setImage(!dto.getImage().isEmpty() || dto.getImage() != null ? dto.getImage().getBytes() : room.getImage());
         room.setStatus(dto.getStatus() != null ? dto.getStatus(): room.getStatus());
         room.setConditionStatus(dto.getConditionStatus() != null ? dto.getConditionStatus() : room.getConditionStatus());
     }
@@ -111,7 +111,7 @@ public class RoomService {
             log.info("------- Update Room End -------");
             return new ResponseEntity<>("Cập nhật phòng thành công", HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
-            log.info("Can't find room");
+            log.info("Can't find room", e.getMessage());
             return new ResponseEntity<>("Không tìm thấy phòng", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("Can't Update Room", e.getMessage());
