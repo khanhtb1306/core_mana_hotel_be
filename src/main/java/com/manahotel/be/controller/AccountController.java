@@ -21,4 +21,9 @@ public class AccountController {
     public ResponseDTO createAndUpdateAccount(StaffDTO staffDTO){
         return staffService.createAndUpdateStaff(staffDTO);
     }
+
+    @PutMapping("/{id}")
+    public ResponseDTO changePassword(@PathVariable Long id,String oldPassword,String newPassword){
+        return staffService.changePassword(id,oldPassword,newPassword);
+    }
 }

@@ -211,7 +211,7 @@ public class GoodsService {
         goods.setMaxInventory(dto.getMaxInventory() != null ? dto.getMaxInventory() : goods.getMaxInventory());
         goods.setNote((dto.getNote() != null && !dto.getNote().isEmpty()) ? dto.getNote() : goods.getNote());
         goods.setDescription((dto.getDescription() != null && !dto.getDescription().isEmpty()) ? dto.getDescription() : goods.getDescription());
-        goods.setImage(!dto.getImage().isEmpty() ? dto.getImage().getBytes() : goods.getImage());
+        goods.setImage(dto.getImage() != null ? dto.getImage().getBytes() : goods.getImage());
     }
 
     private void commonMapping2(GoodsUnit goodsUnit, GoodsUnitDTO dto2) {

@@ -58,7 +58,7 @@ public class CustomerService {
         customer.setNationality(customerDTO.getNationality() != null ? customerDTO.getNationality() : customer.getNationality());
         customer.setTaxCode(customerDTO.getTaxCode() != null ? customerDTO.getTaxCode() : customer.getTaxCode());
         customer.setGender(customerDTO.isGender());
-        customer.setImage(!customerDTO.getImage().isEmpty() ? customerDTO.getImage().getBytes() : customer.getImage());
+        customer.setImage(customerDTO.getImage() != null ? customerDTO.getImage().getBytes() : customer.getImage());
         customer.setIsCustomer(customerDTO.isCustomer());
     }
 

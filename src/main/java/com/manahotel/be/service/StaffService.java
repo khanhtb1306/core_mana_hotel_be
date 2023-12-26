@@ -214,7 +214,7 @@ public class StaffService {
         staff.setIdentity(staffDTO.getIdentity() != null ? staffDTO.getIdentity() : staff.getIdentity());
         staff.setTaxCode(staffDTO.getTaxCode() != null ? staffDTO.getTaxCode() : staff.getTaxCode());
         staff.setPhoneNumber(staffDTO.getPhoneNumber() != null ? staffDTO.getPhoneNumber() : staff.getPhoneNumber());
-        staff.setImage(!staffDTO.getImage().isEmpty() ? staffDTO.getImage().getBytes() : staff.getImage());
+        staff.setImage(staffDTO.getImage() != null ? staffDTO.getImage().getBytes() : staff.getImage());
 
     }
 

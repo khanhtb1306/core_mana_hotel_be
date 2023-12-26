@@ -49,7 +49,7 @@ public class RoomService {
     private void commonMapping(Room room, RoomDTO dto) throws IOException {
         room.setRoomName(dto.getRoomName() != null ? dto.getRoomName() : room.getRoomName());
         room.setNote(dto.getNote() != null ? dto.getNote() : room.getNote());
-        room.setImage(!dto.getImage().isEmpty() || dto.getImage() != null ? dto.getImage().getBytes() : room.getImage());
+        room.setImage(dto.getImage() != null ? dto.getImage().getBytes() : room.getImage());
         room.setStatus(dto.getStatus() != null ? dto.getStatus(): room.getStatus());
         room.setConditionStatus(dto.getConditionStatus() != null ? dto.getConditionStatus() : room.getConditionStatus());
     }
