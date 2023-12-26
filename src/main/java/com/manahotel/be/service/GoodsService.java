@@ -109,6 +109,7 @@ public class GoodsService {
 
             commonMapping2(goodsUnit, dto2);
             goodsUnit.setIsDefault(true);
+            goodsUnit.setStatus(Status.ACTIVATE);
 
             goodsUnitRepository.save(goodsUnit);
             log.info("----- Add Unit End -----");

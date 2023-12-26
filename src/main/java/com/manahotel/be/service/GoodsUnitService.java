@@ -1,5 +1,6 @@
 package com.manahotel.be.service;
 
+import com.manahotel.be.common.constant.Status;
 import com.manahotel.be.exception.ResourceNotFoundException;
 import com.manahotel.be.model.dto.response.GoodsUnitDTO;
 import com.manahotel.be.model.entity.Goods;
@@ -25,7 +26,7 @@ public class GoodsUnitService {
     private GoodsRepository repository2;
 
     public ResponseEntity<List<GoodsUnit>> getAll() {
-        return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(repository.findByStatusNot(Status.DELETE), HttpStatus.OK);
     }
 
     public ResponseEntity<String> createGoodsUnit(GoodsUnitDTO dto) {
@@ -39,6 +40,7 @@ public class GoodsUnitService {
             commonMapping(goodsUnit, dto);
 
             goodsUnit.setIsDefault(false);
+            goodsUnit.setStatus(Status.ACTIVATE);
 
             repository.save(goodsUnit);
             log.info("----- Add Unit End -----");
@@ -69,9 +71,29 @@ public class GoodsUnitService {
 
     public ResponseEntity<String> updateGoodsUnitByList(List<GoodsUnitDTO> goodsUnitDTOs) {
         try {
-            GoodsUnit goodsUnit;
+            log.info("----- Create Update Goods Unit Start -----");
+            String goodsId = null;
+            for(GoodsUnitDTO dto : goodsUnitDTOs) {
+                if(dto.getGoodsId() != null) {
+                    goodsId = dto.getGoodsId();
+                    break;
+                }
+            }
+
+            List<GoodsUnit> existingGoodsUnits = repository.getGoodsUnitByGoodsIdNotStatus6(goodsId);
+            for(GoodsUnit gu : existingGoodsUnits) {
+                if(!goodsUnitDTOs.stream()
+                        .anyMatch(dto -> dto.getGoodsUnitId() != null
+                        && dto.getGoodsUnitId().equals(gu.getGoodsUnitId()))) {
+                    gu.setStatus(Status.DELETE);
+                    repository.save(gu);
+                    log.info("----- Delete goods unit success ----- " + gu.getGoodsUnitId());
+                }
+            }
 
             for (GoodsUnitDTO goodsUnitDTO : goodsUnitDTOs) {
+                GoodsUnit goodsUnit;
+
                 if(goodsUnitDTO.getGoodsUnitId() != null) {
                     goodsUnit = findGoodsUnitById(goodsUnitDTO.getGoodsUnitId());
 
@@ -91,6 +113,7 @@ public class GoodsUnitService {
                     commonMapping(goodsUnit, goodsUnitDTO);
 
                     goodsUnit.setIsDefault(false);
+                    goodsUnit.setStatus(Status.ACTIVATE);
 
                     repository.save(goodsUnit);
                 }
