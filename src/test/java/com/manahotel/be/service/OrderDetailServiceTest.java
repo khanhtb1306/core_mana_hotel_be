@@ -31,12 +31,15 @@ class OrderDetailServiceTest {
 
     @Mock
     private OrderRepository orderRepository;
+    @Mock
+    private OverviewService overviewService;
+
     private OrderDetailService underTest;
 
 
     @BeforeEach
     void setUp() {
-        underTest = new OrderDetailService(orderDetailRepository, goodsRepository, goodsUnitRepository, invoiceRepository, orderRepository);
+        underTest = new OrderDetailService(orderDetailRepository, goodsRepository, goodsUnitRepository, invoiceRepository, orderRepository, overviewService);
     }
 
     @Test

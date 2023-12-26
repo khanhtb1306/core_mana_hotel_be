@@ -57,7 +57,7 @@ public class OrderDetailService {
                 if(goods.isGoodsCategory()) {
                     goods.setInventory(goods.getInventory() - orderDetail.getQuantity());
                     goodsRepository.save(goods);
-                    if(goods.getInventory()<= goods.getMinInventory()){
+                    if(goods.getInventory() <= goods.getMinInventory()){
                         overviewService.writeRecentActivity(goods.getGoodsName(), "sắp hết hàng", 0, new Timestamp(System.currentTimeMillis()));
                     }
                 }

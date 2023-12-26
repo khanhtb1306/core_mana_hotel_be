@@ -19,7 +19,7 @@ public interface GoodsUnitRepository extends JpaRepository<GoodsUnit, Long> {
     List<GoodsUnit> findGoodsUnitByGoodsIdAndAndIsDefault(String goodsId, Boolean isDefault);
 
     @Query("select gu FROM GoodsUnit gu " +
-            "where gu.goods.goodsId = ?1 and gu.status <> 6")
+            "where gu.goods.goodsId = ?1 and gu.status <> 6 and gu.isDefault = false")
     List<GoodsUnit> getGoodsUnitByGoodsIdNotStatus6(String goodsId);
 
     List<GoodsUnit> findByStatusNot(Long status);
