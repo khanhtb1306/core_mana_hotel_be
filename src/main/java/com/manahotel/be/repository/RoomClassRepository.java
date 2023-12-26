@@ -22,7 +22,7 @@ public interface RoomClassRepository extends JpaRepository<RoomCategory, String>
 
     @Query("SELECT rc, COUNT(r) FROM RoomCategory rc " +
             "LEFT JOIN Room r ON rc.roomCategoryId = r.roomCategory.roomCategoryId " +
-            "WHERE rc.status <> 6 And r.status <> 6" +
+            "WHERE rc.status <> 6" +
             "GROUP BY rc")
     List<Object[]> findRoomCategoriesWithRoomCount();
 
