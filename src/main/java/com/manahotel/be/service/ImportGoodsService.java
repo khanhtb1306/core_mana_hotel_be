@@ -106,9 +106,9 @@ public class ImportGoodsService {
 
         importGoods.setStatus(importGoodsDTO.getStatus() != null ? importGoodsDTO.getStatus() : importGoods.getStatus());
 
-        if (importGoods.getStatus().equals(Status.TEMPORARY)) {
-            importGoods.setTimeImport(null);
-        } else {
+//        if (importGoods.getStatus().equals(Status.TEMPORARY)) {
+//            importGoods.setTimeImport(null);
+//        } else {
             try {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Date parsedDate = dateFormat.parse(importGoodsDTO.getTimeImport());
@@ -117,7 +117,7 @@ public class ImportGoodsService {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-        }
+//        }
 
         importGoods.setSupplier(importGoodsDTO.getSupplier() != null ? importGoodsDTO.getSupplier() : importGoods.getSupplier());
         importGoods.setPaid(importGoodsDTO.getPaid() != null ? importGoodsDTO.getPaid() : importGoods.getPaid());
