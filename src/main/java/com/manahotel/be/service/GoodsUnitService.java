@@ -118,7 +118,7 @@ public class GoodsUnitService {
                     repository.save(goodsUnit);
                 }
             }
-
+            log.info("----- Create Update Goods Unit End -----");
             return new ResponseEntity<>("Lưu đơn vị thành công", HttpStatus.OK);
         }
         catch (Exception e) {
