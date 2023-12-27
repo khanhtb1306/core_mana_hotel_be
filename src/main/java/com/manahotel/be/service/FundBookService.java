@@ -72,7 +72,7 @@ public class FundBookService {
 
             repository.save(fundBook);
             log.info("----- End create fund book -----");
-            overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), fundBook.getType().equals(Status.INCOME) ? "tạo phiếu thu" : "tạo phiếu chi", fundBook.getValue(), new Timestamp(System.currentTimeMillis()));
+            overviewService.writeRecentActivity(UserUtils.getUser().getStaffName(), fundBook.getType().contains(Status.INCOME) ? "tạo phiếu thu" : "tạo phiếu chi", fundBook.getValue(), new Timestamp(System.currentTimeMillis()));
             return ResponseUtils.success("Tạo phiếu thành công");
         }
         catch (Exception e) {
